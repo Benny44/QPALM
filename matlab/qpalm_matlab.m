@@ -322,7 +322,8 @@ for k = 1:maxiter
               end
               active_cnstrs_old = active_cnstrs;
           else
-              d = -Q\dphi;
+              LD = ldlchol(Q);
+              d = -ldlsolve (LD,dphi);
           end
           
       elseif strcmp(solver, 'lbfgs')
@@ -531,8 +532,8 @@ function [x, y, Q, q, A, bmin, bmax, D, E, c] = modified_ruiz_equilibration(x, y
         delta   = 1./sqrt([max(max(abs(Q),[],1),max(abs(A),[],1))';max(abs(A),[],2)]);
         ddelta1 = sparse(1:n,1:n,delta(1:n),n,n);
         ddelta2 = sparse(1:m,1:m,delta(n+1:n+m),m,m);
-        Q = ddelta1*Q*ddelta1; q = ddelta1*q; 
-        A = ddelta2*A*ddelta1; 
+        Q = ddelta1*(Q*ddelta1); q = ddelta1*q; 
+        A = ddelta2*(A*ddelta1); 
 %         gamma = 1/max(mean(max(abs(Q),[],2)), norm(q,Inf));
 %         Q = gamma*Q; q = gamma*q;c = gamma*c;
         S = delta.*S; 
@@ -576,7 +577,7 @@ function [x,y,Q,q,A,bmin,bmax,D,E,c] = simple_equilibration(x,y,Q,q,A,bmin,bmax,
         D = D.*c;
     end
     Dm = sparse(rowinds,rowinds,D,n,n);
-    Q = Dm*Q*Dm;
+    Q = Dm*(Q*Dm);
     q = D.*q;
     bmin = E.*bmin; bmax = E.*bmax;
 % Make A have unit row norms
