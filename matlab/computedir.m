@@ -1,4 +1,4 @@
-function [d,LD] = computedir(LD,Q,A,sig,b,active_cnstrs,active_cnstrs_old)
+function [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,b,active_cnstrs,active_cnstrs_old)
 na = nnz(active_cnstrs);
 if ~isempty(active_cnstrs_old)
     enter = active_cnstrs & (~active_cnstrs_old);
@@ -6,12 +6,16 @@ if ~isempty(active_cnstrs_old)
     ne = nnz(enter);
     nl = nnz(leave);
     if ne>0
-        LD = ldlupdate(LD,(sparse(1:ne,1:ne,sqrt(sig(enter)),ne,ne)*A(enter,:))','+');
+%         Ap = (sparse(1:ne,1:ne,sqrt(sig(enter)),ne,ne)*A(enter,:));
+        Ae = Asqrtsigt(:,enter);
+        LD = ldlupdate(LD,Ae,'+');
     end
     if nl>0
-        LD = ldlupdate(LD,(sparse(1:nl,1:nl,sqrt(sig(leave)),nl,nl)*A(leave,:))','-');
+        Al = Asqrtsigt(:,leave);
+        LD = ldlupdate(LD,Al,'-');
     end
 else
-    LD = ldlchol(Q+A(active_cnstrs,:)'*(sparse(1:na,1:na,sig(active_cnstrs),na,na)*A(active_cnstrs,:)));
+    Asig_active_cnstrs = Asig(active_cnstrs,:);
+    LD = ldlchol(Q+A(active_cnstrs,:)'*Asig_active_cnstrs);
 end
 d = ldlsolve (LD,b);

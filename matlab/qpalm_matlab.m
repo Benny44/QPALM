@@ -198,19 +198,22 @@ active_cnstrs_old = [];LD = [];L = [];
 %Initialization for Qdx and Adx used in is_dual_infeasible;
 tau = 0; Qd = zeros(n,1); Ad = zeros(m,1);
 
+%Precompute for ldlupdate
+Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
+Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
 for k = 1:maxiter
    Axys = Ax+y./sig;
    z    = min(max(Axys,bmin),bmax);                         % z-update 
    rp   = Ax-z;                                             % primal residual
    yh   = y+sig.*rp;                                        % candidate dual update
-   df   = Qx+q-x0/gamma;                                % cost gradient
+   df   = Qx+q-x0/gamma;                                    % cost gradient
    Atyh = A'*yh;
    dphi = df+Atyh;                                          % Augmented Lagrangian gradient
 
    if proximal
-        nrm_rd = 1/c_scale*norm((dphi-1/gamma*(x-x0))./D_scale,inf); %Real residual
-        nrm_rd2 = 1/c_scale*norm(dphi./D_scale,inf);
+        nrm_rd = 1/c_scale*norm((dphi-1/gamma*(x-x0))./D_scale,inf); %Residual of original problem
+        nrm_rd2 = 1/c_scale*norm(dphi./D_scale,inf); %Residual of the proximal problem
    else
        nrm_rd = norm(dphi./D_scale,inf)/c_scale;
        nrm_rd2 = nrm_rd;
@@ -251,10 +254,14 @@ for k = 1:maxiter
            end
            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
            sig_updated = true;
-           if strcmp(scaling,'outer_iter') %perform this here when sig is known
-               [x,Q,q,A,D_scale] = outer_iter_scaling(x,Q,q,A,sig,D_scale);
-               Qx = Q*x; 
-           end
+           
+           Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
+           Asig      = (sparse(1:m,1:m,sig,m,m)*A);
+           
+%            if strcmp(scaling,'outer_iter') %perform this here when sig is known
+%                [x,Q,q,A,D_scale] = outer_iter_scaling(x,Q,q,A,sig,D_scale);
+%                Qx = Q*x; 
+%            end
   
        end
        rpK = rp;
@@ -267,16 +274,12 @@ for k = 1:maxiter
        active_cnstrs_old = [];
        if proximal
            x0=x;
-           gamma=min(gamma*gammaUpd, gammaMax);
            if gamma ~= gammaMax
-               Q=Q-(gammaUpd-1)/gamma*speye(n); %Q = original Q + 1/gamma*eye
+               Q=Q-1/gamma*speye(n);
+               gamma=min(gamma*gammaUpd, gammaMax);
+               Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
                Qx = Q*x; 
            end
-%            else
-%                Q = Q-1/gamma*speye(n); %Q = original Q
-%                gamma = inf;
-%            end
-%            fprintf('gamma; %d\n',gamma);
        end
    else
       if strcmp(solver, 'newton') 
@@ -295,7 +298,7 @@ for k = 1:maxiter
                           d = -(Q+A(active_cnstrs,:)'*diag(sig(active_cnstrs))*A(active_cnstrs,:))\dphi;
                       end
                   case 2% ldlchol 2
-                      [d,LD] = computedir(LD,Q,A,sig,-dphi,active_cnstrs,active_cnstrs_old);
+                      [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old);
     %                   LD = ldlchol(Q+A(active_cnstrs,:)'*spdiags(sig(active_cnstrs),0,na,na)*A(active_cnstrs,:));
     %                   d  = -ldlsolve (LD,dphi);
                   case 3% lchol  3

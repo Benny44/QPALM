@@ -1,33 +1,11 @@
 % clear;close all;clc
-m = 300;n = 50;
+m = 3000;n = 500;
 rng(6)
-A = sprandn(m, n, 1e-2, 1e-4); 
-
-% [i,j,s] = find(A);
-% row_idx = 1;
-% for idx = 1:length(j)
-%     col = j(idx);
-%     if idx == 1
-%         prev_col = col;
-%     end
-%     if col ~= prev_col
-%         row_idx = 1;
-%     end
-%     row = i(idx);
-%         
-%     if row ~= row_idx
-%         A(row_idx, col) = A(row, col);
-%         A(row, col) = 0;
-%         row_idx = row_idx+1;
-%         prev_col = col;
-%     end    
-%     
-% end
-% A = sparse(A);
+A = sprandn(m, n, 1e-1, 1e-4); 
 
 lb = -2*ones(m,1);
 ub =  2*ones(m,1);
-Q = sprandsym(n, 1e0, 1e-4, 1); %Q=sparse(n,n);
+Q = sprandsym(n, 1e-1, 1e-4, 1); %Q=sparse(n,n);
 q = 10*randn(n,1);
 fprintf('nnz A: %d, nnz Q: %d\n', nnz(A), nnz(Q));
 
@@ -42,7 +20,7 @@ settings.eps_abs = 1e-4;
 settings.eps_rel = 1e-4;
 settings.delta   = 1.2;
 settings.memory  = 10;
-settings.proximal = false;
+settings.proximal = true;
 solver.setup(Q, q, A, lb, ub, settings);
 tic
 % profile on;
@@ -96,7 +74,7 @@ opts.solver  = 'newton';
 % opts.solver = 'newton';
 opts.scalar_sig = false;
 opts.lbfgs_precon = false;
-opts.proximal = false;
+opts.proximal = true;
 % opts.scalar_sig = true;
 tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(Q,q,A,lb,ub,[],[],opts);qpalm_time = toc
 display(stats_qpalm.status)

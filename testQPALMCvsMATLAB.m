@@ -1,5 +1,5 @@
 clear;close all;clc
-m = 300;n = 50;
+m = 2000;n = 200;
 rng(1)
 A = sprandn(m, n, 1e-1,1e-4); 
 lb = -2*ones(m,1);
