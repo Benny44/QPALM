@@ -10,3 +10,4 @@ vecnorm.m
 prof_output*
 obj/
 lib/
+*.lp

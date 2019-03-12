@@ -117,5 +117,28 @@ if options.qpoases
 
 end
 
+if options.gurobi
+    model.Q = 1/2*prob.Q;
+    model.obj = prob.q;
+    model.A = [prob.A;-prob.A];
+    model.rhs = [prob.ub;-prob.lb];
+    model.sense = '<';
+    params.outputflag = 0;
+    params.OptimalityTol = EPS_ABS;
+    params.FeasibilityTol = EPS_ABS;
+    
+    for k = 1:n
+        results = gurobi(model,params);
+        if k > 1
+            t(k-1) = results.runtime;
+        end
+    end
+    timings.gurobi = sum(t)/(n-1);
+    
+    if timings.gurobi > MAX_TIME
+        options.gurobi = false;
+    end
+    
+
 end
 

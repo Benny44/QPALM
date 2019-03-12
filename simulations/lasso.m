@@ -5,6 +5,14 @@ options.qpalm_matlab = true;
 options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = true;
+options.gurobi = true;
+
+Tqpalm_matlab = [];
+Tqpalm_c = [];
+Tosqp = [];
+Tqpoases = [];
+Tgurobi = [];
+
 
 nb_gamma = 21;
 n_values = 50:51;
@@ -34,6 +42,7 @@ for i = 1:nb_n
     qpalm_c_time = 0;
     osqp_time = 0;
     qpoases_time = 0;
+    gurobi_time = 0;
     
     for gamma = logspace(-2,2,nb_gamma);
         q = [zeros(m+n,1); gamma*ones(n,1)];
@@ -43,16 +52,18 @@ for i = 1:nb_n
         if options.qpalm_c , qpalm_c_time = qpalm_c_time + timings.qpalm_c; end
         if options.osqp, osqp_time = osqp_time + timings.osqp; end
         if options.qpoases, qpoases_time = qpoases_time + timings.qpoases; end
+        if options.gurobi, gurobi_time = gurobi_time + timings.gurobi; end
     end
     
     if options.qpalm_matlab, Tqpalm_matlab(i) = qpalm_matlab_time/nb_gamma; end
     if options.qpalm_c, Tqpalm_c(i) = qpalm_c_time/nb_gamma; end
     if options.osqp, Tosqp(i) = osqp_time/nb_gamma; end
     if options.qpoases, Tqpoases(i) = qpoases_time/nb_gamma; end
+    if options.gurobi, Tgurobi(i) = gurobi_time/nb_gamma; end
     
 end
 
-save('output/Lasso', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases');
+save('output/Lasso', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases','Tgurobi');
 
 %% Plot results
 

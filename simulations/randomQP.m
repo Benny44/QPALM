@@ -5,8 +5,15 @@ options.qpalm_matlab = true;
 options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = true;
+options.gurobi = true;
 
-n_values = 200:220;
+Tqpalm_matlab = [];
+Tqpalm_c = [];
+Tosqp = [];
+Tqpoases = [];
+Tgurobi = [];
+
+n_values = 10;
 nb_n = length(n_values);
 
 for i = 1:nb_n
@@ -27,21 +34,24 @@ for i = 1:nb_n
     qpalm_c_time = 0;
     osqp_time = 0;
     qpoases_time = 0;
+    gurobi_time = 0;
       
     [X, timings, options] = compare_QP_solvers(prob, options);
     if options.qpalm_matlab , qpalm_matlab_time = qpalm_matlab_time + timings.qpalm_matlab; end
     if options.qpalm_c , qpalm_c_time = qpalm_c_time + timings.qpalm_c; end
     if options.osqp, osqp_time = osqp_time + timings.osqp; end
     if options.qpoases, qpoases_time = qpoases_time + timings.qpoases; end
+    if options.gurobi, gurobi_time = gurobi_time + timings.gurobi; end
     
     if options.qpalm_matlab, Tqpalm_matlab(i) = qpalm_matlab_time; end
     if options.qpalm_c, Tqpalm_c(i) = qpalm_c_time; end
     if options.osqp, Tosqp(i) = osqp_time; end
     if options.qpoases, Tqpoases(i) = qpoases_time; end
+    if options.gurobi, Tgurobi(i) = gurobi_time; end
     
 end
 
-save('output/randomQP', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases');
+save('output/randomQP', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases','Tgurobi');
 
 %% Plot results
 
