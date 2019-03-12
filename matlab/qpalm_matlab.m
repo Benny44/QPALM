@@ -37,6 +37,7 @@ end
 
 Ax = A*x;
 Qx = Q*x;
+Aty = A'*y;
 
 if nargin<8 || ~isfield(opts,'sig')
     f = 0.5*(x'*Qx)+q'*x;
@@ -194,6 +195,10 @@ K = 1;
 sig_updated = true; %Reset lbfgs initially and perform gradient descent step
 active_cnstrs_old = [];LD = [];L = [];
 
+%Initialization for Qdx and Adx used in is_dual_infeasible;
+tau = 0; Qd = zeros(n,1); Ad = zeros(m,1);
+
+
 for k = 1:maxiter
    Axys = Ax+y./sig;
    z    = min(max(Axys,bmin),bmax);                         % z-update 
@@ -214,30 +219,27 @@ for k = 1:maxiter
    stats.nrm_rd(k) = nrm_rd;
    stats.nrm_rp(k) = nrm_rp;
 
-%    phi  = 0.5*(x'*Qx)+q'*x+(z-Axys)'*(sig.*(z-Axys)); 
    eps_primal   = eps_abs + eps_rel*max(norm(Ax./E_scale,inf),norm(z./E_scale,inf));            % primal eps
    rel_d        = norm([Qx./D_scale;Atyh./D_scale;q./D_scale],inf)/c_scale;
    eps_dual     = eps_abs + eps_rel*rel_d;    % dual eps
    eps_dual_in  = eps_abs_in + eps_rel_in*rel_d;  % inner dual eps
    
-   dy = yh-y; dx = x-x_prev;
+   dy = yh-y; Atdy = Atyh - Aty;
+   dx = x-x_prev; Qdx = Qd*tau; Adx = Ad*tau;
    
    if nrm_rd <= eps_dual && nrm_rp <= eps_primal
        stats.status = 'solved';
        break
-   elseif is_primal_infeasible(dy, A, bmin, bmax, D_scale, E_scale, eps_pinf)
+   elseif is_primal_infeasible(dy, Atdy, bmin, bmax, D_scale, E_scale, eps_pinf)
        stats.status = 'primal_infeasible';
        stats.pinf_certificate = 1/c_scale*(E_scale.*dy);
        break
-%    elseif is_infeasible(x, A, bmin, bmax, E_scale, eps_fstain, eps_ostain)
-%        stats.status = 'infeasible';
-%        break
-   elseif is_dual_infeasible(dx, Q, q, A, bmin, bmax, D_scale, E_scale, c_scale, eps_dinf)
+   elseif is_dual_infeasible(dx, Qdx, q, Adx, bmin, bmax, D_scale, E_scale, c_scale, eps_dinf)
        stats.status = 'dual_infeasible';
        stats.dinf_certificate = D_scale.*dx;
        break
    elseif nrm_rd2 <= eps_dual_in
-       y   = yh;
+       y = yh; Aty = Atyh;
        eps_abs_in = max(rho*eps_abs_in,eps_abs);
        eps_rel_in = max(rho*eps_rel_in,eps_rel);
        if K > 1 && nrm_rp > eps_primal
@@ -431,35 +433,24 @@ end
 
 %% ========================================================================
 
-function is_pinf = is_primal_infeasible(dy, A, bmin, bmax, D_scale, E_scale, eps_pinf) %OSQP
+function is_pinf = is_primal_infeasible(dy, Atdy, bmin, bmax, D_scale, E_scale, eps_pinf) %OSQP
 
     eps_pinf_norm_Edy = eps_pinf*norm(E_scale.*dy,inf);
     is_pinf = eps_pinf_norm_Edy > 0 ... %dy must be nonzero
-        && norm((A'*dy)./D_scale,inf) <= eps_pinf_norm_Edy ...
+        && norm((Atdy)./D_scale,inf) <= eps_pinf_norm_Edy ...
         && (bmax'*max(dy,0) + bmin'*min(dy,0)) <= -eps_pinf_norm_Edy;
 
 end
 
 %% ========================================================================
 
-function is_pinf = is_infeasible(x, A, bmin, bmax, E_scale, eps_fstain, eps_ostain) %10.2.3 Birgin/Martinez
-    
-    gradA2 = ((E_scale\A)'*(max((A*x-bmax)./E_scale,0) - max((bmin - A*x)./E_scale,0))); %= sum [cj(xk)]+∇cj(xk)
-
-    is_pinf = max(max(A*x-bmax), max(bmin-A*x)) > eps_fstain ...
-        && norm(gradA2,inf) <= eps_ostain;
-
-end
-
-%% ========================================================================
-
-function is_dinf = is_dual_infeasible(dx, Q, q, A, bmin, bmax, D_scale, E_scale, c_scale, eps_dinf) %OSQP
+function is_dinf = is_dual_infeasible(dx, Qdx, q, Adx, bmin, bmax, D_scale, E_scale, c_scale, eps_dinf) %OSQP
 
     eps_dinf_norm_Ddx = eps_dinf*norm(D_scale.*dx,inf);
     if eps_dinf_norm_Ddx == 0
         is_dinf = false; return;
     end
-    Adx = (A*dx)./E_scale;
+    Adx = Adx./E_scale;
     for k = 1:length(bmax)
         if (bmax(k) < 1e20 && Adx(k) >= eps_dinf_norm_Ddx) || ...
                 (bmin(k) > -1e20 && Adx(k) <= -eps_dinf_norm_Ddx)
@@ -467,7 +458,7 @@ function is_dinf = is_dual_infeasible(dx, Q, q, A, bmin, bmax, D_scale, E_scale,
         end
     end
     
-    is_dinf = norm((Q*dx)./D_scale,inf) <= c_scale*eps_dinf_norm_Ddx ...
+    is_dinf = norm(Qdx./D_scale,inf) <= c_scale*eps_dinf_norm_Ddx ...
         && q'*dx <= -c_scale*eps_dinf_norm_Ddx;
 
 end
