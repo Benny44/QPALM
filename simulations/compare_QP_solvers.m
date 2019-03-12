@@ -1,4 +1,4 @@
-function [ x, timings, options ] = compare_QP_solvers( prob, options )
+function [ x, timings, iter, options ] = compare_QP_solvers( prob, options )
 %Run QPALM (Matlab), QPALM (C), OSQP, qpoases, and GUROBI on the given problem 
 %n times and return the solution and timings
 
@@ -8,9 +8,9 @@ t = zeros(n-1,1);
 VERBOSE = false;
 SCALING_ITER = 10;
 MAXITER = 10000;
-EPS_ABS = 1e-4;
-EPS_REL = 1e-4;
-MAX_TIME = 10;
+EPS_ABS = 1e-6;
+EPS_REL = 1e-6;
+MAX_TIME = 100;
 %% QPALM Matlab
 
 if options.qpalm_matlab
@@ -33,7 +33,7 @@ if options.qpalm_matlab
             t(k-1) = qpalm_time;
         end
     end
-
+    iter.qpalm_matlab = stats_qpalm.iter;
     timings.qpalm_matlab = sum(t)/(n-1);
     x.qpalm_matlab = x_qpalm;
     
@@ -65,6 +65,7 @@ if options.qpalm_c
         end
     end
 
+    iter.qpalm_c = res_qpalm.info.iter;
     timings.qpalm_c = sum(t)/(n-1);
     x.qpalm_c = res_qpalm.x;
     
@@ -93,6 +94,7 @@ if options.osqp
         end
     end
 
+    iter.osqp = res_osqp.info.iter;
     timings.osqp = sum(t)/(n-1);
     if timings.osqp > MAX_TIME
         options.osqp = false;
@@ -104,7 +106,7 @@ if options.qpoases
     qpoases_options = qpOASES_options('default', 'printLevel', 0);
 
     for k = 1:n
-        [x.qpoases,fval,exitflag,iter,lambda,auxOutput] = qpOASES(prob.Q,prob.q,prob.A,[],[],prob.lb,prob.ub,qpoases_options);
+        [x.qpoases,fval,exitflag,iter.qpOASES,lambda,auxOutput] = qpOASES(prob.Q,prob.q,prob.A,[],[],prob.lb,prob.ub,qpoases_options);
         if k > 1
             t(k-1) = auxOutput.cpuTime;
         end
