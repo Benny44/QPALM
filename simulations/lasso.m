@@ -1,12 +1,13 @@
 %Sparse regressor selection
 clear; close all;
 
-options.qpalm = true;
+options.qpalm_matlab = true;
+options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = true;
 
 nb_gamma = 21;
-n_values = 10:200;
+n_values = 50:51;
 nb_n = length(n_values);
 
 
@@ -25,13 +26,12 @@ for i = 1:nb_n
         -eye(n), zeros(n,m), eye(n)];
     A = sparse(A);
     lb = [d; zeros(n+n,1)];
-%     lb = sparse(lb);
     ub = [d; inf*ones(n+n,1)];
-%     ub = sparse(ub);
-    
+
     prob.Q = Q; prob.A = A; prob.lb = lb; prob.ub = ub;
     
-    qpalm_time = 0;
+    qpalm_matlab_time = 0;
+    qpalm_c_time = 0;
     osqp_time = 0;
     qpoases_time = 0;
     
@@ -39,18 +39,20 @@ for i = 1:nb_n
         q = [zeros(m+n,1); gamma*ones(n,1)];
         prob.q = q;
         [X, timings, options] = compare_QP_solvers(prob, options);
-        qpalm_time = qpalm_time + timings.qpalm;
-        osqp_time = osqp_time + timings.osqp;
-        qpoases_time = qpoases_time + timings.qpoases;
+        if options.qpalm_matlab , qpalm_matlab_time = qpalm_matlab_time + timings.qpalm_matlab; end
+        if options.qpalm_c , qpalm_c_time = qpalm_c_time + timings.qpalm_c; end
+        if options.osqp, osqp_time = osqp_time + timings.osqp; end
+        if options.qpoases, qpoases_time = qpoases_time + timings.qpoases; end
     end
     
-    if options.qpalm, Tqpalm(i) = qpalm_time/nb_gamma; end
+    if options.qpalm_matlab, Tqpalm_matlab(i) = qpalm_matlab_time/nb_gamma; end
+    if options.qpalm_c, Tqpalm_c(i) = qpalm_c_time/nb_gamma; end
     if options.osqp, Tosqp(i) = osqp_time/nb_gamma; end
     if options.qpoases, Tqpoases(i) = qpoases_time/nb_gamma; end
     
 end
 
-save('Lasso', 'n_values','Tqpalm','Tosqp','Tqpoases');
+save('output/Lasso', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases');
 
 %% Plot results
 

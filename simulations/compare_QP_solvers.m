@@ -1,22 +1,63 @@
 function [ x, timings, options ] = compare_QP_solvers( prob, options )
-%Run QPALM, OSQP, qpoases, and GUROBI on the given problem n times and return the
-%solution and timings
+%Run QPALM (Matlab), QPALM (C), OSQP, qpoases, and GUROBI on the given problem 
+%n times and return the solution and timings
 
 n = 2; %to get an average timing
 t = zeros(n-1,1);
+
+VERBOSE = false;
+SCALING_ITER = 10;
+MAXITER = 10000;
+EPS_ABS = 1e-4;
+EPS_REL = 1e-4;
+MAX_TIME = 10;
+%% QPALM Matlab
+
+if options.qpalm_matlab
+    for k = 1:n
+        opts.solver = 'newton';
+        opts.scalar_sig = false;
+        opts.maxiter = MAXITER;
+        opts.eps_abs = EPS_ABS;
+        opts.eps_rel = EPS_REL;
+        opts.proximal = true;
+        opts.gamma    = 1e4;
+        opts.gammaUpd = 10;
+        opts.gammaMax = 1e8;
+        opts.Delta   = 10;
+        opts.scaling = 'simple';
+        opts.scaling_iter = SCALING_ITER;
+        tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,prob.A,prob.lb,prob.ub,[],[],opts);
+        qpalm_time = toc;
+        if k > 1
+            t(k-1) = qpalm_time;
+        end
+    end
+
+    timings.qpalm_matlab = sum(t)/(n-1);
+    x.qpalm_matlab = x_qpalm;
+    
+    if timings.qpalm_matlab > MAX_TIME
+        options.qpalm_matlab = false;
+    end
+    
+end
+
 %% QPALM C
-%
-if options.qpalm
+
+if options.qpalm_c
     for k = 1:n
         solver = qpalm;
         settings = solver.default_settings();
-        settings.verbose = false;
-        settings.scaling = 10;
-        settings.max_iter = 10000;
-        settings.eps_abs = 1e-4;
-        settings.eps_rel = 1e-4;
+        
+        settings.verbose = VERBOSE;
+        settings.scaling = SCALING_ITER;
+        settings.max_iter = MAXITER;
+        settings.eps_abs = EPS_ABS;
+        settings.eps_rel = EPS_REL;
         settings.delta   = 1.2;
         settings.memory  = 20;
+        
         solver.setup(prob.Q, prob.q, prob.A, prob.lb, prob.ub, settings);
         res_qpalm = solver.solve();
         if k > 1
@@ -24,11 +65,11 @@ if options.qpalm
         end
     end
 
-    timings.qpalm = sum(t)/(n-1);
-    x.qpalm = res_qpalm.x;
+    timings.qpalm_c = sum(t)/(n-1);
+    x.qpalm_c = res_qpalm.x;
     
-    if timings.qpalm > 10
-        options.qpalm = false;
+    if timings.qpalm_c > MAX_TIME
+        options.qpalm_c = false;
     end
     
 end
@@ -38,17 +79,13 @@ if options.osqp
     for k = 1:n
         solver = osqp;
         osqp_settings = solver.default_settings();
-        % settings.verbose = true;
-        % osqp_settings.scaling = 10;
-        osqp_settings.scaling = settings.scaling;
-        osqp_settings.max_iter = settings.max_iter;
-        osqp_settings.eps_abs = settings.eps_abs;
-        osqp_settings.eps_rel = settings.eps_rel;
-        osqp_settings.verbose = settings.verbose; %osqp_settings.verbose = false;
-    %     osqp_settings.adaptive_rho = 1;
-    %     osqp_settings.adaptive_rho_tolerance = 5;
-        % osqp_settings.linsys_solver ='mkl pardiso';
-    %     osqp_settings.check_termination = 25;
+
+        osqp_settings.scaling = SCALING_ITER;
+        osqp_settings.max_iter = MAXITER;
+        osqp_settings.eps_abs = EPS_ABS;
+        osqp_settings.eps_rel = EPS_REL;
+        osqp_settings.verbose = VERBOSE;
+
         solver.setup(prob.Q, prob.q, prob.A, prob.lb, prob.ub, osqp_settings);
         res_osqp = solver.solve();
         solver.delete();
@@ -58,7 +95,7 @@ if options.osqp
     end
 
     timings.osqp = sum(t)/(n-1);
-    if timings.osqp > 10
+    if timings.osqp > MAX_TIME
         options.osqp = false;
     end
     x.osqp = res_osqp.x;
@@ -75,7 +112,7 @@ if options.qpoases
     end
     timings.qpoases = sum(t)/(n-1);
     
-    if timings.qpoases > 10
+    if timings.qpoases > MAX_TIME
         options.qpoases = false;
     end
 
