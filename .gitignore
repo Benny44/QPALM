@@ -1,0 +1,12 @@
+*.m~
+*.mex64a
+*.mat
+demo
+*.o
+*.a
+*.mexa64
+vecnorm.m
+*.out
+prof_output*
+obj/
+lib/
