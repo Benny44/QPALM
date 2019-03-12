@@ -13,8 +13,8 @@ settings = solver.default_settings();
 settings.verbose = true;
 settings.scaling = 10;
 settings.max_iter = 10000;
-settings.eps_abs = 1e-4;
-settings.eps_rel = 1e-4;
+settings.eps_abs = 1e-8;
+settings.eps_rel = 1e-8;
 % settings.adaptive_rho = false;
 % settings.sigma = 0;
 % settings.alpha = 1;
@@ -31,8 +31,8 @@ OSQPtime = toc;
 
 %% QPALM
 opts.Delta   = 2;
-opts.eps_abs = 1e-4;
-opts.eps_rel = 1e-4;
+opts.eps_abs = 1e-8;
+opts.eps_rel = 1e-8;
 % opts.eps_abs_in = 1e-1;
 % opts.eps_rel_in = 1e-1;
 opts.solver  = 'lbfgs';
@@ -47,6 +47,8 @@ opts.proximal = false;
 tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(Q,q,A,lb,ub,[],[],opts);toc
 display(stats_qpalm.status)
 
+opts.Delta   = 10;
+opts.solver = 'newton';
 opts.proximal = true;
 opts.gamma    = 1e4;
 opts.gammaUpd = 10;

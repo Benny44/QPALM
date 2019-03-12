@@ -5,7 +5,7 @@ options.qpalm_matlab = true;
 options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = true;
-options.gurobi = true;
+options.gurobi = false;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
@@ -13,12 +13,12 @@ Tosqp = [];
 Tqpoases = [];
 Tgurobi = [];
 
-n_values = 10;
+n_values = 100:20:600;
 nb_n = length(n_values);
 
 for i = 1:nb_n
     n = n_values(i);
-    m = 6*n;
+    m = 10*n;
     
     M = sprandn(n, n, 5e-1);
     Q = M*M';
@@ -36,7 +36,7 @@ for i = 1:nb_n
     qpoases_time = 0;
     gurobi_time = 0;
       
-    [X, timings, options] = compare_QP_solvers(prob, options);
+    [X, timings, iter, options] = compare_QP_solvers(prob, options);
     if options.qpalm_matlab , qpalm_matlab_time = qpalm_matlab_time + timings.qpalm_matlab; end
     if options.qpalm_c , qpalm_c_time = qpalm_c_time + timings.qpalm_c; end
     if options.osqp, osqp_time = osqp_time + timings.osqp; end
