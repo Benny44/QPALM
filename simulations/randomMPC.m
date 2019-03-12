@@ -85,5 +85,5 @@ save('output/MPC', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases');
 
 %% Plot results
 
-plot_mpc
+plot_QP_comparison('output/MPC')
     

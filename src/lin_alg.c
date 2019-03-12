@@ -48,17 +48,6 @@ void vec_mult_scalar(c_float *a, c_float sc, c_int n) {
   }
 }
 
-// c_float vec_prod(const c_float *a, const c_float *b, c_int n) {
-//   c_float prod = 0.0;
-//   c_int   i; // Index
-
-//   for (i = 0; i < n; i++) {
-//     prod += a[i] * b[i];
-//   }
-
-//   return prod;
-// }
-
 c_float vec_prod(const c_float *a, const c_float *b, c_int n) {
   c_float prod = 0.0;
   c_int   i; // Index

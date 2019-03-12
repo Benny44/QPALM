@@ -56,5 +56,5 @@ save('output/Portfolio', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases
 
 %% Plot results
 
-plot_portfolio
+plot_QP_comparison('output/Portfolio')
     

@@ -26,7 +26,7 @@ if options.qpalm_matlab
         opts.gammaMax = 1e8;
         opts.Delta   = 10;
         opts.scaling = 'simple';
-        opts.scaling_iter = SCALING_ITER;
+        opts.scaling_iter = SCALING_ITER; opts.scaling_iter = 2;
         tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,prob.A,prob.lb,prob.ub,[],[],opts);
         qpalm_time = toc;
         if k > 1
@@ -85,7 +85,6 @@ if options.osqp
         osqp_settings.eps_abs = EPS_ABS;
         osqp_settings.eps_rel = EPS_REL;
         osqp_settings.verbose = VERBOSE;
-
         solver.setup(prob.Q, prob.q, prob.A, prob.lb, prob.ub, osqp_settings);
         res_osqp = solver.solve();
         solver.delete();

@@ -56,5 +56,5 @@ save('output/Lasso', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases');
 
 %% Plot results
 
-plot_lasso
+plot_QP_comparison('output/Lasso')
     
