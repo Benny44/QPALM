@@ -1,0 +1,44 @@
+*******************************************************************************
+*                                                                             *
+*  ONLINE QP BENCHMARK COLLECTION                                             *
+*  http://homes.esat.kuleuven.be/~optec/software/onlineQP                     *
+*                                                                             *
+*  maintained by: Moritz Diehl and Hans Joachim Ferreau                       *
+*                                                                             *
+*******************************************************************************
+
+
+Benchmark problem:
+==================
+
+CDU (crude distillation unit)
+
+
+Dimensions:
+===========
+
+7201 QPs,
+800 variables (no bounds),
+800 constraints,
+0 equality constraints
+
+
+
+Description:
+============
+
+This test problem is a crude distillation unit (CDU) model comprising 
+32 inputs, 90 outputs and 252 states. Inputs and outputs are normalised, and 
+the inputs must satisfy bound constraints. Only four outputs, representing 
+the quality of the CDU side products, have desired setpoints to be tracked.
+
+Response of the "true" plant is simulated by adding, to the nominal model 
+response, unmeasured random step disturbances on the crude composition, on 
+the fuel gas quality and on the steam header pressure, and normally 
+distributed output noise. Prediction and control horizon have the same length 
+of 25 intervals, a sampling time of one minute is used.
+
+
+*******************************************************************************
+* end of file                                                                 *
+*******************************************************************************
