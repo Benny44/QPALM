@@ -439,11 +439,18 @@ end
 %% ========================================================================
 
 function is_pinf = is_primal_infeasible(dy, Atdy, bmin, bmax, D_scale, E_scale, eps_pinf) %OSQP
-
+    is_pinf = false;
     eps_pinf_norm_Edy = eps_pinf*norm(E_scale.*dy,inf);
-    is_pinf = eps_pinf_norm_Edy > 0 ... %dy must be nonzero
-        && norm((Atdy)./D_scale,inf) <= eps_pinf_norm_Edy ...
-        && (bmax'*max(dy,0) + bmin'*min(dy,0)) <= -eps_pinf_norm_Edy;
+    if eps_pinf_norm_Edy>0
+        if norm((Atdy)./D_scale,inf) <= eps_pinf_norm_Edy
+            if (bmax'*max(dy,0) + bmin'*min(dy,0)) <= -eps_pinf_norm_Edy;
+               is_pinf = true;
+            end
+        end
+    end
+%     is_pinf = eps_pinf_norm_Edy > 0 ... %dy must be nonzero
+%         && norm((Atdy)./D_scale,inf) <= eps_pinf_norm_Edy ...
+%         && (bmax'*max(dy,0) + bmin'*min(dy,0)) <= -eps_pinf_norm_Edy;
 
 end
 
@@ -451,20 +458,18 @@ end
 
 function is_dinf = is_dual_infeasible(dx, Qdx, q, Adx, bmin, bmax, D_scale, E_scale, c_scale, eps_dinf) %OSQP
 
-    eps_dinf_norm_Ddx = eps_dinf*norm(D_scale.*dx,inf);
-    if eps_dinf_norm_Ddx == 0
-        is_dinf = false; return;
-    end
-    Adx = Adx./E_scale;
-    for k = 1:length(bmax)
-        if (bmax(k) < 1e20 && Adx(k) >= eps_dinf_norm_Ddx) || ...
-                (bmin(k) > -1e20 && Adx(k) <= -eps_dinf_norm_Ddx)
-            is_dinf = false; return;
-        end
-    end
-    
-    is_dinf = norm(Qdx./D_scale,inf) <= c_scale*eps_dinf_norm_Ddx ...
-        && q'*dx <= -c_scale*eps_dinf_norm_Ddx;
+eps_dinf_norm_Ddx = eps_dinf*norm(D_scale.*dx,inf);
+if eps_dinf_norm_Ddx == 0
+    is_dinf = false;return
+end
+Adx = Adx./E_scale;
+if  any(bmax < inf & Adx >= eps_dinf_norm_Ddx) | (bmin > -inf & Adx <= -eps_dinf_norm_Ddx)
+    is_dinf = false;return
+end
+% for k = 1:length(bmax),if (bmax(k) < 1e20 && Adx(k) >= eps_dinf_norm_Ddx) || (bmin(k) > -1e20 && Adx(k) <= -eps_dinf_norm_Ddx),is_dinf = false; return;end,end
+
+is_dinf = norm(Qdx./D_scale,inf) <= c_scale*eps_dinf_norm_Ddx ...
+    && q'*dx <= -c_scale*eps_dinf_norm_Ddx;
 
 end
 %% ========================================================================

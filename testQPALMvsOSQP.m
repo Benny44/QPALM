@@ -1,5 +1,5 @@
 clear;close all;clc
-m = 500;n = 100;
+m = 1000;n = 100;
 A = sprandn(m, n, 1e-1,1e-8); 
 lb = -1e3*rand(m,1);
 ub =  rand(m,1);
