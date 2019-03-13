@@ -24,11 +24,32 @@ else
     y_warm_start = [];
 end
 
-A_combined = false; %if A is already combined in qpalm_matlab, don't do it again for OSQP
+%Prep A and lbA and ubA for QPALM and OSQP
+if isfield(prob, 'l') || isfield(prob, 'u')
+    A = [prob.A; eye(size(prob.A,2))];
+    A_combined = true;
+else
+    A = prob.A;
+    lbA = prob.lb;
+    ubA = prob.ub;
+end
+if isfield(prob, 'l') && isfield(prob, 'u')
+    lbA = [prob.lb; prob.l];
+    ubA = [prob.ub; prob.u];
+elseif isfield(prob, 'l') && ~isfield(prob, 'u')
+    lbA = [prob.lb; prob.l];
+    ubA = [prob.ub; inf*ones(length(prob.ub),1)];
+elseif ~isfield(prob, 'l') && isfield(prob, 'u')
+    lbA = [prob.lb; -inf*ones(length(prob.ub),1)];
+    ubA = [prob.ub; prob.u];
+end
+
+
 
 if options.qpalm_matlab
-
     
+    
+        
     for k = 1:n
         opts.solver = 'newton';
         opts.scalar_sig = false;
@@ -42,7 +63,7 @@ if options.qpalm_matlab
         opts.Delta   = 10;
         opts.scaling = 'simple';
         opts.scaling_iter = SCALING_ITER; opts.scaling_iter = 1;
-        tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,prob.A,prob.lb,prob.ub,[],[],opts);
+        tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,A,lbA,ubA,x_warm_start,y_warm_start,opts);
         qpalm_time = toc;
         if k > 1
             t(k-1) = qpalm_time;
@@ -62,6 +83,7 @@ end
 %% QPALM C
 
 if options.qpalm_c
+    
     for k = 1:n
         solver = qpalm;
         settings = solver.default_settings();
@@ -74,7 +96,7 @@ if options.qpalm_c
         settings.delta   = 1.2;
         settings.memory  = 20;
         
-        solver.setup(prob.Q, prob.q, prob.A, prob.lb, prob.ub, settings);
+        solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
         res_qpalm = solver.solve();
         if k > 1
             t(k-1) = res_qpalm.info.run_time;
@@ -103,7 +125,7 @@ if options.osqp
         osqp_settings.eps_abs = EPS_ABS;
         osqp_settings.eps_rel = EPS_REL;
         osqp_settings.verbose = VERBOSE;
-        solver.setup(prob.Q, prob.q, prob.A, prob.lb, prob.ub, osqp_settings);
+        solver.setup(prob.Q, prob.q, A,lbA,ubA, osqp_settings);
         res_osqp = solver.solve();
         solver.delete();
         if k > 1
@@ -120,11 +142,25 @@ if options.osqp
     x.osqp = res_osqp.x;
 end
 %% qpoases
+if isfield(prob, 'l') && isfield(prob, 'u')
+    l = prob.l;
+    u = prob.u;
+elseif isfield(prob, 'l') && ~isfield(prob, 'u')
+    l = prob.l;
+    u = [];
+elseif ~isfield(prob, 'l') && isfield(prob, 'u')
+    l = [];
+    u = prob.u;
+else
+    l = [];
+    u = [];
+end
+
 if options.qpoases
     qpoases_options = qpOASES_options('default', 'printLevel', 0);
 
     for k = 1:n
-        [x.qpoases,fval,status.qpoases,iter.qpoases,lambda,auxOutput] = qpOASES(prob.Q,prob.q,prob.A,[],[],prob.lb,prob.ub,qpoases_options);
+        [x.qpoases,fval,status.qpoases,iter.qpoases,lambda,auxOutput] = qpOASES(prob.Q,prob.q,prob.A,l,u,prob.lb,prob.ub,qpoases_options);
         if k > 1
             t(k-1) = auxOutput.cpuTime;
         end
@@ -143,6 +179,15 @@ if options.gurobi
     model.A = [prob.A;-prob.A];
     model.rhs = [prob.ub;-prob.lb];
     model.lb = -inf*ones(size(prob.q)); %gurobi uses default lb = 0 on the vars
+    if isfield(prob, 'l') && isfield(prob, 'u')
+        model.lb = prob.l;
+        model.ub = prob.u;
+    elseif isfield(prob, 'l') && ~isfield(prob, 'u')
+        model.lb = prob.l;
+    elseif ~isfield(prob, 'l') && isfield(prob, 'u')
+        model.ub = prob.u;
+    end
+    
     model.sense = '<';
     
     params.outputflag = 0;
