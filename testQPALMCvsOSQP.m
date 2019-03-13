@@ -1,12 +1,22 @@
 % clear;close all;clc
 m = 3000;n = 500;
-rng(6)
+% rng(6)
 A = sprandn(m, n, 1e-1, 1e-4); 
 
 lb = -2*ones(m,1);
 ub =  2*ones(m,1);
 Q = sprandsym(n, 1e-1, 1e-4, 1); %Q=sparse(n,n);
 q = 10*randn(n,1);
+
+clear;close all;clc
+m = 500;n = 100;
+A = sprandn(m, n, 1e-1,1e-8); 
+lb = -1e3*rand(m,1);
+ub =  rand(m,1);
+Q = sprandsym(n, 9e-1, 1e-8, 1); 
+% Q=sparse(n,n);
+q = 100*randn(n,1);
+
 fprintf('nnz A: %d, nnz Q: %d\n', nnz(A), nnz(Q));
 
 %% QPALM C
@@ -15,7 +25,7 @@ solver = qpalm;
 settings = solver.default_settings();
 settings.verbose = false;
 settings.scaling = 10;
-settings.max_iter = 100;
+settings.max_iter = 10000;
 settings.eps_abs = 1e-4;
 settings.eps_rel = 1e-4;
 settings.delta   = 1.2;
@@ -68,7 +78,7 @@ opts.maxiter = settings.max_iter;
 opts.rho     = settings.rho;
 opts.theta   = settings.theta;
 opts.scaling = 'simple';
-opts.scaling_iter = settings.scaling;
+opts.scaling_iter = settings.scaling; opts.scaling_iter = 2;
 
 opts.solver  = 'newton';
 % opts.solver = 'newton';

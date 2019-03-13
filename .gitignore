@@ -11,3 +11,6 @@ prof_output*
 obj/
 lib/
 *.lp
+*.fig
+*.png
+*.eps
