@@ -37,9 +37,24 @@ osqp_settings.verbose = options.VERBOSE;
 %% qpoases (can deal directly with a sequence of QPs)
 if options.qpoases
     qpoases_options = qpOASES_options('default', 'printLevel', 0);
+    Iter_qpoases = [];
 
-    [X_qpoases,fval,Status_qpoases,Iter_qpoases,lambda,auxOutput] = qpOASES(H,g',A,lb',ub',lbA',ubA',qpoases_options);
-    Tqpoases = auxOutput.cpuTime;
+%     [X_qpoases,fval,Status_qpoases,Iter_qpoases,lambda,auxOutput] = qpOASES(H,g',A,lb',ub',lbA',ubA',qpoases_options);
+%     [X_qpoases,fval,Status_qpoases,Iter_qpoases,lambda,auxOutput] = qpOASES(H,g',A,lb',ub',lbA',ubA',qpoases_options);
+    [QP,x,fval,status, iter, ~, auxOutput] = qpOASES_sequence( 'i',H,g(1,:)',A,lb(1,:)',ub(1,:)',lbA(1,:)',ubA(1,:)',qpoases_options );
+    Status_qpoases{1} = status;
+    X_qpoases{1} = x;
+    Iter_qpoases = [Iter_qpoases iter];
+    Tqpoases = [Tqpoases auxOutput.cpuTime];
+    for i = 1:nQP
+        [x,fval,status, iter, ~, auxOutput] = qpOASES_sequence( 'h',QP,g(i,:)',lb(i,:)',ub(i,:)',lbA(i,:)',ubA(i,:)',qpoases_options );
+        Status_qpoases{i} = status;
+        X_qpoases{i} = x;
+        Iter_qpoases = [Iter_qpoases iter];
+        Tqpoases = [Tqpoases auxOutput.cpuTime];
+    end
+    qpOASES_sequence( 'c',QP );    
+%     Tqpoases = auxOutput.cpuTime;
 
 end
 
@@ -108,5 +123,5 @@ save('output/chain80w');
 
 %% Plot results
 
-% plot_QP_comparison('output/randomQP')
+Iter_qpalm_matlab
     
