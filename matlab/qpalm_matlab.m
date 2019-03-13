@@ -1,4 +1,4 @@
-function [x,y,stats] = qpalm_matlab(Q,q,A,bmin,bmax,x,y,opts)
+function [x,yh,stats] = qpalm_matlab(Q,q,A,bmin,bmax,x,y,opts)
 [m,n] = size(A);
 if nargin<7 || isempty(y)
     y = zeros(m,1);
@@ -7,10 +7,6 @@ end
 if nargin<6 || isempty(x)
     x = zeros(n,1);
 end
-
-x_prev = x; x0 = x;
-
-
 
 if nargin<8 || ~isfield(opts,'scaling')
     scaling = ''; %'ruiz', 'simple', 'outer_iter'
@@ -34,7 +30,7 @@ elseif strcmp(scaling, 'simple') %unit rows A, and unit diagonal elements in Q
 end 
 [m,n] = size(A);
 
-
+x_prev = x; x0 = x;
 Ax = A*x;
 Qx = Q*x;
 Aty = A'*y;
@@ -45,7 +41,7 @@ if nargin<8 || ~isfield(opts,'sig')
     dist2 = dist'*dist;
     sig = max(1e-8,min(2e1*max(1,abs(f))/max(1,0.5*dist2),1e8))*ones(m,1);
 else
-    sig = opts.sig*ones(m,1);
+    sig = opts.sig.*ones(m,1);
 end
 
 if nargin<8 || ~isfield(opts,'linsys')
@@ -179,6 +175,18 @@ else
     gammaMax = opts.gammaMax;
 end
 
+%Factorization caching
+if nargin<8 || ~isfield(opts,'active_cnstrs') 
+    active_cnstrs_old = [];
+    active_cnstrs = [];
+    LD = [];
+else
+    active_cnstrs_old = opts.active_cnstrs;
+    active_cnstrs = opts.active_cnstrs;
+    LD = opts.LD;
+end
+    
+
 if proximal
     Q = Q+1/gamma*speye(n);
     Qx = Q*x;
@@ -193,7 +201,7 @@ end
 
 K = 1; 
 sig_updated = true; %Reset lbfgs initially and perform gradient descent step
-active_cnstrs_old = [];LD = [];L = [];
+
 
 %Initialization for Qdx and Adx used in is_dual_infeasible;
 tau = 0; Qd = zeros(n,1); Ad = zeros(m,1);
@@ -424,6 +432,8 @@ end
 stats.iter = k;
 stats.iter_out = K;
 stats.sig = sig;
+stats.LD = LD;
+stats.active_cnstrs = active_cnstrs;
 if K>1
     stats.iter_in(K) = k-(sum(stats.iter_in));
 else

@@ -2,7 +2,7 @@ function [ x, timings, iter, status, options ] = compare_QP_solvers( prob, optio
 %Run QPALM (Matlab), QPALM (C), OSQP, qpoases, and GUROBI on the given problem 
 %n times and return the solution and timings
 
-n = 2; %to get an average timing
+n = 1; %to get an average timing
 t = zeros(n-1,1);
 
 VERBOSE = false;
@@ -44,11 +44,7 @@ elseif ~isfield(prob, 'l') && isfield(prob, 'u')
     ubA = [prob.ub; prob.u];
 end
 
-
-
-if options.qpalm_matlab
-    
-    
+if options.qpalm_matlab   
         
     for k = 1:n
         opts.solver = 'newton';
@@ -65,14 +61,15 @@ if options.qpalm_matlab
         opts.scaling_iter = SCALING_ITER; opts.scaling_iter = 1;
         tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,A,lbA,ubA,x_warm_start,y_warm_start,opts);
         qpalm_time = toc;
-        if k > 1
-            t(k-1) = qpalm_time;
-        end
+        t(k) = qpalm_time;
+        
     end
+    
     status.qpalm_matlab = stats_qpalm.status;
     iter.qpalm_matlab = stats_qpalm.iter;
-    timings.qpalm_matlab = sum(t)/(n-1);
+    timings.qpalm_matlab = sum(t)/n;
     x.qpalm_matlab = x_qpalm;
+    
     
     if timings.qpalm_matlab > MAX_TIME
         options.qpalm_matlab = false;
@@ -98,14 +95,12 @@ if options.qpalm_c
         
         solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
         res_qpalm = solver.solve();
-        if k > 1
-            t(k-1) = res_qpalm.info.run_time;
-        end
+        t(k) = res_qpalm.info.run_time;
     end
 
     status.qpalm_c = res_qpalm.info.status;
     iter.qpalm_c = res_qpalm.info.iter;
-    timings.qpalm_c = sum(t)/(n-1);
+    timings.qpalm_c = sum(t)/n;
     x.qpalm_c = res_qpalm.x;
     
     if timings.qpalm_c > MAX_TIME
@@ -128,14 +123,13 @@ if options.osqp
         solver.setup(prob.Q, prob.q, A,lbA,ubA, osqp_settings);
         res_osqp = solver.solve();
         solver.delete();
-        if k > 1
-            t(k-1) = res_osqp.info.run_time;
-        end
+        t(k) = res_osqp.info.run_time;
+        
     end
 
     status.osqp = res_osqp.info.status;
     iter.osqp = res_osqp.info.iter;
-    timings.osqp = sum(t)/(n-1);
+    timings.osqp = sum(t)/n;
     if timings.osqp > MAX_TIME
         options.osqp = false;
     end
@@ -157,15 +151,13 @@ else
 end
 
 if options.qpoases
-    qpoases_options = qpOASES_options('default', 'printLevel', 0);
+    qpoases_options = qpOASES_options('default', 'printLevel', 0, 'terminationTolerance', 1e-6);
 
     for k = 1:n
         [x.qpoases,fval,status.qpoases,iter.qpoases,lambda,auxOutput] = qpOASES(prob.Q,prob.q,prob.A,l,u,prob.lb,prob.ub,qpoases_options);
-        if k > 1
-            t(k-1) = auxOutput.cpuTime;
-        end
+        t(k) = auxOutput.cpuTime;
     end
-    timings.qpoases = sum(t)/(n-1);
+    timings.qpoases = sum(t)/n;
     
     if timings.qpoases > MAX_TIME
         options.qpoases = false;
@@ -196,11 +188,9 @@ if options.gurobi
     
     for k = 1:n
         results = gurobi(model,params);
-        if k > 1
-            t(k-1) = results.runtime;
-        end
+        t(k) = results.runtime;
     end
-    timings.gurobi = sum(t)/(n-1);
+    timings.gurobi = sum(t)/n;
     status.gurobi = results.status;
     iter.gurobi = results.baritercount;
     if isfield(results,'x')

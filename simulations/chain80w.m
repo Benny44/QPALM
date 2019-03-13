@@ -4,20 +4,20 @@ clear; close all;
 current = fileparts(mfilename('fullpath'));
 cd(current);
 
-loadBenchmark
+loadBenchmarkChain80w
 
 options.qpalm_matlab = true;
 options.qpalm_c = false;
 options.osqp = true;
 options.qpoases = true;
-options.gurobi = true;
+options.gurobi = false;
 
 options.VERBOSE = false;
 options.SCALING_ITER = 10;
 options.MAXITER = 10000;
 options.EPS_ABS = 1e-6;
 options.EPS_REL = 1e-6;
-options.MAX_TIME = 10000;
+options.MAX_TIME = 100;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
@@ -36,7 +36,7 @@ osqp_settings.verbose = options.VERBOSE;
 
 %% qpoases (can deal directly with a sequence of QPs)
 if options.qpoases
-    qpoases_options = qpOASES_options('default', 'printLevel', 0);
+    qpoases_options = qpOASES_options('default', 'printLevel', 0, 'terminationTolerance', 1e-6);
     Iter_qpoases = [];
 
 %     [X_qpoases,fval,Status_qpoases,Iter_qpoases,lambda,auxOutput] = qpOASES(H,g',A,lb',ub',lbA',ubA',qpoases_options);

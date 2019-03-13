@@ -50,11 +50,22 @@ if options.qpalm_matlab
     opts.gammaUpd = 10;
     opts.gammaMax = 1e6;
     opts.Delta   = 10;
-    opts.scaling = 'simple';
+%     opts.scaling = 'simple';
+    if isfield(options, 'sig')
+        opts.sig = options.sig;
+        opts.LD = options.LD;
+        opts.active_cnstrs = options.active_cnstrs;
+    end
+
+    opts.scaling = '';
     opts.scaling_iter = options.SCALING_ITER; opts.scaling_iter = 1;
     tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,prob.A_combined,prob.lbA_combined,prob.ubA_combined,x_warm_start,y_warm_start,opts);
     timings.qpalm_matlab = toc;
-        
+    
+    options.LD = stats_qpalm.LD;
+    options.active_cnstrs = stats_qpalm.active_cnstrs;
+    options.sig = stats_qpalm.sig;
+    
     status.qpalm_matlab = stats_qpalm.status;
     iter.qpalm_matlab = stats_qpalm.iter;
     x.qpalm_matlab = x_qpalm;
