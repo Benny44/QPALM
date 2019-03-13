@@ -85,6 +85,10 @@ for i = 1:nQP
       
     
     [X, timings, iter, status, options] = compare_QP_solvers_sequential(prob, options, osqp_solver);
+    
+    options.x = [options.x(33:end); zeros(32,1)];
+    options.y = [options.y(33:end); zeros(32,1)];
+    
     if options.qpalm_matlab , qpalm_matlab_time = qpalm_matlab_time + timings.qpalm_matlab; end
     if options.qpalm_c , qpalm_c_time = qpalm_c_time + timings.qpalm_c; end
     if options.osqp, osqp_time = osqp_time + timings.osqp; end

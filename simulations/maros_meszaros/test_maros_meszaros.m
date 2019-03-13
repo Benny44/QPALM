@@ -23,8 +23,8 @@ new                  = {};
 options.qpalm_matlab = true;
 options.qpalm_c = false;
 options.osqp = true;
-options.qpoases = true;
-options.gurobi = true;
+options.qpoases = false;
+options.gurobi = false;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
