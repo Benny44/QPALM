@@ -15,7 +15,7 @@ set(gca,'fontsize',14)
 xlabel('Number of primal variables')
 ylabel('Runtime (s)')
 % title(plot_title);
-legend('QPALM', 'OSQP', 'qpOASES','GUROBI','Location','southeast')
+legend('QPALM', 'OSQP', 'qpOASES','Gurobi','Location','southeast')
 
 end
 

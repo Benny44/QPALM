@@ -4,6 +4,8 @@ clear; close all;
 current = fileparts(mfilename('fullpath'));
 cd(current);
 
+loadBenchmark
+
 options.qpalm_matlab = true;
 options.qpalm_c = false;
 options.osqp = true;
@@ -17,22 +19,16 @@ Tqpoases = [];
 Tgurobi = [];
 
 % n_values = 3;
-n_values = 100:20:600;
-nb_n = length(n_values);
+% n_values = 100:20:600;
+% nb_n = length(n_values);
 
-for i = 1:nb_n
-    n = n_values(i);
-    m = 10*n;
+for i = 1:nQP
     
-    M = sprandn(n, n, 5e-1);
-    Q = M*M';
-    
-    A = sprandn(m,n,5e-1);
-    q = randn(n,1);
-    lb = -rand(m,1);
-    ub = rand(m,1);
-    
-    prob.Q = Q; prob.A = A; prob.lb = lb; prob.ub = ub; prob.q = q;
+    prob.Q = sparse(H); 
+    prob.A = sparse([A; eye(nV)]); 
+    prob.lb = [lbA(i,:)'; lb(i,:)'];
+    prob.ub = [ubA(i,:)'; ub(i,:)']; 
+    prob.q = g(i,:)';
     
     qpalm_matlab_time = 0;
     qpalm_c_time = 0;
@@ -73,9 +69,9 @@ for i = 1:nb_n
     
 end
 
-save('output/randomQP');
+save('output/chain80w');
 
 %% Plot results
 
-plot_QP_comparison('output/randomQP')
+% plot_QP_comparison('output/randomQP')
     

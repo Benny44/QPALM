@@ -24,7 +24,7 @@ options.qpalm_matlab = true;
 options.qpalm_c = false;
 options.osqp = true;
 options.qpoases = true;
-options.gurobi = false;
+options.gurobi = true;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
@@ -37,6 +37,8 @@ Iter_qpalm_c = [];
 Iter_osqp = [];
 Iter_qpoases = [];
 Iter_gurobi = [];
+
+
 
 for i = 1:ll
     baseFileName = Filename{i};
@@ -60,7 +62,7 @@ for i = 1:ll
     qpoases_time = 0;
     gurobi_time = 0;
       
-    [X, timings, iter, options] = compare_QP_solvers(prob, options);
+    [X, timings, iter, status, options] = compare_QP_solvers(prob, options);
     if options.qpalm_matlab , qpalm_matlab_time = qpalm_matlab_time + timings.qpalm_matlab; end
     if options.qpalm_c , qpalm_c_time = qpalm_c_time + timings.qpalm_c; end
     if options.osqp, osqp_time = osqp_time + timings.osqp; end
@@ -73,17 +75,26 @@ for i = 1:ll
     if options.qpoases, Tqpoases(i) = qpoases_time; end
     if options.gurobi, Tgurobi(i) = gurobi_time; end
 
-    if options.qpalm_matlab, Iter_qpalm_matlab(i) = qpalm_matlab_time; end
-    if options.qpalm_c, Iter_qpalm_c(i) = qpalm_c_time; end
-    if options.osqp, Iter_osqp(i) = osqp_time; end
-    if options.qpoases, Iter_qpoases(i) = qpoases_time; end
-    if options.gurobi, Iter_gurobi(i) = gurobi_time; end
+    if options.qpalm_matlab, Iter_qpalm_matlab(i) = iter.qpalm_matlab; end
+    if options.qpalm_c, Iter_qpalm_c(i) = iter.qpalm_c; end
+    if options.osqp, Iter_osqp(i) = iter.osqp; end
+    if options.qpoases, Iter_qpoases(i) = iter.qpoases; end
+    if options.gurobi, Iter_gurobi(i) = iter.gurobi; end
     
+    if options.qpalm_matlab, Status_qpalm_matlab{i} = status.qpalm_matlab; end
+    if options.qpalm_c, Status_qpalm_c{i} = status.qpalm_c; end
+    if options.osqp, Status_osqp{i} = status.osqp; end
+    if options.qpoases, Status_qpoases{i} = status.qpoases; end
+    if options.gurobi, Status_gurobi{i} = status.gurobi; end
     
+    if options.qpalm_matlab, X_qpalm_matlab{i} = X.qpalm_matlab; end
+    if options.qpalm_c, X_qpalm_c{i} = X.qpalm_c; end
+    if options.osqp, X_osqp{i} = X.osqp; end
+    if options.qpoases, X_qpoases{i} = X.qpoases; end
+    if options.gurobi, X_gurobi{i} = X.gurobi; end
 end
 
 n_values = 1:ll;
 
-save('../output/maros_meszaros', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases','Tgurobi',...
-    'Iter_qpalm_matlab','Iter_qpalm_c','Iter_osqp','Iter_qpoases','Iter_gurobi');
+save('../output/maros_meszaros');
 
