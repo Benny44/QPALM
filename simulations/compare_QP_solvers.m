@@ -7,7 +7,7 @@ t = zeros(n-1,1);
 
 VERBOSE = false;
 SCALING_ITER = 10;
-MAXITER = 10000;
+MAXITER = 100000;
 EPS_ABS = 1e-6;
 EPS_REL = 1e-6;
 MAX_TIME = 10000;
@@ -58,7 +58,7 @@ if options.qpalm_matlab
         opts.gammaMax = 1e6;
         opts.Delta   = 10;
         opts.scaling = 'simple';
-        opts.scaling_iter = SCALING_ITER; opts.scaling_iter = 1;
+        opts.scaling_iter = SCALING_ITER; opts.scaling_iter = 10;
         tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,A,lbA,ubA,x_warm_start,y_warm_start,opts);
         qpalm_time = toc;
         t(k) = qpalm_time;

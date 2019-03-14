@@ -79,18 +79,6 @@ else
     eps_dinf = opts.eps_dinf;
 end
 
-if nargin<8 || ~isfield(opts,'eps_fstain')
-    eps_fstain = 1e-2;
-else
-    eps_fstain = opts.eps_fstain;
-end
-
-if nargin<8 || ~isfield(opts,'eps_ostain')
-    eps_ostain = 1e-6;
-else
-    eps_ostain = opts.eps_ostain;
-end
-
 if nargin<8 || ~isfield(opts,'rho')
     rho = 1e-1;
 else
@@ -416,7 +404,7 @@ for k = 1:maxiter
 %       tau = NewtonLS(eta,beta,delta,alpha);
 %       tau = BPLS(eta,beta,delta,alpha);
       stats.tau(k) = tau;
-%       stats.d(k,:)   = d;
+
       % Store previous values (lbfgs)
       x_prev  = x;
       dphi_prev = dphi;

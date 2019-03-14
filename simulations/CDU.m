@@ -6,11 +6,13 @@ cd(current);
 
 loadBenchmarkCDU
 
-options.qpalm_matlab = true;
+nQP = 1;
+
+options.qpalm_matlab = false;
 options.qpalm_c = false;
 options.osqp = false;
 options.qpoases = false;
-options.gurobi = false;
+options.gurobi = true;
 
 options.VERBOSE = false;
 options.SCALING_ITER = 10;
@@ -86,8 +88,10 @@ for i = 1:nQP
     
     [X, timings, iter, status, options] = compare_QP_solvers_sequential(prob, options, osqp_solver);
     
-    options.x = [options.x(33:end); zeros(32,1)];
-    options.y = [options.y(33:end); zeros(32,1)];
+    %Shift solution for warm_starting
+%     options.x = [options.x(33:end); zeros(32,1)];
+%     options.y = [options.y(33:end); zeros(32,1)]; %equally many constraints as vars
+%     options.sig = [options.sig(33:end); 2e1*ones(32,1)];
     
     if options.qpalm_matlab , qpalm_matlab_time = qpalm_matlab_time + timings.qpalm_matlab; end
     if options.qpalm_c , qpalm_c_time = qpalm_c_time + timings.qpalm_c; end
@@ -127,5 +131,5 @@ save('output/CDU');
 
 %% Plot results
 
-Iter_qpalm_matlab
+% Iter_qpalm_matlab
     

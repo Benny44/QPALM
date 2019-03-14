@@ -52,7 +52,7 @@ if options.qpalm_matlab
     opts.Delta   = 10;
 %     opts.scaling = 'simple';
     if isfield(options, 'sig')
-        opts.sig = options.sig;
+%         opts.sig = options.sig;
 %         opts.LD = options.LD;
 %         opts.active_cnstrs = options.active_cnstrs;
     end

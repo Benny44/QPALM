@@ -1,4 +1,4 @@
-%Sparse regressor selection
+%Random QP
 clear; close all;
 
 current = fileparts(mfilename('fullpath'));
