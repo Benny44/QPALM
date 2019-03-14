@@ -31,15 +31,16 @@ OSQPtime = toc;
 % QPtime = toc;
 
 %% QPALM
-opts.Delta   = 2;
+opts.Delta   = 10;
 opts.eps_abs = 1e-6;
 opts.eps_rel = 1e-6;
 % opts.eps_abs_in = 1e-1;
 % opts.eps_rel_in = 1e-1;
-opts.solver  = 'lbfgs';
+opts.solver  = 'newton';
 opts.memory  = 10;
 opts.maxiter = 10000;
-opts.scaling = 'ruiz';
+opts.scaling = 'simple';
+opts.scaling_iter = 0;
 opts.scalar_sig = false;
 opts.lbfgs_precon = false;
 opts.proximal = true;

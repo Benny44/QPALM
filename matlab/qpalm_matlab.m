@@ -587,10 +587,9 @@ function [x,y,Q,q,A,bmin,bmax,D,E,c] = simple_equilibration(x,y,Q,q,A,bmin,bmax,
 % D = speye(n);
 % E = sparse(1:m,1:m,1./vecnorm(A,2,2),m,m);
 % A = E*A; bmin = E*bmin; bmax = E*bmax;
-     c = 1;
-%     load('CostScalingSol')
-%     c = 1/max(1, norm(Q*x+q,inf)); %Add cost scaling 10.2.2 Birgin/Martinez
-%     Q = c*Q; q=c*q;
+    c = 1;
+    c = 1/max(1, norm(Q*x+q,inf)); %Add cost scaling 10.2.2 Birgin/Martinez
+    Q = c*Q; q=c*q;
    
 
     x = x./D; y = c*(y./E);
