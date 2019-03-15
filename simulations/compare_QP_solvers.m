@@ -58,7 +58,7 @@ if options.qpalm_matlab
         opts.gammaMax = 1e6;
         opts.Delta   = 10;
         opts.scaling = 'simple';
-        opts.scaling_iter = SCALING_ITER; opts.scaling_iter = 0;
+        opts.scaling_iter = SCALING_ITER; opts.scaling_iter = 1;
         tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,A,lbA,ubA,x_warm_start,y_warm_start,opts);
         qpalm_time = toc;
         t(k) = qpalm_time;
@@ -166,7 +166,9 @@ if options.qpoases
 end
 
 if options.gurobi
-    model.Q = 0.5*prob.Q;
+    if isfield(options, 'lp') && options.lp
+        model.Q = 0.5*prob.Q;
+    end
     model.obj = prob.q;
     model.A = [prob.A;-prob.A];
     model.rhs = [prob.ub;-prob.lb];
