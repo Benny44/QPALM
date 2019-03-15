@@ -16,8 +16,8 @@ Tosqp = [];
 Tqpoases = [];
 Tgurobi = [];
 
-n_values = 3:4;
-% n_values = 100:20:600;
+% n_values = 3:4;
+n_values = 100:20:600;
 nb_n = length(n_values);
 
 for i = 1:nb_n

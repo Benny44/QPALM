@@ -8,7 +8,7 @@ options.qpalm_matlab = true;
 options.qpalm_c = false;
 options.osqp = true;
 options.qpoases = true;
-options.gurobi = false;
+options.gurobi = true;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
@@ -22,13 +22,13 @@ Iter_osqp = [];
 Iter_qpoases = [];
 Iter_gurobi = [];
 
-condition_number = logspace(-10,-1,20);
+rc = logspace(0, 5, 20);
 % n_values = 100:20:600;
 % nb_n = length(n_values);
 
 nbProb = 5; %Number of problems per condition number 
 
-for i = 1:length(condition_number)
+for i = 1:length(rc)
 %     n = n_values(i);
     n = 100;
     m = 10*n;
@@ -46,12 +46,12 @@ for i = 1:length(condition_number)
     gurobi_iter = 0;
     
     for k = 1:nbProb
-        M = sprandn(n,n,5e-1,condition_number(i));
+        M = sprandn(n,n,5e-1, (1/rc(i)));
         Q = M*M';
 
-        A = sprandn(m,n,5e-1, condition_number(i));
-        q = 1*randn(n,1);
-        lb = -1e0*rand(m,1);
+        A = sprandn(m,n,5e-1, (1/rc(i)));
+        q = rc(i)*randn(n,1);
+        lb = -rand(m,1);
         ub = rand(m,1);
 
         prob.Q = Q; prob.A = A; prob.lb = lb; prob.ub = ub; prob.q = q;
