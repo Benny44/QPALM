@@ -14,11 +14,15 @@ For the C version, run qpalm_setup.m.
 
 In progress
 
+## Benchmarks (random QPs)
+
+![](randomQP.png)
+
 ## Contributors
 
 * **Ben Hermans** - *Main developer*
-**Panagiotis Patrinos** **
-**Andreas Themelis** *Theoretical contributions*
+* **Panagiotis Patrinos** - *Codeveloper*
+* **Andreas Themelis** - *Theoretical contributions*
 ## License
 
 TBA
