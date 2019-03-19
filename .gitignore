@@ -15,3 +15,4 @@ lib/
 *.png
 *.eps
 *.oqp
+!randomQP.png
