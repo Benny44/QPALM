@@ -2,15 +2,21 @@ function [ x, timings, iter, status, options ] = compare_QP_solvers( prob, optio
 %Run QPALM (Matlab), QPALM (C), OSQP, qpoases, and GUROBI on the given problem 
 %n times and return the solution and timings
 
-n = 1; %to get an average timing
-t = zeros(n-1,1);
+n = 5; %to get an average timing
+t = zeros(n,1);
 
 VERBOSE = false;
 SCALING_ITER = 10;
 MAXITER = 100000;
-EPS_ABS = 1e-6;
-EPS_REL = 1e-6;
 MAX_TIME = 10000;
+
+if ~isfield(options, 'EPS_ABS')
+    EPS_ABS = 1e-6;
+    EPS_REL = EPS_ABS;
+else
+    EPS_ABS = options.EPS_ABS;
+    EPS_REL = EPS_ABS;
+end
 %% QPALM Matlab
 
 if isfield(options, 'x')
@@ -58,7 +64,7 @@ if options.qpalm_matlab
         opts.gammaMax = 1e6;
         opts.Delta   = 10;
         opts.scaling = 'simple';
-        opts.scaling_iter = SCALING_ITER; opts.scaling_iter = 1;
+        opts.scaling_iter = SCALING_ITER; opts.scaling_iter = 2;
         tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,A,lbA,ubA,x_warm_start,y_warm_start,opts);
         qpalm_time = toc;
         t(k) = qpalm_time;
@@ -88,6 +94,8 @@ if options.qpalm_c
         settings.verbose = VERBOSE;
         settings.scaling = SCALING_ITER;
         settings.max_iter = MAXITER;
+        settings.eps_abs_in = min(EPS_ABS*1e6, 1);
+        settings.eps_rel_in = min(EPS_REL*1e6, 1);
         settings.eps_abs = EPS_ABS;
         settings.eps_rel = EPS_REL;
         settings.delta   = 1.2;
@@ -120,6 +128,7 @@ if options.osqp
         osqp_settings.eps_abs = EPS_ABS;
         osqp_settings.eps_rel = EPS_REL;
         osqp_settings.verbose = VERBOSE;
+        osqp_settings.polish = true;
         solver.setup(prob.Q, prob.q, A,lbA,ubA, osqp_settings);
         res_osqp = solver.solve();
         solver.delete();
