@@ -6,6 +6,7 @@ extern "C" {
 # endif // ifdef __cplusplus
 
 #include "global_opts.h"
+#include "cholmod.h"
 
 /**
  * Array to sort in linesearch
@@ -34,6 +35,7 @@ typedef struct {
   c_float *x;     ///< numerical values, size nzmax
   c_int    nz;    ///< # of entries in triplet matrix, -1 for csc
 } csc;
+
 
 /**
  * Solution structure
@@ -92,9 +94,9 @@ typedef struct {
 typedef struct {
   c_int    n; ///< number of variables n
   c_int    m; ///< number of constraints m
-  csc     *Q; ///< quadratic part of the cost Q in csc format (size n x n). It
+  cholmod_sparse *Q; ///< quadratic part of the cost Q in csc format (size n x n). It
               ///  can be either the full Q or only the upper triangular part. 
-  csc     *A; ///< linear constraints matrix A in csc format (size m x n)
+  cholmod_sparse *A; ///< linear constraints matrix A in csc format (size m x n)
   c_float *q; ///< dense array for linear part of cost function (size n)
   c_float *bmin; ///< dense array for lower bound (size m)
   c_float *bmax; ///< dense array for upper bound (size m)
@@ -145,6 +147,21 @@ typedef struct {
 } QPALMLbfgs;
 
 /**
+ * Variables for linear system solving (cholmod)
+ */
+typedef struct {
+  cholmod_common c;
+  double one [2];
+  cholmod_factor *LD;
+  cholmod_dense *neg_dphi;
+  cholmod_dense *d;
+  cholmod_dense *Ad;
+  cholmod_dense *Qd;
+  cholmod_dense *yh;
+  cholmod_dense *Atyh;
+} QPALMCholmod;
+
+/**
  * QPALM Workspace
  */
 typedef struct {
@@ -181,6 +198,7 @@ typedef struct {
   c_float *x0;         ///< x0, used in proximal method of multipliers
   c_float *xx0;        ///< x-x0
   c_float *dphi;       ///< Gradient Lagrangian
+  c_float *neg_dphi;   ///< -dphi, needed as rhs in Cholmod 
   c_float *dphi_prev;  ///< Previous gradient Lagrangian
   c_float *d;          ///< Step
 
@@ -247,6 +265,7 @@ typedef struct {
 
   /** @} */
 
+  QPALMCholmod  *chol;     ///< Cholmod variables
   QPALMLbfgs    *lbfgs;    ///< LBFGS variables
   QPALMSettings *settings; ///< Problem settings
   QPALMScaling  *scaling;  ///< Scaling vectors

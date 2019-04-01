@@ -100,43 +100,43 @@ void vec_ew_sqrt(const c_float *a,
 /* Premultiply matrix A by diagonal matrix with diagonal d,
    i.e. scale the rows of A by d
  */
-void mat_premult_diag(csc           *A,
-                      const c_float *d);
+// void mat_premult_diag(csc           *A,
+//                       const c_float *d);
 
 /* Premultiply matrix A by diagonal matrix with diagonal d,
    i.e. scale the columns of A by d
  */
-void mat_postmult_diag(csc           *A,
-                       const c_float *d);
+// void mat_postmult_diag(csc           *A,
+//                        const c_float *d);
 
 /* Matrix-vector multiplication
  *    y  =  A*x 
  */
-void mat_vec(const csc     *A,
-             const c_float *x,
-             c_float       *y);
+// void mat_vec(const csc     *A,
+//              const c_float *x,
+//              c_float       *y);
 
 
 /* Matrix-transpose-vector multiplication
  *    y  =  A'*x 
  */
-void mat_tpose_vec(const csc     *A,
-                   const c_float *x,
-                   c_float       *y);
+// void mat_tpose_vec(const csc     *A,
+//                    const c_float *x,
+//                    c_float       *y);
 
 /* Matrix-transpose-vector multiplication while skipping the diagonal
  *    y +=  A'*x  (if plus_eq == 1)
  */
-void mat_tpose_vec_skip_diag_add(const csc     *A,
-                                 const c_float *x,
-                                 c_float       *y);
+// void mat_tpose_vec_skip_diag_add(const csc     *A,
+//                                  const c_float *x,
+//                                  c_float       *y);
 
 /* Matrix-vector multiplication (where only Q's upper triagonal elements are stored)
  *    y  =  Q*x  
  */
-void mat_vec_triu(const csc     *Q,
-                  const c_float *x,
-                  c_float       *y);
+// void mat_vec_triu(const csc     *Q,
+//                   const c_float *x,
+//                   c_float       *y);
 
 /**
  * Infinity norm of each matrix column
@@ -144,8 +144,8 @@ void mat_vec_triu(const csc     *Q,
  * @param E     Vector of infinity norms
  *
  */
-void mat_inf_norm_cols(const csc *M,
-                       c_float   *E);
+// void mat_inf_norm_cols(const csc *M,
+//                        c_float   *E);
 
 /**
  * Infinity norm of each matrix row
@@ -153,8 +153,8 @@ void mat_inf_norm_cols(const csc *M,
  * @param E     Vector of infinity norms
  *
  */
-void mat_inf_norm_rows(const csc *M,
-                       c_float   *E);
+// void mat_inf_norm_rows(const csc *M,
+//                        c_float   *E);
 
 # ifdef __cplusplus
 }

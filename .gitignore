@@ -16,3 +16,6 @@ lib/
 *.eps
 *.oqp
 !randomQP.png
+SuiteSparse
+*.vscode
+*.code-workspace
