@@ -56,17 +56,39 @@ void scale_data(QPALMWorkspace *work) {
     // Q <- DPD, q <- Dq
     prea_vec_copy(work->scaling->D, work->D_temp, work->data->n);
     cholmod_scale(work->chol->D_temp, CHOLMOD_SYM, work->data->Q, &work->chol->c);
-    // mat_premult_diag(work->data->Q, work->scaling->D);
-    // mat_postmult_diag(work->data->Q, work->scaling->D);
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, work->data->n);
+
+    // Cost scaling
+    vec_add_scaled(work->Qx, work->data->q, work->temp_n, 1, work->data->n);
+    work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->temp_n, work->data->n));
+    vec_mult_scalar(work->data->q, work->scaling->c, work->data->n);
+    cholmod_dense *c = cholmod_ones(1,1,CHOLMOD_REAL, &work->chol->c);
+    c_float *cx = c->x;
+    cx[0] = work->scaling->c;
+    cholmod_scale(c, CHOLMOD_SCALAR, work->data->Q, &work->chol->c);
 
     // Store cinv, Dinv, Einv
     vec_ew_recipr(work->scaling->D, work->scaling->Dinv, work->data->n);
     vec_ew_recipr(work->scaling->E, work->scaling->Einv, work->data->m);
-
+    work->scaling->cinv = 1/work->scaling->c;
 
     // Scale problem vectors l, u
     vec_ew_prod(work->scaling->E, work->data->bmin, work->data->bmin, work->data->m);
     vec_ew_prod(work->scaling->E, work->data->bmax, work->data->bmax, work->data->m);
+
+    // Scale initial vectors x, xprev, x0, Qx, Ax, and y if they are warm-started
+    if (work->settings->warm_start) {
+      vec_ew_prod(work->x, work->scaling->Dinv, work->x, work->data->n);
+      prea_vec_copy(work->x, work->x0, work->data->n);
+      prea_vec_copy(work->x, work->x_prev, work->data->n);
+
+      vec_ew_prod(work->Qx, work->scaling->D, work->Qx, work->data->n);
+      vec_mult_scalar(work->Qx, work->scaling->c, work->data->n);
+
+      vec_ew_prod(work->Ax,work->scaling->E, work->Ax, work->data->m);
+
+      vec_ew_prod(work->y, work->scaling->Einv, work->y, work->data->m);
+      vec_mult_scalar(work->y, work->scaling->c, work->data->m);
+    }  
 
 }

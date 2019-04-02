@@ -44,7 +44,7 @@ extern "C" {
 # define MIN_SCALING (1e-08) ///< Minimum scaling value
 # define MAX_SCALING (1e+04) ///< Maximum scaling value
 
-# define WARM_START (1)
+# define WARM_START (0)
 # define VERBOSE (1)
 
 

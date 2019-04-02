@@ -58,7 +58,8 @@ typedef struct {
   c_float *Dinv; ///< primal variable rescaling
   c_float *E;    ///< dual variable scaling
   c_float *Einv; ///< dual variable rescaling
-  
+  c_float c;     ///< objective scaling
+  c_float cinv;  ///< objective rescaling
 } QPALMScaling;
 
 

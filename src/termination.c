@@ -16,6 +16,7 @@ c_int check_termination(QPALMWorkspace *work) {
         update_status(work->info, QPALM_PRIMAL_INFEASIBLE);
         if (work->settings->scaling) {
             vec_ew_prod(work->scaling->E, work->delta_y, work->delta_y, work->data->m);
+            vec_mult_scalar(work->y, work->scaling->cinv, work->data->m);
         }
         return 1;
     } else if (is_dual_infeasible(work)) {
@@ -57,7 +58,10 @@ void calculate_dual_residual(QPALMWorkspace *work) {
             vec_ew_prod(work->scaling->Dinv, work->dphi, work->temp_n, work->data->n);
             work->info->dua_res_norm = vec_norm_inf(work->temp_n, work->data->n);
             work->info->dua2_res_norm = work->info->dua_res_norm;
-        }     
+        } 
+        work->info->dua_res_norm *= work->scaling->cinv;
+        work->info->dua2_res_norm *= work->scaling->cinv;
+            
     } else {
         if (work->settings->proximal) {
             vec_add_scaled(work->dphi, work->xx0, work->temp_n, -1/work->settings->gamma, work->data->n);
@@ -98,6 +102,7 @@ void calculate_dual_tolerances(QPALMWorkspace *work) {
     }
     
     max_norm = c_max(norm_DinvQx, c_max(norm_Dinvq, norm_DinvAtyh));
+    if (work->settings->scaling) max_norm *= work->scaling->cinv;
 
     work->eps_dua = work->settings->eps_abs + work->settings->eps_rel*max_norm;
     work->eps_dua_in = work->settings->eps_abs_in + work->settings->eps_rel_in*max_norm;
@@ -184,8 +189,8 @@ c_int is_dual_infeasible(QPALMWorkspace *work) {
     //NB Qdx = work->Qd (= tau*Qd of the previous iteration)
     if (work->settings->scaling) {
         vec_ew_prod(work->scaling->Dinv, work->Qd, work->temp_n, work->data->n);
-        return (vec_norm_inf(work->temp_n, work->data->n) <= eps_dinf_norm_Ddx)
-            && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -eps_dinf_norm_Ddx);
+        return (vec_norm_inf(work->temp_n, work->data->n) <= work->scaling->c*eps_dinf_norm_Ddx)
+            && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -work->scaling->c*eps_dinf_norm_Ddx);
     } else {
         return (vec_norm_inf(work->Qd, work->data->n) <= eps_dinf_norm_Ddx)
             && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -eps_dinf_norm_Ddx);
@@ -197,6 +202,7 @@ void store_solution(QPALMWorkspace *work) {
     if (work->settings->scaling) {
         vec_ew_prod(work->x, work->scaling->D, work->solution->x, work->data->n);
         vec_ew_prod(work->yh, work->scaling->E, work->solution->y, work->data->m);
+        vec_mult_scalar(work->yh, work->scaling->cinv, work->data->m);
     } else {
         prea_vec_copy(work->x, work->solution->x, work->data->n);
         prea_vec_copy(work->yh, work->solution->y, work->data->m);
