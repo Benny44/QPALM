@@ -36,7 +36,7 @@ extern "C" {
 # define MEMORY (10)
 
 # define PROXIMAL (1)
-# define GAMMA (1E4)
+# define GAMMA (1E6)
 # define GAMMA_UPD (10)
 # define GAMMA_MAX (1E8)
 

@@ -140,8 +140,13 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     if (work->settings->proximal) {
         vec_add_scaled(work->Qd, work->d, work->Qd, 1/work->settings->gamma, work->data->n);
     }
+    
     //Ad
     mat_vec(work->data->A, work->chol->d, work->chol->Ad, &work->chol->c);
+    // for (int i =0; i<work->data->m; i++) {
+    //   printf("%.10f ", work->Ad[i]);
+    // }
+    // printf("\n");
     //eta = d'*Qd
     work->eta = vec_prod(work->d, work->Qd, work->data->n);
     //beta = d'*df

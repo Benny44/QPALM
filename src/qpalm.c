@@ -240,6 +240,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
   for (iter = 0; iter < work->settings->max_iter; iter++) {
 
+    
     //Axys = Ax + y./sigma
     vec_ew_div(work->y, work->sigma, work->temp_m, m);
     vec_add_scaled(work->Ax, work->temp_m, work->Axys, 1, m);
@@ -247,6 +248,8 @@ void qpalm_solve(QPALMWorkspace *work) {
     vec_ew_mid_vec(work->Axys, work->data->bmin, work->data->bmax, work->z, m);
     //pri_res = Ax-z
     vec_add_scaled(work->Ax, work->z, work->pri_res, -1, m);
+
+
     //yh = y + pri_res.*sigma
     vec_ew_prod(work->pri_res, work->sigma, work->temp_m, m);
     vec_add_scaled(work->y, work->temp_m, work->yh, 1, m);
@@ -255,17 +258,15 @@ void qpalm_solve(QPALMWorkspace *work) {
     vec_add_scaled(work->Qx, work->data->q, work->df, 1, n);
     if (work->settings->proximal) {
       //df = Qx + q +1/gamma*(x-x0)
-      vec_add_scaled(work->x, work->x0, work->xx0, -1, n);
-      vec_add_scaled(work->df, work->xx0, work->df, 1/work->settings->gamma, n);
+      // NB work->Qx contains Qx+1/gamma*x
+      vec_add_scaled(work->df, work->x0, work->df, -1/work->settings->gamma, n);
     }
     // Atyh = A'*yh
     mat_tpose_vec(work->data->A, work->chol->yh, work->chol->Atyh, &work->chol->c);
     //dphi = df+Atyh
     vec_add_scaled(work->df, work->Atyh, work->dphi, 1, n);
-    for (int i = 0; i < work->data->n; i++) {
-      printf("%f ", work->dphi[i]);
-    }
-    printf("\n");
+    
+
     if (check_termination(work)) {
       work->info->iter = iter;
       work->info->iter_out = iter_out;
