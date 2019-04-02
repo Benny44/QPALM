@@ -153,6 +153,8 @@ typedef struct {
   cholmod_common c;
   double one [2];
   cholmod_factor *LD;
+  cholmod_dense *E_temp;
+  cholmod_dense *D_temp;
   cholmod_dense *neg_dphi;
   cholmod_dense *d;
   cholmod_dense *Ad;

@@ -109,8 +109,8 @@ int main() {
   // c_float bmin[3]   =   {-QPALM_INFTY, -QPALM_INFTY, 1.0};
   // c_float bmax[3] =   {1.0, 1.0, 1.0};
 
-  c_int n = 50;
-  c_int m = 300;
+  c_int n = 3;
+  c_int m = 5;
 
 
 
@@ -126,11 +126,24 @@ int main() {
   data->n = n;
   data->m = m;
   //data->Q = csc_matrix(data->n, data->n, Q_nnz, Q_x, Q_i, Q_p);
-  data->Q = random_matrix(data->n, data->n, 1e-1);
+  // data->Q = random_matrix(data->n, data->n, 1e-1);
+  cholmod_dense *Q_dense, *A_dense;
+
+  cholmod_common c;
+  cholmod_start(&c);
+
+
+  Q_dense = cholmod_ones(n, n, CHOLMOD_REAL, &c);
+  data->Q = cholmod_dense_to_sparse(Q_dense, 1, &c);
   data->q = random_vector(data->n);
+  // for (int i = 0; i < data->n; i++) {
+  //   printf(" %.20f", data->q[i]);
+  // }
   //data->q = q;
   //data->A = csc_matrix(data->m, data->n, A_nnz, A_x, A_i, A_p);
-  data->A = random_matrix(data->m, data->n, 1e-1);
+  // data->A = random_matrix(data->m, data->n, 1e-1);
+  A_dense = cholmod_ones(m, n, CHOLMOD_REAL, &c);
+  data->A = cholmod_dense_to_sparse(A_dense, 1, &c);
   data->bmin = constant_vector(-2, data->m);
   data->bmax = constant_vector(2, data->m);
 
@@ -139,7 +152,7 @@ int main() {
   qpalm_set_default_settings(settings);
 
   // Setup workspace
-  work = qpalm_setup(data, settings);
+  work = qpalm_setup(data, settings, &c);
 
   // Solve Problem
   qpalm_solve(work);
@@ -158,15 +171,22 @@ int main() {
   printf("Run time: %f\n", work->info->run_time);
   #endif
   // Clean workspace
+  
+  cholmod_free_dense(&Q_dense, &c);
+  cholmod_free_dense(&A_dense, &c);
+  cholmod_free_sparse(&data->Q, &c);
+  cholmod_free_sparse(&data->A, &c);
   qpalm_cleanup(work);
-  csc_spfree(data->A);
-  csc_spfree(data->Q);
+  // csc_spfree(data->A);
+  // csc_spfree(data->Q);
   c_free(data->q);
   c_free(data->bmin);
   c_free(data->bmax);
   c_free(data);
   c_free(settings);
 
+
+  // cholmod_finish(&work->chol->c);
     return 0;
 
 }

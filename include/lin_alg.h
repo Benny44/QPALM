@@ -7,6 +7,7 @@ extern "C" {
 # endif // ifdef __cplusplus
 
 # include "types.h"
+#include "cholmod_interface.h"
 
 
 /* VECTOR FUNCTIONS ----------------------------------------------------------*/

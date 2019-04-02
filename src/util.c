@@ -154,9 +154,9 @@ c_float qpalm_toc(QPALMTimer *t)
 // Linux
 # elif defined __linux__  /* ifdef _WIN32 */
 /* read current time */
+
 void qpalm_tic(QPALMTimer *t)
 {
-  printf("defined linux in tic\n");
   clock_gettime(CLOCK_MONOTONIC, &t->tic);
 }
 

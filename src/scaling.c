@@ -1,4 +1,5 @@
 #include "scaling.h"
+#include "cholmod.h"
 #include <stdio.h>
 
 // Set values lower than threshold MIN_SCALING to 1 and larger than MAX_SCALING to MAX_SCALING
@@ -40,8 +41,10 @@ void scale_data(QPALMWorkspace *work) {
 
         // Equilibrate matrix A
         // A <- EAD
-        mat_premult_diag(work->data->A, work->E_temp);
-        mat_postmult_diag(work->data->A, work->D_temp);
+        // mat_premult_diag(work->data->A, work->E_temp);
+        // mat_postmult_diag(work->data->A, work->D_temp);
+        cholmod_scale(work->chol->E_temp, CHOLMOD_ROW, work->data->A, &work->chol->c);
+        cholmod_scale(work->chol->D_temp, CHOLMOD_COL, work->data->A, &work->chol->c);
 
         // Update equilibration matrices D and E
         vec_ew_prod(work->scaling->D, work->D_temp, work->scaling->D, work->data->n);
@@ -51,8 +54,10 @@ void scale_data(QPALMWorkspace *work) {
 
     // Equilibrate matrix Q and vector q
     // Q <- DPD, q <- Dq
-    mat_premult_diag(work->data->Q, work->scaling->D);
-    mat_postmult_diag(work->data->Q, work->scaling->D);
+    prea_vec_copy(work->scaling->D, work->D_temp, work->data->n);
+    cholmod_scale(work->chol->D_temp, CHOLMOD_SYM, work->data->Q, &work->chol->c);
+    // mat_premult_diag(work->data->Q, work->scaling->D);
+    // mat_postmult_diag(work->data->Q, work->scaling->D);
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, work->data->n);
 
     // Store cinv, Dinv, Einv

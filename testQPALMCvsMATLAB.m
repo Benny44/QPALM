@@ -1,29 +1,30 @@
 clear;close all;clc
-m = 2000;n = 200;
+m = 5;n = 3;
 rng(1)
-A = sprandn(m, n, 1e-1,1e-4); 
+% A = sprandn(m, n, 1e-1,1e-4); 
+A = sparse(ones(m,n));
 lb = -2*ones(m,1);
 ub =  2*ones(m,1);
-Q = sprandsym(n, 1e-1, 1e-4, 1); %Q=sparse(n,n);
-q = 10*randn(n,1);
+Q = sparse(ones(n,n));
+% Q = sprandsym(n, 1e-1, 1e-4, 1); %Q=sparse(n,n);
+% q = 10*randn(n,1);
+q = [8.40187717154709545753 3.94382926819093038162 7.83099223758605855750]';
 
-% load('problematic')
-% load('O3check')
 %% QPALM C
 % 
 solver = qpalm;
 settings = solver.default_settings();
 % settings.verbose = true;
-settings.proximal = false;
+settings.proximal = true;
 settings.scaling = 10;
 settings.max_iter = 200;
 settings.eps_abs = 1e-4;
 settings.eps_rel = 1e-4;
 settings.tau_init = 1.5;
-solver.setup(Q, q, A, lb, ub, settings);
-tic
-res = solver.solve();
-QPALMtime = toc
+% solver.setup(Q, q, A, lb, ub, settings);
+% tic
+% res = solver.solve();
+% QPALMtime = toc
 %% Quadprog
 
 % tic
@@ -46,8 +47,8 @@ opts.theta   = settings.theta;
 opts.scaling = 'simple';
 opts.scaling_iter = settings.scaling;
 
-% opts.solver  = 'lbfgs';
-opts.solver = 'newton';
+opts.solver  = 'lbfgs';
+% opts.solver = 'newton';
 opts.scalar_sig = false;
 opts.lbfgs_precon = false;
 opts.proximal = settings.proximal;
@@ -72,23 +73,23 @@ display(stats_qpalm.status)
 % QPALMobj = 1/2*x_qpalm'*Q*x_qpalm + q'*x_qpalm;
 % QPALMobj2 = 1/2*x_qpalm2'*Q*x_qpalm2 + q'*x_qpalm2;
 % 
-QPALMCfeas = norm([min(A*res.x-lb,0);min(ub-A*res.x,0)],inf);
-QPALMfeas = norm([min(A*x_qpalm-lb,0);min(ub-A*x_qpalm,0)],inf);
-QPALMCobj = 1/2*res.x'*Q*res.x + q'*res.x;
-QPALMobj = 1/2*x_qpalm'*Q*x_qpalm + q'*x_qpalm;
-
-fprintf('           |   QPALM (C)   |   QPALM  \n')
-fprintf('Iterations |   %3d      |    %3d   \n',...
-    res.info.iter,...
-    stats_qpalm.iter...
-    )
-fprintf('Violation  | %3.2e |  %3.2e \n', ...
-    QPALMCfeas, ...
-    QPALMfeas...
-    )
-fprintf('Objective  | %3.2e |  %3.2e \n', ...
-    QPALMCobj, ...
-    QPALMobj...    
-    )
+% QPALMCfeas = norm([min(A*res.x-lb,0);min(ub-A*res.x,0)],inf);
+% QPALMfeas = norm([min(A*x_qpalm-lb,0);min(ub-A*x_qpalm,0)],inf);
+% QPALMCobj = 1/2*res.x'*Q*res.x + q'*res.x;
+% QPALMobj = 1/2*x_qpalm'*Q*x_qpalm + q'*x_qpalm;
+% 
+% fprintf('           |   QPALM (C)   |   QPALM  \n')
+% fprintf('Iterations |   %3d      |    %3d   \n',...
+%     res.info.iter,...
+%     stats_qpalm.iter...
+%     )
+% fprintf('Violation  | %3.2e |  %3.2e \n', ...
+%     QPALMCfeas, ...
+%     QPALMfeas...
+%     )
+% fprintf('Objective  | %3.2e |  %3.2e \n', ...
+%     QPALMCobj, ...
+%     QPALMobj...    
+%     )
 
 

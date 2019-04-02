@@ -12,16 +12,38 @@ extern "C" {
 /* Matrix-vector multiplication
  *    y  =  A*x 
  */
-void mat_vec(const cholmod_sparse *A,
-             const cholmod_dense  *x,
-             cholmod_dense        *y);
+void mat_vec(cholmod_sparse *A,
+             cholmod_dense  *x,
+             cholmod_dense        *y,
+             cholmod_common       *c);
 
 /* Matrix-transpose-vector multiplication
  *    y  =  A'*x 
  */
-void mat_tpose_vec(const cholmod_sparse *A,
-                   const cholmod_dense  *x,
-                   cholmod_dense        *y);
+void mat_tpose_vec(cholmod_sparse *A,
+                   cholmod_dense  *x,
+                   cholmod_dense        *y,
+                   cholmod_common       *c);
+
+/**
+ * Infinity norm of each matrix column
+ * @param M	Input matrix
+ * @param E     Vector of infinity norms
+ *
+ */
+void mat_inf_norm_cols(cholmod_sparse *M,
+                       c_float   *E);
+
+/**
+ * Infinity norm of each matrix row
+ * @param M	Input matrix
+ * @param E     Vector of infinity norms
+ *
+ */
+void mat_inf_norm_rows(cholmod_sparse *M,
+                       c_float   *E);
+
+
 
 
 # ifdef __cplusplus

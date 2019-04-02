@@ -4,12 +4,13 @@
 
 c_float exact_linesearch_newton(QPALMWorkspace *work){
     //Qd
-    mat_vec_triu(work->data->Q, work->d, work->Qd);
+    // mat_vec_triu(work->data->Q, work->d, work->Qd);
+    mat_vec(work->data->Q, work->chol->d, work->chol->Qd, &work->chol->c);
     if (work->settings->proximal) {
         vec_add_scaled(work->Qd, work->d, work->Qd, 1/work->settings->gamma, work->data->n);
     }
     //Ad
-    mat_vec(work->data->A, work->d, work->Ad);
+    mat_vec(work->data->A, work->chol->d, work->chol->Ad, &work->chol->c);
     //eta = d'*Qd
     work->eta = vec_prod(work->d, work->Qd, work->data->n);
     //beta = d'*df
@@ -90,12 +91,13 @@ c_float exact_linesearch_newton(QPALMWorkspace *work){
 
 c_float armijo_linesearch(QPALMWorkspace *work) {
     //Qd
-    mat_vec_triu(work->data->Q, work->d, work->Qd);
+    // mat_vec_triu(work->data->Q, work->d, work->Qd);
+    mat_vec(work->data->Q, work->chol->d, work->chol->Qd, &work->chol->c);
     if (work->settings->proximal) {
         vec_add_scaled(work->Qd, work->d, work->Qd, 1/work->settings->gamma, work->data->n);
     }
     //Ad
-    mat_vec(work->data->A, work->d, work->Ad);
+    mat_vec(work->data->A, work->chol->d, work->chol->Ad, &work->chol->c);
 
     c_float c1 = 1e-4; //TODO: make this a setting
     c_float rhs, lhs, dQd, ddf, dist2;
@@ -133,12 +135,13 @@ c_float armijo_linesearch(QPALMWorkspace *work) {
 c_float exact_linesearch(QPALMWorkspace *work) {
 
     //Qd
-    mat_vec_triu(work->data->Q, work->d, work->Qd);
+    // mat_vec_triu(work->data->Q, work->d, work->Qd);
+    mat_vec(work->data->Q, work->chol->d, work->chol->Qd, &work->chol->c);
     if (work->settings->proximal) {
         vec_add_scaled(work->Qd, work->d, work->Qd, 1/work->settings->gamma, work->data->n);
     }
     //Ad
-    mat_vec(work->data->A, work->d, work->Ad);
+    mat_vec(work->data->A, work->chol->d, work->chol->Ad, &work->chol->c);
     //eta = d'*Qd
     work->eta = vec_prod(work->d, work->Qd, work->data->n);
     //beta = d'*df
