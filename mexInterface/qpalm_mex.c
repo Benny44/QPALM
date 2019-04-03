@@ -206,6 +206,11 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
          if (data->q) mxFree(data->q);
          if (data->bmin) mxFree(data->bmin);
          if (data->bmax) mxFree(data->bmax);
+         if (data->A->p) mxFree(data->A->p);
+         if (data->A->i) mxFree(data->A->i);
+         if (data->Q->p) mxFree(data->Q->p);
+         if (data->Q->i) mxFree(data->Q->i);
+         //Don't free data->A and data->Q because they are only a shallow copy
          mxFree(data);
          // Settings
          mxFree(settings);
