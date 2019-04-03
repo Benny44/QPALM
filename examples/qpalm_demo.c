@@ -153,9 +153,13 @@ int main() {
 
   // Setup workspace
   work = qpalm_setup(data, settings, &c);
+  cholmod_finish(&c);
 
   // Solve Problem
+  cholmod_start(&work->chol->c);
   qpalm_solve(work);
+  cholmod_finish(&work->chol->c);
+  cholmod_start(&work->chol->c);
 
   printf("Solver status: ");
   printf(work->info->status);

@@ -3,6 +3,7 @@
 #include "qpalm.h"
 #include "cs.h"
 #include "constants.h"
+#include "cholmod.h"
 
 //Modes of operation
 #define MODE_INIT "new"
@@ -85,7 +86,7 @@ mxArray*  copySettingsToMxStruct(QPALMSettings* settings);
 mxArray*  copyInfoToMxStruct(QPALMInfo* info);
 c_int*    copyToCintVector(mwIndex * vecData, c_int numel);
 c_float*  copyToCfloatVector(double * vecData, c_int numel);
-
+cholmod_sparse *mx_get_sparse (const mxArray *Amatlab, cholmod_sparse *A, double *dummy, int stype);
 
 
 /**
@@ -130,6 +131,7 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         
         //clean up the problem workspace
         if(qpalm_work != NULL){
+            cholmod_start(&qpalm_work->chol->c);
             qpalm_cleanup(qpalm_work);
             qpalm_work = NULL;
         }
@@ -170,17 +172,17 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         data->bmin = copyToCfloatVector(mxGetPr(bmin), data->m);
         data->bmax = copyToCfloatVector(mxGetPr(bmax), data->m);
 
-        // Matrix Q:  nnz = Q->p[n]
-        c_int * Qp = copyToCintVector(mxGetJc(Q), data->n + 1);
-        c_int * Qi = copyToCintVector(mxGetIr(Q), Qp[data->n]);
-        c_float * Qx = copyToCfloatVector(mxGetPr(Q), Qp[data->n]);
-        data->Q  = csc_matrix(data->n, data->n, Qp[data->n], Qx, Qi, Qp);
+        // Convert matrices from matlab to cholmod_sparse
+        double dummy = 0; 
+        cholmod_sparse Amatrix, Qmatrix;
+        cholmod_common c, *cm;
+        cm = &c;
+        cholmod_start(cm);
+        cm->metis_memory=0.0;
+        cm->print=-1;
 
-        // Matrix A: nnz = A->p[n]
-        c_int * Ap = copyToCintVector(mxGetJc(A), data->n + 1);
-        c_int * Ai = copyToCintVector(mxGetIr(A), Ap[data->n]);
-        c_float * Ax = copyToCfloatVector(mxGetPr(A), Ap[data->n]);
-        data->A  = csc_matrix(data->m, data->n, Ap[data->n], Ax, Ai, Ap);
+        data->A = mx_get_sparse(A, &Amatrix, &dummy, 0);
+        data->Q = mx_get_sparse(Q, &Qmatrix, &dummy, 0);
 
         // Create Settings
         const mxArray* mxSettings = prhs[8];
@@ -193,8 +195,8 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         }
 
         // Setup workspace
+        qpalm_work = qpalm_setup(data, settings, &c);
 
-        qpalm_work = qpalm_setup(data, settings);
         if(qpalm_work == NULL){
            mexErrMsgTxt("Invalid problem setup");
          }
@@ -204,15 +206,11 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
          if (data->q) mxFree(data->q);
          if (data->bmin) mxFree(data->bmin);
          if (data->bmax) mxFree(data->bmax);
-         if (Qx) mxFree(Qx);
-         if (Qi) mxFree(Qi);
-         if (Qp) mxFree(Qp);
-         if (Ax) mxFree(Ax);
-         if (Ai) mxFree(Ai);
-         if (Ap) mxFree(Ap);
          mxFree(data);
          // Settings
          mxFree(settings);
+         
+         cholmod_finish(&c);
         return;
 
 
@@ -224,9 +222,10 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         if(!qpalm_work){
             mexErrMsgTxt("No problem data has been given.");
         }
-        // solve the problem
+        
+        cholmod_start(&qpalm_work->chol->c);
         qpalm_solve(qpalm_work);
-
+        cholmod_finish(&qpalm_work->chol->c);
 
         // Allocate space for solution
         // primal variables
@@ -283,12 +282,7 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
             qpalm_work->info->obj_val = -mxGetInf();
         }
 
-        // if (qpalm_work->info->status_val == QPALM_NON_CVX) {
-        //     qpalm_work->info->obj_val = mxGetNaN();
-        // }
-
         plhs[4] = copyInfoToMxStruct(qpalm_work->info); // Info structure
-
         return;
 
 
@@ -346,6 +340,53 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         //mexErrMsgIdAndTxt(PANOC_ERROR_RHS_OUT_OF_BOUNDS, "Invalid PANOC mode");
     }
 
+}
+
+cholmod_sparse *mx_get_sparse
+(
+    const mxArray *Amatlab, /* MATLAB version of the matrix */
+    cholmod_sparse *A,	    /* CHOLMOD version of the matrix */
+    double *dummy,	    /* a pointer to a valid scalar double */
+    int stype		    /* -1: lower, 0: unsymmetric, 1: upper */
+)
+{
+    // int *Ap ;
+    
+    A->nrow = mxGetM (Amatlab) ;
+    A->ncol = mxGetN (Amatlab) ;
+    
+    c_int *Ap, *Ai;
+    Ap = copyToCintVector(mxGetJc (Amatlab), A->ncol + 1);
+    Ai = copyToCintVector(mxGetIr (Amatlab), Ap[A->ncol]);
+
+    A->p = Ap;
+    A->i = Ai;
+
+    A->nzmax = Ap [A->ncol] ;
+    A->packed = 1 ;
+    A->sorted = 1 ;
+    A->nz = NULL ;
+    A->itype = CHOLMOD_INT ;       
+    A->dtype = CHOLMOD_DOUBLE ;
+    A->stype = stype ;
+
+    if (mxIsEmpty (Amatlab)){
+        /* this is not dereferenced, but the existence (non-NULL) of these
+        * pointers is checked in CHOLMOD */
+        A->x = dummy ; 
+        A->z = dummy ;
+        A->xtype = mxIsComplex (Amatlab) ? CHOLMOD_ZOMPLEX : CHOLMOD_REAL ;
+    }
+    else if (mxIsDouble (Amatlab)){
+        // c_float *Ax;
+        // Ax = copyToCfloatVector(mxGetPr (Amatlab), Ap[A->ncol]);
+        // A->x = Ax;
+        A->x = mxGetPr (Amatlab) ;
+        A->z = mxGetPi (Amatlab) ;
+        A->xtype = mxIsComplex (Amatlab) ? CHOLMOD_ZOMPLEX : CHOLMOD_REAL ;
+    }
+
+    return (A); 
 }
 
 void castToDoubleArr(c_float *arr, double* arr_out, c_int len) {

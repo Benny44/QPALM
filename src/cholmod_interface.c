@@ -3,12 +3,14 @@
 
 void mat_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, cholmod_common *c) {
     double one [2] = {1,0};
-    cholmod_sdmult(A, 0, one, one, x, y, c);
+    double zero [2] = {0,0};
+    cholmod_sdmult(A, 0, one, zero, x, y, c);
 }
 
 void mat_tpose_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, cholmod_common *c) {
     double one [2] = {1,0};
-    cholmod_sdmult(A, 1, one, one, x, y, c);
+    double zero [2] = {0,0};
+    cholmod_sdmult(A, 1, one, zero, x, y, c);
 }
 
 void mat_inf_norm_cols(cholmod_sparse *M, c_float *E) {

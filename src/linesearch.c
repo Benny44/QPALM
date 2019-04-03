@@ -72,7 +72,6 @@ c_float exact_linesearch_newton(QPALMWorkspace *work){
         intercept = work->beta;
         slope = work->eta;
         for (c_int i = 0; i < work->data->m*2; i++) {
-            // printf(" %d\n", ((work->index_P[i] && (tau > work->temp_2m[i])) || (work->index_J[i] && (tau < work->temp_2m[i]))));
             // if ((work->index_P[i] && (tau > work->temp_2m[i])) || (work->index_J[i] && (tau < work->temp_2m[i]))) {
             //     intercept -= work->delta_alpha[i];
             //     slope     += work->delta2[i];
@@ -91,7 +90,6 @@ c_float exact_linesearch_newton(QPALMWorkspace *work){
 
 c_float armijo_linesearch(QPALMWorkspace *work) {
     //Qd
-    // mat_vec_triu(work->data->Q, work->d, work->Qd);
     mat_vec(work->data->Q, work->chol->d, work->chol->Qd, &work->chol->c);
     if (work->settings->proximal) {
         vec_add_scaled(work->Qd, work->d, work->Qd, 1/work->settings->gamma, work->data->n);
@@ -124,29 +122,20 @@ c_float armijo_linesearch(QPALMWorkspace *work) {
                         *(work->Axys[i] + tau*work->Ad[i] - work->data->bmin[i]);
             }
         }
-        // printf("lhs: %f\n", lhs);
     } while (lhs > tau*rhs);
 
-    // printf("lhs: %f, rhs: %f\n", lhs, rhs);
-    // printf("tau: %f\n", tau);
     return tau;    
 }
 
 c_float exact_linesearch(QPALMWorkspace *work) {
 
     //Qd
-    // mat_vec_triu(work->data->Q, work->d, work->Qd);
     mat_vec(work->data->Q, work->chol->d, work->chol->Qd, &work->chol->c);
     if (work->settings->proximal) {
         vec_add_scaled(work->Qd, work->d, work->Qd, 1/work->settings->gamma, work->data->n);
     }
-    
     //Ad
     mat_vec(work->data->A, work->chol->d, work->chol->Ad, &work->chol->c);
-    // for (int i =0; i<work->data->m; i++) {
-    //   printf("%.10f ", work->Ad[i]);
-    // }
-    // printf("\n");
     //eta = d'*Qd
     work->eta = vec_prod(work->d, work->Qd, work->data->n);
     //beta = d'*df
@@ -183,7 +172,7 @@ c_float exact_linesearch(QPALMWorkspace *work) {
             work->index_L[i] = 0;
         }     
     };
-    // printf("nL: %d\n", (int) nL);
+
     //s = s(indL)
     select_subsequence(work->s, work->s, work->index_L, work->data->m*2);
 

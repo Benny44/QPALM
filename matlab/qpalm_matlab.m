@@ -335,7 +335,7 @@ for k = 1:maxiter
               lbfgs_y = dphi-dphi_prev;
 
               lbfgs_ys  = lbfgs_y'*lbfgs_s;
-
+              
               if abs(lbfgs_ys) >= 1e-8*norm(lbfgs_s,inf)*norm(lbfgs_y,inf)
                   
                   if mem == memory

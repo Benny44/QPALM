@@ -16,7 +16,7 @@ end
 %% Build QPALM library
 
 system('make clean');
-system('make');
+system('make lib');
 
 %% Mex interface
 mex_path = fullfile(current_path, 'mexInterface');
@@ -29,6 +29,13 @@ system(remove_existing_mex);
 error_msg = 'The C compiler could not succesfully compile ';
 if mex('-outdir', mex_path, fullfile(mex_path,'qpalm_mex.c'),...
         '-Iinclude', '-lqpalm','-Llib', '-lm', '-largeArrayDims',...
+        '-ISuiteSparse/include', '-LSuiteSparse/lib',...
+        '-lcholmod', '-lamd', '-lcolamd', '-lsuitesparseconfig',...
         'CFLAGS="\$CFLAGS -std=c99 -fPIC -DMATLAB -O3 -DPROFILING -DPRINTING"')
     error([error_msg, mex_path]);
 end
+   
+ 
+ 
+ 
+ 

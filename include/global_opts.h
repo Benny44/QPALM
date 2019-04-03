@@ -6,7 +6,7 @@ extern "C" {
 # endif /* ifdef __cplusplus */
 
 typedef double c_float; /* doubles for numerical values  */
-typedef long c_int; /* for indices */
+typedef int c_int; /* for indices */
 
 /* DATA CUSTOMIZATIONS (depending on memory manager)-----------------------   */
 #  include <stdlib.h>

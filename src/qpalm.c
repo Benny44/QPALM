@@ -83,15 +83,15 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->chol->c = *c;
 
   // Copy problem data into workspace
-  work->data       = c_malloc(sizeof(QPALMData));
+  work->data       = c_calloc(1, sizeof(QPALMData));
   work->data->n    = data->n;                             // Number of variables
   work->data->m    = data->m;                             // Number of linear constraints
-  work->data->Q    = cholmod_copy_sparse(data->Q, &work->chol->c);                // Cost function matrix
-  work->data->q    = vec_copy(data->q, n);          // Linear part of cost function
-  work->data->A    = cholmod_copy_sparse(data->A, &work->chol->c);               // Linear constraints matrix
-
   work->data->bmin = vec_copy(data->bmin, m);       // Lower bounds on constraints
   work->data->bmax = vec_copy(data->bmax, m);       // Upper bounds on constraints
+  work->data->q    = vec_copy(data->q, n);          // Linear part of cost function
+  work->data->A    = cholmod_copy_sparse(data->A, &work->chol->c);               // Linear constraints matrix
+  work->data->Q    = cholmod_copy_sparse(data->Q, &work->chol->c);                // Cost function matrix
+  
 
   // Allocate internal solver variables 
   work->x        = c_calloc(n, sizeof(c_float));
@@ -177,6 +177,40 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   else {
     work->scaling = QPALM_NULL;
   }
+  // printf("Scaled Q\n");
+  // c_float *Qx;
+  // Qx = work->data->Q->x;
+  // for (int i = 0; i < work->data->Q->nzmax; i++) {
+  //     printf("%.10f ", Qx[i]);
+  // }
+  // printf("\n");
+
+  // c_int *Qp;
+  // Qp = work->data->Q->p;
+  // for (int i = 0; i < work->data->Q->ncol+1; i++) {
+  //     printf("%d ", Qp[i]);
+  // }
+  // printf("\n");
+
+  // c_int *Qi;
+  // Qi = work->data->Q->i;
+  // for (int i = 0; i < work->data->Q->nzmax; i++) {
+  //     printf("%d ", Qi[i]);
+  // }
+  // printf("\n");
+  // for (int i = 0; i< work->data->n; i++) {
+  //   printf("%.10f ", work->data->q[i]);
+  // }
+  // printf("\n");
+
+  // for (int i = 0; i< work->data->m; i++) {
+  //     printf("%.10f ", work->data->bmin[i]);
+  //   }
+  //   printf("\n");
+  // for (int i = 0; i< work->data->m; i++) {
+  //     printf("%.10f ", work->data->bmax[i]);
+  //   }
+  // printf("\n");
 
   // LBFGS variables
   work->lbfgs              = c_calloc(1, sizeof(QPALMLbfgs));
@@ -240,7 +274,6 @@ void qpalm_solve(QPALMWorkspace *work) {
 
   for (iter = 0; iter < work->settings->max_iter; iter++) {
 
-    
     //Axys = Ax + y./sigma
     vec_ew_div(work->y, work->sigma, work->temp_m, m);
     vec_add_scaled(work->Ax, work->temp_m, work->Axys, 1, m);
@@ -248,12 +281,9 @@ void qpalm_solve(QPALMWorkspace *work) {
     vec_ew_mid_vec(work->Axys, work->data->bmin, work->data->bmax, work->z, m);
     //pri_res = Ax-z
     vec_add_scaled(work->Ax, work->z, work->pri_res, -1, m);
-
-
     //yh = y + pri_res.*sigma
     vec_ew_prod(work->pri_res, work->sigma, work->temp_m, m);
     vec_add_scaled(work->y, work->temp_m, work->yh, 1, m);
-
     //df = Qx + q
     vec_add_scaled(work->Qx, work->data->q, work->df, 1, n);
     if (work->settings->proximal) {
@@ -265,8 +295,8 @@ void qpalm_solve(QPALMWorkspace *work) {
     mat_tpose_vec(work->data->A, work->chol->yh, work->chol->Atyh, &work->chol->c);
     //dphi = df+Atyh
     vec_add_scaled(work->df, work->Atyh, work->dphi, 1, n);
-    
-
+  
+  
     if (check_termination(work)) {
       work->info->iter = iter;
       work->info->iter_out = iter_out;
@@ -307,6 +337,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       // d=newton()
 
       tau = exact_linesearch(work);
+
       // tau = armijo_linesearch(work);
       // tau = exact_linesearch_newton(work);
       //x_prev = x
