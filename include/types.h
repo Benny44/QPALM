@@ -152,7 +152,6 @@ typedef struct {
  */
 typedef struct {
   cholmod_common c;
-  double one [2];
   cholmod_factor *LD;
   cholmod_dense *E_temp;
   cholmod_dense *D_temp;
@@ -162,6 +161,9 @@ typedef struct {
   cholmod_dense *Qd;
   cholmod_dense *yh;
   cholmod_dense *Atyh;
+  c_int *active_constraints;
+  c_int *active_constraints_old;
+  c_int nb_active_constraints;
 } QPALMCholmod;
 
 /**

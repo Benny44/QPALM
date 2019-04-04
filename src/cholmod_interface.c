@@ -50,3 +50,16 @@ void mat_inf_norm_rows(cholmod_sparse *M, c_float *E) {
     }
   }
 }
+
+void cholmod_set_settings(cholmod_common *c) {
+  c->final_asis = FALSE ;
+  c->final_super = FALSE ;
+  c->final_ll = FALSE ;
+  c->final_pack = TRUE ;
+  c->final_monotonic = TRUE ;
+  c->final_resymbol = TRUE ;
+  c->quick_return_if_not_posdef = TRUE;
+  c->nmethods = 1 ;
+	c->method [0].ordering = CHOLMOD_NATURAL ;
+	c->postorder = FALSE ;
+}

@@ -11,6 +11,7 @@
 #include "cs.h"
 #include "cholmod.h"
 #include "cholmod_interface.h"
+#include "newton.h"
 #include <stdio.h>
 
 /**********************
@@ -78,9 +79,25 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   c_int n = data->n;
   c_int m = data->m;
 
-  //Initialize CHOLMOD
+  //Initialize CHOLMOD and its settings
   work->chol = c_calloc(1, sizeof(QPALMCholmod));
   work->chol->c = *c;
+
+  // CHOLMOD variables
+  work->chol->neg_dphi = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
+  work->neg_dphi = work->chol->neg_dphi->x; 
+  // work->chol->d = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
+  // work->d = work->chol->d->x;
+  work->chol->Qd = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
+  work->Qd = work->chol->Qd->x;
+  work->chol->Ad = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
+  work->Ad = work->chol->Ad->x;
+  work->chol->yh = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
+  work->yh = work->chol->yh->x;
+  work->chol->Atyh = cholmod_allocate_dense(n, 1, m, CHOLMOD_REAL, &work->chol->c);
+  work->Atyh = work->chol->Atyh->x;
+  work->chol->active_constraints = c_calloc(m, sizeof(c_int));
+  work->chol->active_constraints_old = c_calloc(m, sizeof(c_int));
 
   // Copy problem data into workspace
   work->data       = c_calloc(1, sizeof(QPALMData));
@@ -115,19 +132,19 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->Axys = c_calloc(m, sizeof(c_float));
   work->pri_res = c_calloc(m, sizeof(c_float));
   work->pri_res_in = c_calloc(m, sizeof(c_float));
-  work->yh = c_calloc(m, sizeof(c_float));
-  work->Atyh = c_calloc(n, sizeof(c_float));
+  // work->yh = c_calloc(m, sizeof(c_float));
+  // work->Atyh = c_calloc(n, sizeof(c_float));
   work->df = c_calloc(n, sizeof(c_float));
   
   work->xx0 = c_calloc(n, sizeof(c_float));
   work->dphi = c_calloc(n, sizeof(c_float));
-  work->neg_dphi = c_calloc(n, sizeof(c_float));
+  // work->neg_dphi = c_calloc(n, sizeof(c_float));
   work->dphi_prev = c_calloc(n, sizeof(c_float));
-  work->d = c_calloc(n, sizeof(c_float));
+  // work->d = c_calloc(n, sizeof(c_float));
 
   // Linesearch variables
-  work->Qd          = c_calloc(n, sizeof(c_float));
-  work->Ad          = c_calloc(m, sizeof(c_float));
+  // work->Qd          = c_calloc(n, sizeof(c_float));
+  // work->Ad          = c_calloc(m, sizeof(c_float));
   work->sigma_sqrt  = c_calloc(m, sizeof(c_float));
   work->delta       = c_calloc(m*2, sizeof(c_float));
   work->alpha       = c_calloc(m*2, sizeof(c_float));
@@ -161,14 +178,14 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
     work->scaling->Einv = c_calloc(m, sizeof(c_float));
 
     // Allocate workspace variables used in scaling
-    work->D_temp   = c_malloc(n * sizeof(c_float));
-    work->E_temp   = c_malloc(m * sizeof(c_float));
+    // work->D_temp   = c_malloc(n * sizeof(c_float));
+    // work->E_temp   = c_malloc(m * sizeof(c_float));
 
     // Allocate cholmod_dense pointers to E_temp and D_temp
     work->chol->E_temp = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
-    work->chol->E_temp->x = work->E_temp;
+    work->E_temp = work->chol->E_temp->x;
     work->chol->D_temp = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
-    work->chol->D_temp->x = work->D_temp;
+    work->D_temp = work->chol->D_temp->x;
 
     // Scale data
     scale_data(work);
@@ -177,40 +194,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   else {
     work->scaling = QPALM_NULL;
   }
-  // printf("Scaled Q\n");
-  // c_float *Qx;
-  // Qx = work->data->Q->x;
-  // for (int i = 0; i < work->data->Q->nzmax; i++) {
-  //     printf("%.10f ", Qx[i]);
-  // }
-  // printf("\n");
-
-  // c_int *Qp;
-  // Qp = work->data->Q->p;
-  // for (int i = 0; i < work->data->Q->ncol+1; i++) {
-  //     printf("%d ", Qp[i]);
-  // }
-  // printf("\n");
-
-  // c_int *Qi;
-  // Qi = work->data->Q->i;
-  // for (int i = 0; i < work->data->Q->nzmax; i++) {
-  //     printf("%d ", Qi[i]);
-  // }
-  // printf("\n");
-  // for (int i = 0; i< work->data->n; i++) {
-  //   printf("%.10f ", work->data->q[i]);
-  // }
-  // printf("\n");
-
-  // for (int i = 0; i< work->data->m; i++) {
-  //     printf("%.10f ", work->data->bmin[i]);
-  //   }
-  //   printf("\n");
-  // for (int i = 0; i< work->data->m; i++) {
-  //     printf("%.10f ", work->data->bmax[i]);
-  //   }
-  // printf("\n");
 
   // LBFGS variables
   work->lbfgs              = c_calloc(1, sizeof(QPALMLbfgs));
@@ -225,21 +208,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->lbfgs->H           = 1.0;
   work->lbfgs->alpha       = c_calloc(work->settings->memory, sizeof(c_float));
   work->lbfgs->q           = c_calloc(n, sizeof(c_float));
-
-  // CHOLMOD variables
-  work->chol->one[0] = 1; work->chol->one[1] = 0;
-  work->chol->neg_dphi = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
-  work->chol->neg_dphi->x = work->neg_dphi; 
-  work->chol->d = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
-  work->chol->d->x = work->d;
-  work->chol->Qd = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
-  work->chol->Qd->x = work->Qd;
-  work->chol->Ad = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
-  work->chol->Ad->x = work->Ad;
-  work->chol->yh = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
-  work->chol->yh->x = work->yh;
-  work->chol->Atyh = cholmod_allocate_dense(n, 1, m, CHOLMOD_REAL, &work->chol->c);
-  work->chol->Atyh->x = work->Atyh;
 
   // Allocate solution
   work->solution    = c_calloc(1, sizeof(QPALMSolution));
@@ -260,11 +228,14 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
 
 
 void qpalm_solve(QPALMWorkspace *work) {
-  
+
   #ifdef PROFILING
   qpalm_tic(work->timer); // Start timer
   #endif /* ifdef PROFILING */
-
+  
+  // Cholmod settings to use LDLt
+  cholmod_set_settings(&work->chol->c);
+  
   c_int n = work->data->n;
   c_int m = work->data->m;
 
@@ -296,7 +267,7 @@ void qpalm_solve(QPALMWorkspace *work) {
     //dphi = df+Atyh
     vec_add_scaled(work->df, work->Atyh, work->dphi, 1, n);
   
-  
+
     if (check_termination(work)) {
       work->info->iter = iter;
       work->info->iter_out = iter_out;
@@ -332,10 +303,11 @@ void qpalm_solve(QPALMWorkspace *work) {
       iter_out++;
     } else {
       // d = lbfgs()
-      lbfgs_set_direction(work);
-
+      // lbfgs_set_direction(work);
+      
       // d=newton()
-
+      newton_set_direction(work);
+      
       tau = exact_linesearch(work);
 
       // tau = armijo_linesearch(work);
@@ -522,6 +494,10 @@ void qpalm_cleanup(QPALMWorkspace *work) {
       if (work->chol->Atyh) cholmod_free_dense(&work->chol->Atyh, &work->chol->c);
 
       if (work->chol->LD) cholmod_free_factor(&work->chol->LD, &work->chol->c);
+
+      if (work->chol->active_constraints) c_free(work->chol->active_constraints);
+
+      if (work->chol->active_constraints_old) c_free(work->chol->active_constraints_old);
 
       cholmod_finish(&work->chol->c);
     }

@@ -9,7 +9,7 @@ all: $(BDIR)/libqpalm.a demo
 lib: $(BDIR)/libqpalm.a
 
 CC=gcc-8
-CFLAGS=-I$(IDIR) -ISuiteSparse/include -fPIC -O3 -DPROFILING
+CFLAGS=-I$(IDIR) -ISuiteSparse/include -fPIC -O3 -DPROFILING 
 LIBS=-lm 
 CHOLMOD_LIBS=-lcholmod -lamd -lcolamd -lsuitesparseconfig
 CHOLMOD_LIB_INCLUDES=-LSuiteSparse/lib

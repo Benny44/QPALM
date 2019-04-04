@@ -44,7 +44,11 @@ void mat_inf_norm_rows(cholmod_sparse *M,
                        c_float   *E);
 
 
-
+/**
+ * Cholmod settings to indicate that we use an LDLt factorization
+ * @param c Cholmod workspace
+ */
+void cholmod_set_settings(cholmod_common *c);
 
 # ifdef __cplusplus
 }
