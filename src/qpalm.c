@@ -83,22 +83,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->chol = c_calloc(1, sizeof(QPALMCholmod));
   work->chol->c = *c;
 
-  // CHOLMOD variables
-  work->chol->neg_dphi = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
-  work->neg_dphi = work->chol->neg_dphi->x; 
-  // work->chol->d = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
-  // work->d = work->chol->d->x;
-  work->chol->Qd = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
-  work->Qd = work->chol->Qd->x;
-  work->chol->Ad = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
-  work->Ad = work->chol->Ad->x;
-  work->chol->yh = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
-  work->yh = work->chol->yh->x;
-  work->chol->Atyh = cholmod_allocate_dense(n, 1, m, CHOLMOD_REAL, &work->chol->c);
-  work->Atyh = work->chol->Atyh->x;
-  work->chol->active_constraints = c_calloc(m, sizeof(c_int));
-  work->chol->active_constraints_old = c_calloc(m, sizeof(c_int));
-
   // Copy problem data into workspace
   work->data       = c_calloc(1, sizeof(QPALMData));
   work->data->n    = data->n;                             // Number of variables
@@ -109,7 +93,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->data->A    = cholmod_copy_sparse(data->A, &work->chol->c);               // Linear constraints matrix
   work->data->Q    = cholmod_copy_sparse(data->Q, &work->chol->c);                // Cost function matrix
   
-
   // Allocate internal solver variables 
   work->x        = c_calloc(n, sizeof(c_float));
   work->y        = c_calloc(m, sizeof(c_float));
@@ -145,7 +128,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   // Linesearch variables
   // work->Qd          = c_calloc(n, sizeof(c_float));
   // work->Ad          = c_calloc(m, sizeof(c_float));
-  work->sigma_sqrt  = c_calloc(m, sizeof(c_float));
+  work->sqrt_sigma  = c_calloc(m, sizeof(c_float));
   work->delta       = c_calloc(m*2, sizeof(c_float));
   work->alpha       = c_calloc(m*2, sizeof(c_float));
   work->delta2      = c_calloc(m*2, sizeof(c_float));
@@ -167,6 +150,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
 
   // Copy settings
   work->settings = copy_settings(settings);
+  work->sqrt_delta = c_sqrt(work->settings->delta);
 
   // Perform scaling
   if (settings->scaling) {
@@ -208,6 +192,31 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->lbfgs->H           = 1.0;
   work->lbfgs->alpha       = c_calloc(work->settings->memory, sizeof(c_float));
   work->lbfgs->q           = c_calloc(n, sizeof(c_float));
+
+  // CHOLMOD variables
+  work->chol->neg_dphi = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
+  work->neg_dphi = work->chol->neg_dphi->x; 
+  // work->chol->d = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
+  // work->d = work->chol->d->x;
+  work->chol->Qd = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
+  work->Qd = work->chol->Qd->x;
+  work->chol->Ad = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
+  work->Ad = work->chol->Ad->x;
+  work->chol->yh = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
+  work->yh = work->chol->yh->x;
+  work->chol->Atyh = cholmod_allocate_dense(n, 1, m, CHOLMOD_REAL, &work->chol->c);
+  work->Atyh = work->chol->Atyh->x;
+  work->chol->active_constraints = c_calloc(m, sizeof(c_int));
+  work->chol->active_constraints_old = c_calloc(m, sizeof(c_int));
+  work->chol->enter = c_calloc(m, sizeof(c_int));
+  work->chol->leave = c_calloc(m, sizeof(c_int));
+  work->chol->At_scale = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
+  // work->sqrt_sigma = work->chol->At_scale->x;
+  //sigma_sqrt = sqrt(sigma)
+  vec_ew_sqrt(work->sigma, work->sqrt_sigma, work->data->m);
+  prea_vec_copy(work->sqrt_sigma, work->chol->At_scale->x, work->data->m);
+  work->chol->At_sqrt_sigma = cholmod_transpose(work->data->A, 1, &work->chol->c);
+  cholmod_scale(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
 
   // Allocate solution
   work->solution    = c_calloc(1, sizeof(QPALMSolution));
@@ -286,11 +295,18 @@ void qpalm_solve(QPALMWorkspace *work) {
       work->settings->eps_rel_in = c_max(work->settings->eps_rel,
                                         work->settings->rho*work->settings->eps_rel_in);
       if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
+        c_float *At_scalex = work->chol->At_scale->x;
         for (c_int k = 0; k < m; k++) {
           if (c_absval(work->pri_res[k]) > work->settings->theta*c_absval(work->pri_res_in[k])) {
             work->sigma[k] *= work->settings->delta;
+            work->sqrt_sigma[k] *= work->sqrt_delta;
+            At_scalex[k] = work->sqrt_delta;
+          } else {
+            At_scalex[k] = 1.0;
           }
         }
+        cholmod_scale(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+
         work->lbfgs->reset_lbfgs = 1;
       }
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
@@ -423,7 +439,7 @@ void qpalm_cleanup(QPALMWorkspace *work) {
 
     // if (work->Ad) c_free(work->Ad);
 
-    if (work->sigma_sqrt) c_free(work->sigma_sqrt);
+    if (work->sqrt_sigma) c_free(work->sqrt_sigma);
 
     if (work->delta) c_free(work->delta);
 
@@ -498,6 +514,14 @@ void qpalm_cleanup(QPALMWorkspace *work) {
       if (work->chol->active_constraints) c_free(work->chol->active_constraints);
 
       if (work->chol->active_constraints_old) c_free(work->chol->active_constraints_old);
+
+      if (work->chol->enter) c_free(work->chol->enter);
+
+      if (work->chol->leave) c_free(work->chol->leave);
+
+      if (work->chol->At_scale) cholmod_free_dense(&work->chol->At_scale, &work->chol->c);
+
+      if (work->chol->At_sqrt_sigma) cholmod_free_sparse(&work->chol->At_sqrt_sigma, &work->chol->c);
 
       cholmod_finish(&work->chol->c);
     }

@@ -164,6 +164,13 @@ typedef struct {
   c_int *active_constraints;
   c_int *active_constraints_old;
   c_int nb_active_constraints;
+  c_int *enter;
+  c_int nb_enter;
+  c_int *leave;
+  c_int nb_leave;
+  cholmod_dense *At_scale;
+  cholmod_sparse *At_sqrt_sigma;
+  cholmod_sparse *Q_AtA;
 } QPALMCholmod;
 
 /**
@@ -215,8 +222,8 @@ typedef struct {
    */
   c_float *Qd;        ///< Q*d
   c_float *Ad;        ///< A*d
-  c_float *sigma_sqrt; ///< Elementwise sqrt(sigma)
-
+  c_float *sqrt_sigma; ///< Elementwise sqrt(sigma)
+  c_float sqrt_delta; ///< sqrt(penalty update factor)
   c_float eta;        ///< Linesearch parameter
   c_float beta;       ///< Linesearch parameter
   c_float *delta;     ///< Linesearch parameter

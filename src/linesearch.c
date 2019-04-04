@@ -15,11 +15,9 @@ c_float exact_linesearch_newton(QPALMWorkspace *work){
     work->eta = vec_prod(work->d, work->Qd, work->data->n);
     //beta = d'*df
     work->beta = vec_prod(work->d, work->df, work->data->n);
-    //sigma_sqrt = sqrt(sigma)
-    vec_ew_sqrt(work->sigma, work->sigma_sqrt, work->data->m);
 
     //delta = [-sqrt(sigma).*Ad; sqrt(sigma).*Ad]
-    vec_ew_prod(work->sigma_sqrt, work->Ad, work->temp_m, work->data->m);
+    vec_ew_prod(work->sqrt_sigma, work->Ad, work->temp_m, work->data->m);
     prea_vec_copy(work->temp_m, work->delta + work->data->m, work->data->m); //shifted copy
     vec_mult_scalar(work->temp_m, -1, work->data->m);
     prea_vec_copy(work->temp_m, work->delta, work->data->m); 
@@ -27,12 +25,12 @@ c_float exact_linesearch_newton(QPALMWorkspace *work){
     vec_add_scaled(work->Ax, work->data->bmin, work->temp_m, -1, work->data->m);
     vec_ew_prod(work->sigma, work->temp_m, work->temp_m, work->data->m);
     vec_add_scaled(work->y, work->temp_m, work->temp_m, 1, work->data->m);
-    vec_ew_div(work->temp_m, work->sigma_sqrt, work->temp_m, work->data->m);
+    vec_ew_div(work->temp_m, work->sqrt_sigma, work->temp_m, work->data->m);
     prea_vec_copy(work->temp_m, work->alpha, work->data->m);
     vec_add_scaled(work->data->bmax, work->Ax, work->temp_m, -1, work->data->m);
     vec_ew_prod(work->sigma, work->temp_m, work->temp_m, work->data->m);
     vec_add_scaled(work->temp_m, work->y, work->temp_m, -1, work->data->m);
-    vec_ew_div(work->temp_m, work->sigma_sqrt, work->temp_m, work->data->m);
+    vec_ew_div(work->temp_m, work->sqrt_sigma, work->temp_m, work->data->m);
     prea_vec_copy(work->temp_m, work->alpha + work->data->m, work->data->m); //shifted copy
     // s = alpha./delta
     vec_ew_div(work->alpha, work->delta, work->temp_2m, work->data->m*2);
@@ -140,11 +138,9 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     work->eta = vec_prod(work->d, work->Qd, work->data->n);
     //beta = d'*df
     work->beta = vec_prod(work->d, work->df, work->data->n);
-    //sigma_sqrt = sqrt(sigma)
-    vec_ew_sqrt(work->sigma, work->sigma_sqrt, work->data->m);
 
     //delta = [-sqrt(sigma).*Ad; sqrt(sigma).*Ad]
-    vec_ew_prod(work->sigma_sqrt, work->Ad, work->temp_m, work->data->m);
+    vec_ew_prod(work->sqrt_sigma, work->Ad, work->temp_m, work->data->m);
     prea_vec_copy(work->temp_m, work->delta + work->data->m, work->data->m); //shifted copy
     vec_mult_scalar(work->temp_m, -1, work->data->m);
     prea_vec_copy(work->temp_m, work->delta, work->data->m); 
@@ -152,12 +148,12 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     vec_add_scaled(work->Ax, work->data->bmin, work->temp_m, -1, work->data->m);
     vec_ew_prod(work->sigma, work->temp_m, work->temp_m, work->data->m);
     vec_add_scaled(work->y, work->temp_m, work->temp_m, 1, work->data->m);
-    vec_ew_div(work->temp_m, work->sigma_sqrt, work->temp_m, work->data->m);
+    vec_ew_div(work->temp_m, work->sqrt_sigma, work->temp_m, work->data->m);
     prea_vec_copy(work->temp_m, work->alpha, work->data->m);
     vec_add_scaled(work->data->bmax, work->Ax, work->temp_m, -1, work->data->m);
     vec_ew_prod(work->sigma, work->temp_m, work->temp_m, work->data->m);
     vec_add_scaled(work->temp_m, work->y, work->temp_m, -1, work->data->m);
-    vec_ew_div(work->temp_m, work->sigma_sqrt, work->temp_m, work->data->m);
+    vec_ew_div(work->temp_m, work->sqrt_sigma, work->temp_m, work->data->m);
     prea_vec_copy(work->temp_m, work->alpha + work->data->m, work->data->m); //shifted copy
     // s = alpha./delta
     vec_ew_div(work->alpha, work->delta, work->temp_2m, work->data->m*2);

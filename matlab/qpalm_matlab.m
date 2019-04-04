@@ -283,7 +283,6 @@ for k = 1:maxiter
           active_cnstrs = (Axys<bmin | Axys>bmax);
           na = nnz(active_cnstrs);
           stats.nact(k) = na;
-          na = 0;
           if na
               switch linsys
                   case 0 % sparse backslash
@@ -319,7 +318,7 @@ for k = 1:maxiter
               end
               active_cnstrs_old = active_cnstrs;
           else
-              LD = ldlchol(Q-1/gamma*speye(n));
+              LD = ldlchol(Q);
               d = -ldlsolve (LD,dphi);
           end
           
