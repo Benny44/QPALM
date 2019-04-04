@@ -22,6 +22,12 @@ void newton_set_direction(QPALMWorkspace *work);
  */
 void set_active_constraints(QPALMWorkspace *work);
 
+/**
+ * Determines the entering and leaving constraints
+ * @param work Workspace
+ */
+void set_entering_leaving_constraints(QPALMWorkspace *work);
+
 # ifdef __cplusplus
 }
 # endif // ifdef __cplusplus
