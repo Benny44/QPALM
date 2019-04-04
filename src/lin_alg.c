@@ -40,6 +40,14 @@ void vec_set_scalar(c_float *a, c_float sc, c_int n) {
   }
 }
 
+void vec_set_scalar_int(c_int *a, c_int sc, c_int n) {
+  c_int i;
+
+  for (i = 0; i < n; i++) {
+    a[i] = sc;
+  }
+}
+
 void vec_mult_scalar(c_float *a, c_float sc, c_int n) {
   c_int i;
 

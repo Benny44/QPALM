@@ -208,6 +208,8 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->Atyh = work->chol->Atyh->x;
   work->chol->active_constraints = c_calloc(m, sizeof(c_int));
   work->chol->active_constraints_old = c_calloc(m, sizeof(c_int));
+  vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
+  work->chol->reset_newton = TRUE;
   work->chol->enter = c_calloc(m, sizeof(c_int));
   work->chol->leave = c_calloc(m, sizeof(c_int));
   work->chol->At_scale = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
@@ -307,9 +309,12 @@ void qpalm_solve(QPALMWorkspace *work) {
         }
         cholmod_scale(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
 
-        work->lbfgs->reset_lbfgs = 1;
+        work->lbfgs->reset_lbfgs = TRUE;
       }
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
+      
+      work->chol->reset_newton = TRUE;
+      vec_set_scalar_int(work->chol->active_constraints_old, FALSE, work->data->m);
 
       if(work->settings->proximal) {
         work->settings->gamma = c_min(work->settings->gamma*work->settings->gamma_upd, work->settings->gamma_max);

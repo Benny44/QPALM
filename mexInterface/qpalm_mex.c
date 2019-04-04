@@ -182,8 +182,8 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         cm->print=-1;
 
         data->A = mx_get_sparse(A, &Amatrix, &dummy, 0);
-        data->Q = mx_get_sparse(Q, &Qmatrix, &dummy, 0);
-        data->Q->stype = 1; //Q is symmetric, use only upper part
+        data->Q = mx_get_sparse(Q, &Qmatrix, &dummy, 1);//Q is symmetric, use only upper part
+        
 
         // Create Settings
         const mxArray* mxSettings = prhs[8];

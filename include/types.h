@@ -161,6 +161,7 @@ typedef struct {
   cholmod_dense *Qd;
   cholmod_dense *yh;
   cholmod_dense *Atyh;
+  c_int reset_newton;
   c_int *active_constraints;
   c_int *active_constraints_old;
   c_int nb_active_constraints;

@@ -1,5 +1,5 @@
 clear;close all;clc
-m = 5;n = 3;
+m = 50;n = 30;
 rng(1)
 A = sprandn(m, n, 5e-1,1e-1);
 nnz(A)
@@ -9,9 +9,8 @@ ub =  2*ones(m,1);
 % Q = sparse(ones(n,n));
 Q = sprandsym(n, 5e-1, 1e-1, 1); %Q=sparse(n,n);
 q = 10*randn(n,1);
-% q = [8.40187717154709545753 3.94382926819093038162 7.83099223758605855750]';
 
-full(A)
+% full(A)
 %% QPALM C
 % 
 solver = qpalm;
@@ -19,7 +18,7 @@ settings = solver.default_settings();
 % settings.verbose = true;
 settings.proximal = true;
 settings.scaling = 10;
-settings.max_iter = 10;
+settings.max_iter = 20;
 settings.eps_abs = 1e-4;
 settings.eps_rel = 1e-4;
 settings.tau_init = 1.5;

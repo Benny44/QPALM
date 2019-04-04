@@ -31,6 +31,11 @@ void vec_set_scalar(c_float *a,
                     c_float  sc,
                     c_int    n);
 
+/* set int vector to scalar */
+void vec_set_scalar_int(c_int *a, 
+                        c_int  sc, 
+                        c_int  n);
+
 /* multiply scalar to vector */
 void vec_mult_scalar(c_float *a,
                      c_float  sc,
