@@ -39,7 +39,8 @@ QPALMSettings* copy_settings(QPALMSettings *settings) {
     new->gamma_upd    = settings->gamma_upd;     
     new->gamma_max    = settings->gamma_max;     
     new->scaling      = settings->scaling;      
-    new->verbose      = settings->verbose;       
+    new->verbose      = settings->verbose; 
+    new->warm_start   = settings->warm_start;      
 
     return new;
 }

@@ -109,8 +109,8 @@ int main() {
   // c_float bmin[3]   =   {-QPALM_INFTY, -QPALM_INFTY, 1.0};
   // c_float bmax[3] =   {1.0, 1.0, 1.0};
 
-  c_int n = 3;
-  c_int m = 5;
+  c_int n = 20;
+  c_int m = 50;
 
 
 
@@ -147,18 +147,19 @@ int main() {
   data->bmin = constant_vector(-2, data->m);
   data->bmax = constant_vector(2, data->m);
 
+  cholmod_finish(&c);
 
   // Define Solver settings as default
   qpalm_set_default_settings(settings);
 
   // Setup workspace
   work = qpalm_setup(data, settings, &c);
-  cholmod_finish(&c);
+  // cholmod_finish(&c);
 
   // Solve Problem
-  cholmod_start(&work->chol->c);
+  // cholmod_start(&work->chol->c);
   qpalm_solve(work);
-  cholmod_finish(&work->chol->c);
+  // cholmod_finish(&work->chol->c);
   cholmod_start(&work->chol->c);
 
   printf("Solver status: ");
@@ -180,6 +181,8 @@ int main() {
   cholmod_free_dense(&A_dense, &c);
   cholmod_free_sparse(&data->Q, &c);
   cholmod_free_sparse(&data->A, &c);
+  cholmod_finish(&work->chol->c);
+
   qpalm_cleanup(work);
   // csc_spfree(data->A);
   // csc_spfree(data->Q);

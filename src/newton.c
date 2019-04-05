@@ -24,6 +24,9 @@ void newton_set_direction(QPALMWorkspace *work) {
     prea_vec_copy(work->dphi, work->neg_dphi, work->data->n);
     vec_mult_scalar(work->neg_dphi, -1, work->data->n);
     //d = ldlsolve(LD, -dphi)
+    if (work->chol->d) {
+        cholmod_free_dense(&work->chol->d, &work->chol->c);
+    }
     work->chol->d = cholmod_solve (CHOLMOD_LDLt, work->chol->LD, work->chol->neg_dphi, &work->chol->c);
     work->d = work->chol->d->x;
 

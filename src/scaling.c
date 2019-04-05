@@ -66,6 +66,7 @@ void scale_data(QPALMWorkspace *work) {
     c_float *cx = c->x;
     cx[0] = work->scaling->c;
     cholmod_scale(c, CHOLMOD_SCALAR, work->data->Q, &work->chol->c);
+    cholmod_free_dense(&c, &work->chol->c);
 
     // Store cinv, Dinv, Einv
     vec_ew_recipr(work->scaling->D, work->scaling->Dinv, work->data->n);

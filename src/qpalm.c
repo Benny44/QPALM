@@ -508,6 +508,8 @@ void qpalm_cleanup(QPALMWorkspace *work) {
       if (work->chol->At_sqrt_sigma) cholmod_free_sparse(&work->chol->At_sqrt_sigma, &work->chol->c);
 
       cholmod_finish(&work->chol->c);
+
+      c_free(work->chol);      
     }
     
     // Free solution
