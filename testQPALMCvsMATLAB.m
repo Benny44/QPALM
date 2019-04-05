@@ -1,5 +1,5 @@
 clear;close all;clc
-m = 500;n = 300;
+m = 50;n = 30;
 rng(1)
 A = sprandn(m, n, 5e-1,1e-1);
 nnz(A)
@@ -18,7 +18,7 @@ settings = solver.default_settings();
 % settings.verbose = true;
 settings.proximal = true;
 settings.scaling = 10;
-settings.max_iter = 20;
+settings.max_iter = 1000;
 settings.eps_abs = 1e-4;
 settings.eps_rel = 1e-4;
 settings.tau_init = 1.5;

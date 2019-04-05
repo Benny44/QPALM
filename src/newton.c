@@ -16,8 +16,7 @@ void newton_set_direction(QPALMWorkspace *work) {
             if (work->chol->active_constraints[i]){
                 work->chol->enter[nb_active] = i;
                 nb_active++;
-            }
-            
+            }      
         }
         AtsigmaA = cholmod_aat(work->chol->At_sqrt_sigma, work->chol->enter, nb_active, TRUE, &work->chol->c);
         double one [2] = {1,0};

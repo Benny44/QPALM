@@ -115,19 +115,13 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->Axys = c_calloc(m, sizeof(c_float));
   work->pri_res = c_calloc(m, sizeof(c_float));
   work->pri_res_in = c_calloc(m, sizeof(c_float));
-  // work->yh = c_calloc(m, sizeof(c_float));
-  // work->Atyh = c_calloc(n, sizeof(c_float));
   work->df = c_calloc(n, sizeof(c_float));
   
   work->xx0 = c_calloc(n, sizeof(c_float));
   work->dphi = c_calloc(n, sizeof(c_float));
-  // work->neg_dphi = c_calloc(n, sizeof(c_float));
   work->dphi_prev = c_calloc(n, sizeof(c_float));
-  // work->d = c_calloc(n, sizeof(c_float));
 
   // Linesearch variables
-  // work->Qd          = c_calloc(n, sizeof(c_float));
-  // work->Ad          = c_calloc(m, sizeof(c_float));
   work->sqrt_sigma  = c_calloc(m, sizeof(c_float));
   work->delta       = c_calloc(m*2, sizeof(c_float));
   work->alpha       = c_calloc(m*2, sizeof(c_float));
@@ -161,10 +155,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
     work->scaling->E    = c_calloc(m, sizeof(c_float));
     work->scaling->Einv = c_calloc(m, sizeof(c_float));
 
-    // Allocate workspace variables used in scaling
-    // work->D_temp   = c_malloc(n * sizeof(c_float));
-    // work->E_temp   = c_malloc(m * sizeof(c_float));
-
     // Allocate cholmod_dense pointers to E_temp and D_temp
     work->chol->E_temp = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
     work->E_temp = work->chol->E_temp->x;
@@ -196,8 +186,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   // CHOLMOD variables
   work->chol->neg_dphi = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
   work->neg_dphi = work->chol->neg_dphi->x; 
-  // work->chol->d = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
-  // work->d = work->chol->d->x;
   work->chol->Qd = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
   work->Qd = work->chol->Qd->x;
   work->chol->Ad = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
@@ -213,8 +201,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->chol->enter = c_calloc(m, sizeof(c_int));
   work->chol->leave = c_calloc(m, sizeof(c_int));
   work->chol->At_scale = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
-  // work->sqrt_sigma = work->chol->At_scale->x;
-  //sigma_sqrt = sqrt(sigma)
   vec_ew_sqrt(work->sigma, work->sqrt_sigma, work->data->m);
   prea_vec_copy(work->sqrt_sigma, work->chol->At_scale->x, work->data->m);
   work->chol->At_sqrt_sigma = cholmod_transpose(work->data->A, 1, &work->chol->c);
@@ -278,7 +264,6 @@ void qpalm_solve(QPALMWorkspace *work) {
     //dphi = df+Atyh
     vec_add_scaled(work->df, work->Atyh, work->dphi, 1, n);
   
-
     if (check_termination(work)) {
       work->info->iter = iter;
       work->info->iter_out = iter_out;
@@ -364,10 +349,8 @@ void qpalm_cleanup(QPALMWorkspace *work) {
   if (work) { // If workspace has been allocated
     // Free Data
     if (work->data) {
-      // if (work->data->Q) csc_spfree(work->data->Q);
       if (work->data->Q) cholmod_free_sparse(&work->data->Q, &work->chol->c);
 
-      // if (work->data->A) csc_spfree(work->data->A);
       if (work->data->A) cholmod_free_sparse(&work->data->A, &work->chol->c);
 
       if (work->data->q) c_free(work->data->q);
@@ -387,10 +370,6 @@ void qpalm_cleanup(QPALMWorkspace *work) {
       if (work->scaling->E) c_free(work->scaling->E);
 
       if (work->scaling->Einv) c_free(work->scaling->Einv);
-
-      // if (work->D_temp) c_free(work->D_temp);
-
-      // if (work->E_temp) c_free(work->E_temp);
 
       c_free(work->scaling);
     }
@@ -422,10 +401,6 @@ void qpalm_cleanup(QPALMWorkspace *work) {
 
     if (work->pri_res_in) c_free(work->pri_res_in);
 
-    // if (work->yh) c_free(work->yh);
-
-    // if (work->Atyh) c_free(work->Atyh);
-
     if (work->df) c_free(work->df);
 
     if (work->x0) c_free(work->x0);
@@ -434,15 +409,7 @@ void qpalm_cleanup(QPALMWorkspace *work) {
 
     if (work->dphi) c_free(work->dphi);
 
-    // if (work->neg_dphi) c_free(work->neg_dphi);
-
     if (work->dphi_prev) c_free(work->dphi_prev);
-
-    // if (work->d) c_free(work->d);
-
-    // if (work->Qd) c_free(work->Qd);
-
-    // if (work->Ad) c_free(work->Ad);
 
     if (work->sqrt_sigma) c_free(work->sqrt_sigma);
 
