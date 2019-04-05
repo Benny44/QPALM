@@ -43,6 +43,31 @@ void mat_inf_norm_cols(cholmod_sparse *M,
 void mat_inf_norm_rows(cholmod_sparse *M,
                        c_float   *E);
 
+/**
+ * Calculate LDL factorization of Q
+ * If work->settings->proximal = true, use Q+(1/gamma)*I instead
+ * @param work qpalm workspace
+ */
+void ldlcholQ(QPALMWorkspace *work);
+
+/**
+ * Calculate LDL factorization of Q+A(active_cnstrs,:)'*diag(sigma)*A(active_cnstrs,:)
+ * If work->settings->proximal = true, use Q+(1/gamma)*I+A(active_cnstrs,:)'*diag(sigma)*A(active_cnstrs,:) instead
+ * @param work qpalm workspace
+ */
+void ldlcholQAtsigmaA(QPALMWorkspace *work);
+
+/**
+ * Update the LDL factorization given entering constraints
+ * @param work qpalm workspace
+ */
+void ldlupdate_entering_constraints(QPALMWorkspace *work);
+
+/**
+ * Downdate the LDL factorization given leaving constraints
+ * @param work qpalm workspace
+ */
+void ldldowndate_leaving_constraints(QPALMWorkspace *work);
 
 /**
  * Cholmod settings to indicate that we use an LDLt factorization
