@@ -44,6 +44,15 @@ void mat_inf_norm_rows(cholmod_sparse *M,
                        c_float   *E);
 
 /**
+ * Calculate LDL factorization of M
+ * If work->settings->proximal = true, use M+(1/gamma)*I instead
+ * @param M matrix to be factorized
+ * @param work qpalm workspace
+ */
+void ldlchol(cholmod_sparse *M, 
+             QPALMWorkspace *work);
+
+/**
  * Calculate LDL factorization of Q
  * If work->settings->proximal = true, use Q+(1/gamma)*I instead
  * @param work qpalm workspace

@@ -51,15 +51,27 @@ void mat_inf_norm_rows(cholmod_sparse *M, c_float *E) {
   }
 }
 
-void ldlcholQ(QPALMWorkspace *work) {
-  double beta [2] = {1.0/work->settings->gamma,0};
-  work->chol->LD = cholmod_analyze (work->data->Q, &work->chol->c) ;
-
-  cholmod_factorize_p (work->data->Q, beta, NULL, 0, work->chol->LD, &work->chol->c);
+void ldlchol(cholmod_sparse *M, QPALMWorkspace *work) {
+  work->chol->LD = cholmod_analyze (M, &work->chol->c) ;
+  if (work->settings->proximal) {
+    double beta [2] = {1.0/work->settings->gamma,0};
+    cholmod_factorize_p (M, beta, NULL, 0, work->chol->LD, &work->chol->c);
+  } else {
+    cholmod_factorize (M, work->chol->LD, &work->chol->c);
+  }
   if ((&work->chol->c)->status != CHOLMOD_OK) {
       (&work->chol->c)->supernodal = CHOLMOD_SIMPLICIAL;
-      cholmod_factorize_p (work->data->Q, beta, NULL, 0, work->chol->LD, &work->chol->c);
+      if (work->settings->proximal) {
+        double beta [2] = {1.0/work->settings->gamma,0};
+        cholmod_factorize_p (M, beta, NULL, 0, work->chol->LD, &work->chol->c);
+      } else {
+        cholmod_factorize (M, work->chol->LD, &work->chol->c);
+      }
   }
+}
+
+void ldlcholQ(QPALMWorkspace *work) {
+  ldlchol(work->data->Q, work);
 }
 
 void ldlcholQAtsigmaA(QPALMWorkspace *work) {
@@ -75,16 +87,10 @@ void ldlcholQAtsigmaA(QPALMWorkspace *work) {
   AtsigmaA = cholmod_aat(work->chol->At_sqrt_sigma, work->chol->enter, nb_active, TRUE, &work->chol->c);
   double one [2] = {1,0};
   QAtsigmaA = cholmod_add(work->data->Q, AtsigmaA, one, one, TRUE, FALSE, &work->chol->c);
-  QAtsigmaA->stype = 1;
-  c_float *Qx = QAtsigmaA->x;
+  QAtsigmaA->stype = work->data->Q->stype;
   
-  double beta [2] = {1.0/work->settings->gamma,0};
-  work->chol->LD = cholmod_analyze (QAtsigmaA, &work->chol->c) ;
-  cholmod_factorize_p (QAtsigmaA, beta, NULL, 0, work->chol->LD, &work->chol->c);
-  if ((&work->chol->c)->status != CHOLMOD_OK) {
-      (&work->chol->c)->supernodal = CHOLMOD_SIMPLICIAL;
-      cholmod_factorize_p (QAtsigmaA, beta, NULL, 0, work->chol->LD, &work->chol->c);
-  }
+  ldlchol(QAtsigmaA, work);
+
   cholmod_free_sparse(&AtsigmaA, &work->chol->c);
   cholmod_free_sparse(&QAtsigmaA, &work->chol->c);
 }
