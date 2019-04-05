@@ -1,5 +1,5 @@
 clear;close all;clc
-m = 50;n = 30;
+m = 500;n = 300;
 rng(1)
 A = sprandn(m, n, 5e-1,1e-1);
 nnz(A)
