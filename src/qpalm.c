@@ -82,6 +82,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   //Initialize CHOLMOD and its settings
   work->chol = c_calloc(1, sizeof(QPALMCholmod));
   work->chol->c = *c;
+  cholmod_start(&work->chol->c);
 
   // Copy problem data into workspace
   work->data       = c_calloc(1, sizeof(QPALMData));
@@ -219,6 +220,9 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->info->setup_time  = qpalm_toc(work->timer); // Update timer information
   # endif /* ifdef PROFILING */
 
+  //Finish cholmod
+  cholmod_finish(&work->chol->c);
+
   // Return workspace structure
   return work;
 }
@@ -231,6 +235,7 @@ void qpalm_solve(QPALMWorkspace *work) {
   #endif /* ifdef PROFILING */
   
   // Cholmod settings to use LDLt
+  cholmod_start(&work->chol->c);
   cholmod_set_settings(&work->chol->c);
   
   c_int n = work->data->n;
@@ -273,6 +278,8 @@ void qpalm_solve(QPALMWorkspace *work) {
         work->info->run_time = work->info->setup_time +
                            work->info->solve_time;
       #endif /* ifdef PROFILING */
+      cholmod_finish(&work->chol->c);
+
       return; 
     } else if (check_subproblem_termination(work)) {
       prea_vec_copy(work->yh, work->y, m);
@@ -341,6 +348,9 @@ void qpalm_solve(QPALMWorkspace *work) {
     work->info->run_time = work->info->setup_time +
                            work->info->solve_time;
   #endif /* ifdef PROFILING */
+
+  cholmod_finish(&work->chol->c);
+
 }
 
 
@@ -465,6 +475,8 @@ void qpalm_cleanup(QPALMWorkspace *work) {
 
     //Free chol struct
     if (work->chol) {
+      cholmod_start(&work->chol->c);
+
       if (work->chol->D_temp) cholmod_free_dense(&work->chol->D_temp, &work->chol->c);
 
       if (work->chol->E_temp) cholmod_free_dense(&work->chol->E_temp, &work->chol->c);

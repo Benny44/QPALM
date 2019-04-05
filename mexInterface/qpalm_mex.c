@@ -131,7 +131,6 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         
         //clean up the problem workspace
         if(qpalm_work != NULL){
-            cholmod_start(&qpalm_work->chol->c);
             qpalm_cleanup(qpalm_work);
             qpalm_work = NULL;
         }
@@ -177,14 +176,10 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         cholmod_sparse Amatrix, Qmatrix;
         cholmod_common c, *cm;
         cm = &c;
-        cholmod_start(cm);
-        cm->metis_memory=0.0;
-        cm->print=-1;
 
         data->A = mx_get_sparse(A, &Amatrix, &dummy, 0);
         data->Q = mx_get_sparse(Q, &Qmatrix, &dummy, 1);//Q is symmetric, use only upper part
         
-
         // Create Settings
         const mxArray* mxSettings = prhs[8];
         if(mxIsEmpty(mxSettings)){
@@ -216,7 +211,7 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
          // Settings
          mxFree(settings);
          
-         cholmod_finish(&c);
+        //  cholmod_finish(&c);
         return;
 
 
@@ -229,9 +224,7 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
             mexErrMsgTxt("No problem data has been given.");
         }
         
-        cholmod_start(&qpalm_work->chol->c);
         qpalm_solve(qpalm_work);
-        cholmod_finish(&qpalm_work->chol->c);
 
         // Allocate space for solution
         // primal variables
