@@ -79,6 +79,12 @@ void ldlupdate_entering_constraints(QPALMWorkspace *work);
 void ldldowndate_leaving_constraints(QPALMWorkspace *work);
 
 /**
+ * Solve the linear system LDL'd = -dphi
+ * @param work qpalm workspace
+ */
+void ldlsolveLD_neg_dphi(QPALMWorkspace *work);
+
+/**
  * Cholmod settings to indicate that we use an LDLt factorization
  * @param c Cholmod workspace
  */

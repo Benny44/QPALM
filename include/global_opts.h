@@ -5,14 +5,50 @@
 extern "C" {
 # endif /* ifdef __cplusplus */
 
-typedef double c_float; /* doubles for numerical values  */
-typedef int c_int; /* for indices */
 
 #define FALSE 0
 #define TRUE 1
 
+/* CHOLMOD data types */
+#ifdef DLONG
+#define Real double
+#define Int SuiteSparse_long
+#define Int_max SuiteSparse_long_max
+#define CHOLMOD(name) cholmod_l_ ## name
+#define LONG
+#define DOUBLE
+#define ITYPE CHOLMOD_LONG
+#define DTYPE CHOLMOD_DOUBLE
+#define ID SuiteSparse_long_id
+
+#else
+
+#ifndef DINT
+#define DINT
+#endif
+#define INT
+#define DOUBLE
+
+#define Real double
+#define Int int
+#define Int_max INT_MAX
+#define CHOLMOD(name) cholmod_ ## name
+#define ITYPE CHOLMOD_INT
+#define DTYPE CHOLMOD_DOUBLE
+#define ID "%d"
+
+/* GPU acceleration is not available for the int version of CHOLMOD */
+#undef GPU_BLAS
+
+#endif
+
+
+
 /* DATA CUSTOMIZATIONS (depending on memory manager)-----------------------   */
 #  include <stdlib.h>
+
+typedef Real c_float; /* doubles for numerical values  */
+typedef Int c_int; /* for indices */
 
 /* define custom printfs and memory allocation (e.g. matlab/python) */
 #  ifdef MATLAB

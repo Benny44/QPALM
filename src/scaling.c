@@ -43,8 +43,8 @@ void scale_data(QPALMWorkspace *work) {
         // A <- EAD
         // mat_premult_diag(work->data->A, work->E_temp);
         // mat_postmult_diag(work->data->A, work->D_temp);
-        cholmod_scale(work->chol->E_temp, CHOLMOD_ROW, work->data->A, &work->chol->c);
-        cholmod_scale(work->chol->D_temp, CHOLMOD_COL, work->data->A, &work->chol->c);
+        CHOLMOD(scale)(work->chol->E_temp, CHOLMOD_ROW, work->data->A, &work->chol->c);
+        CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_COL, work->data->A, &work->chol->c);
 
         // Update equilibration matrices D and E
         vec_ew_prod(work->scaling->D, work->D_temp, work->scaling->D, work->data->n);
@@ -55,18 +55,18 @@ void scale_data(QPALMWorkspace *work) {
     // Equilibrate matrix Q and vector q
     // Q <- DPD, q <- Dq
     prea_vec_copy(work->scaling->D, work->D_temp, work->data->n);
-    cholmod_scale(work->chol->D_temp, CHOLMOD_SYM, work->data->Q, &work->chol->c);
+    CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_SYM, work->data->Q, &work->chol->c);
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, work->data->n);
 
     // Cost scaling
     vec_add_scaled(work->Qx, work->data->q, work->temp_n, 1, work->data->n);
     work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->temp_n, work->data->n));
     vec_mult_scalar(work->data->q, work->scaling->c, work->data->n);
-    cholmod_dense *c = cholmod_ones(1,1,CHOLMOD_REAL, &work->chol->c);
+    cholmod_dense *c = CHOLMOD(ones)(1,1,CHOLMOD_REAL, &work->chol->c);
     c_float *cx = c->x;
     cx[0] = work->scaling->c;
-    cholmod_scale(c, CHOLMOD_SCALAR, work->data->Q, &work->chol->c);
-    cholmod_free_dense(&c, &work->chol->c);
+    CHOLMOD(scale)(c, CHOLMOD_SCALAR, work->data->Q, &work->chol->c);
+    CHOLMOD(free_dense)(&c, &work->chol->c);
 
     // Store cinv, Dinv, Einv
     vec_ew_recipr(work->scaling->D, work->scaling->Dinv, work->data->n);

@@ -1,5 +1,6 @@
 #include "mex.h"
 #include <string.h>
+#include "global_opts.h"
 #include "qpalm.h"
 #include "cs.h"
 #include "constants.h"
@@ -365,8 +366,8 @@ cholmod_sparse *mx_get_sparse
     A->packed = 1 ;
     A->sorted = 1 ;
     A->nz = NULL ;
-    A->itype = CHOLMOD_INT ;       
-    A->dtype = CHOLMOD_DOUBLE ;
+    A->itype = ITYPE ;       
+    A->dtype = DTYPE ;
     A->stype = stype ;
 
     if (mxIsEmpty (Amatlab)){
