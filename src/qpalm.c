@@ -193,7 +193,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->Ad = work->chol->Ad->x;
   work->chol->yh = cholmod_allocate_dense(m, 1, m, CHOLMOD_REAL, &work->chol->c);
   work->yh = work->chol->yh->x;
-  work->chol->Atyh = cholmod_allocate_dense(n, 1, m, CHOLMOD_REAL, &work->chol->c);
+  work->chol->Atyh = cholmod_allocate_dense(n, 1, n, CHOLMOD_REAL, &work->chol->c);
   work->Atyh = work->chol->Atyh->x;
   work->chol->active_constraints = c_calloc(m, sizeof(c_int));
   work->chol->active_constraints_old = c_calloc(m, sizeof(c_int));
