@@ -5,6 +5,8 @@
 
 void newton_set_direction(QPALMWorkspace *work) {
 
+    // printf("Setting Newton\n");
+    // printf("\n STATUS: %d \n",(int) (&work->chol->c)->status);
     set_active_constraints(work);
     if (work->chol->reset_newton && work->chol->nb_active_constraints) {
         work->chol->reset_newton = FALSE;
@@ -28,7 +30,7 @@ void newton_set_direction(QPALMWorkspace *work) {
 
 void set_active_constraints(QPALMWorkspace *work) {
     work->chol->nb_active_constraints = 0;
-    for (int i = 0; i < work->data->m; i++) {
+    for (size_t i = 0; i < work->data->m; i++) {
         if ((work->Axys[i] < work->data->bmin[i]) || ((work->Axys[i] > work->data->bmax[i]))){
             work->chol->active_constraints[i] = 1;
             work->chol->nb_active_constraints++;
@@ -41,7 +43,7 @@ void set_active_constraints(QPALMWorkspace *work) {
 void set_entering_leaving_constraints(QPALMWorkspace *work) {
     int nb_enter = 0;
     int nb_leave = 0;
-    for (int i = 0; i < work->data->m; i++) {
+    for (size_t i = 0; i < work->data->m; i++) {
         if (work->chol->active_constraints[i] && !work->chol->active_constraints_old[i]) {
             work->chol->enter[nb_enter] = i;
             nb_enter++;

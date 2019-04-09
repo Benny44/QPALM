@@ -5,6 +5,7 @@
 extern "C" {
 # endif /* ifdef __cplusplus */
 
+#include "cholmod.h"
 
 #define FALSE 0
 #define TRUE 1

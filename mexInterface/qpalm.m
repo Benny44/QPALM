@@ -43,8 +43,125 @@ classdef qpalm < handle
             qpalm_mex('delete');
         end
 
+        %% Optimize function (setup + solve)
+        function varargout = optimize(this, varargin)
+            % OPTIMIZE configure solver with problem data and solve
+            %
+            %   optimize(Q,q,A,bmin,bmax,options)
+            
+            nargin = length(varargin);
 
-        %%
+            %dimension checks on user data. Mex function does not
+            %perform any checks on inputs, so check everything here
+            assert(nargin >= 5, 'incorrect number of inputs');
+            [Q,q,A,bmin,bmax] = deal(varargin{1:5});
+
+            %
+            % Get problem dimensions
+            %
+
+            % Get number of variables n
+            if (isempty(Q))
+                if (~isempty(q))
+                    n = length(q);
+                else
+                    if (~isempty(A))
+                        n = size(A, 2);
+                    else
+                        error('The problem does not have any variables');
+                    end
+                end
+            else
+                n = size(Q, 1);
+                assert(n==size(Q,2), 'Q must be a square matrix');
+            end
+
+            % Get number of constraints m
+            if (isempty(A))
+                m = 0;
+            else
+                m = size(A, 1);
+            end
+
+            %
+            % Create sparse matrices and full vectors if they are empty
+            %
+
+            if (isempty(Q))
+                Q = sparse(n, n);
+%                 Q = zeros(n,n);
+            else
+                Q   = sparse(Q);
+%                 Q = full(Q(:,:));
+            end
+            if (isempty(q))
+                q = zeros(n, 1);
+            else
+                q   = full(q(:));
+            end
+
+            % Create proper constraints if they are not passed
+            if (isempty(A) && (~isempty(bmin) || ~isempty(bmax))) || ...
+                (~isempty(A) && (isempty(bmin) && isempty(bmax)))
+                error('A must be supplied together with at least one bound l or u');
+            end
+
+            if (~isempty(A) && isempty(bmin))
+                bmin = -Inf(m, 1);
+            end
+
+            if (~isempty(A) && isempty(bmax))
+                bmax = Inf(m, 1);
+            end
+
+            if (isempty(A))
+                A = sparse(m, n);
+%                 A = zeros(m,n);
+                bmin = -Inf(m, 1);
+                bmax = Inf(m, 1);
+            else
+                bmin = full(bmin(:));
+                bmax = full(bmax(:));
+                A = sparse(A);
+%                 A = full(A(:,:));
+            end
+
+
+            %
+            % Check vector dimensions (not checked from the C solver)
+            %
+
+            assert(length(q)    == n, 'Incorrect dimension of q');
+            assert(length(bmin) == m, 'Incorrect dimension of l');
+            assert(length(bmax) == m, 'Incorrect dimension of u');
+
+            %
+            % Convert infinity values to QPALM_INFINITY
+            %
+            bmax = min(bmax, qpalm.constant('QPALM_INFTY'));
+            bmin = max(bmin, -qpalm.constant('QPALM_INFTY'));
+
+
+            %make a settings structure from the remainder of the arguments.
+            %'true' means that this is a settings initialization, so all
+            %parameter/values are allowed.  No extra inputs will result
+            %in default settings being passed back
+            theSettings = validateSettings(varargin{6:end});
+
+%             [varargout{1:nargout}] = qpalm_mex('setup',n,m,Q,q,A,bmin,bmax,theSettings);
+            
+            nargoutchk(0,1);  %either return nothing (but still solve), or a single output structure
+            [out.x, out.y, out.prim_inf_cert, out.dual_inf_cert, out.info] = ...
+                qpalm_mex('optimize',n,m,Q,q,A,bmin,bmax,theSettings);
+            if(nargout)
+                varargout{1} = out;
+            end
+%             delete(this);
+            return;
+        end
+            
+            
+        %% Setup function
         function varargout = setup(this, varargin)
             % SETUP configure solver with problem data
             %
@@ -220,7 +337,7 @@ classdef qpalm < handle
 % 
 %         end
 
-        %%
+        %% Solve function
         function varargout = solve(this, varargin)
             % SOLVE solve the QP
 

@@ -140,7 +140,7 @@ c_int is_primal_infeasible(QPALMWorkspace *work) {
 
     //out_of_bounds = bmax'*max(dy,0) + bmin'*min(dy,0)
     c_float out_of_bounds = 0;
-    for(c_int i=0; i < work->data->m; i++) {
+    for(size_t i=0; i < work->data->m; i++) {
         out_of_bounds += work->data->bmax[i]*c_max(work->delta_y[i], 0)
             + work->data->bmin[i]*c_min(work->delta_y[i], 0);
     }
@@ -172,14 +172,14 @@ c_int is_dual_infeasible(QPALMWorkspace *work) {
     //NB Adx = work->Ad (= tau*Ad of the previous iteration)
     if (work->settings->scaling) {
         vec_ew_prod(work->scaling->Einv, work->Ad, work->Adelta_x, work->data->m);
-        for (c_int k = 0; k < work->data->m; k++) {
+        for (size_t k = 0; k < work->data->m; k++) {
             if ((work->data->bmax[k] < QPALM_INFTY && work->Adelta_x[k] >= eps_dinf_norm_Ddx)
                 || (work->data->bmin[k] > -QPALM_INFTY && work->Adelta_x[k] <= -eps_dinf_norm_Ddx)) {
                 return 0;
             }
         }      
     } else {
-        for (c_int k = 0; k < work->data->m; k++) {
+        for (size_t k = 0; k < work->data->m; k++) {
             if ((work->data->bmax[k] < QPALM_INFTY && work->Ad[k] >= eps_dinf_norm_Ddx)
                 || (work->data->bmin[k] > -QPALM_INFTY && work->Ad[k] <= -eps_dinf_norm_Ddx)) {
                 return 0;

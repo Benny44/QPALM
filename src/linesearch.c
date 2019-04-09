@@ -35,9 +35,9 @@ c_float exact_linesearch_newton(QPALMWorkspace *work){
     // s = alpha./delta
     vec_ew_div(work->alpha, work->delta, work->temp_2m, work->data->m*2);
 
-    // index_P = delta > 0
+    // index_P =q delta > 0
     // index_J = delta < 0
-    for (c_int i=0; i<work->data->m*2; i++){
+    for (size_t i=0; i<work->data->m*2; i++){
         if (work->delta[i] == 0) {
             work->index_P[i] = 0;
             work->index_J[i] = 0;
@@ -54,7 +54,7 @@ c_float exact_linesearch_newton(QPALMWorkspace *work){
     c_float intercept, slope, tau;
     tau = -QPALM_INFTY;
     //tau = max(s)
-    for (c_int i = 0; i < work->data->m*2; i++) {
+    for (size_t i = 0; i < work->data->m*2; i++) {
         if (work->temp_2m[i] > tau) {
             tau = work->temp_2m[i];
         }
@@ -69,7 +69,7 @@ c_float exact_linesearch_newton(QPALMWorkspace *work){
     for (c_int k = 0; k < 100; k++) {
         intercept = work->beta;
         slope = work->eta;
-        for (c_int i = 0; i < work->data->m*2; i++) {
+        for (size_t i = 0; i < work->data->m*2; i++) {
             // if ((work->index_P[i] && (tau > work->temp_2m[i])) || (work->index_J[i] && (tau < work->temp_2m[i]))) {
             //     intercept -= work->delta_alpha[i];
             //     slope     += work->delta2[i];
@@ -101,7 +101,7 @@ c_float armijo_linesearch(QPALMWorkspace *work) {
     ddf = vec_prod(work->d, work->df, work->data->n);
     rhs = c1*(ddf + vec_prod(work->Ad, work->yh, work->data->m));
     
-    c_int i;
+    size_t i;
     dist2 = 0;
     for (i = 0; i < work->data->m; i++) {
         dist2 += work->sigma[i]*(work->Axys[i] - work->z[i])*(work->Axys[i] - work->z[i]);
@@ -160,7 +160,7 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     vec_array_copy(work->temp_2m, work->s, work->data->m*2);
     // index_L = s>0
     c_int nL = 0;
-    for (c_int i=0; i<work->data->m*2; i++){
+    for (size_t i=0; i<work->data->m*2; i++){
         if (work->temp_2m[i] > 0) {
             work->index_L[i] = 1;
             nL++;
@@ -173,7 +173,7 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     select_subsequence(work->s, work->s, work->index_L, work->data->m*2);
 
     // index_P = delta > 0
-    for (c_int i=0; i<work->data->m*2; i++){
+    for (size_t i=0; i<work->data->m*2; i++){
         if (work->delta[i] > 0) {
             work->index_P[i] = 1;
         } else {
@@ -181,7 +181,7 @@ c_float exact_linesearch(QPALMWorkspace *work) {
         }     
     };
     // index_J = (P&~L)|(~P&L);
-    for (c_int i=0; i<work->data->m*2; i++){
+    for (size_t i=0; i<work->data->m*2; i++){
         if ((work->index_P[i] + work->index_L[i]) == 1) {
             work->index_J[i] = 1;
         } else {

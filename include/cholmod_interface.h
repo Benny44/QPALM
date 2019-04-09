@@ -6,6 +6,7 @@ extern "C" {
 # endif // ifdef __cplusplus
 
 #include "cholmod.h"
+#include "global_opts.h"
 #include "types.h"
 
 

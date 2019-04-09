@@ -93,8 +93,8 @@ typedef struct {
  * Data structure
  */
 typedef struct {
-  c_int    n; ///< number of variables n
-  c_int    m; ///< number of constraints m
+  size_t    n; ///< number of variables n
+  size_t   m; ///< number of constraints m
   cholmod_sparse *Q; ///< quadratic part of the cost Q in csc format (size n x n). It
               ///  can be either the full Q or only the upper triangular part. 
   cholmod_sparse *A; ///< linear constraints matrix A in csc format (size m x n)

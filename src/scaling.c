@@ -26,6 +26,16 @@ void scale_data(QPALMWorkspace *work) {
         // Set D_temp = vecnorm(A,inf,1) (cols) and E_temp = vecnorm(A,inf,2) (rows)
         mat_inf_norm_cols(work->data->A, work->D_temp);
         mat_inf_norm_rows(work->data->A, work->E_temp);
+        // printf("Scaling\n");
+        // for (size_t j = 0; j < work->data->n; j++) {
+        //   printf("%f ", work->D_temp[j]);
+        // }
+        // printf("\n");
+        // for (size_t j = 0; j < work->data->m; j++) {
+        //   printf("%f ", work->E_temp[j]);
+        // }
+        // printf("\n");
+
 
         // // Set to 1 values with 0 norms (avoid crazy scaling)
         limit_scaling(work->D_temp, work->data->n);
@@ -43,8 +53,70 @@ void scale_data(QPALMWorkspace *work) {
         // A <- EAD
         // mat_premult_diag(work->data->A, work->E_temp);
         // mat_postmult_diag(work->data->A, work->D_temp);
+        // printf("\n\n\n");
+        // printf("Ax before scaling:\n");
+        // c_float *Ax1 = work->data->A->x;
+        // for (size_t j = 0; j < work->data->A->nzmax; j++) {
+        // printf("%f ", Ax1[j]);
+        // }
+        // printf("\n");
+        // printf("nzmax %d\n", (int)work->data->A->nzmax);
+        // printf("nrow %d\n", (int)work->data->A->nrow);
+        // printf("ncol %d\n", (int)work->data->A->ncol);
+        // printf("itype %d\n", (int)work->data->A->itype);
+        // printf("xtype %d\n", (int)work->data->A->xtype);
+        // printf("dtype %d\n", (int)work->data->A->dtype);
+        // printf("sorted %d\n", (int)work->data->A->sorted);
+        // printf("packed %d\n", (int)work->data->A->packed);
+
+        // printf("Ex: \n");
+        // c_float *Ex = work->chol->E_temp->x;
+        // for (size_t j = 0; j < work->chol->E_temp->nzmax; j++) {
+        //   printf("%f ", Ex[j]);
+        // }
+        // printf("\n");
+        // printf("E nrow: %d\n", (int)work->chol->E_temp->nrow);
+        // printf("E ncol: %d\n", (int)work->chol->E_temp->ncol);
+        // printf("E xtype: %d\n", (int)work->chol->E_temp->xtype);
+        // printf("E dtype: %d\n", (int)work->chol->E_temp->dtype);
+        // printf("E d: %d\n", (int)work->chol->E_temp->d);
+        // // work->chol->E_temp->
+        // printf("\n STATUS: %d \n",(int) (&work->chol->c)->status);
+        
         CHOLMOD(scale)(work->chol->E_temp, CHOLMOD_ROW, work->data->A, &work->chol->c);
+
+        // printf("\n STATUS: %d \n",(int) (&work->chol->c)->status);
+
+        
+        // printf("Ax after scaling with E:\n");
+        // c_float *Ax = work->data->A->x;
+        // for (size_t j = 0; j < work->data->A->nzmax; j++) {
+        // printf("%f ", Ax[j]);
+        // }
+        // printf("\n");
+
+        // printf("\n\n\n");
+
+        // printf("Dx: \n");
+        // c_float *Dx = work->chol->D_temp->x;
+        // for (size_t j = 0; j < work->chol->D_temp->nzmax; j++) {
+        //   printf("%f ", Dx[j]);
+        // }
+        // printf("\n");
+        // printf("D nrow: %d\n", (int)work->chol->D_temp->nrow);
+        // printf("D ncol: %d\n", (int)work->chol->D_temp->ncol);
+
         CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_COL, work->data->A, &work->chol->c);
+
+        // printf("Ax after scaling with D:\n");
+        // c_float *Ax2 = work->data->A->x;
+        // for (size_t j = 0; j < work->data->A->nzmax; j++) {
+        // printf("%f ", Ax2[j]);
+        // }
+        // printf("\n");
+
+        // printf("\n\n\n");
+
 
         // Update equilibration matrices D and E
         vec_ew_prod(work->scaling->D, work->D_temp, work->scaling->D, work->data->n);
@@ -53,7 +125,7 @@ void scale_data(QPALMWorkspace *work) {
     }
 
     // Equilibrate matrix Q and vector q
-    // Q <- DPD, q <- Dq
+    // Q <- DQD, q <- Dq
     prea_vec_copy(work->scaling->D, work->D_temp, work->data->n);
     CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_SYM, work->data->Q, &work->chol->c);
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, work->data->n);
