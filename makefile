@@ -4,14 +4,14 @@ SRCDIR=src
 EDIR=examples
 BDIR=lib
 
-all: $(BDIR)/libqpalm.a demo
+all: lib demo
 
 lib: $(BDIR)/libqpalm.a
 
-CC=cc
-CFLAGS=-I$(IDIR) -ISuiteSparse/include -fPIC -O3 -DPROFILING -Wall -Wextra -fexceptions -fopenmp
+CC=gcc
+CFLAGS=-I$(IDIR) -ISuiteSparse/include -fPIC -O3 -DPROFILING -Wall -Wextra -DDLONG -fopenmp -fexceptions -g -fuse-ld=bfd -Wl,-z,noseparate-code
 LIBS=-lm 
-CHOLMOD_LIBS=-lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmwblas -lmwlapack -lmetis -lm -lrt -Wl,-rpath=/home/ben/Documents/Projects/QPALM/SuiteSparse/lib
+CHOLMOD_LIBS=-lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmwblas -lmwlapack -lmetis -lm
 CHOLMOD_LIB_INCLUDES=-LSuiteSparse/lib -L/home/ben/.MATLAB/R2015a/bin/glnxa64 -ISuiteSparse/metis-5.1.0/include
 
 _DEPS = qpalm.h scaling.h util.h lin_alg.h validate.h linesearch.h types.h constants.h lbfgs.h global_opts.h termination.h cs.h cholmod_interface.h newton.h

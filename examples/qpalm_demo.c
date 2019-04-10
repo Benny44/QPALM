@@ -130,11 +130,11 @@ int main() {
   cholmod_dense *Q_dense, *A_dense;
 
   cholmod_common c;
-  cholmod_start(&c);
+  CHOLMOD(start)(&c);
 
 
-  Q_dense = cholmod_ones(n, n, CHOLMOD_REAL, &c);
-  data->Q = cholmod_dense_to_sparse(Q_dense, 1, &c);
+  Q_dense = CHOLMOD(ones)(n, n, CHOLMOD_REAL, &c);
+  data->Q = CHOLMOD(dense_to_sparse)(Q_dense, 1, &c);
   data->q = random_vector(data->n);
   // for (int i = 0; i < data->n; i++) {
   //   printf(" %.20f", data->q[i]);
@@ -142,12 +142,12 @@ int main() {
   //data->q = q;
   //data->A = csc_matrix(data->m, data->n, A_nnz, A_x, A_i, A_p);
   // data->A = random_matrix(data->m, data->n, 1e-1);
-  A_dense = cholmod_ones(m, n, CHOLMOD_REAL, &c);
-  data->A = cholmod_dense_to_sparse(A_dense, 1, &c);
+  A_dense = CHOLMOD(ones)(m, n, CHOLMOD_REAL, &c);
+  data->A = CHOLMOD(dense_to_sparse)(A_dense, 1, &c);
   data->bmin = constant_vector(-2, data->m);
   data->bmax = constant_vector(2, data->m);
 
-  cholmod_finish(&c);
+  CHOLMOD(finish)(&c);
 
   // Define Solver settings as default
   qpalm_set_default_settings(settings);
@@ -160,7 +160,7 @@ int main() {
   // cholmod_start(&work->chol->c);
   qpalm_solve(work);
   // cholmod_finish(&work->chol->c);
-  cholmod_start(&work->chol->c);
+  CHOLMOD(start)(&work->chol->c);
 
   printf("Solver status: ");
   printf(work->info->status);
@@ -177,11 +177,11 @@ int main() {
   #endif
   // Clean workspace
   
-  cholmod_free_dense(&Q_dense, &c);
-  cholmod_free_dense(&A_dense, &c);
-  cholmod_free_sparse(&data->Q, &c);
-  cholmod_free_sparse(&data->A, &c);
-  cholmod_finish(&work->chol->c);
+  CHOLMOD(free_dense)(&Q_dense, &c);
+  CHOLMOD(free_dense)(&A_dense, &c);
+  CHOLMOD(free_sparse)(&data->Q, &c);
+  CHOLMOD(free_sparse)(&data->A, &c);
+  CHOLMOD(finish)(&work->chol->c);
 
   qpalm_cleanup(work);
   // csc_spfree(data->A);
