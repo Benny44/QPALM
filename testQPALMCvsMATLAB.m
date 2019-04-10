@@ -22,10 +22,14 @@ settings.max_iter = 1000;
 settings.eps_abs = 1e-4;
 settings.eps_rel = 1e-4;
 settings.tau_init = 1.5;
-% solver.setup(Q, q, A, lb, ub, settings);
+
 tic
-res = solver.optimize(Q, q, A, lb, ub, settings);
+solver.setup(Q, q, A, lb, ub, settings); 
+res = solver.solve();
 QPALMtime = toc
+% tic
+% res = solver.optimize(Q, q, A, lb, ub, settings);
+% QPALMtime = toc
 %% Quadprog
 
 % tic

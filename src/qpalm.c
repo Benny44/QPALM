@@ -64,6 +64,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   // printf("\n STATUS: %d \n",(int) cm->status);
 
   CHOLMOD(start)(c);
+  CHOLMOD_FUNCTION_DEFAULTS;
   // printf("\n STATUS: %d \n",(int) cm->status);
 
   // printf("Itype: %d, Dtype: %d\n", cm->itype, cm->dtype);
@@ -109,14 +110,12 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   
   work->chol->c = *c;
   // cholmod_l_start(&work->chol->c);
-  // printf("Cholmod started\n");
-  // printf("Itype: %d, Dtype: %d\n", (&work->chol->c)->itype, (&work->chol->c)->dtype);
+  printf("Cholmod started\n");
+  printf("Itype: %d, Dtype: %d\n", (&work->chol->c)->itype, (&work->chol->c)->dtype);
   cholmod_set_settings(&work->chol->c);
   // (&work->chol->c)->itype = ITYPE;
   // (&work->chol->c)->dtype = DTYPE;
   // printf("Itype: %d, Dtype: %d\n", (&work->chol->c)->itype, (&work->chol->c)->dtype);
-
-  
 
   // Copy problem data into workspace
   work->data       = c_calloc(1, sizeof(QPALMData));
@@ -349,8 +348,23 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
 
 void qpalm_solve(QPALMWorkspace *work) {
 
-  // printf("Solving\n");
-  // printf("\n STATUS: %d \n",(int) (&work->chol->c)->status);
+  printf("Solving\n");
+  printf("\n STATUS: %d \n",(int) (&work->chol->c)->status);
+
+  printf("nzmax %d\n", (int)work->data->A->nzmax);
+  printf("nrow %d\n", (int)work->data->A->nrow);
+  printf("ncol %d\n", (int)work->data->A->ncol);
+  printf("itype %d\n", (int)work->data->A->itype);
+  printf("xtype %d\n", (int)work->data->A->xtype);
+  printf("dtype %d\n", (int)work->data->A->dtype);
+  printf("sorted %d\n", (int)work->data->A->sorted);
+  printf("packed %d\n", (int)work->data->A->packed);
+
+  printf("nrow %d\n", (int)work->chol->yh->nrow);
+  printf("ncol %d\n", (int)work->chol->yh->ncol);
+  printf("xtype %d\n", (int)work->chol->yh->xtype);
+  printf("dtype %d\n", (int)work->chol->yh->dtype);
+
 
   #ifdef PROFILING
   qpalm_tic(work->timer); // Start timer

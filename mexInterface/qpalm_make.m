@@ -63,6 +63,7 @@ else
     include = ['-DNPARTITION ' include] ;
 end
 
+flags = [flags ' -DMATLAB_MEX_FILE'];
 
  %---------------------------------------------------------------------------
  % BLAS option

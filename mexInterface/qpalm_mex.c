@@ -6,6 +6,7 @@
 #include "constants.h"
 #include "cholmod.h"
 #include "cholmod_matlab.h"
+#include "cholmod_function.h"
 
 //Modes of operation
 #define MODE_INIT "new"
@@ -114,6 +115,8 @@ void exitFcn() {
  */
 void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs []) {
     
+    mexAtExit(exitFcn);
+
     // Get the command string
     char cmd[64];
 
@@ -300,6 +303,7 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
     }
     else if (strcmp(cmd, MODE_SETUP) == 0) {
 
+
         //throw an error if this is called more than once
         if(qpalm_work != NULL){
           mexErrMsgTxt("Solver is already initialized with problem data.");
@@ -337,8 +341,12 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         // data->A = mx_get_sparse(A, &Amatrix, &dummy, 0);
         // data->Q = mx_get_sparse(Q, &Qmatrix, &dummy, -1);//Q is symmetric, use only lower part
         
+
         data->A = sputil_get_sparse(A, &Amatrix, &dummy, 0);
         data->Q = sputil_get_sparse(Q, &Qmatrix, &dummy, -1);//Q is symmetric, use only lower part
+
+        printf("A nzmax: %d\n", (int) data->A->nzmax);
+
 
         // Create Settings
         const mxArray* mxSettings = prhs[8];
@@ -354,7 +362,8 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         qpalm_work = qpalm_setup(data, settings, &c);
         // printf("After setup\n");
 // c_float *Ax = qpalm_work->data->A->x;
-  printf("A nzmax: %d\n", (int) qpalm_work->data->A->nzmax);
+        
+        printf("A nzmax: %d\n", (int) qpalm_work->data->A->nzmax);
   // printf("A: \n");
   // for (size_t i = 0; i < work->data->A->nzmax; i++) {
   //   printf("%f ", Ax[i]);
@@ -365,8 +374,9 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
            mexErrMsgTxt("Invalid problem setup");
          }
 
-        // mexMakeMemoryPersistent(qpalm_work);
-        // mexAtExit(exitFcn);
+        
+
+        
 
          //cleanup temporary structures
          // Data
@@ -386,7 +396,8 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
          mxFree(settings);
         // printf("After free settings\n");
 
-        // printf("A nzmax: %d\n", (int) qpalm_work->data->A->nzmax);
+        printf("End of setup\n");
+        printf("A nzmax: %d\n", (int) qpalm_work->data->A->nzmax);
 
         // printf("xtype A: %d\n", qpalm_work->data->A->xtype);
 
@@ -396,10 +407,10 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
 
     } else if (strcmp(cmd, MODE_SOLVE) == 0) { // SOLVE
 
-        // printf("Before calling solve\n");
-        // printf("A nzmax: %d\n", (int) qpalm_work->data->A->nzmax);
+        printf("Before calling solve\n");
+        printf("A nzmax: %d\n", (int) qpalm_work->data->A->nzmax);
         // printf("xtype A: %d\n", qpalm_work->data->A->xtype);
-        // printf("reset lbfgs: %d\n", (int) qpalm_work->lbfgs->reset_lbfgs);
+        printf("reset lbfgs: %d\n", (int) qpalm_work->lbfgs->reset_lbfgs);
 
         if (nlhs != 5 || nrhs != 1){
           mexErrMsgTxt("Solve : wrong number of inputs / outputs");
