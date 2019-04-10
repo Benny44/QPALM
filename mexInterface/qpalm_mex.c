@@ -54,14 +54,6 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",      //c_int
                                       "warm_start",     //c_int
                                       "verbose"};       //c_int
 
-const char* CSC_FIELDS[] = {"nzmax",    //c_int
-                            "m",        //size_t
-                            "n",        //size_t
-                            "p",        //c_int*
-                            "i",        //c_int*
-                            "x",        //c_float*
-                            "nz"};      //c_int
-
 const char* QPALM_DATA_FIELDS[] = {"n",     //c_int
                                    "m",     //c_int
                                    "Q",     //csc
@@ -93,6 +85,11 @@ c_float*  copyToCfloatVector(double * vecData, size_t numel);
 cholmod_sparse *mx_get_sparse (const mxArray *Amatlab, cholmod_sparse *A, double *dummy, int stype);
 
 
+/**
+ * Function that mex calls when it closes unexpectedly
+ * Frees the workspace
+ */
+
 void exitFcn() {
   if (qpalm_work != NULL) {
       qpalm_cleanup(qpalm_work);
@@ -115,6 +112,7 @@ void exitFcn() {
  */
 void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs []) {
     
+    // Set function to call when mex closes unexpectedly
     mexAtExit(exitFcn);
 
     // Get the command string
@@ -122,7 +120,6 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
 
     if (nrhs < 1 || mxGetString(prhs[0], cmd, sizeof(cmd)))
 		mexErrMsgTxt("First input should be a command string less than 64 characters long.");
-    
     
     // report the default settings
     if (strcmp(cmd, MODE_DEFAULT_SETTINGS) == 0) {
@@ -150,155 +147,6 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         if (nlhs != 0 || nrhs != 1)
             mexWarnMsgTxt("Delete: Unexpected arguments ignored.");
         return;
-
-
-    } else if (strcmp(cmd, MODE_OPTIMIZE) == 0) { 
-//throw an error if this is called more than once
-        if(qpalm_work != NULL){
-          mexErrMsgTxt("Solver is already initialized with problem data.");
-        }   
-
-        if (nlhs != 5 || nrhs != 9){
-          mexErrMsgTxt("Optimize : wrong number of inputs / outputs");
-        }
-
-        //Create data and settings containers
-        QPALMSettings* settings = (QPALMSettings *)mxCalloc(1,sizeof(QPALMSettings));
-        QPALMData*     data     = (QPALMData *)mxCalloc(1,sizeof(QPALMData));
-
-        // handle the problem data first.  Matlab-side
-        // class wrapper is responsible for ensuring that
-        // Q and A are sparse matrices,  everything
-        // else is a dense vector and all inputs are
-        // of compatible dimension
-
-        // Get mxArrays
-        const mxArray* Q  = prhs[3];
-        const mxArray* q  = prhs[4];
-        const mxArray* A  = prhs[5];
-        const mxArray* bmin = prhs[6];
-        const mxArray* bmax = prhs[7];
-
-        // Create Data Structure
-        data->n = (size_t) mxGetScalar(prhs[1]);
-        data->m = (size_t) mxGetScalar(prhs[2]);
-        data->q = copyToCfloatVector(mxGetPr(q), data->n);
-        data->bmin = copyToCfloatVector(mxGetPr(bmin), data->m);
-        data->bmax = copyToCfloatVector(mxGetPr(bmax), data->m);
-
-        // Convert matrices from matlab to cholmod_sparse
-        double dummy = 0; 
-        cholmod_sparse Amatrix, Qmatrix;
-        cholmod_common c;
-
-        // data->A = mx_get_sparse(A, &Amatrix, &dummy, 0);
-        // data->Q = mx_get_sparse(Q, &Qmatrix, &dummy, -1);//Q is symmetric, use only lower part
-        
-        data->A = sputil_get_sparse(A, &Amatrix, &dummy, 0);
-        data->Q = sputil_get_sparse(Q, &Qmatrix, &dummy, -1);//Q is symmetric, use only lower part
-
-        // Create Settings
-        const mxArray* mxSettings = prhs[8];
-        if(mxIsEmpty(mxSettings)){
-          // use defaults
-          qpalm_set_default_settings(settings);
-        } else {
-          //populate settings structure from mxArray input
-          copyMxStructToSettings(mxSettings, settings);
-        }
-
-        // Setup workspace
-        qpalm_work = qpalm_setup(data, settings, &c);
-        
-        if(qpalm_work == NULL){
-           mexErrMsgTxt("Invalid problem setup");
-         }
-        
-        // Solve the optimization problem
-        qpalm_solve(qpalm_work);
-        // printf("After solving\n");
-
-        // Allocate space for solution
-        // primal variables
-        plhs[0] = mxCreateDoubleMatrix(qpalm_work->data->n,1,mxREAL);
-        // dual variables
-        plhs[1] = mxCreateDoubleMatrix(qpalm_work->data->m,1,mxREAL);
-        // primal infeasibility certificate
-        plhs[2] = mxCreateDoubleMatrix(qpalm_work->data->m,1,mxREAL);
-        // dual infeasibility certificate
-        plhs[3] = mxCreateDoubleMatrix(qpalm_work->data->n,1,mxREAL);
-
-        //copy results to mxArray outputs
-        //assume that five outputs will always
-        //be returned to matlab-side class wrapper
-        if ((qpalm_work->info->status_val != QPALM_PRIMAL_INFEASIBLE) &&
-            (qpalm_work->info->status_val != QPALM_DUAL_INFEASIBLE)){
-
-            //primal and dual solutions
-            castToDoubleArr(qpalm_work->solution->x, mxGetPr(plhs[0]), qpalm_work->data->n);
-            castToDoubleArr(qpalm_work->solution->y, mxGetPr(plhs[1]), qpalm_work->data->m);
-
-            //infeasibility certificates -> NaN values
-            setToNaN(mxGetPr(plhs[2]), qpalm_work->data->m);
-            setToNaN(mxGetPr(plhs[3]), qpalm_work->data->n);
-
-        } else if (qpalm_work->info->status_val == QPALM_PRIMAL_INFEASIBLE){ //primal infeasible
-
-            //primal and dual solutions -> NaN values
-            setToNaN(mxGetPr(plhs[0]), qpalm_work->data->n);
-            setToNaN(mxGetPr(plhs[1]), qpalm_work->data->m);
-
-            //primal infeasibility certificates
-            castToDoubleArr(qpalm_work->delta_y, mxGetPr(plhs[2]), qpalm_work->data->m);
-
-            //dual infeasibility certificates -> NaN values
-            setToNaN(mxGetPr(plhs[3]), qpalm_work->data->n);
-
-            // Set objective value to infinity
-            qpalm_work->info->obj_val = mxGetInf();
-
-        } else if (qpalm_work->info->status_val == QPALM_DUAL_INFEASIBLE) { //dual infeasible
-
-            //primal and dual solutions -> NaN values
-            setToNaN(mxGetPr(plhs[0]), qpalm_work->data->n);
-            setToNaN(mxGetPr(plhs[1]), qpalm_work->data->m);
-
-            //primal infeasibility certificates -> NaN values
-            setToNaN(mxGetPr(plhs[2]), qpalm_work->data->m);
-
-            //dual infeasibility certificates
-            castToDoubleArr(qpalm_work->delta_x, mxGetPr(plhs[3]), qpalm_work->data->n);
-
-            // Set objective value to -infinity
-            qpalm_work->info->obj_val = -mxGetInf();
-        }
-
-        plhs[4] = copyInfoToMxStruct(qpalm_work->info); // Info structure
-        
-        // printf("Before cleanup variables\n");
-        //cleanup temporary structures
-        // Data
-        if (data->q) mxFree(data->q);
-        if (data->bmin) mxFree(data->bmin);
-        if (data->bmax) mxFree(data->bmax);
-        //Don't free data->A and data->Q because they are only a shallow copy
-                // printf("After cleanup variables\n");
-
-        mxFree(data);
-            // printf("After cleanup data\n");
-
-        // Settings
-        mxFree(settings);
-                    // printf("After cleanup settings\n");
-
-                    //clean up the problem workspace
-        if(qpalm_work != NULL){
-            qpalm_cleanup(qpalm_work);
-            qpalm_work = NULL;
-        }
-
-        return;
-
 
     }
     else if (strcmp(cmd, MODE_SETUP) == 0) {
@@ -336,17 +184,10 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         // Convert matrices from matlab to cholmod_sparse
         double dummy = 0; 
         cholmod_sparse Amatrix, Qmatrix;
-        cholmod_common c;
-
-        // data->A = mx_get_sparse(A, &Amatrix, &dummy, 0);
-        // data->Q = mx_get_sparse(Q, &Qmatrix, &dummy, -1);//Q is symmetric, use only lower part
         
 
         data->A = sputil_get_sparse(A, &Amatrix, &dummy, 0);
         data->Q = sputil_get_sparse(Q, &Qmatrix, &dummy, -1);//Q is symmetric, use only lower part
-
-        printf("A nzmax: %d\n", (int) data->A->nzmax);
-
 
         // Create Settings
         const mxArray* mxSettings = prhs[8];
@@ -357,60 +198,30 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
           //populate settings structure from mxArray input
           copyMxStructToSettings(mxSettings, settings);
         }
-
+        
+        cholmod_common c;
         // Setup workspace
         qpalm_work = qpalm_setup(data, settings, &c);
-        // printf("After setup\n");
-// c_float *Ax = qpalm_work->data->A->x;
-        
-        printf("A nzmax: %d\n", (int) qpalm_work->data->A->nzmax);
-  // printf("A: \n");
-  // for (size_t i = 0; i < work->data->A->nzmax; i++) {
-  //   printf("%f ", Ax[i]);
-  // }
-  // printf("\n");
-//   printf("xtype A: %d\n", qpalm_work->data->A->xtype);
+
         if(qpalm_work == NULL){
            mexErrMsgTxt("Invalid problem setup");
          }
-
-        
-
-        
 
          //cleanup temporary structures
          // Data
          if (data->q) mxFree(data->q);
          if (data->bmin) mxFree(data->bmin);
          if (data->bmax) mxFree(data->bmax);
-        //  if (data->A->p) mxFree(data->A->p);
-        //  if (data->A->i) mxFree(data->A->i);
-        //  if (data->Q->p) mxFree(data->Q->p);
-        //  if (data->Q->i) mxFree(data->Q->i);
-        // printf("After free A and Q p/i\n");
-
-         //Don't free data->A and data->Q because they are only a shallow copy
+        //Don't free data->A and data->Q because they are only a shallow copy
          mxFree(data);
-        //  printf("After free data\n");
+         
          // Settings
          mxFree(settings);
-        // printf("After free settings\n");
-
-        printf("End of setup\n");
-        printf("A nzmax: %d\n", (int) qpalm_work->data->A->nzmax);
-
-        // printf("xtype A: %d\n", qpalm_work->data->A->xtype);
-
 
         return;
 
 
     } else if (strcmp(cmd, MODE_SOLVE) == 0) { // SOLVE
-
-        printf("Before calling solve\n");
-        printf("A nzmax: %d\n", (int) qpalm_work->data->A->nzmax);
-        // printf("xtype A: %d\n", qpalm_work->data->A->xtype);
-        printf("reset lbfgs: %d\n", (int) qpalm_work->lbfgs->reset_lbfgs);
 
         if (nlhs != 5 || nrhs != 1){
           mexErrMsgTxt("Solve : wrong number of inputs / outputs");
@@ -531,56 +342,9 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
 
 
     } else {
-        //mexErrMsgIdAndTxt(PANOC_ERROR_RHS_OUT_OF_BOUNDS, "Invalid PANOC mode");
+        mexErrMsgTxt("Invalid QPALM mode");
     }
 
-}
-
-cholmod_sparse *mx_get_sparse
-(
-    const mxArray *Amatlab, /* MATLAB version of the matrix */
-    cholmod_sparse *A,	    /* CHOLMOD version of the matrix */
-    double *dummy,	    /* a pointer to a valid scalar double */
-    int stype		    /* -1: lower, 0: unsymmetric, 1: upper */
-)
-{
-    // int *Ap ;
-    
-    A->nrow = mxGetM (Amatlab) ;
-    A->ncol = mxGetN (Amatlab) ;
-    
-    c_int *Ap, *Ai;
-    Ap = copyToCintVector(mxGetJc (Amatlab), A->ncol + 1);
-    Ai = copyToCintVector(mxGetIr (Amatlab), Ap[A->ncol]);
-
-    A->p = Ap;
-    A->i = Ai;
-
-    A->nzmax = Ap [A->ncol] ;
-    A->packed = 1 ;
-    A->sorted = 1 ;
-    A->nz = NULL ;
-    A->itype = ITYPE ;       
-    A->dtype = DTYPE ;
-    A->stype = stype ;
-
-    if (mxIsEmpty (Amatlab)){
-        /* this is not dereferenced, but the existence (non-NULL) of these
-        * pointers is checked in CHOLMOD */
-        A->x = dummy ; 
-        A->z = dummy ;
-        A->xtype = mxIsComplex (Amatlab) ? CHOLMOD_ZOMPLEX : CHOLMOD_REAL ;
-    }
-    else if (mxIsDouble (Amatlab)){
-        // c_float *Ax;
-        // Ax = copyToCfloatVector(mxGetPr (Amatlab), Ap[A->ncol]);
-        // A->x = Ax;
-        A->x = mxGetPr (Amatlab) ;
-        A->z = mxGetPi (Amatlab) ;
-        A->xtype = mxIsComplex (Amatlab) ? CHOLMOD_ZOMPLEX : CHOLMOD_REAL ;
-    }
-
-    return (A); 
 }
 
 void castToDoubleArr(c_float *arr, double* arr_out, size_t len) {
