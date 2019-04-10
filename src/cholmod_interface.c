@@ -177,8 +177,12 @@ void ldlsolveLD_neg_dphi(QPALMWorkspace *work) {
 
 
 void cholmod_set_settings(cholmod_common *c) {
-  // c->itype = ITYPE;
-  // c->dtype = DTYPE;
+  //Suitesparse memory allocation functions
+  SuiteSparse_config.malloc_func = c_malloc;
+  SuiteSparse_config.calloc_func = c_calloc;
+  SuiteSparse_config.free_func = c_free;
+  SuiteSparse_config.realloc_func = c_realloc;
+  
   c->final_asis = FALSE ;
   c->final_super = FALSE ;
   c->final_ll = FALSE ;

@@ -46,31 +46,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   QPALMWorkspace *work; // Workspace
 
   // Validate data
-
-  // printf("Begin Setup\n Checking Constants\n");
-  // printf("CHOLMOD_INT: %d\n", CHOLMOD_INT);
-  // printf("CHOLMOD_LONG: %d\n", CHOLMOD_LONG);
-  // printf("CHOLMOD_DOUBLE: %d\n", CHOLMOD_DOUBLE);
-
-  // printf("ITYPE: %d\n", ITYPE);
-  // printf("DTYPE: %d\n", DTYPE);
-  // printf("\n");
-
-  // cholmod_common Common, *cm;
-  // cm = &Common;
-  // work->chol->c = *c;
-  // work->chol->c = cm;
-  // printf("Itype: %d, Dtype: %d\n", cm->itype, cm->dtype);
-  // printf("\n STATUS: %d \n",(int) cm->status);
-
-  CHOLMOD(start)(c);
-  CHOLMOD_FUNCTION_DEFAULTS;
-  // printf("\n STATUS: %d \n",(int) cm->status);
-
-  // printf("Itype: %d, Dtype: %d\n", cm->itype, cm->dtype);
-  // printf("nswitch %d (should be 3000)\n", cm->metis_nswitch);
-
-
   if (validate_data(data)) {
 # ifdef PRINTING
     c_eprint("Data validation returned failure");
@@ -109,13 +84,8 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->chol = c_calloc(1, sizeof(QPALMCholmod));
   
   work->chol->c = *c;
-  // cholmod_l_start(&work->chol->c);
-  printf("Cholmod started\n");
-  printf("Itype: %d, Dtype: %d\n", (&work->chol->c)->itype, (&work->chol->c)->dtype);
+  CHOLMOD(start)(&work->chol->c);
   cholmod_set_settings(&work->chol->c);
-  // (&work->chol->c)->itype = ITYPE;
-  // (&work->chol->c)->dtype = DTYPE;
-  // printf("Itype: %d, Dtype: %d\n", (&work->chol->c)->itype, (&work->chol->c)->dtype);
 
   // Copy problem data into workspace
   work->data       = c_calloc(1, sizeof(QPALMData));
@@ -124,10 +94,12 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->data->bmin = vec_copy(data->bmin, m);       // Lower bounds on constraints
   work->data->bmax = vec_copy(data->bmax, m);       // Upper bounds on constraints
   work->data->q    = vec_copy(data->q, n);          // Linear part of cost function
+  printf("Vectors copied\n");
+
   work->data->A    = CHOLMOD(copy_sparse)(data->A, &work->chol->c);               // Linear constraints matrix
   work->data->Q    = CHOLMOD(copy_sparse)(data->Q, &work->chol->c);                // Cost function matrix
   
-  // printf("Cholmod matrices copied\n");
+  printf("Cholmod matrices copied\n");
   // printf("xtype A: %d\n", work->data->A->xtype);
 
   // Allocate internal solver variables 
@@ -524,13 +496,19 @@ void qpalm_solve(QPALMWorkspace *work) {
 
 
 void qpalm_cleanup(QPALMWorkspace *work) {
-
+  
   if (work) { // If workspace has been allocated
+
+    
     // Free Data
     if (work->data) {
+      CHOLMOD(start)(&work->chol->c);
+
       if (work->data->Q) CHOLMOD(free_sparse)(&work->data->Q, &work->chol->c);
 
       if (work->data->A) CHOLMOD(free_sparse)(&work->data->A, &work->chol->c);
+
+      CHOLMOD(finish)(&work->chol->c);
 
       if (work->data->q) c_free(work->data->q);
 
