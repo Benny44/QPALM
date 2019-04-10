@@ -8,7 +8,7 @@
 ***********************************************************/
 
 c_int validate_data(const QPALMData *data) {
-  size_t j;
+  
 
   if (!data) {
 # ifdef PRINTING
@@ -17,16 +17,8 @@ c_int validate_data(const QPALMData *data) {
     return 1;
   }
 
-  // General dimensions Tests
-//   if ((data->n <= 0) || (data->m < 0)) {
-// # ifdef PRINTING
-//     c_eprint("n must be positive and m nonnegative; n = %i, m = %i",
-//              (int)data->n, (int)data->m);
-// # endif /* ifdef PRINTING */
-//     return 1;
-//   }
-
   // Lower and upper bounds
+  size_t j;
   for (j = 0; j < data->m; j++) {
     if (data->bmin[j] > data->bmax[j]) {
 # ifdef PRINTING
@@ -36,9 +28,6 @@ c_int validate_data(const QPALMData *data) {
       return 1;
     }
   }
-
-  // TODO: Complete with other checks
-
   return 0;
 }
 

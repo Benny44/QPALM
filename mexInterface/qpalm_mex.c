@@ -185,7 +185,6 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         double dummy = 0; 
         cholmod_sparse Amatrix, Qmatrix;
         
-
         data->A = sputil_get_sparse(A, &Amatrix, &dummy, 0);
         data->Q = sputil_get_sparse(Q, &Qmatrix, &dummy, -1);//Q is symmetric, use only lower part
 

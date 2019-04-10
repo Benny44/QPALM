@@ -1,8 +1,7 @@
 clear;close all;clc
-m = 5;n = 3;
+m = 500;n = 3000;
 rng(1)
 A = sprandn(m, n, 5e-1,1e-1);
-% nnz(A)
 % A = sparse(ones(m,n));
 lb = -2*ones(m,1);
 ub =  2*ones(m,1);
@@ -17,7 +16,7 @@ solver = qpalm;
 settings = solver.default_settings();
 % settings.verbose = true;
 settings.proximal = true;
-settings.scaling = 10;
+settings.scaling = 2;
 settings.max_iter = 1000;
 settings.eps_abs = 1e-4;
 settings.eps_rel = 1e-4;

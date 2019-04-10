@@ -82,7 +82,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
 
   //Initialize CHOLMOD and its settings
   work->chol = c_calloc(1, sizeof(QPALMCholmod));
-  
   work->chol->c = *c;
   CHOLMOD(start)(&work->chol->c);
   cholmod_set_settings(&work->chol->c);
@@ -94,13 +93,9 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->data->bmin = vec_copy(data->bmin, m);       // Lower bounds on constraints
   work->data->bmax = vec_copy(data->bmax, m);       // Upper bounds on constraints
   work->data->q    = vec_copy(data->q, n);          // Linear part of cost function
-  printf("Vectors copied\n");
 
   work->data->A    = CHOLMOD(copy_sparse)(data->A, &work->chol->c);               // Linear constraints matrix
   work->data->Q    = CHOLMOD(copy_sparse)(data->Q, &work->chol->c);                // Cost function matrix
-  
-  printf("Cholmod matrices copied\n");
-  // printf("xtype A: %d\n", work->data->A->xtype);
 
   // Allocate internal solver variables 
   work->x        = c_calloc(n, sizeof(c_float));
@@ -155,8 +150,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->settings = copy_settings(settings);
   work->sqrt_delta = c_sqrt(work->settings->delta);
 
-  // printf("Before scaling\n");
-
   // Perform scaling
   if (settings->scaling) {
     // Allocate scaling structure
@@ -194,8 +187,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->lbfgs->alpha       = c_calloc(work->settings->memory, sizeof(c_float));
   work->lbfgs->q           = c_calloc(n, sizeof(c_float));
 
-    // printf("Before cholmod allocations\n");
-
   // CHOLMOD variables
   work->chol->neg_dphi = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, &work->chol->c);
   work->neg_dphi = work->chol->neg_dphi->x; 
@@ -216,75 +207,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->chol->At_scale = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, &work->chol->c);
   vec_ew_sqrt(work->sigma, work->sqrt_sigma, work->data->m);
   prea_vec_copy(work->sqrt_sigma, work->chol->At_scale->x, work->data->m);
-  // printf("Before transpose\n");
-  // c_float *Ax = work->data->A->x;
-  // c_int* Ap = work->data->A->p;
-  // c_int *Ai = work->data->A->i;
-  // printf("nzmax %d\n", (int)work->data->A->nzmax);
-  // printf("nrow %d\n", (int)work->data->A->nrow);
-  // printf("ncol %d\n", (int)work->data->A->ncol);
-  // printf("itype %d\n", (int)work->data->A->itype);
-  // printf("xtype %d\n", (int)work->data->A->xtype);
-  // printf("dtype %d\n", (int)work->data->A->dtype);
-  // printf("sorted %d\n", (int)work->data->A->sorted);
-  // printf("packed %d\n", (int)work->data->A->packed);
-
-
-  // for (size_t i = 0; i < work->data->A->nzmax; i++) {
-  //   printf("%f ", Ax[i]);
-  // }
-  // printf("\n");
-  //   for (size_t i = 0; i < work->data->A->ncol+1; i++) {
-  //   printf("%d ", (int)Ap[i]);
-  // }
-  // printf("\n");
-  //   for (size_t i = 0; i < work->data->A->nzmax; i++) {
-  //   printf("%d ", (int)Ai[i]);
-  // }
-  // printf("\n");
-
-  //         printf("\n STATUS: %d \n",(int) (&work->chol->c)->status);
-
   work->chol->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, &work->chol->c);
-
-  //         printf("\n STATUS: %d \n",(int) (&work->chol->c)->status);
-
-  // printf("After transpose\n");
-
-  // c_float *Atx = work->chol->At_sqrt_sigma->x;
-  // c_int* Atp = work->chol->At_sqrt_sigma->p;
-  // c_int *Ati = work->chol->At_sqrt_sigma->i;
-  // printf("nzmax %d\n", (int)work->chol->At_sqrt_sigma->nzmax);
-  // printf("nrow %d\n", (int)work->chol->At_sqrt_sigma->nrow);
-  // printf("ncol %d\n", (int)work->chol->At_sqrt_sigma->ncol);
-  // printf("itype %d\n", (int)work->chol->At_sqrt_sigma->itype);
-  // printf("xtype %d\n", (int)work->chol->At_sqrt_sigma->xtype);
-  // printf("dtype %d\n", (int)work->chol->At_sqrt_sigma->dtype);
-  // printf("sorted %d\n", (int)work->chol->At_sqrt_sigma->sorted);
-  // printf("packed %d\n", (int)work->chol->At_sqrt_sigma->packed);
-
-
-  // for (size_t i = 0; i < work->chol->At_sqrt_sigma->nzmax; i++) {
-  //   printf("%f ", Atx[i]);
-  // }
-  // printf("\n");
-  //   for (size_t i = 0; i < work->chol->At_sqrt_sigma->ncol+1; i++) {
-  //   printf("%d ", (int)Atp[i]);
-  // }
-  // printf("\n");
-  //   for (size_t i = 0; i < work->chol->At_sqrt_sigma->nzmax; i++) {
-  //   printf("%d ", (int) Ati[i]);
-  // }
-  // printf("\n");
-
-  // cholmod_dense* ones = cholmod_l_ones(4,1,CHOLMOD_REAL, &work->chol->c);
-  // c_float *Onesx = ones->x;
-  // printf("Ones\n");
-  // for (size_t i = 0; i < ones->nzmax; i++) {
-  //   printf("%f ", Onesx[i]);
-  // }
-  // printf("\n");
-
   CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
 
   // Allocate solution
@@ -303,16 +226,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   //Finish cholmod
   CHOLMOD(finish)(&work->chol->c);
 
-    // printf("End setup\n");
-
-  // c_float *Ax = work->data->A->x;
-  // printf("A nzmax: %d\n", (int) work->data->A->nzmax);
-  // printf("A: \n");
-  // for (size_t i = 0; i < work->data->A->nzmax; i++) {
-  //   printf("%f ", Ax[i]);
-  // }
-  // printf("\n");
-  // printf("xtype A: %d\n", work->data->A->xtype);
   // Return workspace structure
   return work;
 }
@@ -320,38 +233,11 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
 
 void qpalm_solve(QPALMWorkspace *work) {
 
-  printf("Solving\n");
-  printf("\n STATUS: %d \n",(int) (&work->chol->c)->status);
-
-  printf("nzmax %d\n", (int)work->data->A->nzmax);
-  printf("nrow %d\n", (int)work->data->A->nrow);
-  printf("ncol %d\n", (int)work->data->A->ncol);
-  printf("itype %d\n", (int)work->data->A->itype);
-  printf("xtype %d\n", (int)work->data->A->xtype);
-  printf("dtype %d\n", (int)work->data->A->dtype);
-  printf("sorted %d\n", (int)work->data->A->sorted);
-  printf("packed %d\n", (int)work->data->A->packed);
-
-  printf("nrow %d\n", (int)work->chol->yh->nrow);
-  printf("ncol %d\n", (int)work->chol->yh->ncol);
-  printf("xtype %d\n", (int)work->chol->yh->xtype);
-  printf("dtype %d\n", (int)work->chol->yh->dtype);
-
-
   #ifdef PROFILING
   qpalm_tic(work->timer); // Start timer
   #endif /* ifdef PROFILING */
   
-  // cholmod_common cm;
-  // work->chol->c = cm;
-  // printf("A nzmax: %d\n", (int) work->data->A->nzmax);
-  // printf("A: \n");
-  // for (size_t i = 0; i < work->data->A->nzmax; i++) {
-  //   printf("%f ", Ax[i]);
-  // }
-  // printf("\n");
-  // printf("xtype A: %d\n", work->data->A->xtype);
-  // Cholmod settings to use LDLt
+  //Initialize CHOLMOD and its settings
   CHOLMOD(start)(&work->chol->c);
   cholmod_set_settings(&work->chol->c);
   
@@ -361,15 +247,6 @@ void qpalm_solve(QPALMWorkspace *work) {
   c_int iter;
   c_int iter_out = 0;
   c_float tau;
-
-  c_float *Ax = work->data->A->x;
-  // printf("A nzmax: %d\n", (int) work->data->A->nzmax);
-  // printf("A: \n");
-  // for (size_t i = 0; i < work->data->A->nzmax; i++) {
-  //   printf("%f ", Ax[i]);
-  // }
-  // printf("\n");
-  // printf("xtype A: %d\n", work->data->A->xtype);
 
   for (iter = 0; iter < work->settings->max_iter; iter++) {
 
@@ -391,19 +268,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       vec_add_scaled(work->df, work->x0, work->df, -1/work->settings->gamma, n);
     }
     // Atyh = A'*yh
-    // c_float* yhx = work->chol->yh->x;
-    // yhx[0] = 1; yhx[1] = 2; yhx[2] = 3;
-    // printf("Before mat tpose vec\n");
-    // printf("\n STATUS: %d \n",(int) (&work->chol->c)->status);
-    
-
     mat_tpose_vec(work->data->A, work->chol->yh, work->chol->Atyh, &work->chol->c);
-    // printf("\n STATUS: %d \n",(int) (&work->chol->c)->status);
-    // printf("Check mat tpose vec\n");
-    // for (size_t i=0; i<work->data->n; i++) {
-    //   printf("%f ", work->Atyh[i]);
-    // }
-    // printf("\n");
     //dphi = df+Atyh
     vec_add_scaled(work->df, work->Atyh, work->dphi, 1, n);
   
@@ -417,7 +282,6 @@ void qpalm_solve(QPALMWorkspace *work) {
                            work->info->solve_time;
       #endif /* ifdef PROFILING */
       CHOLMOD(finish)(&work->chol->c);
-        // printf("Finish solving\n");
 
       return; 
     } else if (check_subproblem_termination(work)) {
@@ -489,17 +353,12 @@ void qpalm_solve(QPALMWorkspace *work) {
   #endif /* ifdef PROFILING */
 
   CHOLMOD(finish)(&work->chol->c);
-          // printf("Finish solving\n");
-
-
 }
 
 
 void qpalm_cleanup(QPALMWorkspace *work) {
   
   if (work) { // If workspace has been allocated
-
-    
     // Free Data
     if (work->data) {
       CHOLMOD(start)(&work->chol->c);

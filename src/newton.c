@@ -5,8 +5,6 @@
 
 void newton_set_direction(QPALMWorkspace *work) {
 
-    // printf("Setting Newton\n");
-    // printf("\n STATUS: %d \n",(int) (&work->chol->c)->status);
     set_active_constraints(work);
     if (work->chol->reset_newton && work->chol->nb_active_constraints) {
         work->chol->reset_newton = FALSE;

@@ -368,7 +368,7 @@ kk = do_cmd (s, kk, details) ;
  % clean up
 s = ['delete ' obj] ;
 do_cmd (s, kk, details) ;
-fprintf ('\nCHOLMOD successfully compiled\n') ;
+fprintf ('\nQPALM successfully compiled\n') ;
 
 % remove the renamed METIS files, if they exist
 if (exist ('GKlib_util.c', 'file'))
