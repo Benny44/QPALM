@@ -2,7 +2,7 @@ function [ x, timings, iter, status, options ] = compare_QP_solvers( prob, optio
 %Run QPALM (Matlab), QPALM (C), OSQP, qpoases, and GUROBI on the given problem 
 %n times and return the solution and timings
 
-n = 5; %to get an average timing
+n = 1; %to get an average timing
 t = zeros(n,1);
 
 VERBOSE = false;
@@ -92,14 +92,14 @@ if options.qpalm_c
         settings = solver.default_settings();
         
         settings.verbose = VERBOSE;
-        settings.scaling = SCALING_ITER;
+        settings.scaling = 2;
         settings.max_iter = MAXITER;
         settings.eps_abs_in = min(EPS_ABS*1e6, 1);
         settings.eps_rel_in = min(EPS_REL*1e6, 1);
         settings.eps_abs = EPS_ABS;
         settings.eps_rel = EPS_REL;
-        settings.delta   = 1.2;
-        settings.memory  = 20;
+        settings.delta   = 10;
+%         settings.memory  = 20;
         
         solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
         res_qpalm = solver.solve();

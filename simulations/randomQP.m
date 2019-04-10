@@ -4,8 +4,8 @@ clear; close all;
 current = fileparts(mfilename('fullpath'));
 cd(current);
 
-options.qpalm_matlab = true;
-options.qpalm_c = false;
+options.qpalm_matlab = false;
+options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = true;
 options.gurobi = true;
@@ -17,7 +17,7 @@ Tqpoases = [];
 Tgurobi = [];
 
 % n_values = 3:4;
-n_values = 100:20:600;
+n_values = 20:20:500;
 nb_n = length(n_values);
 
 for i = 1:nb_n
