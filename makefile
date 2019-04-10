@@ -9,10 +9,9 @@ all: lib demo
 lib: $(BDIR)/libqpalm.a
 
 CC=gcc
-CFLAGS=-I$(IDIR) -ISuiteSparse/include -fPIC -O3 -DPROFILING -Wall -Wextra -DDLONG -fopenmp -fexceptions -g -fuse-ld=bfd -Wl,-z,noseparate-code
-LIBS=-lm 
+CFLAGS=-I$(IDIR) -Isuitesparse/include -fPIC -O3 -DPROFILING -Wall -Wextra -DDLONG -fopenmp -fexceptions
 CHOLMOD_LIBS=-lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmwblas -lmwlapack -lmetis -lm
-CHOLMOD_LIB_INCLUDES=-LSuiteSparse/lib -L/home/ben/.MATLAB/R2015a/bin/glnxa64 -ISuiteSparse/metis-5.1.0/include
+CHOLMOD_LIB_INCLUDES=-Lsuitesparse/lib -L/home/ben/.MATLAB/R2015a/bin/glnxa64 -Isuitesparse/metis-5.1.0/include
 
 _DEPS = qpalm.h scaling.h util.h lin_alg.h validate.h linesearch.h types.h constants.h lbfgs.h global_opts.h termination.h cs.h cholmod_interface.h newton.h
 DEPS = $(patsubst %, $(IDIR)/%, $(_DEPS))
@@ -31,7 +30,7 @@ $(BDIR)/libqpalm.a: $(_OBJ)
 	ar rcs $@ $^ 
 
 demo: $(OBJ) 
-	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(CHOLMOD_LIBS) $(CHOLMOD_LIB_INCLUDES)
+	$(CC) -o $@ $^ $(CFLAGS) $(CHOLMOD_LIBS) $(CHOLMOD_LIB_INCLUDES)
 
 .PHONY: clean
 
