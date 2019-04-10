@@ -1,0 +1,4 @@
+[submodule "suitesparse"]
+	path = suitesparse
+	url = https://github.com/jluttine/suitesparse.git
+	branch = master
