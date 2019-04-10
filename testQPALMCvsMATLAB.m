@@ -1,5 +1,5 @@
 clear;close all;clc
-m = 500;n = 3000;
+m = 500;n = 30;
 rng(1)
 A = sprandn(m, n, 5e-1,1e-1);
 % A = sparse(ones(m,n));
@@ -22,10 +22,12 @@ settings.eps_abs = 1e-4;
 settings.eps_rel = 1e-4;
 settings.tau_init = 1.5;
 
-tic
+% tic
 solver.setup(Q, q, A, lb, ub, settings); 
 res = solver.solve();
-QPALMtime = toc
+fprintf('QPALM C \n');
+fprintf('Elapsed time is %f seconds\n', res.info.run_time);
+% QPALMtime = toc
 % tic
 % res = solver.optimize(Q, q, A, lb, ub, settings);
 % QPALMtime = toc
@@ -57,6 +59,8 @@ opts.scalar_sig = false;
 opts.lbfgs_precon = false;
 opts.proximal = settings.proximal;
 % opts.scalar_sig = true;
+fprintf('QPALM MATLAB \n');
+
 tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(Q,q,A,lb,ub,[],[],opts);toc
 display(stats_qpalm.status)
 % 
