@@ -1,3 +1,10 @@
+/**
+ * @file constants.h
+ * @author Ben Hermans
+ * @brief Macros used in QPALM
+ * @details This file contains the macros that are used as default settings and to set the solver status.
+ * @warning Verbose is not implemented as of yet.
+ */
 #ifndef CONSTANTS_H
 # define CONSTANTS_H
 
@@ -5,62 +12,80 @@
 extern "C" {
 # endif // ifdef __cplusplus
 
-/******************
-* Solver Status  *
-******************/
+/**
+ * @name Booleans
+ * @{
+ */
+#define TRUE 1
+#define FALSE 0
+/**
+ * @}
+ */
 
-# define QPALM_SOLVED (1)
-# define QPALM_MAX_ITER_REACHED (-2)
-# define QPALM_PRIMAL_INFEASIBLE (-3) /* primal infeasible  */
-# define QPALM_DUAL_INFEASIBLE (-4)   /* dual infeasible */
-# define QPALM_NON_CVX (-7)           /* problem non convex */
-# define QPALM_UNSOLVED (-10) /* Unsolved. Only setup function has been called */
 
+/** 
+ * @name Solver status
+ * @{
+ */
+
+# define QPALM_SOLVED (1)             /**< status to indicate the problem is solved to optimality given the specified tolerances */
+# define QPALM_MAX_ITER_REACHED (-2)  /**< status to indicate termination due to reaching the maximum number of iterations  */
+# define QPALM_PRIMAL_INFEASIBLE (-3) /**< status to indicate the problem is primal infeasible  */
+# define QPALM_DUAL_INFEASIBLE (-4)   /**< status to indicate the problem is dual infeasible  */
+# define QPALM_UNSOLVED (-10)         /**< status to indicate the problem is unsolved. Only setup function has been called */
+
+/**
+ * @}
+ */
+
+/** 
+ * @name Solver parameters and settings
+ * @{
+ */
 
 /**********************************
 * Solver Parameters and Settings *
 **********************************/
 
-# define MAX_ITER (10000)
-# define EPS_ABS (1E-4)
-# define EPS_REL (1E-4)
-# define EPS_ABS_IN (1)
-# define EPS_REL_IN (1)
-# define RHO (0.1)
-# define EPS_PRIM_INF (1E-4)
-# define EPS_DUAL_INF (1E-4)
-# define THETA (0.25)
-# define DELTA (2)
-# define TAU_INIT (1)
+# define MAX_ITER (10000)       /**< default maximum number of iterations */
+# define EPS_ABS (1e-4)         /**< default absolute convergence tolerance */
+# define EPS_REL (1e-4)         /**< default relative convergence tolerance */
+# define EPS_ABS_IN (1)         /**< default intermediate absolute convergence tolerance */
+# define EPS_REL_IN (1)         /**< default intermediate relative convergence tolerance */
+# define RHO (0.1)              /**< default tolerance scaling factor */
+# define EPS_PRIM_INF (1e-4)    /**< default primal infeasibility tolerance */
+# define EPS_DUAL_INF (1e-4)    /**< default dual infeasibility tolerance */
+# define THETA (0.25)           /**< default penalty update criterion parameter */
+# define DELTA (10)             /**< default penalty update factor */
+# define TAU_INIT (1)           /**< default initial stepsize in backtracking */
 
-# define MEMORY (10)
+# define PROXIMAL (TRUE)        /**< default use of proximal method of multipliers */
+# define GAMMA (1E6)            /**< default proximal penalty parameter */
+# define GAMMA_UPD (10)         /**< default proximal penalty update factor */
+# define GAMMA_MAX (1E8)        /**< default proximal penalty cap */
 
-# define PROXIMAL (1)
-# define GAMMA (1E6)
-# define GAMMA_UPD (10)
-# define GAMMA_MAX (1E8)
+# define SCALING (2)            /**< default number of scaling iterations */
+# define MIN_SCALING (1e-08)    /**< minimum scaling value *////< Minimum scaling value
+# define MAX_SCALING (1e+04)    /**< maximum scaling value *////< Maximum scaling value
 
-# define SCALING (10)
-# define MIN_SCALING (1e-08) ///< Minimum scaling value
-# define MAX_SCALING (1e+04) ///< Maximum scaling value
-
-# define WARM_START (0)
-# define VERBOSE (1)
-
+# define WARM_START (FALSE)     /**< default warm start setting */
+# define VERBOSE (TRUE)         /**< default write out progress setting */
 
 # ifndef QPALM_NULL
-#  define QPALM_NULL 0
+#  define QPALM_NULL 0 /**< NULL, if something goes wrong during setup, the workspace pointer is set to this */
 # endif /* ifndef QPALM_NULL */
 
 # ifndef QPALM_NAN
-#  define QPALM_NAN ((c_float)0x7fc00000UL) // Not a Number
+#  define QPALM_NAN ((c_float)0x7fc00000UL)  /**< not a number, used for the solution if the problem is primal or dual infeasible */
 # endif /* ifndef QPALM_NAN */
 
 # ifndef QPALM_INFTY
-#  define QPALM_INFTY ((c_float)1e20) // Infinity
+#  define QPALM_INFTY ((c_float)1e20)  /**< infinity, used to indicate one-sided constraints */
 # endif /* ifndef QPALM_INFTY */
 
-
+/**
+ * @}
+ */
 
 
 # ifdef __cplusplus

@@ -46,7 +46,6 @@ opts.eps_abs = settings.eps_abs;
 opts.eps_rel = settings.eps_rel;
 opts.eps_abs_in = settings.eps_abs_in;
 opts.eps_rel_in = settings.eps_rel_in;
-opts.memory  = settings.memory;
 opts.maxiter = settings.max_iter;
 opts.rho     = settings.rho;
 opts.theta   = settings.theta;

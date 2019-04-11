@@ -35,7 +35,7 @@ c_float exact_linesearch_newton(QPALMWorkspace *work){
     // s = alpha./delta
     vec_ew_div(work->alpha, work->delta, work->temp_2m, work->data->m*2);
 
-    // index_P =q delta > 0
+    // index_P = delta > 0
     // index_J = delta < 0
     for (size_t i=0; i<work->data->m*2; i++){
         if (work->delta[i] == 0) {

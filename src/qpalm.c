@@ -1,5 +1,13 @@
+/**
+ * @file qpalm.c
+ * @author Ben Hermans
+ * @brief QPALM main solver API.
+ * @details This file contains the main functions that can be called by the user.
+ * The user can load the default settings, setup the workspace with data and settings,
+ * run the solver, and cleanup the workspace afterwards.
+ */
+
 #include "qpalm.h"
-#include "global_opts.h"
 #include "constants.h"
 #include "validate.h"
 #include "lin_alg.h"
@@ -11,7 +19,6 @@
 #include "cholmod_function.h"
 #include "cholmod_interface.h"
 #include "newton.h"
-#include <stdio.h>
 
 /**********************
 * Main API Functions *
@@ -29,7 +36,6 @@ void qpalm_set_default_settings(QPALMSettings *settings) {
   settings->theta         = (c_float)THETA;          /* penalty update criterion parameter */
   settings->delta         = (c_float)DELTA;          /* penalty update factor */
   settings->tau_init      = (c_float)TAU_INIT;       /* initial stepsize for backtracking */
-  settings->memory        = MEMORY;                  /* LBFGS memory */
   settings->proximal      = PROXIMAL;                /* boolean, proximal method of multipliers*/
   settings->gamma         = (c_float)GAMMA;          /* proximal penalty parameter */
   settings->gamma_upd     = (c_float)GAMMA_UPD;      /* proximal penalty update factor*/

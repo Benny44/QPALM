@@ -7,6 +7,7 @@ extern "C" {
 
 #include "cholmod.h"
 #include "global_opts.h"
+#include "constants.h"
 #include "types.h"
 
 

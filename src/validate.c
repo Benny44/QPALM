@@ -125,13 +125,6 @@ c_int validate_settings(const QPALMSettings *settings) {
     return 1;
   }
 
-    if (settings->memory <= 0) {
-# ifdef PRINTING
-    c_eprint("LBFGS memory must be greater than 0");
-# endif /* ifdef PRINTING */
-    return 1;
-  }
-
    if ((settings->proximal != 0) && (settings->proximal != 1)) {
 # ifdef PRINTING
     c_eprint("proximal must be either 0 or 1");

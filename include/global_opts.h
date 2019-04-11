@@ -7,9 +7,6 @@ extern "C" {
 
 #include "cholmod.h"
 
-#define FALSE 0
-#define TRUE 1
-
 /* CHOLMOD data types */
 #ifdef DLONG
 #define Real double
