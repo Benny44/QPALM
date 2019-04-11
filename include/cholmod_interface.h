@@ -25,7 +25,7 @@ extern "C" {
 /** 
  * Matrix-vector multiplication.
  *    
- * y  =  A*x
+ * @f$y  =  A*x@f$
  * 
  * @param A Sparse matrix
  * @param x Dense input vector
@@ -40,7 +40,7 @@ void mat_vec(cholmod_sparse *A,
 /** 
  * Matrix-transpose-vector multiplication.
  *    
- * y  =  A'*x 
+ * @f$y  =  A^T*x@f$ 
  * 
  * @param A Sparse matrix
  * @param x Dense input vector
@@ -53,7 +53,7 @@ void mat_tpose_vec(cholmod_sparse *A,
                    cholmod_common       *c);
 
 /**
- * Infinity norm of each matrix column.
+ * Infinity norm of each matrix column, @f$E_i = \|M{(:,i)}\|_\infty@f$.
  * 
  * @param M	Sparse input matrix
  * @param E Vector of infinity norms
@@ -63,7 +63,7 @@ void mat_inf_norm_cols(cholmod_sparse *M,
                        c_float   *E);
 
 /**
- * Infinity norm of each matrix row.
+ * Infinity norm of each matrix row, @f$E_i = \|M{(i,:)}\|_\infty@f$.
  * 
  * @param M	Sparse input matrix
  * @param E Vector of infinity norms
@@ -73,9 +73,9 @@ void mat_inf_norm_rows(cholmod_sparse *M,
                        c_float   *E);
 
 /**
- * Calculate LDL factorization of a matrix M.
+ * Calculate @f$LDL^T@f$ factorization of a matrix @f$M@f$.
  * 
- * If work->settings->proximal = true, use M+(1/gamma)*I instead.
+ * If work->settings->proximal = true, use @f$M+\frac{1}{\gamma}*I@f$ instead.
  * 
  * @param M Matrix to be factorized
  * @param work Workspace
@@ -84,27 +84,27 @@ void ldlchol(cholmod_sparse *M,
              QPALMWorkspace *work);
 
 /**
- * Calculate LDL factorization of Q.
+ * Calculate @f$LDL^T@f$ factorization of @f$Q@f$.
  * 
- * Q is the quadratic part of the objective function.
+ * @f$Q@f$ is the quadratic part of the objective function.
  * 
- * If work->settings->proximal = true, use Q+(1/gamma)*I instead.
+ * If work->settings->proximal = true, use @f$Q+\frac{1}{\gamma}*I@f$ instead.
  * 
  * @param work Workspace
  */
 void ldlcholQ(QPALMWorkspace *work);
 
 /**
- * Calculate LDL factorization of Q+A_a'*Sigma_{a,a}*A_a, with Sigma=diag(sigma) and a the set of active constraints.
+ * Calculate @f$LDL^T@f$ factorization of @f$Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}@f$, with @f$\Sigma=diag(\sigma)@f$ and @f$a@f$ the set of active constraints.
  * 
- * If work->settings->proximal = true, use Q+(1/gamma)*I+A_a'*Sigma_{a,a}*A_a instead.
+ * If work->settings->proximal = true, use @f$Q+\frac{1}{\gamma}*I+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}@f$ instead.
  * 
  * @param work Workspace
  */
 void ldlcholQAtsigmaA(QPALMWorkspace *work);
 
 /**
- * Update the LDL factorization given a set of entering constraints.
+ * Update the @f$LDL^T@f$ factorization given a set of entering constraints.
  * 
  * The index set of entering constraints is assumed to be set in work->chol->enter.
  * 
@@ -113,7 +113,7 @@ void ldlcholQAtsigmaA(QPALMWorkspace *work);
 void ldlupdate_entering_constraints(QPALMWorkspace *work);
 
 /**
- * Downdate the LDL factorization given a set of leaving constraints.
+ * Downdate the @f$LDL^T@f$ factorization given a set of leaving constraints.
  * 
  * The index set of leaving constraints is assumed to be set in work->chol->leave.
  * 
@@ -122,14 +122,14 @@ void ldlupdate_entering_constraints(QPALMWorkspace *work);
 void ldldowndate_leaving_constraints(QPALMWorkspace *work);
 
 /**
- * Solve the linear system LDL'*d = -dphi.
+ * Solve the linear system @f$LDL^T*d = -\nabla \varphi@f$.
  * 
  * @param work Workspace
  */
 void ldlsolveLD_neg_dphi(QPALMWorkspace *work);
 
 /**
- * Cholmod settings to indicate that we use an LDL' factorization.
+ * Cholmod settings to indicate that we use an @f$LDL^T@f$ factorization.
  * 
  * In addition, this function sets the suitesparse memory allocation function to our custom functions.
  * 

@@ -20,3 +20,24 @@
 \form#19:$b_i = \sqrt{a_i}$
 \form#20:$c_i = a_i\cdot b_i$
 \form#21:$c_i = a_i/b_i$
+\form#22:$y = A*x$
+\form#23:$y = A'*x$
+\form#24:$M+\frac{1}{\gamma}*I$
+\form#25:$Q+\frac{1}{\gamma}*I$
+\form#26:$Q+A_(a,:)^T*\Sigma_(a,a)*A_(a,:)$
+\form#27:$\Sigma=diag(\sigma)$
+\form#28:$a$
+\form#29:$Q+\frac{1}{\gamma}*I+A_a'*Sigma_{a,a}*A_a$
+\form#30:$LDL^T*d = -\nabla \varphi$
+\form#31:$Q+A_{(a,:)}^T*\Sigma_{(a,a)}*A_{(a,:)}$
+\form#32:$Q+\frac{1}{\gamma}*I+A_{(a,:)}^T*\Sigma_{(a,a)}*A_{(a,:)}$
+\form#33:$Q$
+\form#34:$LDL^T$
+\form#35:$M$
+\form#36:$y = A^T*x$
+\form#37:$E_i = \|M_{(:,i)}\|_\infty$
+\form#38:$E_i = \|M_{(i,:)}\|_\infty$
+\form#39:$E_i = \|M{(:,i)}\|_\infty$
+\form#40:$E_i = \|M{(i,:)}\|_\infty$
+\form#41:$Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$
+\form#42:$Q+\frac{1}{\gamma}*I+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$
