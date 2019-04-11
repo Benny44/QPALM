@@ -26,7 +26,7 @@
 /**
  * Set default settings from constants.h file.
  * Assumes settings are already allocated in memory.
- * @param settings settings structure
+ * @param settings Settings structure
  */
 void qpalm_set_default_settings(QPALMSettings *settings);
 

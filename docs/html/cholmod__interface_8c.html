@@ -72,6 +72,9 @@ $(function() {
 <div class="title">cholmod_interface.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Interface and wrapper to cholmod functions.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="cholmod__interface_8h_source.html">cholmod_interface.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="lin__alg_8h_source.html">lin_alg.h</a>&quot;</code><br />
 <code>#include &lt;stdio.h&gt;</code><br />
@@ -79,8 +82,10 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a3a3b1f5d8d98db1e983ec863db409722"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#a3a3b1f5d8d98db1e983ec863db409722">mat_vec</a> (cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, cholmod_common *c)</td></tr>
+<tr class="memdesc:a3a3b1f5d8d98db1e983ec863db409722"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix-vector multiplication.  <a href="#a3a3b1f5d8d98db1e983ec863db409722">More...</a><br /></td></tr>
 <tr class="separator:a3a3b1f5d8d98db1e983ec863db409722"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab40f66e01c9ed199883cb983ac7bfbed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#ab40f66e01c9ed199883cb983ac7bfbed">mat_tpose_vec</a> (cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, cholmod_common *c)</td></tr>
+<tr class="memdesc:ab40f66e01c9ed199883cb983ac7bfbed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix-transpose-vector multiplication.  <a href="#ab40f66e01c9ed199883cb983ac7bfbed">More...</a><br /></td></tr>
 <tr class="separator:ab40f66e01c9ed199883cb983ac7bfbed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a245c8ffca24c21625bca1a5d855ceacf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#a245c8ffca24c21625bca1a5d855ceacf">mat_inf_norm_cols</a> (cholmod_sparse *M, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *E)</td></tr>
 <tr class="memdesc:a245c8ffca24c21625bca1a5d855ceacf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Infinity norm of each matrix column.  <a href="#a245c8ffca24c21625bca1a5d855ceacf">More...</a><br /></td></tr>
@@ -89,28 +94,32 @@ Functions</h2></td></tr>
 <tr class="memdesc:a9a875648b3a1beed9a6ee638bc79f2c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Infinity norm of each matrix row.  <a href="#a9a875648b3a1beed9a6ee638bc79f2c0">More...</a><br /></td></tr>
 <tr class="separator:a9a875648b3a1beed9a6ee638bc79f2c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabcf6fd94369ab46e830695da0a96128"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#aabcf6fd94369ab46e830695da0a96128">ldlchol</a> (cholmod_sparse *M, <a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:aabcf6fd94369ab46e830695da0a96128"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate LDL factorization of M If work-&gt;settings-&gt;proximal = true, use M+(1/gamma)*I instead.  <a href="#aabcf6fd94369ab46e830695da0a96128">More...</a><br /></td></tr>
+<tr class="memdesc:aabcf6fd94369ab46e830695da0a96128"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate LDL factorization of a matrix M.  <a href="#aabcf6fd94369ab46e830695da0a96128">More...</a><br /></td></tr>
 <tr class="separator:aabcf6fd94369ab46e830695da0a96128"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fe1e838ac3f89a1772058904338a849"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#a7fe1e838ac3f89a1772058904338a849">ldlcholQ</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:a7fe1e838ac3f89a1772058904338a849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate LDL factorization of Q If work-&gt;settings-&gt;proximal = true, use Q+(1/gamma)*I instead.  <a href="#a7fe1e838ac3f89a1772058904338a849">More...</a><br /></td></tr>
+<tr class="memdesc:a7fe1e838ac3f89a1772058904338a849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate LDL factorization of Q.  <a href="#a7fe1e838ac3f89a1772058904338a849">More...</a><br /></td></tr>
 <tr class="separator:a7fe1e838ac3f89a1772058904338a849"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef86b2766eb92f6550e1b6bbc6019fcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#aef86b2766eb92f6550e1b6bbc6019fcc">ldlcholQAtsigmaA</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:aef86b2766eb92f6550e1b6bbc6019fcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate LDL factorization of Q+A(active_cnstrs,) If work-&gt;settings-&gt;proximal = true, use Q+(1/gamma)*I+A(active_cnstrs,) instead.  <a href="#aef86b2766eb92f6550e1b6bbc6019fcc">More...</a><br /></td></tr>
+<tr class="memdesc:aef86b2766eb92f6550e1b6bbc6019fcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate LDL factorization of Q+A_a'*Sigma_{a,a}*A_a, with Sigma=diag(sigma) and a the set of active constraints.  <a href="#aef86b2766eb92f6550e1b6bbc6019fcc">More...</a><br /></td></tr>
 <tr class="separator:aef86b2766eb92f6550e1b6bbc6019fcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb3c7409417adc5657d4c67f13bf7a26"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#afb3c7409417adc5657d4c67f13bf7a26">ldlupdate_entering_constraints</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:afb3c7409417adc5657d4c67f13bf7a26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the LDL factorization given entering constraints.  <a href="#afb3c7409417adc5657d4c67f13bf7a26">More...</a><br /></td></tr>
+<tr class="memdesc:afb3c7409417adc5657d4c67f13bf7a26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the LDL factorization given a set of entering constraints.  <a href="#afb3c7409417adc5657d4c67f13bf7a26">More...</a><br /></td></tr>
 <tr class="separator:afb3c7409417adc5657d4c67f13bf7a26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2b40552827ed1501207124cb067331b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#ad2b40552827ed1501207124cb067331b">ldldowndate_leaving_constraints</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:ad2b40552827ed1501207124cb067331b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downdate the LDL factorization given leaving constraints.  <a href="#ad2b40552827ed1501207124cb067331b">More...</a><br /></td></tr>
+<tr class="memdesc:ad2b40552827ed1501207124cb067331b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downdate the LDL factorization given a set of leaving constraints.  <a href="#ad2b40552827ed1501207124cb067331b">More...</a><br /></td></tr>
 <tr class="separator:ad2b40552827ed1501207124cb067331b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a600375b897e61294eabebe282fa236e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#a600375b897e61294eabebe282fa236e3">ldlsolveLD_neg_dphi</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:a600375b897e61294eabebe282fa236e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system LDL'd = -dphi.  <a href="#a600375b897e61294eabebe282fa236e3">More...</a><br /></td></tr>
+<tr class="memdesc:a600375b897e61294eabebe282fa236e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system LDL'*d = -dphi.  <a href="#a600375b897e61294eabebe282fa236e3">More...</a><br /></td></tr>
 <tr class="separator:a600375b897e61294eabebe282fa236e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a554be628f3c65ca260876d465dfacf0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#a554be628f3c65ca260876d465dfacf0e">cholmod_set_settings</a> (cholmod_common *c)</td></tr>
-<tr class="memdesc:a554be628f3c65ca260876d465dfacf0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cholmod settings to indicate that we use an LDLt factorization.  <a href="#a554be628f3c65ca260876d465dfacf0e">More...</a><br /></td></tr>
+<tr class="memdesc:a554be628f3c65ca260876d465dfacf0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cholmod settings to indicate that we use an LDL' factorization.  <a href="#a554be628f3c65ca260876d465dfacf0e">More...</a><br /></td></tr>
 <tr class="separator:a554be628f3c65ca260876d465dfacf0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p class="">Interface and wrapper to cholmod functions. </p>
+<dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
+<p>This file includes all calls to cholmod functions apart from scaling in <a class="el" href="scaling_8c.html">scaling.c</a> and memory allocation/deallocation in the main functions in <a class="el" href="qpalm_8c.html" title="QPALM main solver API.">qpalm.c</a>. It includes all matrix operations, such as matrix vector products, row- and columnwise norms, cholesky factorizations, factorization updates and solving the linear system. Finally, all the settings relevant to cholmod (and suitesparse) are included in this file as well. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a554be628f3c65ca260876d465dfacf0e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a554be628f3c65ca260876d465dfacf0e">&#9670;&nbsp;</a></span>cholmod_set_settings()</h2>
 
@@ -127,10 +136,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Cholmod settings to indicate that we use an LDLt factorization. </p>
+<p>Cholmod settings to indicate that we use an LDL' factorization. </p>
+<p class="">In addition, this function sets the suitesparse memory allocation function to our custom functions.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">c</td><td>Cholmod workspace </td></tr>
+    <tr><td class="paramname">c</td><td>Cholmod environment </td></tr>
   </table>
   </dd>
 </dl>
@@ -163,11 +173,12 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Calculate LDL factorization of M If work-&gt;settings-&gt;proximal = true, use M+(1/gamma)*I instead. </p>
+<p>Calculate LDL factorization of a matrix M. </p>
+<p class="">If work-&gt;settings-&gt;proximal = true, use M+(1/gamma)*I instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">M</td><td>matrix to be factorized </td></tr>
-    <tr><td class="paramname">work</td><td>qpalm workspace </td></tr>
+    <tr><td class="paramname">M</td><td>Matrix to be factorized </td></tr>
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
   </table>
   </dd>
 </dl>
@@ -190,10 +201,12 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Calculate LDL factorization of Q If work-&gt;settings-&gt;proximal = true, use Q+(1/gamma)*I instead. </p>
+<p>Calculate LDL factorization of Q. </p>
+<p class="">Q is the quadratic part of the objective function.</p>
+<p class="">If work-&gt;settings-&gt;proximal = true, use Q+(1/gamma)*I instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">work</td><td>qpalm workspace </td></tr>
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
   </table>
   </dd>
 </dl>
@@ -216,10 +229,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Calculate LDL factorization of Q+A(active_cnstrs,) If work-&gt;settings-&gt;proximal = true, use Q+(1/gamma)*I+A(active_cnstrs,) instead. </p>
+<p>Calculate LDL factorization of Q+A_a'*Sigma_{a,a}*A_a, with Sigma=diag(sigma) and a the set of active constraints. </p>
+<p class="">If work-&gt;settings-&gt;proximal = true, use Q+(1/gamma)*I+A_a'*Sigma_{a,a}*A_a instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">work</td><td>qpalm workspace </td></tr>
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
   </table>
   </dd>
 </dl>
@@ -242,10 +256,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Downdate the LDL factorization given leaving constraints. </p>
+<p>Downdate the LDL factorization given a set of leaving constraints. </p>
+<p class="">The index set of leaving constraints is assumed to be set in work-&gt;chol-&gt;leave.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">work</td><td>qpalm workspace </td></tr>
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
   </table>
   </dd>
 </dl>
@@ -268,10 +283,10 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Solve the linear system LDL'd = -dphi. </p>
+<p>Solve the linear system LDL'*d = -dphi. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">work</td><td>qpalm workspace </td></tr>
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
   </table>
   </dd>
 </dl>
@@ -294,10 +309,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Update the LDL factorization given entering constraints. </p>
+<p>Update the LDL factorization given a set of entering constraints. </p>
+<p class="">The index set of entering constraints is assumed to be set in work-&gt;chol-&gt;enter.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">work</td><td>qpalm workspace </td></tr>
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
   </table>
   </dd>
 </dl>
@@ -333,7 +349,7 @@ Functions</h2></td></tr>
 <p>Infinity norm of each matrix column. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">M</td><td>Input matrix </td></tr>
+    <tr><td class="paramname">M</td><td>Sparse input matrix </td></tr>
     <tr><td class="paramname">E</td><td>Vector of infinity norms </td></tr>
   </table>
   </dd>
@@ -370,7 +386,7 @@ Functions</h2></td></tr>
 <p>Infinity norm of each matrix row. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">M</td><td>Input matrix </td></tr>
+    <tr><td class="paramname">M</td><td>Sparse input matrix </td></tr>
     <tr><td class="paramname">E</td><td>Vector of infinity norms </td></tr>
   </table>
   </dd>
@@ -416,6 +432,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Matrix-transpose-vector multiplication. </p>
+<p class="">y = A'*x</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A</td><td>Sparse matrix </td></tr>
+    <tr><td class="paramname">x</td><td>Dense input vector </td></tr>
+    <tr><td class="paramname">y</td><td>Dense output vector </td></tr>
+    <tr><td class="paramname">c</td><td>Cholmod environment </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a3a3b1f5d8d98db1e983ec863db409722"></a>
@@ -455,6 +483,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Matrix-vector multiplication. </p>
+<p class="">y = A*x</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A</td><td>Sparse matrix </td></tr>
+    <tr><td class="paramname">x</td><td>Dense input vector </td></tr>
+    <tr><td class="paramname">y</td><td>Dense output vector </td></tr>
+    <tr><td class="paramname">c</td><td>Cholmod environment </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

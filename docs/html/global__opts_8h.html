@@ -66,13 +66,13 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#define-members">Macros</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">global_opts.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Custom memory allocation, print and utility functions, and data types for floats and ints.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;cholmod.h&quot;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
@@ -81,6 +81,7 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr><td colspan="2"><div class="groupHeader">CHOLMOD data types and macros</div></td></tr>
 <tr class="memitem:a058e7dbf59195ee615d22066fbdd844b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a058e7dbf59195ee615d22066fbdd844b">DINT</a></td></tr>
 <tr class="separator:a058e7dbf59195ee615d22066fbdd844b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afeeffe52c8fd59db7c61cf8b02042dbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#afeeffe52c8fd59db7c61cf8b02042dbf">INT</a></td></tr>
@@ -101,33 +102,51 @@ Macros</h2></td></tr>
 <tr class="separator:a3834ad0136a8b95a6589500e4009fe9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77ceac8d6af195fe72f95f6afd87c45e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a77ceac8d6af195fe72f95f6afd87c45e">ID</a>&#160;&#160;&#160;&quot;%d&quot;</td></tr>
 <tr class="separator:a77ceac8d6af195fe72f95f6afd87c45e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Custom memory allocation (e.g. matlab/python)</div></td></tr>
 <tr class="memitem:a3ab8252f80f6fe439c69aa168f64ee5e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a3ab8252f80f6fe439c69aa168f64ee5e">c_malloc</a>&#160;&#160;&#160;malloc</td></tr>
+<tr class="memdesc:a3ab8252f80f6fe439c69aa168f64ee5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">custom malloc  <a href="#a3ab8252f80f6fe439c69aa168f64ee5e">More...</a><br /></td></tr>
 <tr class="separator:a3ab8252f80f6fe439c69aa168f64ee5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f3db26db28ecca250635aeeed9061df"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a6f3db26db28ecca250635aeeed9061df">c_calloc</a>&#160;&#160;&#160;calloc</td></tr>
+<tr class="memdesc:a6f3db26db28ecca250635aeeed9061df"><td class="mdescLeft">&#160;</td><td class="mdescRight">custom calloc  <a href="#a6f3db26db28ecca250635aeeed9061df">More...</a><br /></td></tr>
 <tr class="separator:a6f3db26db28ecca250635aeeed9061df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f8399dfdd5aded24b094b2e4ba21d9b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a4f8399dfdd5aded24b094b2e4ba21d9b">c_free</a>&#160;&#160;&#160;free</td></tr>
+<tr class="memdesc:a4f8399dfdd5aded24b094b2e4ba21d9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">custom free  <a href="#a4f8399dfdd5aded24b094b2e4ba21d9b">More...</a><br /></td></tr>
 <tr class="separator:a4f8399dfdd5aded24b094b2e4ba21d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8865c6728c372790de8dee1ed24c7480"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a8865c6728c372790de8dee1ed24c7480">c_realloc</a>&#160;&#160;&#160;realloc</td></tr>
+<tr class="memdesc:a8865c6728c372790de8dee1ed24c7480"><td class="mdescLeft">&#160;</td><td class="mdescRight">custom realloc  <a href="#a8865c6728c372790de8dee1ed24c7480">More...</a><br /></td></tr>
 <tr class="separator:a8865c6728c372790de8dee1ed24c7480"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Custom operations</div></td></tr>
 <tr class="memitem:acde65b798fcd87e08c1f337b0b9d7c9b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#acde65b798fcd87e08c1f337b0b9d7c9b">c_absval</a>(x)&#160;&#160;&#160;(((x) &lt; 0) ? -(x) : (x))</td></tr>
+<tr class="memdesc:acde65b798fcd87e08c1f337b0b9d7c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">absolute value  <a href="#acde65b798fcd87e08c1f337b0b9d7c9b">More...</a><br /></td></tr>
 <tr class="separator:acde65b798fcd87e08c1f337b0b9d7c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a65de2804630e8b5c13c2c03f24aef3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a9a65de2804630e8b5c13c2c03f24aef3">c_max</a>(a,  b)&#160;&#160;&#160;(((a) &gt; (b)) ? (a) : (b))</td></tr>
+<tr class="memdesc:a9a65de2804630e8b5c13c2c03f24aef3"><td class="mdescLeft">&#160;</td><td class="mdescRight">maximum of two values  <a href="#a9a65de2804630e8b5c13c2c03f24aef3">More...</a><br /></td></tr>
 <tr class="separator:a9a65de2804630e8b5c13c2c03f24aef3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8215c036535f0b2b2ccf09d5f96fabf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#af8215c036535f0b2b2ccf09d5f96fabf">c_min</a>(a,  b)&#160;&#160;&#160;(((a) &lt; (b)) ? (a) : (b))</td></tr>
+<tr class="memdesc:af8215c036535f0b2b2ccf09d5f96fabf"><td class="mdescLeft">&#160;</td><td class="mdescRight">minimum of two values  <a href="#af8215c036535f0b2b2ccf09d5f96fabf">More...</a><br /></td></tr>
 <tr class="separator:af8215c036535f0b2b2ccf09d5f96fabf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8effeb3246f2f663f5c53b0a997b4374"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a8effeb3246f2f663f5c53b0a997b4374">mod</a>(a,  b)&#160;&#160;&#160;((((a)%(b))+(b))%(b))</td></tr>
+<tr class="memdesc:a8effeb3246f2f663f5c53b0a997b4374"><td class="mdescLeft">&#160;</td><td class="mdescRight">modulo operation (positive result for all values)  <a href="#a8effeb3246f2f663f5c53b0a997b4374">More...</a><br /></td></tr>
 <tr class="separator:a8effeb3246f2f663f5c53b0a997b4374"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e7d4980398cb3cfa11ef1e9677d5835"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a2e7d4980398cb3cfa11ef1e9677d5835">c_sqrt</a>&#160;&#160;&#160;sqrt</td></tr>
+<tr class="memdesc:a2e7d4980398cb3cfa11ef1e9677d5835"><td class="mdescLeft">&#160;</td><td class="mdescRight">square root  <a href="#a2e7d4980398cb3cfa11ef1e9677d5835">More...</a><br /></td></tr>
 <tr class="separator:a2e7d4980398cb3cfa11ef1e9677d5835"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr><td colspan="2"><div class="groupHeader">Data customizations</div></td></tr>
 <tr class="memitem:a7f1a9fda95e52979658c20a0d134fb15"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="global__opts_8h.html#a060b837c3b4486ee35317744156f3da2">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a></td></tr>
+<tr class="memdesc:a7f1a9fda95e52979658c20a0d134fb15"><td class="mdescLeft">&#160;</td><td class="mdescRight">doubles for numerical values  <a href="#a7f1a9fda95e52979658c20a0d134fb15">More...</a><br /></td></tr>
 <tr class="separator:a7f1a9fda95e52979658c20a0d134fb15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3217a0f49d3e52b74e9dd830c44472f"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="global__opts_8h.html#a91adff1610bdf681555a8f2e330dc963">Int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a></td></tr>
+<tr class="memdesc:aa3217a0f49d3e52b74e9dd830c44472f"><td class="mdescLeft">&#160;</td><td class="mdescRight">long or int for indices  <a href="#aa3217a0f49d3e52b74e9dd830c44472f">More...</a><br /></td></tr>
 <tr class="separator:aa3217a0f49d3e52b74e9dd830c44472f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p class="">Custom memory allocation, print and utility functions, and data types for floats and ints. </p>
+<dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
+<p>Memory allocation and print functions depend on whether the code is compiled as a standalone library or with matlab or python. The data types used for floating point numbers and integer numbers can be changed here as well. Finally, some customized operations (max, min, mod and abs) are included as well. </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="acde65b798fcd87e08c1f337b0b9d7c9b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acde65b798fcd87e08c1f337b0b9d7c9b">&#9670;&nbsp;</a></span>c_absval</h2>
 
@@ -144,6 +163,8 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>absolute value </p>
+
 </div>
 </div>
 <a id="a6f3db26db28ecca250635aeeed9061df"></a>
@@ -157,6 +178,8 @@ Typedefs</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>custom calloc </p>
 
 </div>
 </div>
@@ -172,6 +195,8 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>custom free </p>
+
 </div>
 </div>
 <a id="a3ab8252f80f6fe439c69aa168f64ee5e"></a>
@@ -185,6 +210,8 @@ Typedefs</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>custom malloc </p>
 
 </div>
 </div>
@@ -214,6 +241,8 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>maximum of two values </p>
+
 </div>
 </div>
 <a id="af8215c036535f0b2b2ccf09d5f96fabf"></a>
@@ -242,6 +271,8 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>minimum of two values </p>
+
 </div>
 </div>
 <a id="a8865c6728c372790de8dee1ed24c7480"></a>
@@ -256,6 +287,8 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>custom realloc </p>
+
 </div>
 </div>
 <a id="a2e7d4980398cb3cfa11ef1e9677d5835"></a>
@@ -269,6 +302,8 @@ Typedefs</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>square root </p>
 
 </div>
 </div>
@@ -428,6 +463,8 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>modulo operation (positive result for all values) </p>
+
 </div>
 </div>
 <a id="a060b837c3b4486ee35317744156f3da2"></a>
@@ -457,6 +494,8 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>doubles for numerical values </p>
+
 </div>
 </div>
 <a id="aa3217a0f49d3e52b74e9dd830c44472f"></a>
@@ -470,6 +509,8 @@ Typedefs</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>long or int for indices </p>
 
 </div>
 </div>
