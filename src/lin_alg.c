@@ -1,7 +1,15 @@
+/**
+ * @file lin_alg.c
+ * @author Ben Hermans
+ * @brief Linear algebra with vectors.
+ * @details Common operations, such as vector products, infinity norm, elementwise 
+ * add/product/division/max etc. are included in this file.
+ */
+
 #include "lin_alg.h"
 
 
-/* VECTOR FUNCTIONS ----------------------------------------------------------*/
+
 
 c_float* vec_copy(c_float *a, c_int n) {
   c_float *b;
@@ -101,15 +109,15 @@ void vec_add_scaled(const c_float *a,
   }
 }
 
-c_float vec_norm_inf(const c_float *v, c_int l) {
+c_float vec_norm_inf(const c_float *a, c_int n) {
   c_int   i;
-  c_float abs_v_i;
+  c_float abs_a_i;
   c_float max = 0.0;
 
-  for (i = 0; i < l; i++) {
-    abs_v_i = c_absval(v[i]);
+  for (i = 0; i < n; i++) {
+    abs_a_i = c_absval(a[i]);
 
-    if (abs_v_i > max) max = abs_v_i;
+    if (abs_a_i > max) max = abs_a_i;
   }
   return max;
 }
@@ -154,6 +162,9 @@ void vec_ew_sqrt(const c_float *a, c_float *b, c_int n) {
   }
 }
 
+/**
+ * @}
+ */
 
 
 /* MATRIX FUNCTIONS ----------------------------------------------------------*/

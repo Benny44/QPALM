@@ -1,0 +1,22 @@
+\form#0:$||a||_\infty$
+\form#1:$a^T \cdot b$
+\form#2:$|\|a|\|_\infty$
+\form#3:$c = a + sc\cdot b$
+\form#4:$\|a\|_\infty$
+\form#5:$b = 1./a$
+\form#6:$c = \textrm{max}(a, b)$
+\form#7:$c = \textrm{min}(a, b)$
+\form#8:$c = \textrm{max}(b_\textrm{min}, \textrm{min}(a, b_\textrm{max}))$
+\form#9:$c = a.*b$
+\form#10:$c = a./b$
+\form#11:$b = \sqrt{a}$
+\form#12:$c_i = a_i + sc\cdot b_i$
+\form#13:$b_i = 1/a_i$
+\form#14:$c_i = \textrm{max}(a_i, b_i)$
+\form#15:$c_i = \textrm{min}(a_i, b_i)$
+\form#16:$c_i = \textrm{max}(b_{\textrm{min},i}, \textrm{min}(a_i, b_{\textrm{max},i}))$
+\form#17:$c = a_i\cdot b_i$
+\form#18:$c = a_i/b_i$
+\form#19:$b_i = \sqrt{a_i}$
+\form#20:$c_i = a_i\cdot b_i$
+\form#21:$c_i = a_i/b_i$
