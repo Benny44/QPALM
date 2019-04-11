@@ -72,6 +72,9 @@ $(function() {
 <div class="title">linesearch.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Routines to perform exact or backtracking linesearch.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="constants_8h_source.html">constants.h</a>&quot;</code><br />
 </div>
@@ -89,18 +92,23 @@ Functions</h2></td></tr>
 <tr class="memdesc:a6ac57ea5ff25012ad3e89b5956b06b96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute backtracking linesearch with Armijo condition.  <a href="#a6ac57ea5ff25012ad3e89b5956b06b96">More...</a><br /></td></tr>
 <tr class="separator:a6ac57ea5ff25012ad3e89b5956b06b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae209633a57657f1a729244619f7df8be"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linesearch_8h.html#ae209633a57657f1a729244619f7df8be">vec_array_copy</a> (<a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, <a class="el" href="structarray__element.html">array_element</a> *b, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:ae209633a57657f1a729244619f7df8be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to copy a vector a in an array b (with indices)  <a href="#ae209633a57657f1a729244619f7df8be">More...</a><br /></td></tr>
+<tr class="memdesc:ae209633a57657f1a729244619f7df8be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to copy vector a in array b (with indices)  <a href="#ae209633a57657f1a729244619f7df8be">More...</a><br /></td></tr>
 <tr class="separator:ae209633a57657f1a729244619f7df8be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acffdd7f23862848722b98489848ca78d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linesearch_8h.html#acffdd7f23862848722b98489848ca78d">select_subsequence</a> (const <a class="el" href="structarray__element.html">array_element</a> *a, <a class="el" href="structarray__element.html">array_element</a> *b, const <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> *L, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:acffdd7f23862848722b98489848ca78d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select subsequence based on index list (fill the rest with QPALM_INFTY)  <a href="#acffdd7f23862848722b98489848ca78d">More...</a><br /></td></tr>
+<tr class="memdesc:acffdd7f23862848722b98489848ca78d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Select subsequence based on a set of indices, <img class="formulaInl" alt="$b = a(L)$" src="form_43.png"/>.  <a href="#acffdd7f23862848722b98489848ca78d">More...</a><br /></td></tr>
 <tr class="separator:acffdd7f23862848722b98489848ca78d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad446681224f354ad209acc44a91b5e1d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linesearch_8h.html#ad446681224f354ad209acc44a91b5e1d">vec_prod_ind</a> (const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *b, const <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> *L, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
+<tr class="memdesc:ad446681224f354ad209acc44a91b5e1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inner product over index set, <img class="formulaInl" alt="$a(L)^T\cdot b(L)$" src="form_45.png"/>.  <a href="#ad446681224f354ad209acc44a91b5e1d">More...</a><br /></td></tr>
 <tr class="separator:ad446681224f354ad209acc44a91b5e1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac70138609ef6aa6fabca57aca8681e83"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="linesearch_8h.html#ac70138609ef6aa6fabca57aca8681e83">compare</a> (const void *a, const void *b)</td></tr>
-<tr class="memdesc:ac70138609ef6aa6fabca57aca8681e83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function for qsort Carries out comparison between two array_elements.  <a href="#ac70138609ef6aa6fabca57aca8681e83">More...</a><br /></td></tr>
+<tr class="memdesc:ac70138609ef6aa6fabca57aca8681e83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function for qsort.  <a href="#ac70138609ef6aa6fabca57aca8681e83">More...</a><br /></td></tr>
 <tr class="separator:ac70138609ef6aa6fabca57aca8681e83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p class="">Routines to perform exact or backtracking linesearch. </p>
+<dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
+<p>Once the direction is found using the semismooth Newton method, the functions in this file can be called to calculate a stepsize, either using exact linesearch or a backtracking linesearch to satisfy the armijo condition. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a6ac57ea5ff25012ad3e89b5956b06b96"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6ac57ea5ff25012ad3e89b5956b06b96">&#9670;&nbsp;</a></span>armijo_linesearch()</h2>
 
@@ -124,7 +132,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>tau Stepsize </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>tau Step size </dd></dl>
 
 </div>
 </div>
@@ -154,7 +162,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Helper function for qsort Carries out comparison between two array_elements. </p>
+<p>Helper function for qsort. </p>
+<p class="">Carries out comparison between two array_elements </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Pointer to array element </td></tr>
+    <tr><td class="paramname">b</td><td>Pointer to array element </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a.x &gt; b.x </dd></dl>
 
 </div>
 </div>
@@ -181,7 +197,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>tau Stepsize </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>tau Step size </dd></dl>
 
 </div>
 </div>
@@ -208,7 +224,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>tau Stepsize </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>tau Step size </dd></dl>
 
 </div>
 </div>
@@ -250,7 +266,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Select subsequence based on index list (fill the rest with QPALM_INFTY) </p>
+<p>Select subsequence based on a set of indices, <img class="formulaInl" alt="$b = a(L)$" src="form_43.png"/>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Input array </td></tr>
+    <tr><td class="paramname">b</td><td>Outpur array </td></tr>
+    <tr><td class="paramname">L</td><td>Index set </td></tr>
+    <tr><td class="paramname">n</td><td>Length of a </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -286,7 +311,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Helper function to copy a vector a in an array b (with indices) </p>
+<p>Helper function to copy vector a in array b (with indices) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Vector </td></tr>
+    <tr><td class="paramname">b</td><td>Array (vector with added indices) </td></tr>
+    <tr><td class="paramname">n</td><td>Vector length </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -327,6 +360,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Inner product over index set, <img class="formulaInl" alt="$a(L)^T\cdot b(L)$" src="form_45.png"/>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>Vector </td></tr>
+    <tr><td class="paramname">b</td><td>Vector </td></tr>
+    <tr><td class="paramname">L</td><td>Index set </td></tr>
+    <tr><td class="paramname">n</td><td>Vector length </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

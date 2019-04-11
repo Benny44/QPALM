@@ -41,3 +41,6 @@
 \form#40:$E_i = \|M{(i,:)}\|_\infty$
 \form#41:$Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$
 \form#42:$Q+\frac{1}{\gamma}*I+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$
+\form#43:$b = a(L)$
+\form#44:$L$
+\form#45:$a(L)^T\cdot b(L)$

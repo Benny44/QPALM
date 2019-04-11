@@ -1,3 +1,12 @@
+/**
+ * @file linesearch.c
+ * @author Ben Hermans
+ * @brief Routines to perform exact or backtracking linesearch.
+ * @details Once the direction is found using the semismooth Newton method, the functions in this file can 
+ * be called to calculate a stepsize, either using exact linesearch or a backtracking linesearch to
+ * satisfy the armijo condition.
+ */
+
 #include "linesearch.h"
 #include "lin_alg.h"
 #include <stdlib.h> //for sorting
