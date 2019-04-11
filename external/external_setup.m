@@ -12,9 +12,8 @@ close all
 
 %% OSQP setup
 
-external_path = fullfile(current_path, 'external');
-addpath(external_path);
-cd(external_path);
+current_path = fileparts(mfilename('fullpath'));
+cd(current_path);
 websave('install_osqp.m', 'https://dl.bintray.com/bstellato/generic/OSQP/0.5.0/install_osqp.m');
 install_osqp
 !git clone --recurse-submodules https://github.com/oxfordcontrol/osqp-matlab
@@ -22,10 +21,10 @@ cd osqp-matlab
 make_osqp
 
 %% Savepath
-addpath(genpath(current_path));
-savepath;
+% addpath(genpath(current_path));
+% savepath;
+% 
+% cd(current_path);
 
-cd(current_path);
-
-clear current_path LBFGS_path external_path error_msg
+% clear current_path LBFGS_path external_path error_msg
 clc
