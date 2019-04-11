@@ -6,9 +6,7 @@
 #include "util.h"
 #include "scaling.h"
 #include "linesearch.h"
-#include "lbfgs.h"
 #include "termination.h"
-#include "cs.h"
 #include "cholmod.h"
 #include "cholmod_function.h"
 #include "cholmod_interface.h"
@@ -173,20 +171,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
     work->scaling = QPALM_NULL;
   }
 
-  // LBFGS variables
-  work->lbfgs              = c_calloc(1, sizeof(QPALMLbfgs));
-  work->lbfgs->curridx     = 0;
-  work->lbfgs->currmem     = 0;
-  work->lbfgs->reset_lbfgs = 1;
-  work->lbfgs->s           = c_calloc(n, sizeof(c_float));
-  work->lbfgs->y           = c_calloc(n, sizeof(c_float));
-  work->lbfgs->Sbuffer     = c_calloc(n*work->settings->memory, sizeof(c_float));
-  work->lbfgs->Ybuffer     = c_calloc(n*work->settings->memory, sizeof(c_float));
-  work->lbfgs->YSbuffer    = c_calloc(work->settings->memory, sizeof(c_float));
-  work->lbfgs->H           = 1.0;
-  work->lbfgs->alpha       = c_calloc(work->settings->memory, sizeof(c_float));
-  work->lbfgs->q           = c_calloc(n, sizeof(c_float));
-
   // CHOLMOD variables
   work->chol->neg_dphi = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, &work->chol->c);
   work->neg_dphi = work->chol->neg_dphi->x; 
@@ -303,8 +287,6 @@ void qpalm_solve(QPALMWorkspace *work) {
           }
         }
         CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
-
-        work->lbfgs->reset_lbfgs = TRUE;
       }
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
       
@@ -318,9 +300,6 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       iter_out++;
     } else {
-      // d = lbfgs()
-      // lbfgs_set_direction(work);
-      
       // d=newton()
       newton_set_direction(work);
       
@@ -459,25 +438,6 @@ void qpalm_cleanup(QPALMWorkspace *work) {
 
     // Free Settings
     if (work->settings) c_free(work->settings);
-
-    // Free lbfgs struct
-    if (work->lbfgs) {
-      if (work->lbfgs->s) c_free(work->lbfgs->s);
-
-      if (work->lbfgs->y) c_free(work->lbfgs->y);
-
-      if (work->lbfgs->Sbuffer) c_free(work->lbfgs->Sbuffer);
-
-      if (work->lbfgs->Ybuffer) c_free(work->lbfgs->Ybuffer);
-
-      if (work->lbfgs->YSbuffer) c_free(work->lbfgs->YSbuffer);
-
-      if (work->lbfgs->alpha) c_free(work->lbfgs->alpha);
-
-      if (work->lbfgs->q) c_free(work->lbfgs->q);
-
-      c_free(work->lbfgs);
-    }
 
     //Free chol struct
     if (work->chol) {

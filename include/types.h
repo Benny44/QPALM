@@ -22,22 +22,6 @@ typedef struct array_element  {
 ******************/
 
 /**
- *  Matrix in compressed-column or triplet form
- */
-typedef struct {
-  c_int    nzmax; ///< maximum number of entries.
-  c_int    m;     ///< number of rows
-  c_int    n;     ///< number of columns
-  c_int   *p;     ///< column pointers (size n+1) (col indices (size nzmax)
-                  // start from 0 when using triplet format (direct KKT matrix
-                  // formation))
-  c_int   *i;     ///< row indices, size nzmax starting from 0
-  c_float *x;     ///< numerical values, size nzmax
-  c_int    nz;    ///< # of entries in triplet matrix, -1 for csc
-} csc;
-
-
-/**
  * Solution structure
  */
 typedef struct {
@@ -128,24 +112,6 @@ typedef struct {
   c_int   verbose;       ///< boolean, write out progress
   c_int   warm_start;    ///< boolean, warm start
 } QPALMSettings;
-
-/**
- * LBFGS struct
- */
-typedef struct {
-  c_int    curridx;     ///< Starting position in the buffers
-  c_int    currmem;     ///< Number of (valid) elements in buffers
-  c_int    reset_lbfgs; ///< boolean, reset lbfgs (after sigma update)
-  c_float *s;           ///< s = x-x_prev
-  c_float *y;           ///< y = dphi-dphi_prev
-  c_float  ys;          ///< y'*s
-  c_float *Sbuffer;     ///< Buffer for s vectors
-  c_float *Ybuffer;     ///< Buffer for y vectors
-  c_float *YSbuffer;    ///< Buffer for ys numbers
-  c_float  H;           ///< preconditioning constant in lbfgs
-  c_float *alpha;       ///< alpha vector
-  c_float *q;           ///< running vector
-} QPALMLbfgs;
 
 /**
  * Variables for linear system solving (cholmod)
@@ -279,7 +245,6 @@ typedef struct {
   /** @} */
 
   QPALMCholmod  *chol;     ///< Cholmod variables
-  QPALMLbfgs    *lbfgs;    ///< LBFGS variables
   QPALMSettings *settings; ///< Problem settings
   QPALMScaling  *scaling;  ///< Scaling vectors
   QPALMSolution *solution; ///< Problem solution

@@ -2,7 +2,6 @@
 #include <string.h>
 #include "global_opts.h"
 #include "qpalm.h"
-#include "cs.h"
 #include "constants.h"
 #include "cholmod.h"
 #include "cholmod_matlab.h"

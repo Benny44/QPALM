@@ -158,25 +158,5 @@ void vec_ew_sqrt(const c_float *a, c_float *b, c_int n) {
 
 /* MATRIX FUNCTIONS ----------------------------------------------------------*/
 
-void mat_premult_diag(csc *A, const c_float *d) {
-  c_int j, i;
-
-  for (j = 0; j < A->n; j++) {                // Cycle over columns
-    for (i = A->p[j]; i < A->p[j + 1]; i++) { // Cycle every row in the column
-      A->x[i] *= d[A->i[i]];                  // Scale by corresponding element
-                                              // of d for row i
-    }
-  }
-}
-
-void mat_postmult_diag(csc *A, const c_float *d) {
-  c_int j, i;
-
-  for (j = 0; j < A->n; j++) {                // Cycle over columns j
-    for (i = A->p[j]; i < A->p[j + 1]; i++) { // Cycle every row i in column j
-      A->x[i] *= d[j];                        // Scale by corresponding element
-                                              // of d for column j
-    }
-  }
-}
+/* Moved to cholmod_interface.c*/
 
