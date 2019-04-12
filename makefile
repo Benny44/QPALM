@@ -3,8 +3,12 @@ ODIR=obj
 SRCDIR=src
 EDIR=examples
 BDIR=lib
+TESTDIR=tests
 
 all: directories lib demo
+
+test: 
+	(cd $(TESTDIR) && $(MAKE) )
 
 lib: $(BDIR)/libqpalm.a
 
@@ -59,6 +63,7 @@ demo: $(OBJ)
 
 clean:
 	rm -f $(ODIR)/*.o $(BDIR)/*.a $(EDIR)/*.o demo
+	(cd $(TESTDIR) && $(MAKE) clean)
 
 directories:
 	mkdir -p obj lib
