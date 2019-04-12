@@ -1,3 +1,10 @@
+/**
+ * @file util.h
+ * @author Ben Hermans
+ * @brief Utility functions.
+ * @details This file contains some utility functions, to copy the settings, initialize the penalty parameters,
+ * initialize the iterates, update the solver status and time the algorithm.
+ */
 #ifndef UTIL_H
 # define UTIL_H
 
@@ -14,7 +21,8 @@ extern "C" {
 **********************/
 
 /**
- * Copy settings creating a new settings structure (uses MALLOC)
+ * Copy settings creating a new settings structure.
+ * @warning This function uses malloc.
  * @param  settings Settings to be copied
  * @return          New settings structure
  */
@@ -22,30 +30,32 @@ QPALMSettings* copy_settings(QPALMSettings *settings);
 
 
 /**
- * Custom string copy to avoid string.h library
- * @param dest   destination string
- * @param source source string
+ * Custom string copy to avoid string.h library.
+ * @param dest   Destination string
+ * @param source Source string
  */
 void c_strcpy(char       dest[],
               const char source[]);
 
 
 /**
- * Update solver status (value and string)
+ * Update solver status (value and string).
  * @param info QPALMInfo
- * @param status_val new status value
+ * @param status_val New status value
  */
 void update_status(QPALMInfo *info,
                    c_int     status_val);
 
 /**
- * Cold start workspace variables x, x_prev, y, Ax and Qx
+ * Cold start workspace variables x, x_0, x_prev, y, Ax and Qx
  * @param work Workspace
  */
 void cold_start(QPALMWorkspace *work);
 
 /**
- * Initialize penalty factors from initial x 
+ * Initialize penalty factors from initial x
+ * 
+ * The formula used here can be found in \cite birgin2014practical.  
  * @param work Workspace
  */
 void initialize_sigma(QPALMWorkspace *work);
@@ -103,10 +113,9 @@ struct QPALM_TIMER {
 
 // Linux
 #  elif defined __linux__ // ifdef _WIN32
-/* Use POSIX clocl_gettime() for timing on non-Windows machines */
+
 #   include <time.h>
 #   include <sys/time.h>
-
 
 struct QPALM_TIMER {
   struct timespec tic;
@@ -117,20 +126,17 @@ struct QPALM_TIMER {
 
 /*! \endcond */
 
-/**
- * Timer Methods
- */
 
 /**
- * Start timer
+ * Start timer.
  * @param t Timer object
  */
 void    qpalm_tic(QPALMTimer *t);
 
 /**
- * Report time
+ * Report time in seconds since last call to qpalm_tic.
  * @param  t Timer object
- * @return   Reported time
+ * @return   Reported time in seconds
  */
 c_float qpalm_toc(QPALMTimer *t);
 

@@ -1,0 +1,265 @@
+\hypertarget{structQPALMCholmod}{}\section{Q\+P\+A\+L\+M\+Cholmod Struct Reference}
+\label{structQPALMCholmod}\index{QPALMCholmod@{QPALMCholmod}}
+
+
+Variables for linear system solving (cholmod)  
+
+
+
+
+{\ttfamily \#include $<$types.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+cholmod\+\_\+common \mbox{\hyperlink{structQPALMCholmod_ae0b17902eab7e85f15ec7bcbcc555a89}{c}}
+\begin{DoxyCompactList}\small\item\em cholmod environment \end{DoxyCompactList}\item 
+cholmod\+\_\+factor $\ast$ \mbox{\hyperlink{structQPALMCholmod_aa13c04a0c6d42ce03f4ed35facecdb17}{LD}}
+\begin{DoxyCompactList}\small\item\em LD factor (part of L\+DL\textquotesingle{} factorization) \end{DoxyCompactList}\item 
+cholmod\+\_\+dense $\ast$ \mbox{\hyperlink{structQPALMCholmod_a81f1783209b107329ef325f7da73c231}{E\+\_\+temp}}
+\begin{DoxyCompactList}\small\item\em temporary constraints scaling vectors \end{DoxyCompactList}\item 
+cholmod\+\_\+dense $\ast$ \mbox{\hyperlink{structQPALMCholmod_a75e770d10fb08d241acdd13373288e70}{D\+\_\+temp}}
+\begin{DoxyCompactList}\small\item\em temporary primal variable scaling vectors \end{DoxyCompactList}\item 
+cholmod\+\_\+dense $\ast$ \mbox{\hyperlink{structQPALMCholmod_a7c0275f19a37eb6108f98c867c2c843f}{neg\+\_\+dphi}}
+\begin{DoxyCompactList}\small\item\em -\/gradient of the Lagrangian \end{DoxyCompactList}\item 
+cholmod\+\_\+dense $\ast$ \mbox{\hyperlink{structQPALMCholmod_ad0aa804eb45d8ec35a7f5bc7cb8ad3d8}{d}}
+\begin{DoxyCompactList}\small\item\em primal update step \end{DoxyCompactList}\item 
+cholmod\+\_\+dense $\ast$ \mbox{\hyperlink{structQPALMCholmod_a56224cbea98a1f5555eb08701b1e97d5}{Ad}}
+\begin{DoxyCompactList}\small\item\em A $\ast$ d. \end{DoxyCompactList}\item 
+cholmod\+\_\+dense $\ast$ \mbox{\hyperlink{structQPALMCholmod_abaedb802a939e9ee04577c87bb9f25cc}{Qd}}
+\begin{DoxyCompactList}\small\item\em Q $\ast$ d. \end{DoxyCompactList}\item 
+cholmod\+\_\+dense $\ast$ \mbox{\hyperlink{structQPALMCholmod_afec81875b9a1a98a6984d0b607cdd28e}{yh}}
+\begin{DoxyCompactList}\small\item\em candidate dual update \end{DoxyCompactList}\item 
+cholmod\+\_\+dense $\ast$ \mbox{\hyperlink{structQPALMCholmod_a94defa21b4eb5bc4e49bd344e72f8174}{Atyh}}
+\begin{DoxyCompactList}\small\item\em A\textquotesingle{} $\ast$ yh. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{structQPALMCholmod_a5d243ea350665531164a8b355ac7c370}{reset\+\_\+newton}}
+\begin{DoxyCompactList}\small\item\em boolean, after sigma is updated perform a new factorization \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$ \mbox{\hyperlink{structQPALMCholmod_a90e849ad034aa9c44fdb05b4a28f4d94}{active\+\_\+constraints}}
+\begin{DoxyCompactList}\small\item\em index set of active constraints \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$ \mbox{\hyperlink{structQPALMCholmod_a9689c1013d1d38928c62c07d76fea9d3}{active\+\_\+constraints\+\_\+old}}
+\begin{DoxyCompactList}\small\item\em index set of active constraints in the previous iteration \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{structQPALMCholmod_ad36c8474bed45333464cf3d877e783c5}{nb\+\_\+active\+\_\+constraints}}
+\begin{DoxyCompactList}\small\item\em number of active constraints \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$ \mbox{\hyperlink{structQPALMCholmod_aa8b56653cf6a253c025c7430b112d4ee}{enter}}
+\begin{DoxyCompactList}\small\item\em index set of entering constraints \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{structQPALMCholmod_ae5447313a38c410f87578b1e24c54e8f}{nb\+\_\+enter}}
+\begin{DoxyCompactList}\small\item\em number of entering constraints \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$ \mbox{\hyperlink{structQPALMCholmod_a9b386126a4e4d1773152c32e40cb7ccf}{leave}}
+\begin{DoxyCompactList}\small\item\em index set of leaving constraints \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{structQPALMCholmod_a3d848261dea95f43ff0ccf8c32db4622}{nb\+\_\+leave}}
+\begin{DoxyCompactList}\small\item\em number of leaving constraints \end{DoxyCompactList}\item 
+cholmod\+\_\+dense $\ast$ \mbox{\hyperlink{structQPALMCholmod_a21442e539bbff4c9a2cba6f94f067b96}{At\+\_\+scale}}
+\begin{DoxyCompactList}\small\item\em running vector of sqrt(sigma), used to scale At\+\_\+sqrt\+\_\+sigma \end{DoxyCompactList}\item 
+cholmod\+\_\+sparse $\ast$ \mbox{\hyperlink{structQPALMCholmod_a26018b83bc91c059f03950f66862320c}{At\+\_\+sqrt\+\_\+sigma}}
+\begin{DoxyCompactList}\small\item\em A\textquotesingle{} $\ast$ sqrt(sigma) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Variables for linear system solving (cholmod) 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structQPALMCholmod_a90e849ad034aa9c44fdb05b4a28f4d94}\label{structQPALMCholmod_a90e849ad034aa9c44fdb05b4a28f4d94}} 
+\index{QPALMCholmod@{QPALMCholmod}!active\_constraints@{active\_constraints}}
+\index{active\_constraints@{active\_constraints}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{active\_constraints}{active\_constraints}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::active\+\_\+constraints}
+
+
+
+index set of active constraints 
+
+\mbox{\Hypertarget{structQPALMCholmod_a9689c1013d1d38928c62c07d76fea9d3}\label{structQPALMCholmod_a9689c1013d1d38928c62c07d76fea9d3}} 
+\index{QPALMCholmod@{QPALMCholmod}!active\_constraints\_old@{active\_constraints\_old}}
+\index{active\_constraints\_old@{active\_constraints\_old}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{active\_constraints\_old}{active\_constraints\_old}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::active\+\_\+constraints\+\_\+old}
+
+
+
+index set of active constraints in the previous iteration 
+
+\mbox{\Hypertarget{structQPALMCholmod_a56224cbea98a1f5555eb08701b1e97d5}\label{structQPALMCholmod_a56224cbea98a1f5555eb08701b1e97d5}} 
+\index{QPALMCholmod@{QPALMCholmod}!Ad@{Ad}}
+\index{Ad@{Ad}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{Ad}{Ad}}
+{\footnotesize\ttfamily cholmod\+\_\+dense$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::\+Ad}
+
+
+
+A $\ast$ d. 
+
+\mbox{\Hypertarget{structQPALMCholmod_a21442e539bbff4c9a2cba6f94f067b96}\label{structQPALMCholmod_a21442e539bbff4c9a2cba6f94f067b96}} 
+\index{QPALMCholmod@{QPALMCholmod}!At\_scale@{At\_scale}}
+\index{At\_scale@{At\_scale}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{At\_scale}{At\_scale}}
+{\footnotesize\ttfamily cholmod\+\_\+dense$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::\+At\+\_\+scale}
+
+
+
+running vector of sqrt(sigma), used to scale At\+\_\+sqrt\+\_\+sigma 
+
+\mbox{\Hypertarget{structQPALMCholmod_a26018b83bc91c059f03950f66862320c}\label{structQPALMCholmod_a26018b83bc91c059f03950f66862320c}} 
+\index{QPALMCholmod@{QPALMCholmod}!At\_sqrt\_sigma@{At\_sqrt\_sigma}}
+\index{At\_sqrt\_sigma@{At\_sqrt\_sigma}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{At\_sqrt\_sigma}{At\_sqrt\_sigma}}
+{\footnotesize\ttfamily cholmod\+\_\+sparse$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::\+At\+\_\+sqrt\+\_\+sigma}
+
+
+
+A\textquotesingle{} $\ast$ sqrt(sigma) 
+
+\mbox{\Hypertarget{structQPALMCholmod_a94defa21b4eb5bc4e49bd344e72f8174}\label{structQPALMCholmod_a94defa21b4eb5bc4e49bd344e72f8174}} 
+\index{QPALMCholmod@{QPALMCholmod}!Atyh@{Atyh}}
+\index{Atyh@{Atyh}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{Atyh}{Atyh}}
+{\footnotesize\ttfamily cholmod\+\_\+dense$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::\+Atyh}
+
+
+
+A\textquotesingle{} $\ast$ yh. 
+
+\mbox{\Hypertarget{structQPALMCholmod_ae0b17902eab7e85f15ec7bcbcc555a89}\label{structQPALMCholmod_ae0b17902eab7e85f15ec7bcbcc555a89}} 
+\index{QPALMCholmod@{QPALMCholmod}!c@{c}}
+\index{c@{c}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{c}{c}}
+{\footnotesize\ttfamily cholmod\+\_\+common Q\+P\+A\+L\+M\+Cholmod\+::c}
+
+
+
+cholmod environment 
+
+\mbox{\Hypertarget{structQPALMCholmod_ad0aa804eb45d8ec35a7f5bc7cb8ad3d8}\label{structQPALMCholmod_ad0aa804eb45d8ec35a7f5bc7cb8ad3d8}} 
+\index{QPALMCholmod@{QPALMCholmod}!d@{d}}
+\index{d@{d}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{d}{d}}
+{\footnotesize\ttfamily cholmod\+\_\+dense$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::d}
+
+
+
+primal update step 
+
+\mbox{\Hypertarget{structQPALMCholmod_a75e770d10fb08d241acdd13373288e70}\label{structQPALMCholmod_a75e770d10fb08d241acdd13373288e70}} 
+\index{QPALMCholmod@{QPALMCholmod}!D\_temp@{D\_temp}}
+\index{D\_temp@{D\_temp}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{D\_temp}{D\_temp}}
+{\footnotesize\ttfamily cholmod\+\_\+dense$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::\+D\+\_\+temp}
+
+
+
+temporary primal variable scaling vectors 
+
+\mbox{\Hypertarget{structQPALMCholmod_a81f1783209b107329ef325f7da73c231}\label{structQPALMCholmod_a81f1783209b107329ef325f7da73c231}} 
+\index{QPALMCholmod@{QPALMCholmod}!E\_temp@{E\_temp}}
+\index{E\_temp@{E\_temp}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{E\_temp}{E\_temp}}
+{\footnotesize\ttfamily cholmod\+\_\+dense$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::\+E\+\_\+temp}
+
+
+
+temporary constraints scaling vectors 
+
+\mbox{\Hypertarget{structQPALMCholmod_aa8b56653cf6a253c025c7430b112d4ee}\label{structQPALMCholmod_aa8b56653cf6a253c025c7430b112d4ee}} 
+\index{QPALMCholmod@{QPALMCholmod}!enter@{enter}}
+\index{enter@{enter}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{enter}{enter}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::enter}
+
+
+
+index set of entering constraints 
+
+\mbox{\Hypertarget{structQPALMCholmod_aa13c04a0c6d42ce03f4ed35facecdb17}\label{structQPALMCholmod_aa13c04a0c6d42ce03f4ed35facecdb17}} 
+\index{QPALMCholmod@{QPALMCholmod}!LD@{LD}}
+\index{LD@{LD}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{LD}{LD}}
+{\footnotesize\ttfamily cholmod\+\_\+factor$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::\+LD}
+
+
+
+LD factor (part of L\+DL\textquotesingle{} factorization) 
+
+\mbox{\Hypertarget{structQPALMCholmod_a9b386126a4e4d1773152c32e40cb7ccf}\label{structQPALMCholmod_a9b386126a4e4d1773152c32e40cb7ccf}} 
+\index{QPALMCholmod@{QPALMCholmod}!leave@{leave}}
+\index{leave@{leave}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{leave}{leave}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::leave}
+
+
+
+index set of leaving constraints 
+
+\mbox{\Hypertarget{structQPALMCholmod_ad36c8474bed45333464cf3d877e783c5}\label{structQPALMCholmod_ad36c8474bed45333464cf3d877e783c5}} 
+\index{QPALMCholmod@{QPALMCholmod}!nb\_active\_constraints@{nb\_active\_constraints}}
+\index{nb\_active\_constraints@{nb\_active\_constraints}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{nb\_active\_constraints}{nb\_active\_constraints}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} Q\+P\+A\+L\+M\+Cholmod\+::nb\+\_\+active\+\_\+constraints}
+
+
+
+number of active constraints 
+
+\mbox{\Hypertarget{structQPALMCholmod_ae5447313a38c410f87578b1e24c54e8f}\label{structQPALMCholmod_ae5447313a38c410f87578b1e24c54e8f}} 
+\index{QPALMCholmod@{QPALMCholmod}!nb\_enter@{nb\_enter}}
+\index{nb\_enter@{nb\_enter}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{nb\_enter}{nb\_enter}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} Q\+P\+A\+L\+M\+Cholmod\+::nb\+\_\+enter}
+
+
+
+number of entering constraints 
+
+\mbox{\Hypertarget{structQPALMCholmod_a3d848261dea95f43ff0ccf8c32db4622}\label{structQPALMCholmod_a3d848261dea95f43ff0ccf8c32db4622}} 
+\index{QPALMCholmod@{QPALMCholmod}!nb\_leave@{nb\_leave}}
+\index{nb\_leave@{nb\_leave}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{nb\_leave}{nb\_leave}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} Q\+P\+A\+L\+M\+Cholmod\+::nb\+\_\+leave}
+
+
+
+number of leaving constraints 
+
+\mbox{\Hypertarget{structQPALMCholmod_a7c0275f19a37eb6108f98c867c2c843f}\label{structQPALMCholmod_a7c0275f19a37eb6108f98c867c2c843f}} 
+\index{QPALMCholmod@{QPALMCholmod}!neg\_dphi@{neg\_dphi}}
+\index{neg\_dphi@{neg\_dphi}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{neg\_dphi}{neg\_dphi}}
+{\footnotesize\ttfamily cholmod\+\_\+dense$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::neg\+\_\+dphi}
+
+
+
+-\/gradient of the Lagrangian 
+
+\mbox{\Hypertarget{structQPALMCholmod_abaedb802a939e9ee04577c87bb9f25cc}\label{structQPALMCholmod_abaedb802a939e9ee04577c87bb9f25cc}} 
+\index{QPALMCholmod@{QPALMCholmod}!Qd@{Qd}}
+\index{Qd@{Qd}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{Qd}{Qd}}
+{\footnotesize\ttfamily cholmod\+\_\+dense$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::\+Qd}
+
+
+
+Q $\ast$ d. 
+
+\mbox{\Hypertarget{structQPALMCholmod_a5d243ea350665531164a8b355ac7c370}\label{structQPALMCholmod_a5d243ea350665531164a8b355ac7c370}} 
+\index{QPALMCholmod@{QPALMCholmod}!reset\_newton@{reset\_newton}}
+\index{reset\_newton@{reset\_newton}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{reset\_newton}{reset\_newton}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} Q\+P\+A\+L\+M\+Cholmod\+::reset\+\_\+newton}
+
+
+
+boolean, after sigma is updated perform a new factorization 
+
+\mbox{\Hypertarget{structQPALMCholmod_afec81875b9a1a98a6984d0b607cdd28e}\label{structQPALMCholmod_afec81875b9a1a98a6984d0b607cdd28e}} 
+\index{QPALMCholmod@{QPALMCholmod}!yh@{yh}}
+\index{yh@{yh}!QPALMCholmod@{QPALMCholmod}}
+\subsubsection{\texorpdfstring{yh}{yh}}
+{\footnotesize\ttfamily cholmod\+\_\+dense$\ast$ Q\+P\+A\+L\+M\+Cholmod\+::yh}
+
+
+
+candidate dual update 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/include/\mbox{\hyperlink{types_8h}{types.\+h}}\end{DoxyCompactItemize}

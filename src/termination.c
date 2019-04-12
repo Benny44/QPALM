@@ -1,3 +1,14 @@
+/**
+ * @file termination.c
+ * @author Ben Hermans
+ * @brief Routines to check the termination and infeasibility criteria.
+ * @details The routines in this file compute the primal and dual residuals, 
+ * the primal and dual tolerances, check whether the problem is solved 
+ * completely, unscale and store the solution if that is the case, check
+ *  whether the intermediate problem is solved and whether one of the 
+ * infeasibility criteria hold. In other words, all routines related to 
+ * the termination of the optimization algorithm are grouped in this file.
+ */
 #include "termination.h"
 #include "lin_alg.h"
 #include "constants.h"
@@ -15,9 +26,9 @@ c_int check_termination(QPALMWorkspace *work) {
     } else if (is_primal_infeasible(work)) {
         update_status(work->info, QPALM_PRIMAL_INFEASIBLE);
         if (work->settings->scaling) {
+            vec_mult_scalar(work->delta_y, work->scaling->cinv, work->data->m);
             vec_ew_prod(work->scaling->E, work->delta_y, work->delta_y, work->data->m);
-            vec_mult_scalar(work->y, work->scaling->cinv, work->data->m);
-        }
+        } 
         return 1;
     } else if (is_dual_infeasible(work)) {
         update_status(work->info, QPALM_DUAL_INFEASIBLE);
@@ -32,7 +43,7 @@ c_int check_termination(QPALMWorkspace *work) {
 
 void calculate_residuals_and_tolerances(QPALMWorkspace *work) {
     calculate_primal_residual(work);
-    calculate_dual_residual(work);
+    calculate_dual_residuals(work);
     calculate_primal_tolerance(work);
     calculate_dual_tolerances(work);
 }
@@ -46,9 +57,10 @@ void calculate_primal_residual(QPALMWorkspace *work) {
     }
 }
 
-void calculate_dual_residual(QPALMWorkspace *work) {
+void calculate_dual_residuals(QPALMWorkspace *work) {
     if (work->settings->scaling) {
         if (work->settings->proximal) {
+            vec_add_scaled(work->x, work->x0, work->xx0, -1, work->data->n);
             vec_add_scaled(work->dphi, work->xx0, work->temp_n, -1/work->settings->gamma, work->data->n);
             vec_ew_prod(work->scaling->Dinv, work->temp_n, work->temp_n, work->data->n);
             work->info->dua_res_norm = vec_norm_inf(work->temp_n, work->data->n);
@@ -64,6 +76,7 @@ void calculate_dual_residual(QPALMWorkspace *work) {
             
     } else {
         if (work->settings->proximal) {
+            vec_add_scaled(work->x, work->x0, work->xx0, -1, work->data->n);
             vec_add_scaled(work->dphi, work->xx0, work->temp_n, -1/work->settings->gamma, work->data->n);
             work->info->dua_res_norm = vec_norm_inf(work->temp_n, work->data->n);
             work->info->dua2_res_norm = vec_norm_inf(work->dphi, work->data->n);
@@ -76,6 +89,9 @@ void calculate_dual_residual(QPALMWorkspace *work) {
 
 void calculate_primal_tolerance(QPALMWorkspace *work) {
     if (work->settings->scaling) {
+        /**NB Implementation detail: store Einv*Ax and Einv*z in temp_2m. 
+         * The infinity norm of that vector is equal to the maximum
+         * of the infinity norms of Einv*Ax and Einv*z.*/
         vec_ew_prod(work->scaling->Einv, work->Ax, work->temp_2m, work->data->m);
         vec_ew_prod(work->scaling->Einv, work->z, work->temp_2m + work->data->m, work->data->m);
         work->eps_pri =  work->settings->eps_abs + work->settings->eps_rel*vec_norm_inf(work->temp_2m, work->data->m);                  
@@ -132,7 +148,6 @@ c_int is_primal_infeasible(QPALMWorkspace *work) {
         return 0;
     }
 
-    //mat_tpose_vec(work->data->A, work->delta_y, work->Atdelta_y, 0, 0);
     vec_add_scaled(work->Atyh, work->Aty, work->Atdelta_y, -1, work->data->n);
     if (work->settings->scaling) {
         vec_ew_prod(work->scaling->Dinv, work->Atdelta_y, work->Atdelta_y, work->data->n);
@@ -201,8 +216,8 @@ c_int is_dual_infeasible(QPALMWorkspace *work) {
 void store_solution(QPALMWorkspace *work) {
     if (work->settings->scaling) {
         vec_ew_prod(work->x, work->scaling->D, work->solution->x, work->data->n);
-        vec_ew_prod(work->yh, work->scaling->E, work->solution->y, work->data->m);
         vec_mult_scalar(work->yh, work->scaling->cinv, work->data->m);
+        vec_ew_prod(work->yh, work->scaling->E, work->solution->y, work->data->m);
     } else {
         prea_vec_copy(work->x, work->solution->x, work->data->n);
         prea_vec_copy(work->yh, work->solution->y, work->data->m);

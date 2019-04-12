@@ -1,3 +1,10 @@
+/**
+ * @file types.h
+ * @author Ben Hermans
+ * @brief Internal data structures used in QPALM.
+ * @details See data structures tab.
+ */
+
 #ifndef QPALM_TYPES_H
 # define QPALM_TYPES_H
 
@@ -12,8 +19,8 @@ extern "C" {
  * Array to sort in linesearch
  */
 typedef struct array_element  {
-  c_float x; ///< Array element
-  c_int   i; ///< Index
+  c_float x; ///< value of the element
+  c_int   i; ///< index
 } array_element;
 
 
@@ -22,27 +29,11 @@ typedef struct array_element  {
 ******************/
 
 /**
- *  Matrix in compressed-column or triplet form
- */
-typedef struct {
-  c_int    nzmax; ///< maximum number of entries.
-  c_int    m;     ///< number of rows
-  c_int    n;     ///< number of columns
-  c_int   *p;     ///< column pointers (size n+1) (col indices (size nzmax)
-                  // start from 0 when using triplet format (direct KKT matrix
-                  // formation))
-  c_int   *i;     ///< row indices, size nzmax starting from 0
-  c_float *x;     ///< numerical values, size nzmax
-  c_int    nz;    ///< # of entries in triplet matrix, -1 for csc
-} csc;
-
-
-/**
  * Solution structure
  */
 typedef struct {
-  c_float *x; ///< Primal solution
-  c_float *y; ///< Dual solution$
+  c_float *x; ///< primal solution
+  c_float *y; ///< dual solution
 } QPALMSolution;
 
 /**
@@ -58,8 +49,8 @@ typedef struct {
   c_float *Dinv; ///< primal variable rescaling
   c_float *E;    ///< dual variable scaling
   c_float *Einv; ///< dual variable rescaling
-  c_float c;     ///< objective scaling
-  c_float cinv;  ///< objective rescaling
+  c_float  c;    ///< objective scaling
+  c_float  cinv; ///< objective rescaling
 } QPALMScaling;
 
 
@@ -67,20 +58,19 @@ typedef struct {
  * Solver return information
  */
 typedef struct {
-  c_int iter;          ///< number of iterations taken
-  c_int iter_out;      ///< number of outer iterations
-  char  status[32];    ///< status string, e.g. 'solved'
-  c_int status_val;    ///< status as c_int, defined in constants.h
+  c_int   iter;          ///< number of iterations taken
+  c_int   iter_out;      ///< number of outer iterations (i.e. dual updates)
+  char    status[32];    ///< status string, e.g. 'solved'
+  c_int   status_val;    ///< status as c_int, defined in constants.h
 
-  c_float obj_val;          ///< primal objective
-  c_float pri_res_norm;     ///< norm of primal residual
-  c_float dua_res_norm;     ///< norm of dual residual
-  c_float dua2_res_norm;    ///< norm of intermediate dual residual (minus proximal term)
+  c_float pri_res_norm;  ///< norm of primal residual
+  c_float dua_res_norm;  ///< norm of dual residual
+  c_float dua2_res_norm; ///< norm of intermediate dual residual (minus proximal term)
 
   #ifdef PROFILING
-  c_float setup_time;  ///< time taken for setup phase (seconds)
-  c_float solve_time;  ///< time taken for solve phase (seconds)
-  c_float run_time;    ///< total time  (seconds)
+  c_float setup_time;    ///< time taken for setup phase (seconds)
+  c_float solve_time;    ///< time taken for solve phase (seconds)
+  c_float run_time;      ///< total time (seconds)
   #endif
 
 } QPALMInfo;
@@ -93,14 +83,13 @@ typedef struct {
  * Data structure
  */
 typedef struct {
-  size_t    n; ///< number of variables n
-  size_t   m; ///< number of constraints m
-  cholmod_sparse *Q; ///< quadratic part of the cost Q in csc format (size n x n). It
-              ///  can be either the full Q or only the upper triangular part. 
-  cholmod_sparse *A; ///< linear constraints matrix A in csc format (size m x n)
-  c_float *q; ///< dense array for linear part of cost function (size n)
-  c_float *bmin; ///< dense array for lower bound (size m)
-  c_float *bmax; ///< dense array for upper bound (size m)
+  size_t          n;    ///< number of variables n
+  size_t          m;    ///< number of constraints m
+  cholmod_sparse *Q;    ///< sparse quadratic part of the cost Q (size n x n)           
+  cholmod_sparse *A;    ///< sparse linear constraints matrix A (size m x n)
+  c_float        *q;    ///< dense array for linear part of cost function (size n)
+  c_float        *bmin; ///< dense array for lower bounds (size m)
+  c_float        *bmax; ///< dense array for upper bounds (size m)
 } QPALMData;
 
 
@@ -108,89 +97,72 @@ typedef struct {
  * Settings struct
  */
 typedef struct {
-  c_int   max_iter;      ///< maximum iterations
-  c_float eps_abs;       ///< absolute convergence tolerance
-  c_float eps_rel;       ///< relative convergence tolerance
-  c_float eps_abs_in;    ///< intermediate absolute convergence tolerance
-  c_float eps_rel_in;    ///< intermediate relative convergence tolerance
-  c_float rho;           ///< tolerance scaling factor 
-  c_float eps_prim_inf;  ///< primal infeasibility tolerance
-  c_float eps_dual_inf;  ///< dual infeasibility tolerance
-  c_float theta;         ///< penalty update criterion parameter
-  c_float delta;         ///< penalty update factor
-  c_float tau_init;      ///< initial stepsize in backtracking
-  c_int   memory;        ///< LBFGS memory
-  c_int   proximal;      ///< boolean, proximal method of multipliers
-  c_float gamma;         ///< proximal penalty parameter
-  c_float gamma_upd;     ///< proximal penalty update factor
-  c_float gamma_max;     ///< proximal penalty parameter cap
-  c_int   scaling;       ///< scaling iterations, if 0 scaling disabled
-  c_int   verbose;       ///< boolean, write out progress
-  c_int   warm_start;    ///< boolean, warm start
+  c_int   max_iter;      ///< maximum number of iterations @details @note Assumption: @f$>0@f$
+  c_float eps_abs;       ///< absolute convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs or eps_rel must be @f$>0@f$
+  c_float eps_rel;       ///< relative convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs or eps_rel must be @f$>0@f$
+  c_float eps_abs_in;    ///< intermediate absolute convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs_in or eps_rel_in must be @f$>0@f$
+  c_float eps_rel_in;    ///< intermediate relative convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs_in or eps_rel_in must be @f$>0@f$
+  c_float rho;           ///< tolerance scaling factor @details @note Assumption: @f$0<\rho<1@f$
+  c_float eps_prim_inf;  ///< primal infeasibility tolerance @details @note Assumption: @f$>=0@f$
+  c_float eps_dual_inf;  ///< dual infeasibility tolerance @details @note Assumption: @f$>=0@f$
+  c_float theta;         ///< penalty update criterion parameter @details @note Assumption: @f$<=1@f$
+  c_float delta;         ///< penalty update factor @details @note Assumption: @f$>1@f$
+  c_float tau_init;      ///< initial stepsize in backtracking @details @note Assumption: @f$>0@f$
+  c_int   proximal;      ///< boolean, use proximal method of multipliers or not @details @note Assumption: @f$\in \{0,1\}@f$ 
+  c_float gamma;         ///< proximal penalty parameter @details @note Assumption: @f$>0@f$
+  c_float gamma_upd;     ///< proximal penalty update factor @details @note Assumption: @f$>=1@f$
+  c_float gamma_max;     ///< proximal penalty parameter cap @details @note Assumption: @f$>=\gamma@f$
+  c_int   scaling;       ///< scaling iterations, if 0 then scaling is disabled @details @note Assumption: @f$>=0@f$
+  c_int   verbose;       ///< boolean, write out progress @details @note Assumption:@f$\in \{0,1\}@f$
+  c_int   warm_start;    ///< boolean, warm start @details @note Assumption: @f$\in \{0,1\}@f$
 } QPALMSettings;
-
-/**
- * LBFGS struct
- */
-typedef struct {
-  c_int    curridx;     ///< Starting position in the buffers
-  c_int    currmem;     ///< Number of (valid) elements in buffers
-  c_int    reset_lbfgs; ///< boolean, reset lbfgs (after sigma update)
-  c_float *s;           ///< s = x-x_prev
-  c_float *y;           ///< y = dphi-dphi_prev
-  c_float  ys;          ///< y'*s
-  c_float *Sbuffer;     ///< Buffer for s vectors
-  c_float *Ybuffer;     ///< Buffer for y vectors
-  c_float *YSbuffer;    ///< Buffer for ys numbers
-  c_float  H;           ///< preconditioning constant in lbfgs
-  c_float *alpha;       ///< alpha vector
-  c_float *q;           ///< running vector
-} QPALMLbfgs;
 
 /**
  * Variables for linear system solving (cholmod)
  */
 typedef struct {
-  cholmod_common c;
-  cholmod_factor *LD;
-  cholmod_dense *E_temp;
-  cholmod_dense *D_temp;
-  cholmod_dense *neg_dphi;
-  cholmod_dense *d;
-  cholmod_dense *Ad;
-  cholmod_dense *Qd;
-  cholmod_dense *yh;
-  cholmod_dense *Atyh;
-  c_int reset_newton;
-  c_int *active_constraints;
-  c_int *active_constraints_old;
-  c_int nb_active_constraints;
-  c_int *enter;
-  c_int nb_enter;
-  c_int *leave;
-  c_int nb_leave;
-  cholmod_dense *At_scale;
-  cholmod_sparse *At_sqrt_sigma;
-  cholmod_sparse *Q_AtA;
+  cholmod_common c;               ///< cholmod environment
+  cholmod_factor *LD;             ///< LD factor (part of LDL' factorization)
+  cholmod_dense *E_temp;          ///< temporary constraints scaling vectors
+  cholmod_dense *D_temp;          ///< temporary primal variable scaling vectors
+  cholmod_dense *neg_dphi;        ///< -gradient of the Lagrangian
+  cholmod_dense *d;               ///< primal update step
+  cholmod_dense *Ad;              ///< A * d
+  cholmod_dense *Qd;              ///< Q * d
+  cholmod_dense *yh;              ///< candidate dual update
+  cholmod_dense *Atyh;            ///< A' * yh
+  c_int reset_newton;             ///< boolean, after sigma is updated perform a new factorization
+  c_int *active_constraints;      ///< index set of active constraints
+  c_int *active_constraints_old;  ///< index set of active constraints in the previous iteration
+  c_int nb_active_constraints;    ///< number of active constraints
+  c_int *enter;                   ///< index set of entering constraints
+  c_int nb_enter;                 ///< number of entering constraints
+  c_int *leave;                   ///< index set of leaving constraints
+  c_int nb_leave;                 ///< number of leaving constraints
+  cholmod_dense *At_scale;        ///< running vector of sqrt(sigma), used to scale At_sqrt_sigma
+  cholmod_sparse *At_sqrt_sigma;  ///< A' * sqrt(sigma)
 } QPALMCholmod;
 
 /**
  * QPALM Workspace
+ * 
+ * The workspace is the main data structure and is given as a pointer to (almost) all QPALM functions.
+ * It contains pointers to the settings, the data, return info, solution variables and intermediate 
+ * workspace variables.
  */
 typedef struct {
-  /// Problem data to work on (possibly scaled)
-  QPALMData *data;
+  QPALMData *data; ///< problem data to work on (possibly scaled)
 
   /**
    * @name Iterates
    * @{
    */
-  c_float *x;        ///< Iterate x
-  c_float *y;        ///< Iterate y
-  c_float *Ax;       ///< Scaled A * x
-  c_float *Qx;       ///< Scaled Q * x
-  c_float *Aty;      ///< Aty (useful for sparing one mat_tpose_vec)
-  c_float *x_prev;   ///< Previous x
+  c_float *x;        ///< primal iterate
+  c_float *y;        ///< dual iterate
+  c_float *Ax;       ///< scaled A * x
+  c_float *Qx;       ///< scaled Q * x
+  c_float *Aty;      ///< A' * y (useful for saving one mat_tpose_vec)
+  c_float *x_prev;   ///< previous primal iterate
 
   /** @} */
 
@@ -198,22 +170,22 @@ typedef struct {
    * @name Workspace variables
    * @{ 
    */
-  c_float *temp_m;     ///< Placeholder for vector of size m
-  c_float *temp_n;     ///< Placeholder for vector of size n
-  c_float *sigma;      ///< Penalty vector
+  c_float *temp_m;     ///< placeholder for vector of size m
+  c_float *temp_n;     ///< placeholder for vector of size n
+  c_float *sigma;      ///< penalty vector
   c_float *Axys;       ///< Ax + y./sigma
-  c_float *z;          ///< z vector
-  c_float *pri_res;    ///< Primal residual
-  c_float *pri_res_in; ///< Intermediate Primal residual
-  c_float *yh;         ///< Candidate dual update
-  c_float *Atyh;       ///< A'*yh
-  c_float *df;         ///< Gradient primal objective (+proximal term)
-  c_float *x0;         ///< x0, used in proximal method of multipliers
-  c_float *xx0;        ///< x-x0
-  c_float *dphi;       ///< Gradient Lagrangian
-  c_float *neg_dphi;   ///< -dphi, needed as rhs in Cholmod 
-  c_float *dphi_prev;  ///< Previous gradient Lagrangian
-  c_float *d;          ///< Step
+  c_float *z;          ///< projection of Axys onto the constraint set [bmin, bmax]
+  c_float *pri_res;    ///< primal residual
+  c_float *pri_res_in; ///< intermediate primal residual
+  c_float *yh;         ///< candidate dual update
+  c_float *Atyh;       ///< A' * yh
+  c_float *df;         ///< gradient of the primal objective (+proximal term)
+  c_float *x0;         ///< record of the primal iterate during the last dual update
+  c_float *xx0;        ///< x - x0
+  c_float *dphi;       ///< gradient of the Lagrangian
+  c_float *neg_dphi;   ///< -dphi, required as the rhs in Cholmod 
+  c_float *dphi_prev;  ///< previous gradient of the Lagrangian
+  c_float *d;          ///< primal update step
 
   /** @} */
 
@@ -221,21 +193,21 @@ typedef struct {
    * @name Linesearch variables
    * @{
    */
-  c_float *Qd;        ///< Q*d
-  c_float *Ad;        ///< A*d
-  c_float *sqrt_sigma; ///< Elementwise sqrt(sigma)
+  c_float *Qd;        ///< Q * d
+  c_float *Ad;        ///< A * d
+  c_float *sqrt_sigma; ///< elementwise sqrt(sigma)
   c_float sqrt_delta; ///< sqrt(penalty update factor)
-  c_float eta;        ///< Linesearch parameter
-  c_float beta;       ///< Linesearch parameter
-  c_float *delta;     ///< Linesearch parameter
-  c_float *alpha;     ///< Linesearch parameter
-  c_float *temp_2m;   ///< Placeholder for vector of size 2m
-  c_float *delta2;    ///< delta.*delta
-  c_float *delta_alpha; ///< delta.*alpha
-  array_element *s;   ///< alpha./delta
-  c_int   *index_L;   ///< Index set L
-  c_int   *index_P;   ///< Index set P
-  c_int   *index_J;   ///< Index set J
+  c_float eta;        ///< linesearch parameter
+  c_float beta;       ///< linesearch parameter
+  c_float *delta;     ///< linesearch parameter
+  c_float *alpha;     ///< linesearch parameter
+  c_float *temp_2m;   ///< placeholder for vector of size 2m
+  c_float *delta2;    ///< delta .* delta
+  c_float *delta_alpha; ///< delta .* alpha
+  array_element *s;   ///< alpha ./ delta
+  c_int   *index_L;   ///< index set L (where s>0)
+  c_int   *index_P;   ///< index set P (where delta>0)
+  c_int   *index_J;   ///< index set J (L xor P)
 
   /** @} */
 
@@ -243,16 +215,16 @@ typedef struct {
    * @name Termination criteria variables
    * @{ 
    */
-  c_float eps_pri;    ///< Primal tolerance
-  c_float eps_dua;    ///< Dual tolerance
-  c_float eps_dua_in; ///< Intermediate dual tolerance
+  c_float eps_pri;    ///< primal tolerance
+  c_float eps_dua;    ///< dual tolerance
+  c_float eps_dua_in; ///< intermediate dual tolerance
   /** @} */
 
   /**
    * @name Primal infeasibility variables
    * @{
    */
-  c_float *delta_y;   ///< Difference of consecutive dual iterates
+  c_float *delta_y;   ///< difference of consecutive dual iterates
   c_float *Atdelta_y; ///< A' * delta_y
 
   /** @} */
@@ -261,7 +233,7 @@ typedef struct {
    * @name Dual infeasibility variables
    * @{
    */
-  c_float *delta_x;  ///< Difference of consecutive primal iterates
+  c_float *delta_x;  ///< difference of consecutive primal iterates
   c_float *Qdelta_x; ///< Q * delta_x
   c_float *Adelta_x; ///< A * delta_x
 
@@ -278,15 +250,14 @@ typedef struct {
 
   /** @} */
 
-  QPALMCholmod  *chol;     ///< Cholmod variables
-  QPALMLbfgs    *lbfgs;    ///< LBFGS variables
-  QPALMSettings *settings; ///< Problem settings
-  QPALMScaling  *scaling;  ///< Scaling vectors
-  QPALMSolution *solution; ///< Problem solution
-  QPALMInfo     *info;     ///< Solver information
+  QPALMCholmod  *chol;     ///< cholmod variables
+  QPALMSettings *settings; ///< problem settings
+  QPALMScaling  *scaling;  ///< scaling vectors
+  QPALMSolution *solution; ///< problem solution
+  QPALMInfo     *info;     ///< solver information
 
   # ifdef PROFILING
-  QPALMTimer *timer;       ///< Timer object
+  QPALMTimer *timer;       ///< timer object
   # endif // ifdef PROFILING
 
 } QPALMWorkspace;

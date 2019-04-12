@@ -1,0 +1,384 @@
+\hypertarget{lin__alg_8c}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/src/lin\+\_\+alg.c File Reference}
+\label{lin__alg_8c}\index{/home/ben/Documents/Projects/QPALM/src/lin\_alg.c@{/home/ben/Documents/Projects/QPALM/src/lin\_alg.c}}
+
+
+Linear algebra with vectors.  
+
+
+{\ttfamily \#include \char`\"{}lin\+\_\+alg.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{lin__alg_8c_af182409dbeff3d8910dec34893fe32e3}{vec\+\_\+copy}} (\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Copy vector a into output. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_acef53b3d399e7361c0d24b9bbd3ca8a6}{prea\+\_\+vec\+\_\+copy}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$b, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Copy vector a into preallocated vector b. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_a9b0e1b0ffa9c3c0247a9a4a87a22dff6}{prea\+\_\+int\+\_\+vec\+\_\+copy}} (const \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$a, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$b, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Copy integer vector a into preallocated vector b. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_afc46d9b9bdda9ff99adcd8c730f25166}{vec\+\_\+set\+\_\+scalar}} (\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} sc, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Fill float vector with a scalar value. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_af8ebcc73ae872954d9356f09c72a8806}{vec\+\_\+set\+\_\+scalar\+\_\+int}} (\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$a, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} sc, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Fill int vector with a scalar value. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_ad2b16385215cc97fab370ecf8754637c}{vec\+\_\+mult\+\_\+scalar}} (\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} sc, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Mulitply vector with a constant scale factor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{lin__alg_8c_afc44881d029f117e072274407c05a3e9}{vec\+\_\+prod}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$b, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Inner product between two vectors, $a^T \cdot b$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_a7f2e0a1fdaeed893ee9bab859690f601}{vec\+\_\+ew\+\_\+prod}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$b, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$c, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Elementwise product, $c_i = a_i\cdot b_i$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_a5f157bdd5a89e6c4e35245fcb2e6a0c0}{vec\+\_\+ew\+\_\+div}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$b, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$c, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Elementwise division, $c_i = a_i/b_i$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_af110358505394931e126cd77e8f2f4f1}{vec\+\_\+add\+\_\+scaled}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$b, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$c, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} sc, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Scaled addition of one vector to another vector, $c_i = a_i + sc\cdot b_i$. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{lin__alg_8c_a3321b732daba283fe149c52029170825}{vec\+\_\+norm\+\_\+inf}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Infinity norm of a vector, $\|a\|_\infty$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_a68f8236fc8e682d70ba8c3842f02630d}{vec\+\_\+ew\+\_\+recipr}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$b, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Elementwise reciprocal $b_i = 1/a_i$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_a3019bdc59e67a535b465def905975b93}{vec\+\_\+ew\+\_\+max\+\_\+vec}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$b, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$c, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Elementwise maximum between vectors, $c_i = \textrm{max}(a_i, b_i)$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_a18f068101d520ac81ee880854b1789a9}{vec\+\_\+ew\+\_\+min\+\_\+vec}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$b, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$c, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Elementwise minimum between vectors, $c_i = \textrm{min}(a_i, b_i)$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_abeba762f440a0ce4ef3026285093acff}{vec\+\_\+ew\+\_\+mid\+\_\+vec}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$bmin, const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$bmax, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$c, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Elementwise mid between vectors, $c_i = \textrm{max}(b_{\textrm{min},i}, \textrm{min}(a_i, b_{\textrm{max},i}))$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lin__alg_8c_a90ce916f6cac7bb37f1318aebbd64ee8}{vec\+\_\+ew\+\_\+sqrt}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$b, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Elementwise square root, $b_i = \sqrt{a_i}$. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Linear algebra with vectors. 
+
+\begin{DoxyAuthor}{Author}
+Ben Hermans
+\end{DoxyAuthor}
+Common operations, such as vector products, infinity norm, elementwise add/product/division/max etc. are included in this file. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{lin__alg_8c_a9b0e1b0ffa9c3c0247a9a4a87a22dff6}\label{lin__alg_8c_a9b0e1b0ffa9c3c0247a9a4a87a22dff6}} 
+\index{lin\_alg.c@{lin\_alg.c}!prea\_int\_vec\_copy@{prea\_int\_vec\_copy}}
+\index{prea\_int\_vec\_copy@{prea\_int\_vec\_copy}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{prea\_int\_vec\_copy()}{prea\_int\_vec\_copy()}}
+{\footnotesize\ttfamily void prea\+\_\+int\+\_\+vec\+\_\+copy (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$}]{b,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Copy integer vector a into preallocated vector b. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Input vector \\
+\hline
+{\em b} & Output vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_acef53b3d399e7361c0d24b9bbd3ca8a6}\label{lin__alg_8c_acef53b3d399e7361c0d24b9bbd3ca8a6}} 
+\index{lin\_alg.c@{lin\_alg.c}!prea\_vec\_copy@{prea\_vec\_copy}}
+\index{prea\_vec\_copy@{prea\_vec\_copy}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{prea\_vec\_copy()}{prea\_vec\_copy()}}
+{\footnotesize\ttfamily void prea\+\_\+vec\+\_\+copy (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{b,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Copy vector a into preallocated vector b. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Input vector \\
+\hline
+{\em b} & Output vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_af110358505394931e126cd77e8f2f4f1}\label{lin__alg_8c_af110358505394931e126cd77e8f2f4f1}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_add\_scaled@{vec\_add\_scaled}}
+\index{vec\_add\_scaled@{vec\_add\_scaled}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_add\_scaled()}{vec\_add\_scaled()}}
+{\footnotesize\ttfamily void vec\+\_\+add\+\_\+scaled (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{b,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{c,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}}]{sc,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Scaled addition of one vector to another vector, $c_i = a_i + sc\cdot b_i$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Input vector \\
+\hline
+{\em b} & Input vector \\
+\hline
+{\em c} & Output vector \\
+\hline
+{\em sc} & Scaling value \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_af182409dbeff3d8910dec34893fe32e3}\label{lin__alg_8c_af182409dbeff3d8910dec34893fe32e3}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_copy@{vec\_copy}}
+\index{vec\_copy@{vec\_copy}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_copy()}{vec\_copy()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ vec\+\_\+copy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Copy vector a into output. 
+
+\begin{DoxyWarning}{Warning}
+This function uses malloc. 
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Copy of a 
+\end{DoxyReturn}
+\mbox{\Hypertarget{lin__alg_8c_a5f157bdd5a89e6c4e35245fcb2e6a0c0}\label{lin__alg_8c_a5f157bdd5a89e6c4e35245fcb2e6a0c0}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_ew\_div@{vec\_ew\_div}}
+\index{vec\_ew\_div@{vec\_ew\_div}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_ew\_div()}{vec\_ew\_div()}}
+{\footnotesize\ttfamily void vec\+\_\+ew\+\_\+div (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{b,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{c,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Elementwise division, $c_i = a_i/b_i$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Input vector \\
+\hline
+{\em b} & Input vector \\
+\hline
+{\em c} & Output vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_a3019bdc59e67a535b465def905975b93}\label{lin__alg_8c_a3019bdc59e67a535b465def905975b93}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_ew\_max\_vec@{vec\_ew\_max\_vec}}
+\index{vec\_ew\_max\_vec@{vec\_ew\_max\_vec}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_ew\_max\_vec()}{vec\_ew\_max\_vec()}}
+{\footnotesize\ttfamily void vec\+\_\+ew\+\_\+max\+\_\+vec (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{b,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{c,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Elementwise maximum between vectors, $c_i = \textrm{max}(a_i, b_i)$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Input vector \\
+\hline
+{\em b} & Input vector \\
+\hline
+{\em c} & Output vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_abeba762f440a0ce4ef3026285093acff}\label{lin__alg_8c_abeba762f440a0ce4ef3026285093acff}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_ew\_mid\_vec@{vec\_ew\_mid\_vec}}
+\index{vec\_ew\_mid\_vec@{vec\_ew\_mid\_vec}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_ew\_mid\_vec()}{vec\_ew\_mid\_vec()}}
+{\footnotesize\ttfamily void vec\+\_\+ew\+\_\+mid\+\_\+vec (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{bmin,  }\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{bmax,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{c,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Elementwise mid between vectors, $c_i = \textrm{max}(b_{\textrm{min},i}, \textrm{min}(a_i, b_{\textrm{max},i}))$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Input vector \\
+\hline
+{\em bmin} & Lower bounds \\
+\hline
+{\em bmax} & Upper bounds \\
+\hline
+{\em c} & Output vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_a18f068101d520ac81ee880854b1789a9}\label{lin__alg_8c_a18f068101d520ac81ee880854b1789a9}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_ew\_min\_vec@{vec\_ew\_min\_vec}}
+\index{vec\_ew\_min\_vec@{vec\_ew\_min\_vec}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_ew\_min\_vec()}{vec\_ew\_min\_vec()}}
+{\footnotesize\ttfamily void vec\+\_\+ew\+\_\+min\+\_\+vec (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{b,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{c,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Elementwise minimum between vectors, $c_i = \textrm{min}(a_i, b_i)$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Input vector \\
+\hline
+{\em b} & Input vector \\
+\hline
+{\em c} & Output vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_a7f2e0a1fdaeed893ee9bab859690f601}\label{lin__alg_8c_a7f2e0a1fdaeed893ee9bab859690f601}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_ew\_prod@{vec\_ew\_prod}}
+\index{vec\_ew\_prod@{vec\_ew\_prod}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_ew\_prod()}{vec\_ew\_prod()}}
+{\footnotesize\ttfamily void vec\+\_\+ew\+\_\+prod (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{b,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{c,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Elementwise product, $c_i = a_i\cdot b_i$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Input vector \\
+\hline
+{\em b} & Input vector \\
+\hline
+{\em c} & Output vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_a68f8236fc8e682d70ba8c3842f02630d}\label{lin__alg_8c_a68f8236fc8e682d70ba8c3842f02630d}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_ew\_recipr@{vec\_ew\_recipr}}
+\index{vec\_ew\_recipr@{vec\_ew\_recipr}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_ew\_recipr()}{vec\_ew\_recipr()}}
+{\footnotesize\ttfamily void vec\+\_\+ew\+\_\+recipr (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{b,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Elementwise reciprocal $b_i = 1/a_i$. 
+
+This function is used in scaling.
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Input vector \\
+\hline
+{\em b} & Output vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_a90ce916f6cac7bb37f1318aebbd64ee8}\label{lin__alg_8c_a90ce916f6cac7bb37f1318aebbd64ee8}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_ew\_sqrt@{vec\_ew\_sqrt}}
+\index{vec\_ew\_sqrt@{vec\_ew\_sqrt}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_ew\_sqrt()}{vec\_ew\_sqrt()}}
+{\footnotesize\ttfamily void vec\+\_\+ew\+\_\+sqrt (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{b,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Elementwise square root, $b_i = \sqrt{a_i}$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Input vector \\
+\hline
+{\em b} & Output vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_ad2b16385215cc97fab370ecf8754637c}\label{lin__alg_8c_ad2b16385215cc97fab370ecf8754637c}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_mult\_scalar@{vec\_mult\_scalar}}
+\index{vec\_mult\_scalar@{vec\_mult\_scalar}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_mult\_scalar()}{vec\_mult\_scalar()}}
+{\footnotesize\ttfamily void vec\+\_\+mult\+\_\+scalar (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}}]{sc,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Mulitply vector with a constant scale factor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Vector \\
+\hline
+{\em sc} & Value \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_a3321b732daba283fe149c52029170825}\label{lin__alg_8c_a3321b732daba283fe149c52029170825}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_norm\_inf@{vec\_norm\_inf}}
+\index{vec\_norm\_inf@{vec\_norm\_inf}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_norm\_inf()}{vec\_norm\_inf()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} vec\+\_\+norm\+\_\+inf (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Infinity norm of a vector, $\|a\|_\infty$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Infinity norm of a 
+\end{DoxyReturn}
+\mbox{\Hypertarget{lin__alg_8c_afc44881d029f117e072274407c05a3e9}\label{lin__alg_8c_afc44881d029f117e072274407c05a3e9}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_prod@{vec\_prod}}
+\index{vec\_prod@{vec\_prod}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_prod()}{vec\_prod()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} vec\+\_\+prod (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{b,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Inner product between two vectors, $a^T \cdot b$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Vector \\
+\hline
+{\em b} & Vector \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Result of the inner product 
+\end{DoxyReturn}
+\mbox{\Hypertarget{lin__alg_8c_afc46d9b9bdda9ff99adcd8c730f25166}\label{lin__alg_8c_afc46d9b9bdda9ff99adcd8c730f25166}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_set\_scalar@{vec\_set\_scalar}}
+\index{vec\_set\_scalar@{vec\_set\_scalar}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_set\_scalar()}{vec\_set\_scalar()}}
+{\footnotesize\ttfamily void vec\+\_\+set\+\_\+scalar (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}}]{sc,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Fill float vector with a scalar value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Vector \\
+\hline
+{\em sc} & Value \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lin__alg_8c_af8ebcc73ae872954d9356f09c72a8806}\label{lin__alg_8c_af8ebcc73ae872954d9356f09c72a8806}} 
+\index{lin\_alg.c@{lin\_alg.c}!vec\_set\_scalar\_int@{vec\_set\_scalar\_int}}
+\index{vec\_set\_scalar\_int@{vec\_set\_scalar\_int}!lin\_alg.c@{lin\_alg.c}}
+\subsubsection{\texorpdfstring{vec\_set\_scalar\_int()}{vec\_set\_scalar\_int()}}
+{\footnotesize\ttfamily void vec\+\_\+set\+\_\+scalar\+\_\+int (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{sc,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Fill int vector with a scalar value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Vector \\
+\hline
+{\em sc} & Value \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}

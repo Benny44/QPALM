@@ -1,0 +1,247 @@
+\hypertarget{cholmod__interface_8c}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/src/cholmod\+\_\+interface.c File Reference}
+\label{cholmod__interface_8c}\index{/home/ben/Documents/Projects/QPALM/src/cholmod\_interface.c@{/home/ben/Documents/Projects/QPALM/src/cholmod\_interface.c}}
+
+
+Interface and wrapper to cholmod functions.  
+
+
+{\ttfamily \#include \char`\"{}cholmod\+\_\+interface.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}lin\+\_\+alg.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{cholmod__interface_8c_a3a3b1f5d8d98db1e983ec863db409722}{mat\+\_\+vec}} (cholmod\+\_\+sparse $\ast$A, cholmod\+\_\+dense $\ast$x, cholmod\+\_\+dense $\ast$y, cholmod\+\_\+common $\ast$c)
+\begin{DoxyCompactList}\small\item\em Matrix-\/vector multiplication. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cholmod__interface_8c_ab40f66e01c9ed199883cb983ac7bfbed}{mat\+\_\+tpose\+\_\+vec}} (cholmod\+\_\+sparse $\ast$A, cholmod\+\_\+dense $\ast$x, cholmod\+\_\+dense $\ast$y, cholmod\+\_\+common $\ast$c)
+\begin{DoxyCompactList}\small\item\em Matrix-\/transpose-\/vector multiplication. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cholmod__interface_8c_a245c8ffca24c21625bca1a5d855ceacf}{mat\+\_\+inf\+\_\+norm\+\_\+cols}} (cholmod\+\_\+sparse $\ast$M, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$E)
+\begin{DoxyCompactList}\small\item\em Infinity norm of each matrix column, $E_i = \|M{(:,i)}\|_\infty$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cholmod__interface_8c_a9a875648b3a1beed9a6ee638bc79f2c0}{mat\+\_\+inf\+\_\+norm\+\_\+rows}} (cholmod\+\_\+sparse $\ast$M, \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$E)
+\begin{DoxyCompactList}\small\item\em Infinity norm of each matrix row, $E_i = \|M{(i,:)}\|_\infty$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cholmod__interface_8c_aabcf6fd94369ab46e830695da0a96128}{ldlchol}} (cholmod\+\_\+sparse $\ast$M, \mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Calculate $LDL^T$ factorization of a matrix $M$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cholmod__interface_8c_a7fe1e838ac3f89a1772058904338a849}{ldlcholQ}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Calculate $LDL^T$ factorization of $Q$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cholmod__interface_8c_aef86b2766eb92f6550e1b6bbc6019fcc}{ldlchol\+Q\+AtsigmaA}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Calculate $LDL^T$ factorization of $Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$, with $\Sigma=diag(\sigma)$ and $a$ the set of active constraints. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cholmod__interface_8c_afb3c7409417adc5657d4c67f13bf7a26}{ldlupdate\+\_\+entering\+\_\+constraints}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Update the $LDL^T$ factorization given a set of entering constraints. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cholmod__interface_8c_ad2b40552827ed1501207124cb067331b}{ldldowndate\+\_\+leaving\+\_\+constraints}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Downdate the $LDL^T$ factorization given a set of leaving constraints. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cholmod__interface_8c_a600375b897e61294eabebe282fa236e3}{ldlsolve\+L\+D\+\_\+neg\+\_\+dphi}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Solve the linear system $LDL^T*d = -\nabla \varphi$. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{cholmod__interface_8c_a554be628f3c65ca260876d465dfacf0e}{cholmod\+\_\+set\+\_\+settings}} (cholmod\+\_\+common $\ast$c)
+\begin{DoxyCompactList}\small\item\em Cholmod settings to indicate that we use an $LDL^T$ factorization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Interface and wrapper to cholmod functions. 
+
+\begin{DoxyAuthor}{Author}
+Ben Hermans
+\end{DoxyAuthor}
+This file includes all calls to cholmod functions apart from scaling in \mbox{\hyperlink{scaling_8c}{scaling.\+c}} and memory allocation/deallocation in the main functions in \mbox{\hyperlink{qpalm_8c}{qpalm.\+c}}. It includes all matrix operations, such as matrix vector products, row-\/ and columnwise norms, cholesky factorizations, factorization updates and solving the linear system. Finally, all the settings relevant to cholmod (and suitesparse) are included in this file as well. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{cholmod__interface_8c_a554be628f3c65ca260876d465dfacf0e}\label{cholmod__interface_8c_a554be628f3c65ca260876d465dfacf0e}} 
+\index{cholmod\_interface.c@{cholmod\_interface.c}!cholmod\_set\_settings@{cholmod\_set\_settings}}
+\index{cholmod\_set\_settings@{cholmod\_set\_settings}!cholmod\_interface.c@{cholmod\_interface.c}}
+\subsubsection{\texorpdfstring{cholmod\_set\_settings()}{cholmod\_set\_settings()}}
+{\footnotesize\ttfamily void cholmod\+\_\+set\+\_\+settings (\begin{DoxyParamCaption}\item[{cholmod\+\_\+common $\ast$}]{c }\end{DoxyParamCaption})}
+
+
+
+Cholmod settings to indicate that we use an $LDL^T$ factorization. 
+
+In addition, this function sets the suitesparse memory allocation function to our custom functions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em c} & Cholmod environment \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cholmod__interface_8c_aabcf6fd94369ab46e830695da0a96128}\label{cholmod__interface_8c_aabcf6fd94369ab46e830695da0a96128}} 
+\index{cholmod\_interface.c@{cholmod\_interface.c}!ldlchol@{ldlchol}}
+\index{ldlchol@{ldlchol}!cholmod\_interface.c@{cholmod\_interface.c}}
+\subsubsection{\texorpdfstring{ldlchol()}{ldlchol()}}
+{\footnotesize\ttfamily void ldlchol (\begin{DoxyParamCaption}\item[{cholmod\+\_\+sparse $\ast$}]{M,  }\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Calculate $LDL^T$ factorization of a matrix $M$. 
+
+If work-\/$>$settings-\/$>$proximal = true, use $M+\frac{1}{\gamma}*I$ instead.
+
+
+\begin{DoxyParams}{Parameters}
+{\em M} & Matrix to be factorized \\
+\hline
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cholmod__interface_8c_a7fe1e838ac3f89a1772058904338a849}\label{cholmod__interface_8c_a7fe1e838ac3f89a1772058904338a849}} 
+\index{cholmod\_interface.c@{cholmod\_interface.c}!ldlcholQ@{ldlcholQ}}
+\index{ldlcholQ@{ldlcholQ}!cholmod\_interface.c@{cholmod\_interface.c}}
+\subsubsection{\texorpdfstring{ldlcholQ()}{ldlcholQ()}}
+{\footnotesize\ttfamily void ldlcholQ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Calculate $LDL^T$ factorization of $Q$. 
+
+$Q$ is the quadratic part of the objective function.
+
+If work-\/$>$settings-\/$>$proximal = true, use $Q+\frac{1}{\gamma}*I$ instead.
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cholmod__interface_8c_aef86b2766eb92f6550e1b6bbc6019fcc}\label{cholmod__interface_8c_aef86b2766eb92f6550e1b6bbc6019fcc}} 
+\index{cholmod\_interface.c@{cholmod\_interface.c}!ldlcholQAtsigmaA@{ldlcholQAtsigmaA}}
+\index{ldlcholQAtsigmaA@{ldlcholQAtsigmaA}!cholmod\_interface.c@{cholmod\_interface.c}}
+\subsubsection{\texorpdfstring{ldlcholQAtsigmaA()}{ldlcholQAtsigmaA()}}
+{\footnotesize\ttfamily void ldlchol\+Q\+AtsigmaA (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Calculate $LDL^T$ factorization of $Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$, with $\Sigma=diag(\sigma)$ and $a$ the set of active constraints. 
+
+If work-\/$>$settings-\/$>$proximal = true, use $Q+\frac{1}{\gamma}*I+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$ instead.
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cholmod__interface_8c_ad2b40552827ed1501207124cb067331b}\label{cholmod__interface_8c_ad2b40552827ed1501207124cb067331b}} 
+\index{cholmod\_interface.c@{cholmod\_interface.c}!ldldowndate\_leaving\_constraints@{ldldowndate\_leaving\_constraints}}
+\index{ldldowndate\_leaving\_constraints@{ldldowndate\_leaving\_constraints}!cholmod\_interface.c@{cholmod\_interface.c}}
+\subsubsection{\texorpdfstring{ldldowndate\_leaving\_constraints()}{ldldowndate\_leaving\_constraints()}}
+{\footnotesize\ttfamily void ldldowndate\+\_\+leaving\+\_\+constraints (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Downdate the $LDL^T$ factorization given a set of leaving constraints. 
+
+The index set of leaving constraints is assumed to be set in work-\/$>$chol-\/$>$leave.
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cholmod__interface_8c_a600375b897e61294eabebe282fa236e3}\label{cholmod__interface_8c_a600375b897e61294eabebe282fa236e3}} 
+\index{cholmod\_interface.c@{cholmod\_interface.c}!ldlsolveLD\_neg\_dphi@{ldlsolveLD\_neg\_dphi}}
+\index{ldlsolveLD\_neg\_dphi@{ldlsolveLD\_neg\_dphi}!cholmod\_interface.c@{cholmod\_interface.c}}
+\subsubsection{\texorpdfstring{ldlsolveLD\_neg\_dphi()}{ldlsolveLD\_neg\_dphi()}}
+{\footnotesize\ttfamily void ldlsolve\+L\+D\+\_\+neg\+\_\+dphi (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Solve the linear system $LDL^T*d = -\nabla \varphi$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cholmod__interface_8c_afb3c7409417adc5657d4c67f13bf7a26}\label{cholmod__interface_8c_afb3c7409417adc5657d4c67f13bf7a26}} 
+\index{cholmod\_interface.c@{cholmod\_interface.c}!ldlupdate\_entering\_constraints@{ldlupdate\_entering\_constraints}}
+\index{ldlupdate\_entering\_constraints@{ldlupdate\_entering\_constraints}!cholmod\_interface.c@{cholmod\_interface.c}}
+\subsubsection{\texorpdfstring{ldlupdate\_entering\_constraints()}{ldlupdate\_entering\_constraints()}}
+{\footnotesize\ttfamily void ldlupdate\+\_\+entering\+\_\+constraints (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Update the $LDL^T$ factorization given a set of entering constraints. 
+
+The index set of entering constraints is assumed to be set in work-\/$>$chol-\/$>$enter.
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cholmod__interface_8c_a245c8ffca24c21625bca1a5d855ceacf}\label{cholmod__interface_8c_a245c8ffca24c21625bca1a5d855ceacf}} 
+\index{cholmod\_interface.c@{cholmod\_interface.c}!mat\_inf\_norm\_cols@{mat\_inf\_norm\_cols}}
+\index{mat\_inf\_norm\_cols@{mat\_inf\_norm\_cols}!cholmod\_interface.c@{cholmod\_interface.c}}
+\subsubsection{\texorpdfstring{mat\_inf\_norm\_cols()}{mat\_inf\_norm\_cols()}}
+{\footnotesize\ttfamily void mat\+\_\+inf\+\_\+norm\+\_\+cols (\begin{DoxyParamCaption}\item[{cholmod\+\_\+sparse $\ast$}]{M,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{E }\end{DoxyParamCaption})}
+
+
+
+Infinity norm of each matrix column, $E_i = \|M{(:,i)}\|_\infty$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em M} & Sparse input matrix \\
+\hline
+{\em E} & Vector of infinity norms \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cholmod__interface_8c_a9a875648b3a1beed9a6ee638bc79f2c0}\label{cholmod__interface_8c_a9a875648b3a1beed9a6ee638bc79f2c0}} 
+\index{cholmod\_interface.c@{cholmod\_interface.c}!mat\_inf\_norm\_rows@{mat\_inf\_norm\_rows}}
+\index{mat\_inf\_norm\_rows@{mat\_inf\_norm\_rows}!cholmod\_interface.c@{cholmod\_interface.c}}
+\subsubsection{\texorpdfstring{mat\_inf\_norm\_rows()}{mat\_inf\_norm\_rows()}}
+{\footnotesize\ttfamily void mat\+\_\+inf\+\_\+norm\+\_\+rows (\begin{DoxyParamCaption}\item[{cholmod\+\_\+sparse $\ast$}]{M,  }\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{E }\end{DoxyParamCaption})}
+
+
+
+Infinity norm of each matrix row, $E_i = \|M{(i,:)}\|_\infty$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em M} & Sparse input matrix \\
+\hline
+{\em E} & Vector of infinity norms \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cholmod__interface_8c_ab40f66e01c9ed199883cb983ac7bfbed}\label{cholmod__interface_8c_ab40f66e01c9ed199883cb983ac7bfbed}} 
+\index{cholmod\_interface.c@{cholmod\_interface.c}!mat\_tpose\_vec@{mat\_tpose\_vec}}
+\index{mat\_tpose\_vec@{mat\_tpose\_vec}!cholmod\_interface.c@{cholmod\_interface.c}}
+\subsubsection{\texorpdfstring{mat\_tpose\_vec()}{mat\_tpose\_vec()}}
+{\footnotesize\ttfamily void mat\+\_\+tpose\+\_\+vec (\begin{DoxyParamCaption}\item[{cholmod\+\_\+sparse $\ast$}]{A,  }\item[{cholmod\+\_\+dense $\ast$}]{x,  }\item[{cholmod\+\_\+dense $\ast$}]{y,  }\item[{cholmod\+\_\+common $\ast$}]{c }\end{DoxyParamCaption})}
+
+
+
+Matrix-\/transpose-\/vector multiplication. 
+
+$y = A^T*x$
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Sparse matrix \\
+\hline
+{\em x} & Dense input vector \\
+\hline
+{\em y} & Dense output vector \\
+\hline
+{\em c} & Cholmod environment \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{cholmod__interface_8c_a3a3b1f5d8d98db1e983ec863db409722}\label{cholmod__interface_8c_a3a3b1f5d8d98db1e983ec863db409722}} 
+\index{cholmod\_interface.c@{cholmod\_interface.c}!mat\_vec@{mat\_vec}}
+\index{mat\_vec@{mat\_vec}!cholmod\_interface.c@{cholmod\_interface.c}}
+\subsubsection{\texorpdfstring{mat\_vec()}{mat\_vec()}}
+{\footnotesize\ttfamily void mat\+\_\+vec (\begin{DoxyParamCaption}\item[{cholmod\+\_\+sparse $\ast$}]{A,  }\item[{cholmod\+\_\+dense $\ast$}]{x,  }\item[{cholmod\+\_\+dense $\ast$}]{y,  }\item[{cholmod\+\_\+common $\ast$}]{c }\end{DoxyParamCaption})}
+
+
+
+Matrix-\/vector multiplication. 
+
+$y = A*x$
+
+
+\begin{DoxyParams}{Parameters}
+{\em A} & Sparse matrix \\
+\hline
+{\em x} & Dense input vector \\
+\hline
+{\em y} & Dense output vector \\
+\hline
+{\em c} & Cholmod environment \\
+\hline
+\end{DoxyParams}

@@ -1,3 +1,12 @@
+/**
+ * @file scaling.c
+ * @author Ben Hermans
+ * @brief Problem data scaling during setup.
+ * @details This file includes the routine that is called during setup to scale the problem data, 
+ * and initial guesses if the problem is warm-started. Scaling the problem is useful to prevent 
+ * large changes in the active set and to guard against ill-conditioning in the objective function. 
+ * @note The function in this file makes use of the cholmod scale routines. 
+ */
 #include "scaling.h"
 #include "cholmod.h"
 #include <stdio.h>

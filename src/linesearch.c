@@ -1,3 +1,12 @@
+/**
+ * @file linesearch.c
+ * @author Ben Hermans
+ * @brief Routines to perform exact or backtracking linesearch.
+ * @details Once the direction is found using the semismooth Newton method, the functions in this file can 
+ * be called to calculate a stepsize, either using exact linesearch or a backtracking linesearch to
+ * satisfy the armijo condition.
+ */
+
 #include "linesearch.h"
 #include "lin_alg.h"
 #include <stdlib.h> //for sorting
@@ -35,7 +44,7 @@ c_float exact_linesearch_newton(QPALMWorkspace *work){
     // s = alpha./delta
     vec_ew_div(work->alpha, work->delta, work->temp_2m, work->data->m*2);
 
-    // index_P =q delta > 0
+    // index_P = delta > 0
     // index_J = delta < 0
     for (size_t i=0; i<work->data->m*2; i++){
         if (work->delta[i] == 0) {

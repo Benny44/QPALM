@@ -1,0 +1,57 @@
+\hypertarget{scaling_8c}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/src/scaling.c File Reference}
+\label{scaling_8c}\index{/home/ben/Documents/Projects/QPALM/src/scaling.c@{/home/ben/Documents/Projects/QPALM/src/scaling.c}}
+
+
+Problem data scaling during setup.  
+
+
+{\ttfamily \#include \char`\"{}scaling.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cholmod.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{scaling_8c_ae571f80a4da8e7e83f6a3c644be0c618}{limit\+\_\+scaling}} (\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$D, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\item 
+void \mbox{\hyperlink{scaling_8c_a3735b6c9c3aeeddfb3bb0982ae5f70ba}{scale\+\_\+data}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Scale problem matrices. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Problem data scaling during setup. 
+
+\begin{DoxyAuthor}{Author}
+Ben Hermans
+\end{DoxyAuthor}
+This file includes the routine that is called during setup to scale the problem data, and initial guesses if the problem is warm-\/started. Scaling the problem is useful to prevent large changes in the active set and to guard against ill-\/conditioning in the objective function. \begin{DoxyNote}{Note}
+The function in this file makes use of the cholmod scale routines. 
+\end{DoxyNote}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{scaling_8c_ae571f80a4da8e7e83f6a3c644be0c618}\label{scaling_8c_ae571f80a4da8e7e83f6a3c644be0c618}} 
+\index{scaling.c@{scaling.c}!limit\_scaling@{limit\_scaling}}
+\index{limit\_scaling@{limit\_scaling}!scaling.c@{scaling.c}}
+\subsubsection{\texorpdfstring{limit\_scaling()}{limit\_scaling()}}
+{\footnotesize\ttfamily void limit\+\_\+scaling (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{D,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{scaling_8c_a3735b6c9c3aeeddfb3bb0982ae5f70ba}\label{scaling_8c_a3735b6c9c3aeeddfb3bb0982ae5f70ba}} 
+\index{scaling.c@{scaling.c}!scale\_data@{scale\_data}}
+\index{scale\_data@{scale\_data}!scaling.c@{scaling.c}}
+\subsubsection{\texorpdfstring{scale\_data()}{scale\_data()}}
+{\footnotesize\ttfamily void scale\+\_\+data (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Scale problem matrices. 
+
+Ruiz scaling \cite{ruiz2001scaling} is applied to the constraint matrix A. This means that the rows and columns of A are scaled elementwise by the square root of their infinity norm, and this for a number of work-\/$>$settings-\/$>$scaling iterations. The resulting scaling can be written as $\bar{A}\leftarrow EAD$, where $E$ and $D$ are the row and column scaling diagonal matrices respectively. The upper and lower bounds are also scaled with $E$, thus $\bar{b}_\textrm{min}, \bar{b}_\textrm{max} \leftarrow E b_\textrm{min}, E b_\textrm{max}$. The primal variables are transformed using $D^{-1}$, resulting in $\bar{x}\leftarrow D^{-1}x$. Therefore, also the cost matrix Q and vector q have to be scaled with $D$, $\bar{Q}\leftarrow DQD$ and $\bar{q}\leftarrow Dq$. Finally the objective function is scaled with a scalar $c$, thus $\bar{Q}, \bar{q} \leftarrow c\bar{Q}, c\bar{q} $, where $c=1/\textrm{max}(1, \nabla f(x_0))$. The dual variables in the scaled problem become $\bar{y} \leftarrow c E^{-1} y$. The diagonals of $D$ and $E$ are stored and used in the remainder of the problem.
+
+\begin{DoxyNote}{Note}
+This function makes use of the cholmod scale routines.
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}

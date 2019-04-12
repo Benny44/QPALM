@@ -1,0 +1,139 @@
+\hypertarget{util_8h}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/include/util.h File Reference}
+\label{util_8h}\index{/home/ben/Documents/Projects/QPALM/include/util.h@{/home/ben/Documents/Projects/QPALM/include/util.h}}
+{\ttfamily \#include \char`\"{}types.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}constants.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} $\ast$ \mbox{\hyperlink{util_8h_afc6f0428587fb1ede055b075aa6f7ca2}{copy\+\_\+settings}} (\mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} $\ast$settings)
+\begin{DoxyCompactList}\small\item\em Copy settings creating a new settings structure (uses M\+A\+L\+L\+OC) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{util_8h_a7645b56a91479fac2285909a25875b91}{c\+\_\+strcpy}} (char dest\mbox{[}$\,$\mbox{]}, const char source\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Custom string copy to avoid string.\+h library. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{util_8h_a14fe651105f1f38b2a3a49614f4b8ae2}{update\+\_\+status}} (\mbox{\hyperlink{structQPALMInfo}{Q\+P\+A\+L\+M\+Info}} $\ast$info, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} status\+\_\+val)
+\begin{DoxyCompactList}\small\item\em Update solver status (value and string) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{util_8h_a28dd4fdde8c9147ce8926c6b5e39cc0e}{cold\+\_\+start}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Cold start workspace variables x, x\+\_\+prev, y, Ax and Qx. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{util_8h_a84ebca05a9d2dfd2fca71d0e3ef95927}{initialize\+\_\+sigma}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Initialize penalty factors from initial x. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{util_8h_aae57226ec767e15f27d88e97df093b41}{qpalm\+\_\+tic}} (\mbox{\hyperlink{types_8h_ad5355c7afd46cc21c6e25414b2a3c4b2}{Q\+P\+A\+L\+M\+Timer}} $\ast$t)
+\begin{DoxyCompactList}\small\item\em Timer Methods. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{util_8h_a6eecdaf6f3f1c4bf0ab1067a5e7e69da}{qpalm\+\_\+toc}} (\mbox{\hyperlink{types_8h_ad5355c7afd46cc21c6e25414b2a3c4b2}{Q\+P\+A\+L\+M\+Timer}} $\ast$t)
+\begin{DoxyCompactList}\small\item\em Report time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{util_8h_a7645b56a91479fac2285909a25875b91}\label{util_8h_a7645b56a91479fac2285909a25875b91}} 
+\index{util.h@{util.h}!c\_strcpy@{c\_strcpy}}
+\index{c\_strcpy@{c\_strcpy}!util.h@{util.h}}
+\subsubsection{\texorpdfstring{c\_strcpy()}{c\_strcpy()}}
+{\footnotesize\ttfamily void c\+\_\+strcpy (\begin{DoxyParamCaption}\item[{char}]{dest\mbox{[}$\,$\mbox{]},  }\item[{const char}]{source\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Custom string copy to avoid string.\+h library. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dest} & destination string \\
+\hline
+{\em source} & source string \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{util_8h_a28dd4fdde8c9147ce8926c6b5e39cc0e}\label{util_8h_a28dd4fdde8c9147ce8926c6b5e39cc0e}} 
+\index{util.h@{util.h}!cold\_start@{cold\_start}}
+\index{cold\_start@{cold\_start}!util.h@{util.h}}
+\subsubsection{\texorpdfstring{cold\_start()}{cold\_start()}}
+{\footnotesize\ttfamily void cold\+\_\+start (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Cold start workspace variables x, x\+\_\+prev, y, Ax and Qx. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{util_8h_afc6f0428587fb1ede055b075aa6f7ca2}\label{util_8h_afc6f0428587fb1ede055b075aa6f7ca2}} 
+\index{util.h@{util.h}!copy\_settings@{copy\_settings}}
+\index{copy\_settings@{copy\_settings}!util.h@{util.h}}
+\subsubsection{\texorpdfstring{copy\_settings()}{copy\_settings()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}}$\ast$ copy\+\_\+settings (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} $\ast$}]{settings }\end{DoxyParamCaption})}
+
+
+
+Copy settings creating a new settings structure (uses M\+A\+L\+L\+OC) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em settings} & Settings to be copied \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+New settings structure 
+\end{DoxyReturn}
+\mbox{\Hypertarget{util_8h_a84ebca05a9d2dfd2fca71d0e3ef95927}\label{util_8h_a84ebca05a9d2dfd2fca71d0e3ef95927}} 
+\index{util.h@{util.h}!initialize\_sigma@{initialize\_sigma}}
+\index{initialize\_sigma@{initialize\_sigma}!util.h@{util.h}}
+\subsubsection{\texorpdfstring{initialize\_sigma()}{initialize\_sigma()}}
+{\footnotesize\ttfamily void initialize\+\_\+sigma (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Initialize penalty factors from initial x. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{util_8h_aae57226ec767e15f27d88e97df093b41}\label{util_8h_aae57226ec767e15f27d88e97df093b41}} 
+\index{util.h@{util.h}!qpalm\_tic@{qpalm\_tic}}
+\index{qpalm\_tic@{qpalm\_tic}!util.h@{util.h}}
+\subsubsection{\texorpdfstring{qpalm\_tic()}{qpalm\_tic()}}
+{\footnotesize\ttfamily void qpalm\+\_\+tic (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{types_8h_ad5355c7afd46cc21c6e25414b2a3c4b2}{Q\+P\+A\+L\+M\+Timer}} $\ast$}]{t }\end{DoxyParamCaption})}
+
+
+
+Timer Methods. 
+
+Start timer 
+\begin{DoxyParams}{Parameters}
+{\em t} & Timer object \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{util_8h_a6eecdaf6f3f1c4bf0ab1067a5e7e69da}\label{util_8h_a6eecdaf6f3f1c4bf0ab1067a5e7e69da}} 
+\index{util.h@{util.h}!qpalm\_toc@{qpalm\_toc}}
+\index{qpalm\_toc@{qpalm\_toc}!util.h@{util.h}}
+\subsubsection{\texorpdfstring{qpalm\_toc()}{qpalm\_toc()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} qpalm\+\_\+toc (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{types_8h_ad5355c7afd46cc21c6e25414b2a3c4b2}{Q\+P\+A\+L\+M\+Timer}} $\ast$}]{t }\end{DoxyParamCaption})}
+
+
+
+Report time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & Timer object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reported time 
+\end{DoxyReturn}
+\mbox{\Hypertarget{util_8h_a14fe651105f1f38b2a3a49614f4b8ae2}\label{util_8h_a14fe651105f1f38b2a3a49614f4b8ae2}} 
+\index{util.h@{util.h}!update\_status@{update\_status}}
+\index{update\_status@{update\_status}!util.h@{util.h}}
+\subsubsection{\texorpdfstring{update\_status()}{update\_status()}}
+{\footnotesize\ttfamily void update\+\_\+status (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMInfo}{Q\+P\+A\+L\+M\+Info}} $\ast$}]{info,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{status\+\_\+val }\end{DoxyParamCaption})}
+
+
+
+Update solver status (value and string) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em info} & \mbox{\hyperlink{structQPALMInfo}{Q\+P\+A\+L\+M\+Info}} \\
+\hline
+{\em status\+\_\+val} & new status value \\
+\hline
+\end{DoxyParams}

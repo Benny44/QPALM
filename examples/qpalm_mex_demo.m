@@ -16,8 +16,8 @@ settings.delta = 10;
 settings.proximal = true;
 settings.scaling = 2;
 settings.max_iter = 1000;
-settings.eps_abs = 1e-4;
-settings.eps_rel = 1e-4;
+settings.eps_abs = 1e-3;
+settings.eps_rel = 1e-3;
 
 solver.setup(Q, q, A, lb, ub, settings); 
 res = solver.solve();

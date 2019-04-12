@@ -1,0 +1,66 @@
+\hypertarget{types_8h}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/include/types.h File Reference}
+\label{types_8h}\index{/home/ben/Documents/Projects/QPALM/include/types.h@{/home/ben/Documents/Projects/QPALM/include/types.h}}
+
+
+Internal data structures used in Q\+P\+A\+LM.  
+
+
+{\ttfamily \#include \char`\"{}global\+\_\+opts.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cholmod.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structarray__element}{array\+\_\+element}}
+\begin{DoxyCompactList}\small\item\em Array to sort in linesearch. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structQPALMSolution}{Q\+P\+A\+L\+M\+Solution}}
+\begin{DoxyCompactList}\small\item\em Solution structure. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structQPALMScaling}{Q\+P\+A\+L\+M\+Scaling}}
+\begin{DoxyCompactList}\small\item\em Problem scaling matrices stored as vectors. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structQPALMInfo}{Q\+P\+A\+L\+M\+Info}}
+\begin{DoxyCompactList}\small\item\em Solver return information. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structQPALMData}{Q\+P\+A\+L\+M\+Data}}
+\begin{DoxyCompactList}\small\item\em Data structure. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}}
+\begin{DoxyCompactList}\small\item\em Settings struct. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structQPALMCholmod}{Q\+P\+A\+L\+M\+Cholmod}}
+\begin{DoxyCompactList}\small\item\em Variables for linear system solving (cholmod) \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}}
+\begin{DoxyCompactList}\small\item\em Q\+P\+A\+LM Workspace. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structarray__element}{array\+\_\+element}} \mbox{\hyperlink{types_8h_a1a267f5ef932417d8207c7f0a1ae1801}{array\+\_\+element}}
+\begin{DoxyCompactList}\small\item\em Array to sort in linesearch. \end{DoxyCompactList}\item 
+typedef struct Q\+P\+A\+L\+M\+\_\+\+T\+I\+M\+ER \mbox{\hyperlink{types_8h_ad5355c7afd46cc21c6e25414b2a3c4b2}{Q\+P\+A\+L\+M\+Timer}}
+\begin{DoxyCompactList}\small\item\em Q\+P\+A\+LM Timer for statistics. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Internal data structures used in Q\+P\+A\+LM. 
+
+\begin{DoxyAuthor}{Author}
+Ben Hermans
+\end{DoxyAuthor}
+See data structures tab. 
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{types_8h_a1a267f5ef932417d8207c7f0a1ae1801}\label{types_8h_a1a267f5ef932417d8207c7f0a1ae1801}} 
+\index{types.h@{types.h}!array\_element@{array\_element}}
+\index{array\_element@{array\_element}!types.h@{types.h}}
+\subsubsection{\texorpdfstring{array\_element}{array\_element}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structarray__element}{array\+\_\+element}}  \mbox{\hyperlink{structarray__element}{array\+\_\+element}}}
+
+
+
+Array to sort in linesearch. 
+
+\mbox{\Hypertarget{types_8h_ad5355c7afd46cc21c6e25414b2a3c4b2}\label{types_8h_ad5355c7afd46cc21c6e25414b2a3c4b2}} 
+\index{types.h@{types.h}!QPALMTimer@{QPALMTimer}}
+\index{QPALMTimer@{QPALMTimer}!types.h@{types.h}}
+\subsubsection{\texorpdfstring{QPALMTimer}{QPALMTimer}}
+{\footnotesize\ttfamily typedef struct Q\+P\+A\+L\+M\+\_\+\+T\+I\+M\+ER \mbox{\hyperlink{types_8h_ad5355c7afd46cc21c6e25414b2a3c4b2}{Q\+P\+A\+L\+M\+Timer}}}
+
+
+
+Q\+P\+A\+LM Timer for statistics. 
+
