@@ -94,7 +94,7 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Functions to calculate the semismooth Newton direction. </p>
 <dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
-<p>The functions in this file concern the calculation of the semismooth Newton direction. Factorizing, updating the factorization and solving the linear system are functions in <a class="el" href="cholmod__interface_8c.html" title="Interface and wrapper to cholmod functions.">cholmod_interface.c</a>. </p>
+<p>The functions in this file concern the calculation of the semismooth Newton direction. Factorizing, updating the factorization and solving the linear system are performed by functions in <a class="el" href="cholmod__interface_8c.html" title="Interface and wrapper to cholmod functions.">cholmod_interface.c</a>. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a2a3cf6a5a9f0b22f35386149aa1e4252"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2a3cf6a5a9f0b22f35386149aa1e4252">&#9670;&nbsp;</a></span>newton_set_direction()</h2>
@@ -165,6 +165,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Determines the entering and leaving constraints and stores them in work-&gt;chol-&gt;enter and work-&gt;chol-&gt;leave respectively. </p>
+<p class="">Entering constraints are constraints that are in the new but not in the previous set of active constraints. Leaving constraints are constraints that are in the previous but not in the new set of active constraints.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>

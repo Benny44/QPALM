@@ -97,24 +97,24 @@ typedef struct {
  * Settings struct
  */
 typedef struct {
-  c_int   max_iter;      ///< maximum number of iterations
-  c_float eps_abs;       ///< absolute convergence tolerance
-  c_float eps_rel;       ///< relative convergence tolerance
-  c_float eps_abs_in;    ///< intermediate absolute convergence tolerance
-  c_float eps_rel_in;    ///< intermediate relative convergence tolerance
-  c_float rho;           ///< tolerance scaling factor 
-  c_float eps_prim_inf;  ///< primal infeasibility tolerance
-  c_float eps_dual_inf;  ///< dual infeasibility tolerance
-  c_float theta;         ///< penalty update criterion parameter
-  c_float delta;         ///< penalty update factor
-  c_float tau_init;      ///< initial stepsize in backtracking
-  c_int   proximal;      ///< boolean, use proximal method of multipliers or not
-  c_float gamma;         ///< proximal penalty parameter
-  c_float gamma_upd;     ///< proximal penalty update factor
-  c_float gamma_max;     ///< proximal penalty parameter cap
-  c_int   scaling;       ///< scaling iterations, if 0 then scaling is disabled
-  c_int   verbose;       ///< boolean, write out progress
-  c_int   warm_start;    ///< boolean, warm start
+  c_int   max_iter;      ///< maximum number of iterations @details @note Assumption: @f$>0@f$
+  c_float eps_abs;       ///< absolute convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs or eps_rel must be @f$>0@f$
+  c_float eps_rel;       ///< relative convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs or eps_rel must be @f$>0@f$
+  c_float eps_abs_in;    ///< intermediate absolute convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs_in or eps_rel_in must be @f$>0@f$
+  c_float eps_rel_in;    ///< intermediate relative convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs_in or eps_rel_in must be @f$>0@f$
+  c_float rho;           ///< tolerance scaling factor @details @note Assumption: @f$0<\rho<1@f$
+  c_float eps_prim_inf;  ///< primal infeasibility tolerance @details @note Assumption: @f$>=0@f$
+  c_float eps_dual_inf;  ///< dual infeasibility tolerance @details @note Assumption: @f$>=0@f$
+  c_float theta;         ///< penalty update criterion parameter @details @note Assumption: @f$<=1@f$
+  c_float delta;         ///< penalty update factor @details @note Assumption: @f$>1@f$
+  c_float tau_init;      ///< initial stepsize in backtracking @details @note Assumption: @f$>0@f$
+  c_int   proximal;      ///< boolean, use proximal method of multipliers or not @details @note Assumption: @f$\in \{0,1\}@f$ 
+  c_float gamma;         ///< proximal penalty parameter @details @note Assumption: @f$>0@f$
+  c_float gamma_upd;     ///< proximal penalty update factor @details @note Assumption: @f$>=1@f$
+  c_float gamma_max;     ///< proximal penalty parameter cap @details @note Assumption: @f$>=\gamma@f$
+  c_int   scaling;       ///< scaling iterations, if 0 then scaling is disabled @details @note Assumption: @f$>=0@f$
+  c_int   verbose;       ///< boolean, write out progress @details @note Assumption:@f$\in \{0,1\}@f$
+  c_int   warm_start;    ///< boolean, warm start @details @note Assumption: @f$\in \{0,1\}@f$
 } QPALMSettings;
 
 /**

@@ -1,0 +1,254 @@
+\hypertarget{global__opts_8h}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/include/global\+\_\+opts.h File Reference}
+\label{global__opts_8h}\index{/home/ben/Documents/Projects/QPALM/include/global\_opts.h@{/home/ben/Documents/Projects/QPALM/include/global\_opts.h}}
+
+
+Custom memory allocation, print and utility functions, and data types for floats and ints.  
+
+
+{\ttfamily \#include \char`\"{}cholmod.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+\subsection*{Macros}
+\begin{Indent}\textbf{ C\+H\+O\+L\+M\+OD data types and macros}\par
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_a058e7dbf59195ee615d22066fbdd844b}{D\+I\+NT}}
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_afeeffe52c8fd59db7c61cf8b02042dbf}{I\+NT}}
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_a8747af38b86aa2bbcda2f1b1aa0888c2}{D\+O\+U\+B\+LE}}
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_a060b837c3b4486ee35317744156f3da2}{Real}}~double
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_a91adff1610bdf681555a8f2e330dc963}{Int}}~int
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_af2bdae8b2a1a2c6cc68215ef219d2673}{Int\+\_\+max}}~I\+N\+T\+\_\+\+M\+AX
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_a96c2976c8b8307b8dab27af3273f1533}{C\+H\+O\+L\+M\+OD}}(name)~cholmod\+\_\+ \#\# name
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_afa9c89c62b53deb647c3722a1114ffb1}{I\+T\+Y\+PE}}~C\+H\+O\+L\+M\+O\+D\+\_\+\+I\+NT
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_a3834ad0136a8b95a6589500e4009fe9a}{D\+T\+Y\+PE}}~C\+H\+O\+L\+M\+O\+D\+\_\+\+D\+O\+U\+B\+LE
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_a77ceac8d6af195fe72f95f6afd87c45e}{ID}}~\char`\"{}\%d\char`\"{}
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Custom memory allocation (e.\+g. matlab/python)}\par
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_a3ab8252f80f6fe439c69aa168f64ee5e}{c\+\_\+malloc}}~malloc
+\begin{DoxyCompactList}\small\item\em custom malloc \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{global__opts_8h_a6f3db26db28ecca250635aeeed9061df}{c\+\_\+calloc}}~calloc
+\begin{DoxyCompactList}\small\item\em custom calloc \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{global__opts_8h_a4f8399dfdd5aded24b094b2e4ba21d9b}{c\+\_\+free}}~free
+\begin{DoxyCompactList}\small\item\em custom free \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{global__opts_8h_a8865c6728c372790de8dee1ed24c7480}{c\+\_\+realloc}}~realloc
+\begin{DoxyCompactList}\small\item\em custom realloc \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Custom operations}\par
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{global__opts_8h_acde65b798fcd87e08c1f337b0b9d7c9b}{c\+\_\+absval}}(x)~(((x) $<$ 0) ? -\/(x) \+: (x))
+\begin{DoxyCompactList}\small\item\em absolute value \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{global__opts_8h_a9a65de2804630e8b5c13c2c03f24aef3}{c\+\_\+max}}(a,  b)~(((a) $>$ (b)) ? (a) \+: (b))
+\begin{DoxyCompactList}\small\item\em maximum of two values \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{global__opts_8h_af8215c036535f0b2b2ccf09d5f96fabf}{c\+\_\+min}}(a,  b)~(((a) $<$ (b)) ? (a) \+: (b))
+\begin{DoxyCompactList}\small\item\em minimum of two values \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{global__opts_8h_a8effeb3246f2f663f5c53b0a997b4374}{mod}}(a,  b)~((((a)\%(b))+(b))\%(b))
+\begin{DoxyCompactList}\small\item\em modulo operation (positive result for all values) \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{global__opts_8h_a2e7d4980398cb3cfa11ef1e9677d5835}{c\+\_\+sqrt}}~sqrt
+\begin{DoxyCompactList}\small\item\em square root \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Typedefs}
+\begin{Indent}\textbf{ Data customizations}\par
+\begin{DoxyCompactItemize}
+\item 
+typedef \mbox{\hyperlink{global__opts_8h_a060b837c3b4486ee35317744156f3da2}{Real}} \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}
+\begin{DoxyCompactList}\small\item\em doubles for numerical values \end{DoxyCompactList}\item 
+typedef \mbox{\hyperlink{global__opts_8h_a91adff1610bdf681555a8f2e330dc963}{Int}} \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}
+\begin{DoxyCompactList}\small\item\em long or int for indices \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\subsection{Detailed Description}
+Custom memory allocation, print and utility functions, and data types for floats and ints. 
+
+\begin{DoxyAuthor}{Author}
+Ben Hermans
+\end{DoxyAuthor}
+Memory allocation and print functions depend on whether the code is compiled as a standalone library or with matlab or python. The data types used for floating point numbers and integer numbers can be changed here as well. Finally, some customized operations (max, min, mod and abs) are included as well. 
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{global__opts_8h_acde65b798fcd87e08c1f337b0b9d7c9b}\label{global__opts_8h_acde65b798fcd87e08c1f337b0b9d7c9b}} 
+\index{global\_opts.h@{global\_opts.h}!c\_absval@{c\_absval}}
+\index{c\_absval@{c\_absval}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{c\_absval}{c\_absval}}
+{\footnotesize\ttfamily \#define c\+\_\+absval(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(((x) $<$ 0) ? -\/(x) \+: (x))}
+
+
+
+absolute value 
+
+\mbox{\Hypertarget{global__opts_8h_a6f3db26db28ecca250635aeeed9061df}\label{global__opts_8h_a6f3db26db28ecca250635aeeed9061df}} 
+\index{global\_opts.h@{global\_opts.h}!c\_calloc@{c\_calloc}}
+\index{c\_calloc@{c\_calloc}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{c\_calloc}{c\_calloc}}
+{\footnotesize\ttfamily \#define c\+\_\+calloc~calloc}
+
+
+
+custom calloc 
+
+\mbox{\Hypertarget{global__opts_8h_a4f8399dfdd5aded24b094b2e4ba21d9b}\label{global__opts_8h_a4f8399dfdd5aded24b094b2e4ba21d9b}} 
+\index{global\_opts.h@{global\_opts.h}!c\_free@{c\_free}}
+\index{c\_free@{c\_free}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{c\_free}{c\_free}}
+{\footnotesize\ttfamily \#define c\+\_\+free~free}
+
+
+
+custom free 
+
+\mbox{\Hypertarget{global__opts_8h_a3ab8252f80f6fe439c69aa168f64ee5e}\label{global__opts_8h_a3ab8252f80f6fe439c69aa168f64ee5e}} 
+\index{global\_opts.h@{global\_opts.h}!c\_malloc@{c\_malloc}}
+\index{c\_malloc@{c\_malloc}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{c\_malloc}{c\_malloc}}
+{\footnotesize\ttfamily \#define c\+\_\+malloc~malloc}
+
+
+
+custom malloc 
+
+\mbox{\Hypertarget{global__opts_8h_a9a65de2804630e8b5c13c2c03f24aef3}\label{global__opts_8h_a9a65de2804630e8b5c13c2c03f24aef3}} 
+\index{global\_opts.h@{global\_opts.h}!c\_max@{c\_max}}
+\index{c\_max@{c\_max}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{c\_max}{c\_max}}
+{\footnotesize\ttfamily \#define c\+\_\+max(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{b }\end{DoxyParamCaption})~(((a) $>$ (b)) ? (a) \+: (b))}
+
+
+
+maximum of two values 
+
+\mbox{\Hypertarget{global__opts_8h_af8215c036535f0b2b2ccf09d5f96fabf}\label{global__opts_8h_af8215c036535f0b2b2ccf09d5f96fabf}} 
+\index{global\_opts.h@{global\_opts.h}!c\_min@{c\_min}}
+\index{c\_min@{c\_min}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{c\_min}{c\_min}}
+{\footnotesize\ttfamily \#define c\+\_\+min(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{b }\end{DoxyParamCaption})~(((a) $<$ (b)) ? (a) \+: (b))}
+
+
+
+minimum of two values 
+
+\mbox{\Hypertarget{global__opts_8h_a8865c6728c372790de8dee1ed24c7480}\label{global__opts_8h_a8865c6728c372790de8dee1ed24c7480}} 
+\index{global\_opts.h@{global\_opts.h}!c\_realloc@{c\_realloc}}
+\index{c\_realloc@{c\_realloc}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{c\_realloc}{c\_realloc}}
+{\footnotesize\ttfamily \#define c\+\_\+realloc~realloc}
+
+
+
+custom realloc 
+
+\mbox{\Hypertarget{global__opts_8h_a2e7d4980398cb3cfa11ef1e9677d5835}\label{global__opts_8h_a2e7d4980398cb3cfa11ef1e9677d5835}} 
+\index{global\_opts.h@{global\_opts.h}!c\_sqrt@{c\_sqrt}}
+\index{c\_sqrt@{c\_sqrt}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{c\_sqrt}{c\_sqrt}}
+{\footnotesize\ttfamily \#define c\+\_\+sqrt~sqrt}
+
+
+
+square root 
+
+\mbox{\Hypertarget{global__opts_8h_a96c2976c8b8307b8dab27af3273f1533}\label{global__opts_8h_a96c2976c8b8307b8dab27af3273f1533}} 
+\index{global\_opts.h@{global\_opts.h}!CHOLMOD@{CHOLMOD}}
+\index{CHOLMOD@{CHOLMOD}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{CHOLMOD}{CHOLMOD}}
+{\footnotesize\ttfamily \#define C\+H\+O\+L\+M\+OD(\begin{DoxyParamCaption}\item[{}]{name }\end{DoxyParamCaption})~cholmod\+\_\+ \#\# name}
+
+\mbox{\Hypertarget{global__opts_8h_a058e7dbf59195ee615d22066fbdd844b}\label{global__opts_8h_a058e7dbf59195ee615d22066fbdd844b}} 
+\index{global\_opts.h@{global\_opts.h}!DINT@{DINT}}
+\index{DINT@{DINT}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{DINT}{DINT}}
+{\footnotesize\ttfamily \#define D\+I\+NT}
+
+\mbox{\Hypertarget{global__opts_8h_a8747af38b86aa2bbcda2f1b1aa0888c2}\label{global__opts_8h_a8747af38b86aa2bbcda2f1b1aa0888c2}} 
+\index{global\_opts.h@{global\_opts.h}!DOUBLE@{DOUBLE}}
+\index{DOUBLE@{DOUBLE}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{DOUBLE}{DOUBLE}}
+{\footnotesize\ttfamily \#define D\+O\+U\+B\+LE}
+
+\mbox{\Hypertarget{global__opts_8h_a3834ad0136a8b95a6589500e4009fe9a}\label{global__opts_8h_a3834ad0136a8b95a6589500e4009fe9a}} 
+\index{global\_opts.h@{global\_opts.h}!DTYPE@{DTYPE}}
+\index{DTYPE@{DTYPE}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{DTYPE}{DTYPE}}
+{\footnotesize\ttfamily \#define D\+T\+Y\+PE~C\+H\+O\+L\+M\+O\+D\+\_\+\+D\+O\+U\+B\+LE}
+
+\mbox{\Hypertarget{global__opts_8h_a77ceac8d6af195fe72f95f6afd87c45e}\label{global__opts_8h_a77ceac8d6af195fe72f95f6afd87c45e}} 
+\index{global\_opts.h@{global\_opts.h}!ID@{ID}}
+\index{ID@{ID}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{ID}{ID}}
+{\footnotesize\ttfamily \#define ID~\char`\"{}\%d\char`\"{}}
+
+\mbox{\Hypertarget{global__opts_8h_afeeffe52c8fd59db7c61cf8b02042dbf}\label{global__opts_8h_afeeffe52c8fd59db7c61cf8b02042dbf}} 
+\index{global\_opts.h@{global\_opts.h}!INT@{INT}}
+\index{INT@{INT}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{INT}{INT}}
+{\footnotesize\ttfamily \#define I\+NT}
+
+\mbox{\Hypertarget{global__opts_8h_a91adff1610bdf681555a8f2e330dc963}\label{global__opts_8h_a91adff1610bdf681555a8f2e330dc963}} 
+\index{global\_opts.h@{global\_opts.h}!Int@{Int}}
+\index{Int@{Int}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{Int}{Int}}
+{\footnotesize\ttfamily \#define Int~int}
+
+\mbox{\Hypertarget{global__opts_8h_af2bdae8b2a1a2c6cc68215ef219d2673}\label{global__opts_8h_af2bdae8b2a1a2c6cc68215ef219d2673}} 
+\index{global\_opts.h@{global\_opts.h}!Int\_max@{Int\_max}}
+\index{Int\_max@{Int\_max}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{Int\_max}{Int\_max}}
+{\footnotesize\ttfamily \#define Int\+\_\+max~I\+N\+T\+\_\+\+M\+AX}
+
+\mbox{\Hypertarget{global__opts_8h_afa9c89c62b53deb647c3722a1114ffb1}\label{global__opts_8h_afa9c89c62b53deb647c3722a1114ffb1}} 
+\index{global\_opts.h@{global\_opts.h}!ITYPE@{ITYPE}}
+\index{ITYPE@{ITYPE}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{ITYPE}{ITYPE}}
+{\footnotesize\ttfamily \#define I\+T\+Y\+PE~C\+H\+O\+L\+M\+O\+D\+\_\+\+I\+NT}
+
+\mbox{\Hypertarget{global__opts_8h_a8effeb3246f2f663f5c53b0a997b4374}\label{global__opts_8h_a8effeb3246f2f663f5c53b0a997b4374}} 
+\index{global\_opts.h@{global\_opts.h}!mod@{mod}}
+\index{mod@{mod}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{mod}{mod}}
+{\footnotesize\ttfamily \#define mod(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{b }\end{DoxyParamCaption})~((((a)\%(b))+(b))\%(b))}
+
+
+
+modulo operation (positive result for all values) 
+
+\mbox{\Hypertarget{global__opts_8h_a060b837c3b4486ee35317744156f3da2}\label{global__opts_8h_a060b837c3b4486ee35317744156f3da2}} 
+\index{global\_opts.h@{global\_opts.h}!Real@{Real}}
+\index{Real@{Real}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{Real}{Real}}
+{\footnotesize\ttfamily \#define Real~double}
+
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}\label{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}} 
+\index{global\_opts.h@{global\_opts.h}!c\_float@{c\_float}}
+\index{c\_float@{c\_float}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{c\_float}{c\_float}}
+{\footnotesize\ttfamily typedef \mbox{\hyperlink{global__opts_8h_a060b837c3b4486ee35317744156f3da2}{Real}} \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}}
+
+
+
+doubles for numerical values 
+
+\mbox{\Hypertarget{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}\label{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}} 
+\index{global\_opts.h@{global\_opts.h}!c\_int@{c\_int}}
+\index{c\_int@{c\_int}!global\_opts.h@{global\_opts.h}}
+\subsubsection{\texorpdfstring{c\_int}{c\_int}}
+{\footnotesize\ttfamily typedef \mbox{\hyperlink{global__opts_8h_a91adff1610bdf681555a8f2e330dc963}{Int}} \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}
+
+
+
+long or int for indices 
+

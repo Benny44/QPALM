@@ -72,6 +72,9 @@ $(function() {
 <div class="title">termination.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Routines to check the termination and infeasibility criteria.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="termination_8h_source.html">termination.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="lin__alg_8h_source.html">lin_alg.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="constants_8h_source.html">constants.h</a>&quot;</code><br />
@@ -81,37 +84,52 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a77bf8ca55a3eab6356c7624c500b02e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#a77bf8ca55a3eab6356c7624c500b02e4">check_termination</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:a77bf8ca55a3eab6356c7624c500b02e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the problem is solved or infeasible and updates the status accordingly.  <a href="#a77bf8ca55a3eab6356c7624c500b02e4">More...</a><br /></td></tr>
 <tr class="separator:a77bf8ca55a3eab6356c7624c500b02e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a248d97a7a68e015a999e06d40017dabe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#a248d97a7a68e015a999e06d40017dabe">calculate_residuals_and_tolerances</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:a248d97a7a68e015a999e06d40017dabe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the primal and dual residual and tolerance routines.  <a href="#a248d97a7a68e015a999e06d40017dabe">More...</a><br /></td></tr>
 <tr class="separator:a248d97a7a68e015a999e06d40017dabe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc13c2c286796ec381cdb5c83d9f764f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#afc13c2c286796ec381cdb5c83d9f764f">calculate_primal_residual</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:afc13c2c286796ec381cdb5c83d9f764f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the infinity norm of the primal residual and stores it in work-&gt;info-&gt;pri_res_norm.  <a href="#afc13c2c286796ec381cdb5c83d9f764f">More...</a><br /></td></tr>
 <tr class="separator:afc13c2c286796ec381cdb5c83d9f764f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a755facb8a07f865bd114215133d6c089"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#a755facb8a07f865bd114215133d6c089">calculate_dual_residual</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="separator:a755facb8a07f865bd114215133d6c089"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1889ad003b14a004d4560bedde40ce9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#af1889ad003b14a004d4560bedde40ce9">calculate_dual_residuals</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:af1889ad003b14a004d4560bedde40ce9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the infinity norm of the dual residual and the residual of the subproblem and stores them in work-&gt;info-&gt;dua_res_norm and work-&gt;info-&gt;dua2_res_norm respectively.  <a href="#af1889ad003b14a004d4560bedde40ce9">More...</a><br /></td></tr>
+<tr class="separator:af1889ad003b14a004d4560bedde40ce9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac638a8fe12bfee736c6832fa6140c92d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#ac638a8fe12bfee736c6832fa6140c92d">calculate_primal_tolerance</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:ac638a8fe12bfee736c6832fa6140c92d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the primal tolerance and stores it in work-&gt;eps_pri.  <a href="#ac638a8fe12bfee736c6832fa6140c92d">More...</a><br /></td></tr>
 <tr class="separator:ac638a8fe12bfee736c6832fa6140c92d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad746ec6ec47a1240e5e910abfb01fee3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#ad746ec6ec47a1240e5e910abfb01fee3">calculate_dual_tolerances</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:ad746ec6ec47a1240e5e910abfb01fee3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the dual tolerance for the problem and current subproblem and stores them in work-&gt;eps_dua and worl-&gt;eps_dua_in respectively.  <a href="#ad746ec6ec47a1240e5e910abfb01fee3">More...</a><br /></td></tr>
 <tr class="separator:ad746ec6ec47a1240e5e910abfb01fee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6dbbbcff619e13f4164f7248365cfec0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#a6dbbbcff619e13f4164f7248365cfec0">is_solved</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:a6dbbbcff619e13f4164f7248365cfec0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether the primal and dual residual norms are smaller than the primal and dual tolerances.  <a href="#a6dbbbcff619e13f4164f7248365cfec0">More...</a><br /></td></tr>
 <tr class="separator:a6dbbbcff619e13f4164f7248365cfec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4df388b37067a843cbb2c6b244496d9c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#a4df388b37067a843cbb2c6b244496d9c">is_primal_infeasible</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:a4df388b37067a843cbb2c6b244496d9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether the problem is primal infeasible.  <a href="#a4df388b37067a843cbb2c6b244496d9c">More...</a><br /></td></tr>
 <tr class="separator:a4df388b37067a843cbb2c6b244496d9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8cf01c07469436e7c562c9f3e162fd2b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#a8cf01c07469436e7c562c9f3e162fd2b">is_dual_infeasible</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:a8cf01c07469436e7c562c9f3e162fd2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether the problem is dual infeasible.  <a href="#a8cf01c07469436e7c562c9f3e162fd2b">More...</a><br /></td></tr>
 <tr class="separator:a8cf01c07469436e7c562c9f3e162fd2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59f3d4d2ea459665833cc3d5e9265d5e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#a59f3d4d2ea459665833cc3d5e9265d5e">store_solution</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:a59f3d4d2ea459665833cc3d5e9265d5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to store the (unscaled) solution in the solution struct.  <a href="#a59f3d4d2ea459665833cc3d5e9265d5e">More...</a><br /></td></tr>
 <tr class="separator:a59f3d4d2ea459665833cc3d5e9265d5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1d7800c435fff9310d684b4154e7fdb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="termination_8c.html#aa1d7800c435fff9310d684b4154e7fdb">check_subproblem_termination</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:aa1d7800c435fff9310d684b4154e7fdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether the subproblem is solved.  <a href="#aa1d7800c435fff9310d684b4154e7fdb">More...</a><br /></td></tr>
 <tr class="separator:aa1d7800c435fff9310d684b4154e7fdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="a755facb8a07f865bd114215133d6c089"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a755facb8a07f865bd114215133d6c089">&#9670;&nbsp;</a></span>calculate_dual_residual()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p class="">Routines to check the termination and infeasibility criteria. </p>
+<dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
+<p>The routines in this file compute the primal and dual residuals, the primal and dual tolerances, check whether the problem is solved completely, unscale and store the solution if that is the case, check whether the intermediate problem is solved and whether one of the infeasibility criteria hold. In other words, all routines related to the termination of the optimization algorithm are grouped in this file. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="af1889ad003b14a004d4560bedde40ce9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1889ad003b14a004d4560bedde40ce9">&#9670;&nbsp;</a></span>calculate_dual_residuals()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void calculate_dual_residual </td>
+          <td class="memname">void calculate_dual_residuals </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
           <td class="paramname"><em>work</em></td><td>)</td>
@@ -119,6 +137,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Calculates the infinity norm of the dual residual and the residual of the subproblem and stores them in work-&gt;info-&gt;dua_res_norm and work-&gt;info-&gt;dua2_res_norm respectively. </p>
+<p class="">The dual residual is given by <img class="formulaInl" alt="$\nabla \varphi$" src="form_71.png"/>. In the scaled case, the residual used for checking is unscaled and is <img class="formulaInl" alt="$D^{-1}\nabla \varphi$" src="form_72.png"/> instead. If the work-&gt;settings-&gt;proximal is true, then the dual residual is <img class="formulaInl" alt="$\nabla \varphi - \frac{1}{\gamma}(x-x_0)$" src="form_73.png"/>. If work-&gt;settings-&gt;proximal is true and the problem is scaled, then the dual residual is <img class="formulaInl" alt="$D^{-1}(\nabla \varphi - \frac{1}{\gamma}(x-x_0))$" src="form_74.png"/>. The residual of the subproblem is <img class="formulaInl" alt="$\nabla \varphi$" src="form_71.png"/> or <img class="formulaInl" alt="$D^{-1}\nabla \varphi$" src="form_72.png"/> in the scaled case.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -138,6 +165,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Calculates the dual tolerance for the problem and current subproblem and stores them in work-&gt;eps_dua and worl-&gt;eps_dua_in respectively. </p>
+<p class="">For the dual tolerance an absolute and relative contribution are added. It is given by <img class="formulaInl" alt="$\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|Qx\|_\infty, \|q\|_\infty, \|A^T y\|_\infty)$" src="form_81.png"/>. In the scaled case, the relative contributions are unscaled and the primal tolerance is given by <img class="formulaInl" alt="$\epsilon_\textrm{abs} + \epsilon_\textrm{rel}c^{-1}\textrm{max}(\|D^{-1}Qx\|_\infty, \|D^{-1}q\|_\infty, \|D^{-1}A^T y\|_\infty)$" src="form_82.png"/>. The tolerance for the subproblem is given by the same formulas, with <img class="formulaInl" alt="$\epsilon_\textrm{abs,in}$" src="form_77.png"/> and <img class="formulaInl" alt="$\epsilon_\textrm{rel,in}$" src="form_78.png"/> instead of <img class="formulaInl" alt="$\epsilon_\textrm{abs}$" src="form_79.png"/> and <img class="formulaInl" alt="$\epsilon_\textrm{rel}$" src="form_80.png"/>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="afc13c2c286796ec381cdb5c83d9f764f"></a>
@@ -155,6 +191,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Calculates the infinity norm of the primal residual and stores it in work-&gt;info-&gt;pri_res_norm. </p>
+<p class="">The primal residual is given by <img class="formulaInl" alt="$Ax-z$" src="form_69.png"/>. In the scaled case, the residual used for checking is unscaled and is <img class="formulaInl" alt="$E^{-1}(Ax-z)$" src="form_70.png"/> instead.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -174,6 +219,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Calculates the primal tolerance and stores it in work-&gt;eps_pri. </p>
+<p class="">For the primal tolerance an absolute and relative contribution are added. It is given by <img class="formulaInl" alt="$\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|Ax\|_\infty, \|z\|_\infty)$" src="form_75.png"/>. In the scaled case, the relative contributions are unscaled and the primal tolerance is given by <img class="formulaInl" alt="$\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|E^{-1}Ax\|_\infty, \|E^{-1}z\|_\infty)$" src="form_76.png"/>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+<p class="">NB Implementation detail: store Einv*Ax and Einv*z in temp_2m. The infinity norm of that vector is equal to the maximum of the infinity norms of Einv*Ax and Einv*z. </p>
+
 </div>
 </div>
 <a id="a248d97a7a68e015a999e06d40017dabe"></a>
@@ -191,6 +246,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Calls the primal and dual residual and tolerance routines. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -210,6 +273,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Check whether the subproblem is solved. </p>
+<p class="">This amounts to checking whether the residual of the subproblem smaller than or equal is to the tolerance of the subproblem, as mentioned in calculate_dual_residuals and calculate_dual_tolerances.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Exitflag indicating whether the subproblem is solved. </dd></dl>
+
 </div>
 </div>
 <a id="a77bf8ca55a3eab6356c7624c500b02e4"></a>
@@ -227,6 +300,16 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Checks whether the problem is solved or infeasible and updates the status accordingly. </p>
+<p class="">The calculation of residuals and tolerances and infeasibility criteria is delegated to other functions. If the problem is solved, the primal/dual solution is stored in work-&gt;solution-&gt;x and work-&gt;solution-&gt;y. If the problem is primal infeasible, the certificate of primal infeasibility is stored in work-&gt;delta_y. If the problem is dual infeasible, the certificate of dual infeasibility is stored in work-&gt;delta_x.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Exitflag indicating the problem is solved or infeasible. </dd></dl>
 
 </div>
 </div>
@@ -246,6 +329,28 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Check whether the problem is dual infeasible. </p>
+<p class="">The infeasibility criterion used here was introduced in <a class="el" href="citelist.html#CITEREF_osqp-infeasibility">[1]</a>. The problem is dual infeasible if for <img class="formulaInl" alt="$\delta x = x-x_\textrm{prev} \neq 0$" src="form_94.png"/> the following condtions hold: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{align*} \|Q\delta x\|_\infty &amp;\leq \varepsilon_\textrm{dua, inf} \|\delta x\|_\infty, \\ q^T \delta x &amp; \leq - \varepsilon_\textrm{dua, inf} \|\delta x\|_\infty, \end{align*}" src="form_132.png"/>
+</p>
+<p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{align*} (A\delta x)_i = \begin{cases} \geq \varepsilon_{\rm dua,inf} \|\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_{\rm dua,inf} \|\delta x\|_\infty &amp; \textrm{if } b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_{\rm dua,inf},\varepsilon_{\rm dua,inf}] \|\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i}, b_{\textrm{min},i} \in {\rm I\!R}. \end{cases} \end{align*}" src="form_133.png"/>
+</p>
+<p> In case the problems is scaled the conditions turn into the following: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{align*} \|D^{-1}Q\delta x\|_\infty &amp;\leq c \cdot \varepsilon_\textrm{dua, inf} \|D\delta x\|_\infty, \\ q^T \delta x &amp; \leq - c \cdot \varepsilon_\textrm{dua, inf} \|D\delta x\|_\infty, \end{align*}" src="form_134.png"/>
+</p>
+<p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{align*} (E^{-1}A\delta x)_i = \begin{cases} \geq \varepsilon_{\rm dua,inf} \|D\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_{\rm dua,inf} \|D\delta x\|_\infty &amp; \textrm{if } b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_{\rm dua,inf},\varepsilon_{\rm dua,inf}] \|D\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i}, b_{\textrm{min},i} \in {\rm I\!R}. \end{cases} \end{align*}" src="form_131.png"/>
+</p>
+<p class="">If the above conditions hold, <img class="formulaInl" alt="$\delta x$" src="form_137.png"/>, or in the scaled case <img class="formulaInl" alt="$D\delta x$" src="form_138.png"/>, is the certificate of dual infeasibility.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Exitflag indicating whether the problem is dual infeasible. </dd></dl>
+
 </div>
 </div>
 <a id="a4df388b37067a843cbb2c6b244496d9c"></a>
@@ -263,6 +368,22 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Check whether the problem is primal infeasible. </p>
+<p class="">The infeasibility criterion used here was introduced in <a class="el" href="citelist.html#CITEREF_osqp-infeasibility">[1]</a>. The problem is primal infeasible if for <img class="formulaInl" alt="$\delta y = \Sigma\bigl(Ax-z)\bigr) \neq 0$" src="form_83.png"/>, with <img class="formulaInl" alt="$\Sigma = \textrm{diag}(\sigma)$" src="form_88.png"/> the following condtions hold: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{align*} \|A^T \delta y\|_\infty &amp; \leq \varepsilon_\textrm{prim,inf} \|\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- &amp; \leq -\varepsilon_\textrm{prim,inf} \|\delta y\|_\infty. \end{align*}" src="form_117.png"/>
+</p>
+<p> In case the problems is scaled the conditions turn into the following: </p><p class="formulaDsp">
+<img class="formulaDsp" alt="\begin{align*} \|D^{-1}A^T \delta y\|_\infty &amp; \leq \varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- &amp; \leq -\varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty. \end{align*}" src="form_118.png"/>
+</p>
+<p class="">If the above conditions hold, <img class="formulaInl" alt="$\delta y$" src="form_135.png"/>, or in the scaled case <img class="formulaInl" alt="$c^{-1} E\delta y$" src="form_136.png"/>, is the certificate of primal infeasibility.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Exitflag indicating whether the problem is primal infeasible. </dd></dl>
 
 </div>
 </div>
@@ -282,6 +403,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Check whether the primal and dual residual norms are smaller than the primal and dual tolerances. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Exitflag indicating whether the problem is solved. </dd></dl>
+
 </div>
 </div>
 <a id="a59f3d4d2ea459665833cc3d5e9265d5e"></a>
@@ -299,6 +429,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Helper function to store the (unscaled) solution in the solution struct. </p>
+<p class="">The primal/dual solution <img class="formulaInl" alt="$x,y$" src="form_139.png"/> is copied to work-&gt;solution-&gt;x, work-&gt;solution-&gt;y. In case the problem is scaled, the soltution is first unscaled, and the solution vectors <img class="formulaInl" alt="$Dx, c^{-1}Ey$" src="form_140.png"/> are stored in work-&gt;solution-&gt;x, work-&gt;solution-&gt;y.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

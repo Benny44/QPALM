@@ -1,0 +1,109 @@
+\hypertarget{structQPALMData}{}\section{Q\+P\+A\+L\+M\+Data Struct Reference}
+\label{structQPALMData}\index{QPALMData@{QPALMData}}
+
+
+Data structure.  
+
+
+
+
+{\ttfamily \#include $<$types.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+size\+\_\+t \mbox{\hyperlink{structQPALMData_a8a238460cbd7dd6571ac594b92a946cf}{n}}
+\begin{DoxyCompactList}\small\item\em number of variables n \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{structQPALMData_a1adf9ac40f4560e8d7d4b5b59efacb2e}{m}}
+\begin{DoxyCompactList}\small\item\em number of constraints m \end{DoxyCompactList}\item 
+cholmod\+\_\+sparse $\ast$ \mbox{\hyperlink{structQPALMData_a9b440bae03198195823e1e3f5154a611}{Q}}
+\begin{DoxyCompactList}\small\item\em sparse quadratic part of the cost Q (size n x n) \end{DoxyCompactList}\item 
+cholmod\+\_\+sparse $\ast$ \mbox{\hyperlink{structQPALMData_abba076ae970ced06cf4b9791b87fdeb4}{A}}
+\begin{DoxyCompactList}\small\item\em sparse linear constraints matrix A (size m x n) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMData_aa6775bd0b50250223ddd66115da68a12}{q}}
+\begin{DoxyCompactList}\small\item\em dense array for linear part of cost function (size n) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMData_a60dd17db336a4267f86b0b913a82bc83}{bmin}}
+\begin{DoxyCompactList}\small\item\em dense array for lower bounds (size m) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMData_ab3ab1a3453ce3efaeb49e6b13fe317ed}{bmax}}
+\begin{DoxyCompactList}\small\item\em dense array for upper bounds (size m) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Data structure. 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structQPALMData_abba076ae970ced06cf4b9791b87fdeb4}\label{structQPALMData_abba076ae970ced06cf4b9791b87fdeb4}} 
+\index{QPALMData@{QPALMData}!A@{A}}
+\index{A@{A}!QPALMData@{QPALMData}}
+\subsubsection{\texorpdfstring{A}{A}}
+{\footnotesize\ttfamily cholmod\+\_\+sparse$\ast$ Q\+P\+A\+L\+M\+Data\+::A}
+
+
+
+sparse linear constraints matrix A (size m x n) 
+
+\mbox{\Hypertarget{structQPALMData_ab3ab1a3453ce3efaeb49e6b13fe317ed}\label{structQPALMData_ab3ab1a3453ce3efaeb49e6b13fe317ed}} 
+\index{QPALMData@{QPALMData}!bmax@{bmax}}
+\index{bmax@{bmax}!QPALMData@{QPALMData}}
+\subsubsection{\texorpdfstring{bmax}{bmax}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Data\+::bmax}
+
+
+
+dense array for upper bounds (size m) 
+
+\mbox{\Hypertarget{structQPALMData_a60dd17db336a4267f86b0b913a82bc83}\label{structQPALMData_a60dd17db336a4267f86b0b913a82bc83}} 
+\index{QPALMData@{QPALMData}!bmin@{bmin}}
+\index{bmin@{bmin}!QPALMData@{QPALMData}}
+\subsubsection{\texorpdfstring{bmin}{bmin}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Data\+::bmin}
+
+
+
+dense array for lower bounds (size m) 
+
+\mbox{\Hypertarget{structQPALMData_a1adf9ac40f4560e8d7d4b5b59efacb2e}\label{structQPALMData_a1adf9ac40f4560e8d7d4b5b59efacb2e}} 
+\index{QPALMData@{QPALMData}!m@{m}}
+\index{m@{m}!QPALMData@{QPALMData}}
+\subsubsection{\texorpdfstring{m}{m}}
+{\footnotesize\ttfamily size\+\_\+t Q\+P\+A\+L\+M\+Data\+::m}
+
+
+
+number of constraints m 
+
+\mbox{\Hypertarget{structQPALMData_a8a238460cbd7dd6571ac594b92a946cf}\label{structQPALMData_a8a238460cbd7dd6571ac594b92a946cf}} 
+\index{QPALMData@{QPALMData}!n@{n}}
+\index{n@{n}!QPALMData@{QPALMData}}
+\subsubsection{\texorpdfstring{n}{n}}
+{\footnotesize\ttfamily size\+\_\+t Q\+P\+A\+L\+M\+Data\+::n}
+
+
+
+number of variables n 
+
+\mbox{\Hypertarget{structQPALMData_a9b440bae03198195823e1e3f5154a611}\label{structQPALMData_a9b440bae03198195823e1e3f5154a611}} 
+\index{QPALMData@{QPALMData}!Q@{Q}}
+\index{Q@{Q}!QPALMData@{QPALMData}}
+\subsubsection{\texorpdfstring{Q}{Q}}
+{\footnotesize\ttfamily cholmod\+\_\+sparse$\ast$ Q\+P\+A\+L\+M\+Data\+::Q}
+
+
+
+sparse quadratic part of the cost Q (size n x n) 
+
+\mbox{\Hypertarget{structQPALMData_aa6775bd0b50250223ddd66115da68a12}\label{structQPALMData_aa6775bd0b50250223ddd66115da68a12}} 
+\index{QPALMData@{QPALMData}!q@{q}}
+\index{q@{q}!QPALMData@{QPALMData}}
+\subsubsection{\texorpdfstring{q}{q}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Data\+::q}
+
+
+
+dense array for linear part of cost function (size n) 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/include/\mbox{\hyperlink{types_8h}{types.\+h}}\end{DoxyCompactItemize}

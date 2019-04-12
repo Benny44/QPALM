@@ -1,7 +1,6 @@
 #include "util.h"
 #include "lin_alg.h"
 #include "global_opts.h"
-#include <stdio.h>
 /**********************
 * Utility Functions  *
 **********************/

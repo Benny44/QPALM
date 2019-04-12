@@ -72,6 +72,9 @@ $(function() {
 <div class="title">validate.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Validation of the user provided settings and data.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 </div>
 <p><a href="validate_8h_source.html">Go to the source code of this file.</a></p>
@@ -85,7 +88,11 @@ Functions</h2></td></tr>
 <tr class="memdesc:aa3fa0338cebc63078430fed1211df147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validate problem settings.  <a href="#aa3fa0338cebc63078430fed1211df147">More...</a><br /></td></tr>
 <tr class="separator:aa3fa0338cebc63078430fed1211df147"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p class="">Validation of the user provided settings and data. </p>
+<dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
+<p>The assumptions on the settings can be found in the details of the <a class="el" href="structQPALMSettings.html" title="Settings struct.">QPALMSettings</a> tab in data structures. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a095cca2f68e07f3b0ebd35a2f4a12d9b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a095cca2f68e07f3b0ebd35a2f4a12d9b">&#9670;&nbsp;</a></span>validate_data()</h2>
 
@@ -103,9 +110,10 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Validate problem data. </p>
+<p class="">Checks whether the upper bounds are always greater than or equal to the lower bounds. Dimension checking of the data matrices and vectors is assumed to be done by the wrappers and interfaces.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">data</td><td><a class="el" href="structQPALMData.html" title="Data structure.">QPALMData</a> to be validated </td></tr>
+    <tr><td class="paramname">data</td><td>Data to be validated </td></tr>
   </table>
   </dd>
 </dl>
@@ -130,9 +138,10 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Validate problem settings. </p>
+<p class="">Checks the assumptions on all settings. The assumptions can be found in the details of the <a class="el" href="structQPALMSettings.html" title="Settings struct.">QPALMSettings</a> tab in data structures.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">settings</td><td><a class="el" href="structQPALMSettings.html" title="Settings struct.">QPALMSettings</a> to be validated </td></tr>
+    <tr><td class="paramname">settings</td><td>Settings to be validated </td></tr>
   </table>
   </dd>
 </dl>

@@ -1,0 +1,223 @@
+\hypertarget{termination_8c}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/src/termination.c File Reference}
+\label{termination_8c}\index{/home/ben/Documents/Projects/QPALM/src/termination.c@{/home/ben/Documents/Projects/QPALM/src/termination.c}}
+
+
+Routines to check the termination and infeasibility criteria.  
+
+
+{\ttfamily \#include \char`\"{}termination.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}lin\+\_\+alg.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}constants.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}util.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{termination_8c_a77bf8ca55a3eab6356c7624c500b02e4}{check\+\_\+termination}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Checks whether the problem is solved or infeasible and updates the status accordingly. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{termination_8c_a248d97a7a68e015a999e06d40017dabe}{calculate\+\_\+residuals\+\_\+and\+\_\+tolerances}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Calls the primal and dual residual and tolerance routines. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{termination_8c_afc13c2c286796ec381cdb5c83d9f764f}{calculate\+\_\+primal\+\_\+residual}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Calculates the infinity norm of the primal residual and stores it in work-\/$>$info-\/$>$pri\+\_\+res\+\_\+norm. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{termination_8c_a755facb8a07f865bd114215133d6c089}{calculate\+\_\+dual\+\_\+residual}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Calculates the infinity norm of the dual residual and the residual of the subproblem and stores them in work-\/$>$info-\/$>$dua\+\_\+res\+\_\+norm and work-\/$>$info-\/$>$dua2\+\_\+res\+\_\+norm respectively. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{termination_8c_ac638a8fe12bfee736c6832fa6140c92d}{calculate\+\_\+primal\+\_\+tolerance}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Calculates the primal tolerance and stores it in work-\/$>$eps\+\_\+pri. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{termination_8c_ad746ec6ec47a1240e5e910abfb01fee3}{calculate\+\_\+dual\+\_\+tolerances}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Calculates the dual tolerance for the problem and current subproblem and stores them in work-\/$>$eps\+\_\+dua and worl-\/$>$eps\+\_\+dua\+\_\+in respectively. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{termination_8c_a6dbbbcff619e13f4164f7248365cfec0}{is\+\_\+solved}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Check whether the primal and dual residual norms are smaller than the primal and dual tolerances. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{termination_8c_a4df388b37067a843cbb2c6b244496d9c}{is\+\_\+primal\+\_\+infeasible}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Check whether the problem is primal infeasible. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{termination_8c_a8cf01c07469436e7c562c9f3e162fd2b}{is\+\_\+dual\+\_\+infeasible}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Check whether the problem is dual infeasible. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{termination_8c_a59f3d4d2ea459665833cc3d5e9265d5e}{store\+\_\+solution}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{termination_8c_aa1d7800c435fff9310d684b4154e7fdb}{check\+\_\+subproblem\+\_\+termination}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Routines to check the termination and infeasibility criteria. 
+
+\begin{DoxyAuthor}{Author}
+Ben Hermans
+\end{DoxyAuthor}
+The routines in this file compute the primal and dual residuals, the primal and dual tolerances, check whether the problem is solved completely, unscale and store the solution if that is the case, check whether the intermediate problem is solved and whether one of the infeasibility criteria hold. In other words, all routines related to the termination of the optimization algorithm. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{termination_8c_a755facb8a07f865bd114215133d6c089}\label{termination_8c_a755facb8a07f865bd114215133d6c089}} 
+\index{termination.c@{termination.c}!calculate\_dual\_residual@{calculate\_dual\_residual}}
+\index{calculate\_dual\_residual@{calculate\_dual\_residual}!termination.c@{termination.c}}
+\subsubsection{\texorpdfstring{calculate\_dual\_residual()}{calculate\_dual\_residual()}}
+{\footnotesize\ttfamily void calculate\+\_\+dual\+\_\+residual (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Calculates the infinity norm of the dual residual and the residual of the subproblem and stores them in work-\/$>$info-\/$>$dua\+\_\+res\+\_\+norm and work-\/$>$info-\/$>$dua2\+\_\+res\+\_\+norm respectively. 
+
+The dual residual is given by $\nabla \varphi$. In the scaled case, the residual used for checking is unscaled and is $D^{-1}\nabla \varphi$ instead. If the work-\/$>$settings-\/$>$proximal is true, then the dual residual is $\nabla \varphi - \frac{1}{\gamma}(x-x_0)$. If work-\/$>$settings-\/$>$proximal is true and the problem is scaled, then the dual residual is $D^{-1}(\nabla \varphi - \frac{1}{\gamma}(x-x_0))$. The residual of the subproblem is $\nabla \varphi$ or $D^{-1}\nabla \varphi$ in the scaled case.
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{termination_8c_ad746ec6ec47a1240e5e910abfb01fee3}\label{termination_8c_ad746ec6ec47a1240e5e910abfb01fee3}} 
+\index{termination.c@{termination.c}!calculate\_dual\_tolerances@{calculate\_dual\_tolerances}}
+\index{calculate\_dual\_tolerances@{calculate\_dual\_tolerances}!termination.c@{termination.c}}
+\subsubsection{\texorpdfstring{calculate\_dual\_tolerances()}{calculate\_dual\_tolerances()}}
+{\footnotesize\ttfamily void calculate\+\_\+dual\+\_\+tolerances (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Calculates the dual tolerance for the problem and current subproblem and stores them in work-\/$>$eps\+\_\+dua and worl-\/$>$eps\+\_\+dua\+\_\+in respectively. 
+
+For the dual tolerance an absolute and relative contribution are added. It is given by $\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|Qx\|_\infty, \|q\|_\infty, \|A^T y\|_\infty)$. In the scaled case, the relative contributions are unscaled and the primal tolerance is given by $\epsilon_\textrm{abs} + \epsilon_\textrm{rel}c^{-1}\textrm{max}(\|D^{-1}Qx\|_\infty, \|D^{-1}q\|_\infty, \|D^{-1}A^T y\|_\infty)$. The tolerance for the subproblem is given by the same formulas, with $\epsilon_\textrm{abs,in}$ and $\epsilon_\textrm{rel,in}$ instead of $\epsilon_\textrm{abs}$ and $\epsilon_\textrm{rel}$.
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{termination_8c_afc13c2c286796ec381cdb5c83d9f764f}\label{termination_8c_afc13c2c286796ec381cdb5c83d9f764f}} 
+\index{termination.c@{termination.c}!calculate\_primal\_residual@{calculate\_primal\_residual}}
+\index{calculate\_primal\_residual@{calculate\_primal\_residual}!termination.c@{termination.c}}
+\subsubsection{\texorpdfstring{calculate\_primal\_residual()}{calculate\_primal\_residual()}}
+{\footnotesize\ttfamily void calculate\+\_\+primal\+\_\+residual (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Calculates the infinity norm of the primal residual and stores it in work-\/$>$info-\/$>$pri\+\_\+res\+\_\+norm. 
+
+The primal residual is given by $Ax-z$. In the scaled case, the residual used for checking is unscaled and is $E^{-1}(Ax-z)$ instead.
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{termination_8c_ac638a8fe12bfee736c6832fa6140c92d}\label{termination_8c_ac638a8fe12bfee736c6832fa6140c92d}} 
+\index{termination.c@{termination.c}!calculate\_primal\_tolerance@{calculate\_primal\_tolerance}}
+\index{calculate\_primal\_tolerance@{calculate\_primal\_tolerance}!termination.c@{termination.c}}
+\subsubsection{\texorpdfstring{calculate\_primal\_tolerance()}{calculate\_primal\_tolerance()}}
+{\footnotesize\ttfamily void calculate\+\_\+primal\+\_\+tolerance (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Calculates the primal tolerance and stores it in work-\/$>$eps\+\_\+pri. 
+
+For the primal tolerance an absolute and relative contribution are added. It is given by $\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|Ax\|_\infty, \|z\|_\infty)$. In the scaled case, the relative contributions are unscaled and the primal tolerance is given by $\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|E^{-1}Ax\|_\infty, \|E^{-1}z\|_\infty)$.
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+NB Implementation detail\+: store Einv$\ast$\+Ax and Einv$\ast$z in temp\+\_\+2m. The infinity norm of that vector is equal to the maximum of the infinity norms of Einv$\ast$\+Ax and Einv$\ast$z. \mbox{\Hypertarget{termination_8c_a248d97a7a68e015a999e06d40017dabe}\label{termination_8c_a248d97a7a68e015a999e06d40017dabe}} 
+\index{termination.c@{termination.c}!calculate\_residuals\_and\_tolerances@{calculate\_residuals\_and\_tolerances}}
+\index{calculate\_residuals\_and\_tolerances@{calculate\_residuals\_and\_tolerances}!termination.c@{termination.c}}
+\subsubsection{\texorpdfstring{calculate\_residuals\_and\_tolerances()}{calculate\_residuals\_and\_tolerances()}}
+{\footnotesize\ttfamily void calculate\+\_\+residuals\+\_\+and\+\_\+tolerances (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Calls the primal and dual residual and tolerance routines. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{termination_8c_aa1d7800c435fff9310d684b4154e7fdb}\label{termination_8c_aa1d7800c435fff9310d684b4154e7fdb}} 
+\index{termination.c@{termination.c}!check\_subproblem\_termination@{check\_subproblem\_termination}}
+\index{check\_subproblem\_termination@{check\_subproblem\_termination}!termination.c@{termination.c}}
+\subsubsection{\texorpdfstring{check\_subproblem\_termination()}{check\_subproblem\_termination()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} check\+\_\+subproblem\+\_\+termination (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{termination_8c_a77bf8ca55a3eab6356c7624c500b02e4}\label{termination_8c_a77bf8ca55a3eab6356c7624c500b02e4}} 
+\index{termination.c@{termination.c}!check\_termination@{check\_termination}}
+\index{check\_termination@{check\_termination}!termination.c@{termination.c}}
+\subsubsection{\texorpdfstring{check\_termination()}{check\_termination()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} check\+\_\+termination (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Checks whether the problem is solved or infeasible and updates the status accordingly. 
+
+The calculation of residuals and tolerances and infeasibility criteria is delegated to other functions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exitflag indicating the problem is solved or infeasible. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{termination_8c_a8cf01c07469436e7c562c9f3e162fd2b}\label{termination_8c_a8cf01c07469436e7c562c9f3e162fd2b}} 
+\index{termination.c@{termination.c}!is\_dual\_infeasible@{is\_dual\_infeasible}}
+\index{is\_dual\_infeasible@{is\_dual\_infeasible}!termination.c@{termination.c}}
+\subsubsection{\texorpdfstring{is\_dual\_infeasible()}{is\_dual\_infeasible()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} is\+\_\+dual\+\_\+infeasible (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Check whether the problem is dual infeasible. 
+
+The infeasibility criterion used here was introduced in \cite{osqp-infeasibility}. The problem is dual infeasible if for $\delta x = x-x_\textrm{prev} \neq 0$ the following condtions hold\+: \begin{eqnarray*} \|A^T \delta y\|_\infty & \leq \varepsilon_\textrm{prim,inf} \|\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & \leq -\varepsilon_\textrm{prim,inf} \|\delta y\|_\infty. \end{eqnarray*} In case the problems is scaled the conditions turn into the following\+: \begin{align*} \|D^{-1}Q\delta x\|_\infty &\leq c \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty, \\ q^T \delta x & \leq - c \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty, \end{align*}
+
+\begin{align*} (E^{-1}\bar{A}\delta \bar{x})_i = \begin{cases} \geq \varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \textrm{if } \bar{u}_i = +\infty \\ \leq -\varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \textrm{if } \bar{\ell}_i = -\infty \\ \in [-\varepsilon_{\rm d},\varepsilon_{\rm d}] \|D\delta \bar{x}\|_\infty & \bar{u}_i, \bar{\ell}_i \in {\rm I\!R} \textrm{ otherwise}. \end{cases} \end{align*}
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exitflag indicating whether the problem is dual infeasible. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{termination_8c_a4df388b37067a843cbb2c6b244496d9c}\label{termination_8c_a4df388b37067a843cbb2c6b244496d9c}} 
+\index{termination.c@{termination.c}!is\_primal\_infeasible@{is\_primal\_infeasible}}
+\index{is\_primal\_infeasible@{is\_primal\_infeasible}!termination.c@{termination.c}}
+\subsubsection{\texorpdfstring{is\_primal\_infeasible()}{is\_primal\_infeasible()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} is\+\_\+primal\+\_\+infeasible (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Check whether the problem is primal infeasible. 
+
+The infeasibility criterion used here was introduced in \cite{osqp-infeasibility}. The problem is primal infeasible if for $\delta y = \Sigma\bigl(Ax-z)\bigr) \neq 0$, with $\Sigma = \textrm{diag}(\sigma)$ the following condtions hold\+: \begin{align*} \|A^T \delta y\|_\infty & \leq \varepsilon_\textrm{prim,inf} \|\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & \leq -\varepsilon_\textrm{prim,inf} \|\delta y\|_\infty. \end{align*} In case the problems is scaled the conditions turn into the following\+: \begin{align*} \|D^{-1}A^T \delta y\|_\infty & \leq \varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & \leq -\varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty. \end{align*}
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exitflag indicating whether the problem is primal infeasible. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{termination_8c_a6dbbbcff619e13f4164f7248365cfec0}\label{termination_8c_a6dbbbcff619e13f4164f7248365cfec0}} 
+\index{termination.c@{termination.c}!is\_solved@{is\_solved}}
+\index{is\_solved@{is\_solved}!termination.c@{termination.c}}
+\subsubsection{\texorpdfstring{is\_solved()}{is\_solved()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} is\+\_\+solved (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Check whether the primal and dual residual norms are smaller than the primal and dual tolerances. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exitflag indicating whether the problem is solved. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{termination_8c_a59f3d4d2ea459665833cc3d5e9265d5e}\label{termination_8c_a59f3d4d2ea459665833cc3d5e9265d5e}} 
+\index{termination.c@{termination.c}!store\_solution@{store\_solution}}
+\index{store\_solution@{store\_solution}!termination.c@{termination.c}}
+\subsubsection{\texorpdfstring{store\_solution()}{store\_solution()}}
+{\footnotesize\ttfamily void store\+\_\+solution (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+

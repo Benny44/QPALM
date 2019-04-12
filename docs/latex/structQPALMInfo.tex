@@ -1,0 +1,109 @@
+\hypertarget{structQPALMInfo}{}\section{Q\+P\+A\+L\+M\+Info Struct Reference}
+\label{structQPALMInfo}\index{QPALMInfo@{QPALMInfo}}
+
+
+Solver return information.  
+
+
+
+
+{\ttfamily \#include $<$types.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{structQPALMInfo_a37deb2f191ee74eb42877aff5d31e44c}{iter}}
+\begin{DoxyCompactList}\small\item\em number of iterations taken \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{structQPALMInfo_a10f2f0fd44923bdcc22951f9de27d391}{iter\+\_\+out}}
+\begin{DoxyCompactList}\small\item\em number of outer iterations (i.\+e. dual updates) \end{DoxyCompactList}\item 
+char \mbox{\hyperlink{structQPALMInfo_a50d560141016d6b0a0198feb84c4a835}{status}} \mbox{[}32\mbox{]}
+\begin{DoxyCompactList}\small\item\em status string, e.\+g. \textquotesingle{}solved\textquotesingle{} \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{structQPALMInfo_a8e754dd1c46f6b40ea54fb7422764522}{status\+\_\+val}}
+\begin{DoxyCompactList}\small\item\em status as c\+\_\+int, defined in \mbox{\hyperlink{constants_8h}{constants.\+h}} \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{structQPALMInfo_a21e0db7fa16ec32656953c375dc01e3c}{pri\+\_\+res\+\_\+norm}}
+\begin{DoxyCompactList}\small\item\em norm of primal residual \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{structQPALMInfo_ad9e5596b60be7e567f1d936a80046f10}{dua\+\_\+res\+\_\+norm}}
+\begin{DoxyCompactList}\small\item\em norm of dual residual \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{structQPALMInfo_a646b39a446df4d60f9d7bd8a8d3adf4b}{dua2\+\_\+res\+\_\+norm}}
+\begin{DoxyCompactList}\small\item\em norm of intermediate dual residual (minus proximal term) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Solver return information. 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structQPALMInfo_a646b39a446df4d60f9d7bd8a8d3adf4b}\label{structQPALMInfo_a646b39a446df4d60f9d7bd8a8d3adf4b}} 
+\index{QPALMInfo@{QPALMInfo}!dua2\_res\_norm@{dua2\_res\_norm}}
+\index{dua2\_res\_norm@{dua2\_res\_norm}!QPALMInfo@{QPALMInfo}}
+\subsubsection{\texorpdfstring{dua2\_res\_norm}{dua2\_res\_norm}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} Q\+P\+A\+L\+M\+Info\+::dua2\+\_\+res\+\_\+norm}
+
+
+
+norm of intermediate dual residual (minus proximal term) 
+
+\mbox{\Hypertarget{structQPALMInfo_ad9e5596b60be7e567f1d936a80046f10}\label{structQPALMInfo_ad9e5596b60be7e567f1d936a80046f10}} 
+\index{QPALMInfo@{QPALMInfo}!dua\_res\_norm@{dua\_res\_norm}}
+\index{dua\_res\_norm@{dua\_res\_norm}!QPALMInfo@{QPALMInfo}}
+\subsubsection{\texorpdfstring{dua\_res\_norm}{dua\_res\_norm}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} Q\+P\+A\+L\+M\+Info\+::dua\+\_\+res\+\_\+norm}
+
+
+
+norm of dual residual 
+
+\mbox{\Hypertarget{structQPALMInfo_a37deb2f191ee74eb42877aff5d31e44c}\label{structQPALMInfo_a37deb2f191ee74eb42877aff5d31e44c}} 
+\index{QPALMInfo@{QPALMInfo}!iter@{iter}}
+\index{iter@{iter}!QPALMInfo@{QPALMInfo}}
+\subsubsection{\texorpdfstring{iter}{iter}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} Q\+P\+A\+L\+M\+Info\+::iter}
+
+
+
+number of iterations taken 
+
+\mbox{\Hypertarget{structQPALMInfo_a10f2f0fd44923bdcc22951f9de27d391}\label{structQPALMInfo_a10f2f0fd44923bdcc22951f9de27d391}} 
+\index{QPALMInfo@{QPALMInfo}!iter\_out@{iter\_out}}
+\index{iter\_out@{iter\_out}!QPALMInfo@{QPALMInfo}}
+\subsubsection{\texorpdfstring{iter\_out}{iter\_out}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} Q\+P\+A\+L\+M\+Info\+::iter\+\_\+out}
+
+
+
+number of outer iterations (i.\+e. dual updates) 
+
+\mbox{\Hypertarget{structQPALMInfo_a21e0db7fa16ec32656953c375dc01e3c}\label{structQPALMInfo_a21e0db7fa16ec32656953c375dc01e3c}} 
+\index{QPALMInfo@{QPALMInfo}!pri\_res\_norm@{pri\_res\_norm}}
+\index{pri\_res\_norm@{pri\_res\_norm}!QPALMInfo@{QPALMInfo}}
+\subsubsection{\texorpdfstring{pri\_res\_norm}{pri\_res\_norm}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} Q\+P\+A\+L\+M\+Info\+::pri\+\_\+res\+\_\+norm}
+
+
+
+norm of primal residual 
+
+\mbox{\Hypertarget{structQPALMInfo_a50d560141016d6b0a0198feb84c4a835}\label{structQPALMInfo_a50d560141016d6b0a0198feb84c4a835}} 
+\index{QPALMInfo@{QPALMInfo}!status@{status}}
+\index{status@{status}!QPALMInfo@{QPALMInfo}}
+\subsubsection{\texorpdfstring{status}{status}}
+{\footnotesize\ttfamily char Q\+P\+A\+L\+M\+Info\+::status\mbox{[}32\mbox{]}}
+
+
+
+status string, e.\+g. \textquotesingle{}solved\textquotesingle{} 
+
+\mbox{\Hypertarget{structQPALMInfo_a8e754dd1c46f6b40ea54fb7422764522}\label{structQPALMInfo_a8e754dd1c46f6b40ea54fb7422764522}} 
+\index{QPALMInfo@{QPALMInfo}!status\_val@{status\_val}}
+\index{status\_val@{status\_val}!QPALMInfo@{QPALMInfo}}
+\subsubsection{\texorpdfstring{status\_val}{status\_val}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} Q\+P\+A\+L\+M\+Info\+::status\+\_\+val}
+
+
+
+status as c\+\_\+int, defined in \mbox{\hyperlink{constants_8h}{constants.\+h}} 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/include/\mbox{\hyperlink{types_8h}{types.\+h}}\end{DoxyCompactItemize}

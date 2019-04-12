@@ -1,0 +1,68 @@
+\hypertarget{validate_8c}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/src/validate.c File Reference}
+\label{validate_8c}\index{/home/ben/Documents/Projects/QPALM/src/validate.c@{/home/ben/Documents/Projects/QPALM/src/validate.c}}
+
+
+Validation of the user provided settings and data.  
+
+
+{\ttfamily \#include \char`\"{}validate.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}lin\+\_\+alg.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}constants.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{validate_8c_a095cca2f68e07f3b0ebd35a2f4a12d9b}{validate\+\_\+data}} (const \mbox{\hyperlink{structQPALMData}{Q\+P\+A\+L\+M\+Data}} $\ast$data)
+\begin{DoxyCompactList}\small\item\em Validate problem data. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} \mbox{\hyperlink{validate_8c_aa3fa0338cebc63078430fed1211df147}{validate\+\_\+settings}} (const \mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} $\ast$settings)
+\begin{DoxyCompactList}\small\item\em Validate problem settings. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Validation of the user provided settings and data. 
+
+\begin{DoxyAuthor}{Author}
+Ben Hermans
+\end{DoxyAuthor}
+The assumptions on the settings can be found in the details of the \mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} tab in data structures. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{validate_8c_a095cca2f68e07f3b0ebd35a2f4a12d9b}\label{validate_8c_a095cca2f68e07f3b0ebd35a2f4a12d9b}} 
+\index{validate.c@{validate.c}!validate\_data@{validate\_data}}
+\index{validate\_data@{validate\_data}!validate.c@{validate.c}}
+\subsubsection{\texorpdfstring{validate\_data()}{validate\_data()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} validate\+\_\+data (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structQPALMData}{Q\+P\+A\+L\+M\+Data}} $\ast$}]{data }\end{DoxyParamCaption})}
+
+
+
+Validate problem data. 
+
+Checks whether the upper bounds are always greater than or equal to the lower bounds. Dimension checking of the data matrices and vectors is assumed to be done by the wrappers and interfaces.
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & Data to be validated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exitflag to check 
+\end{DoxyReturn}
+\mbox{\Hypertarget{validate_8c_aa3fa0338cebc63078430fed1211df147}\label{validate_8c_aa3fa0338cebc63078430fed1211df147}} 
+\index{validate.c@{validate.c}!validate\_settings@{validate\_settings}}
+\index{validate\_settings@{validate\_settings}!validate.c@{validate.c}}
+\subsubsection{\texorpdfstring{validate\_settings()}{validate\_settings()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} validate\+\_\+settings (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} $\ast$}]{settings }\end{DoxyParamCaption})}
+
+
+
+Validate problem settings. 
+
+Checks the assumptions on all settings. The assumptions can be found in the details of the \mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} tab in data structures.
+
+
+\begin{DoxyParams}{Parameters}
+{\em settings} & Settings to be validated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Exitflag to check 
+\end{DoxyReturn}

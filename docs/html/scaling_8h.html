@@ -72,6 +72,9 @@ $(function() {
 <div class="title">scaling.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Problem data scaling during setup.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="lin__alg_8h_source.html">lin_alg.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="constants_8h_source.html">constants.h</a>&quot;</code><br />
@@ -84,7 +87,11 @@ Functions</h2></td></tr>
 <tr class="memdesc:a3735b6c9c3aeeddfb3bb0982ae5f70ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale problem matrices.  <a href="#a3735b6c9c3aeeddfb3bb0982ae5f70ba">More...</a><br /></td></tr>
 <tr class="separator:a3735b6c9c3aeeddfb3bb0982ae5f70ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p class="">Problem data scaling during setup. </p>
+<dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
+<p>This file includes the routine that is called during setup to scale the problem data, and initial guesses if the problem is warm-started. Scaling the problem is useful to prevent large changes in the active set and to guard against ill-conditioning in the objective function. </p><dl class="section note"><dt>Note</dt><dd>The function in this file makes use of the cholmod scale routines. </dd></dl>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a id="a3735b6c9c3aeeddfb3bb0982ae5f70ba"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3735b6c9c3aeeddfb3bb0982ae5f70ba">&#9670;&nbsp;</a></span>scale_data()</h2>
 
@@ -102,13 +109,14 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Scale problem matrices. </p>
+<p class="">Ruiz scaling <a class="el" href="citelist.html#CITEREF_ruiz2001scaling">[3]</a> is applied to the constraint matrix A. This means that the rows and columns of A are scaled elementwise by the square root of their infinity norm, and this for a number of work-&gt;settings-&gt;scaling iterations. The resulting scaling can be written as <img class="formulaInl" alt="$\bar{A}\leftarrow EAD$" src="form_46.png"/>, where <img class="formulaInl" alt="$E$" src="form_47.png"/> and <img class="formulaInl" alt="$D$" src="form_48.png"/> are the row and column scaling diagonal matrices respectively. The upper and lower bounds are also scaled with <img class="formulaInl" alt="$E$" src="form_47.png"/>, thus <img class="formulaInl" alt="$\bar{b}_\textrm{min}, \bar{b}_\textrm{max} \leftarrow E b_\textrm{min}, E b_\textrm{max}$" src="form_49.png"/>. The primal variables are transformed using <img class="formulaInl" alt="$D^{-1}$" src="form_50.png"/>, resulting in <img class="formulaInl" alt="$\bar{x}\leftarrow D^{-1}x$" src="form_51.png"/>. Therefore, also the cost matrix Q and vector q have to be scaled with <img class="formulaInl" alt="$D$" src="form_48.png"/>, <img class="formulaInl" alt="$\bar{Q}\leftarrow DQD$" src="form_57.png"/> and <img class="formulaInl" alt="$\bar{q}\leftarrow Dq$" src="form_52.png"/>. Finally the objective function is scaled with a scalar <img class="formulaInl" alt="$c$" src="form_53.png"/>, thus <img class="formulaInl" alt="$\bar{Q}, \bar{q} \leftarrow c\bar{Q}, c\bar{q} $" src="form_54.png"/>, where <img class="formulaInl" alt="$c=1/\textrm{max}(1, \nabla f(x_0))$" src="form_58.png"/>. The dual variables in the scaled problem become <img class="formulaInl" alt="$\bar{y} \leftarrow c E^{-1} y$" src="form_56.png"/>. The diagonals of <img class="formulaInl" alt="$D$" src="form_48.png"/> and <img class="formulaInl" alt="$E$" src="form_47.png"/> are stored and used in the remainder of the problem.</p>
+<dl class="section note"><dt>Note</dt><dd>This function makes use of the cholmod scale routines.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>exitflag </dd></dl>
 
 </div>
 </div>

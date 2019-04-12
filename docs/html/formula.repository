@@ -44,3 +44,98 @@
 \form#43:$b = a(L)$
 \form#44:$L$
 \form#45:$a(L)^T\cdot b(L)$
+\form#46:$\bar{A}\leftarrow EAD$
+\form#47:$E$
+\form#48:$D$
+\form#49:$\bar{b}_\textrm{min}, \bar{b}_\textrm{max} \leftarrow E b_\textrm{min}, E b_\textrm{max}$
+\form#50:$D^{-1}$
+\form#51:$\bar{x}\leftarrow D^{-1}x$
+\form#52:$\bar{q}\leftarrow Dq$
+\form#53:$c$
+\form#54:$\bar{Q}, \bar{q} \leftarrow c\bar{Q}, c\bar{q} $
+\form#55:$c=1/\textrm{max}(1, \nabla f(x_0)$
+\form#56:$\bar{y} \leftarrow c E^{-1} y$
+\form#57:$\bar{Q}\leftarrow DQD$
+\form#58:$c=1/\textrm{max}(1, \nabla f(x_0))$
+\form#59:$>0$
+\form#60:$>=0$
+\form#61:$0<\rho<1$
+\form#62:$<=1$
+\form#63:$>1$
+\form#64:$=0$
+\form#65:$=1$
+\form#66:$>=1$
+\form#67:$>=\gamma$
+\form#68:$\in \{0,1\}$
+\form#69:$Ax-z$
+\form#70:$E^{-1}(Ax-z)$
+\form#71:$\nabla \varphi$
+\form#72:$D^{-1}\nabla \varphi$
+\form#73:$\nabla \varphi - \frac{1}{\gamma}(x-x_0)$
+\form#74:$D^{-1}(\nabla \varphi - \frac{1}{\gamma}(x-x_0))$
+\form#75:$\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|Ax\|_\infty, \|z\|_\infty)$
+\form#76:$\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|E^{-1}Ax\|_\infty, \|E^{-1}z\|_\infty)$
+\form#77:$\epsilon_\textrm{abs,in}$
+\form#78:$\epsilon_\textrm{rel,in}$
+\form#79:$\epsilon_\textrm{abs}$
+\form#80:$\epsilon_\textrm{rel}$
+\form#81:$\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|Qx\|_\infty, \|q\|_\infty, \|A^T y\|_\infty)$
+\form#82:$\epsilon_\textrm{abs} + \epsilon_\textrm{rel}c^{-1}\textrm{max}(\|D^{-1}Qx\|_\infty, \|D^{-1}q\|_\infty, \|D^{-1}A^T y\|_\infty)$
+\form#83:$\delta y = \Sigma\bigl(Ax-z)\bigr) \neq 0$
+\form#84:$\begin{align*} \|D^{-1} \trans{\bar{A}} \delta \bar{y}\|_\infty & {}\leq \varepsilon_{\rm p} \|E\delta \bar{y}\|_\infty, \\ \trans{\bar{u}} [\delta \bar{y}]_+ + \trans{\bar{\ell}} [\delta \bar{y}]_- & {}\leq -\varepsilon_{\rm p} \|E\delta \bar{y}\|_\infty, \end{align*}$
+\form#85:\begin{align*} \|D^{-1} \trans{\bar{A}} \delta \bar{y}\|_\infty & {}\leq \varepsilon_{\rm p} \|E\delta \bar{y}\|_\infty, \\ \trans{\bar{u}} [\delta \bar{y}]_+ + \trans{\bar{\ell}} [\delta \bar{y}]_- & {}\leq -\varepsilon_{\rm p} \|E\delta \bar{y}\|_\infty, \end{align*}
+\form#86:$\Sigma = \textrm{diag}(\sigma}$
+\form#87:\begin{align*} \|D^{-1} A^T \delta y\|_\infty & {}\leq \varepsilon_\textrm{prim_inf} \|E\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & {}\leq -\varepsilon_\textrm{prim_inf} \|E\delta y\|_\infty, \end{align*}
+\form#88:$\Sigma = \textrm{diag}(\sigma)$
+\form#89:\begin{align*} \|D^{-1} A^T \delta y\|_\infty & {}\leq \varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & {}\leq -\varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty. \end{align*}
+\form#90:\begin{align*} \|D^{-1} A^T \delta y\|_\infty & \leq \varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & \leq -\varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty. \end{align*}
+\form#91:\begin{align} \|D^{-1} A^T \delta y\|_\infty & \leq \varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & \leq -\varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty. \end{align}
+\form#92:\begin{eqnarray*} \|D^{-1} A^T \delta y\|_\infty & \leq \varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & \leq -\varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty. \end{eqnarray*}
+\form#93:\begin{eqnarray*} \|A^T \delta y\|_\infty & \leq \varepsilon_\textrm{prim,inf} \|\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & \leq -\varepsilon_\textrm{prim,inf} \|\delta y\|_\infty. \end{eqnarray*}
+\form#94:$\delta x = x-x_\textrm{prev} \neq 0$
+\form#95:\begin{eqnarray*} \|D^{-1}\bar{Q}\delta \bar{x}\|_\infty &\leq c_f \varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty, \\ \trans{\bar{q}} \delta \bar{x} & \leq - c_f \varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty, \end{eqnarray*}
+\form#96:\begin{eqnarray*} (E^{-1}A\delta x)_i\; \begin{ifcases} \geq \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty & \b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_\textrm{dua, in} \|D\delta x\|_\infty & \b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_\textrm{dua, in},\varepsilon_\textrm{dua, in}] \|D\delta x\|_\infty% & \b_{\textrm{max},i}, \b_{\textrm{min},i} \in \R \otherwise. \end{ifcases} \end{eqnarray*}
+\form#97:\begin{eqnarray*} \|D^{-1}Q\delta x\|_\infty &\leq c \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty, \\ q^T \delta x & \leq - c \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty, \end{eqnarray*}
+\form#98:\begin{eqnarray*} (E^{-1}A\delta x)_i\; @f{ifcases}{ \geq \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty & \b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_\textrm{dua, in} \|D\delta x\|_\infty & \b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_\textrm{dua, in},\varepsilon_\textrm{dua, in}] \|D\delta x\|_\infty% & \b_{\textrm{max},i}, \b_{\textrm{min},i} \in \R \otherwise. \end{eqnarray*}
+\form#99:$ (E^{-1}A\delta x)_i = $
+\form#100:\begin{ifcases} \geq \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty & \b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_\textrm{dua, in} \|D\delta x\|_\infty & \b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_\textrm{dua, in},\varepsilon_\textrm{dua, in}] \|D\delta x\|_\infty% & \b_{\textrm{max},i}, \b_{\textrm{min},i} \in \R \otherwise. \end{ifcases}
+\form#101:\begin{cases} \geq \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty & \b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_\textrm{dua, in} \|D\delta x\|_\infty & \b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_\textrm{dua, in},\varepsilon_\textrm{dua, in}] \|D\delta x\|_\infty% & \b_{\textrm{max},i}, \b_{\textrm{min},i} \in \R \otherwise. \end{cases}
+\form#102:$ (E^{-1}A\delta x)_i = @f{cases}{ \geq \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty \b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_\textrm{dua, in} \|D\delta x\|_\infty \b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_\textrm{dua, in},\varepsilon_\textrm{dua, in}] \|D\delta x\|_\infty \b_{\textrm{max},i}, \b_{\textrm{min},i} \in \R \otherwise. @f} $
+\form#103:$ X(m,n)= $
+\form#104:\begin{eqnarray*} { x(n),\\ x(n-1)\\ x(n-1) \end{eqnarray*}
+\form#105:$ X(m,n)= \left\{$
+\form#106:\begin{eqnarray*} x(n), & \text{for } 0\leq n\leq 1\\ x(n-1), & \text{for } 0\leq n\leq 1\\ x(n-1), & \text{for } 0\leq n\leq 1 \end{eqnarray*}
+\form#107:$\right\} = xy $
+\form#108:$ X(m,n)= \left\{\begin{array}{ x(n), & \text{for } 0\leq n\leq 1\\ x(n-1), & \text{for } 0\leq n\leq 1\\ x(n-1), & \text{for } 0\leq n\leq 1 \end{array}\right\} = xy $
+\form#109:$ X(m,n)= \left\{\begin{array} x(n), & \text{for } 0\leq n\leq 1\\ x(n-1), & \text{for } 0\leq n\leq 1\\ x(n-1), & \text{for } 0\leq n\leq 1 \end{array}\right\} = xy $
+\form#110:$ X(m,n)= \left\{\begin{array}{lr} x(n), & \text{for } 0\leq n\leq 1\\ x(n-1), & \text{for } 0\leq n\leq 1\\ x(n-1), & \text{for } 0\leq n\leq 1 \end{array}\right\} = xy $
+\form#111:$ (E^{-1}A\delta x)_i = \begin{cases}{ \geq \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_\textrm{dua, in} \|D\delta x\|_\infty b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_\textrm{dua, in},\varepsilon_\textrm{dua, in}] \|D\delta x\|_\infty b_{\textrm{max},i}, b_{\textrm{min},i} \in \R \otherwise. \end{cases} $
+\form#112:$ (E^{-1}A\delta x)_i = \begin{cases} \geq \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_\textrm{dua, in} \|D\delta x\|_\infty b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_\textrm{dua, in},\varepsilon_\textrm{dua, in}] \|D\delta x\|_\infty b_{\textrm{max},i}, b_{\textrm{min},i} \in \R \otherwise. \end{cases} $
+\form#113:$ (E^{-1}A\delta x)_i = \begin{cases} \geq \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_\textrm{dua, in} \|D\delta x\|_\infty b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_\textrm{dua, in},\varepsilon_\textrm{dua, in}] \|D\delta x\|_\infty b_{\textrm{max},i}, b_{\textrm{min},i} \in \|R \textrm{otherwise}. \end{cases} $
+\form#114:$ (E^{-1}A\delta x)_i = \begin{cases} \geq \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_\textrm{dua, in} \|D\delta x\|_\infty b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_\textrm{dua, in},\varepsilon_\textrm{dua, in}] \|D\delta x\|_\infty b_{\textrm{max},i}, b_{\textrm{min},i} \in {\rm I\!R} \textrm{otherwise}. \end{cases} $
+\form#115:\begin{align*} \|D^{-1}Q\delta x\|_\infty &\leq c \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty, \\ q^T \delta x & \leq - c \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty, \end{align*}
+\form#116:$ (E^{-1}A\delta x)_i = \begin{cases} \geq \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_\textrm{dua, in} \|D\delta x\|_\infty b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_\textrm{dua, in},\varepsilon_\textrm{dua, in}] \|D\delta x\|_\infty b_{\textrm{max},i}, b_{\textrm{min},i} \in {\rm I\!R} \textrm{ otherwise}. \end{cases} $
+\form#117:\begin{align*} \|A^T \delta y\|_\infty & \leq \varepsilon_\textrm{prim,inf} \|\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & \leq -\varepsilon_\textrm{prim,inf} \|\delta y\|_\infty. \end{align*}
+\form#118:\begin{align*} \|D^{-1}A^T \delta y\|_\infty & \leq \varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & \leq -\varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty. \end{align*}
+\form#119:\begin{align*} \| A^T \delta y\|_\infty & \leq \varepsilon_\textrm{prim,inf} \|\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- & \leq -\varepsilon_\textrm{prim,inf} \|\delta y\|_\infty. \end{align*}
+\form#120:\begin{align*} (E^{-1}\bar{A}\delta \bar{x})_i\; \begin{ifcases} \geq \varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{u}_i = +\infty \\ \leq -\varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{\ell}_i = -\infty \\ \in [-\varepsilon_{\rm d},\varepsilon_{\rm d}] \|D\delta \bar{x}\|_\infty% & \bar{u}_i, \bar{\ell}_i \in R otherwise. \end{ifcases} \end{align*}
+\form#121:\begin{align*} (E^{-1}\bar{A}\delta \bar{x})_i = \begin{ifcases} \geq \varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{u}_i = +\infty \\ \leq -\varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{\ell}_i = -\infty \\ \in [-\varepsilon_{\rm d},\varepsilon_{\rm d}] \|D\delta \bar{x}\|_\infty% & \bar{u}_i, \bar{\ell}_i \in R otherwise. \end{ifcases} \end{align*}
+\form#122:\begin{align*} (E^{-1}\bar{A}\delta \bar{x})_i = \begin{cases} \geq \varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{u}_i = +\infty \\ \leq -\varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{\ell}_i = -\infty \\ \in [-\varepsilon_{\rm d},\varepsilon_{\rm d}] \|D\delta \bar{x}\|_\infty% & \bar{u}_i, \bar{\ell}_i \in R otherwise. \end{cases} \end{align*}
+\form#123:$ (E^{-1}\bar{A}\delta \bar{x})_i = \begin{cases} \geq \varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{u}_i = +\infty \\ \leq -\varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{\ell}_i = -\infty \\ \in [-\varepsilon_{\rm d},\varepsilon_{\rm d}] \|D\delta \bar{x}\|_\infty & \bar{u}_i, \bar{\ell}_i \in R otherwise. \end{cases} $
+\form#124:$$ (E^{-1}\bar{A}\delta \bar{x})_i = \begin{cases} \geq \varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{u}_i = +\infty \\ \leq -\varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{\ell}_i = -\infty \\ \in [-\varepsilon_{\rm d},\varepsilon_{\rm d}] \|D\delta \bar{x}\|_\infty & \bar{u}_i, \bar{\ell}_i \in R otherwise. \end{cases} $
+\form#125:\begin{align*} (E^{-1}\bar{A}\delta \bar{x})_i = \begin{cases} \geq \varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{u}_i = +\infty \\ \leq -\varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \bar{\ell}_i = -\infty \\ \in [-\varepsilon_{\rm d},\varepsilon_{\rm d}] \|D\delta \bar{x}\|_\infty & \bar{u}_i, \bar{\ell}_i \in R otherwise. \end{cases} \end{align*}
+\form#126:\begin{align*} (E^{-1}\bar{A}\delta \bar{x})_i = \begin{cases} \geq \varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \textrm{if } \bar{u}_i = +\infty \\ \leq -\varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \textrm{if } \bar{\ell}_i = -\infty \\ \in [-\varepsilon_{\rm d},\varepsilon_{\rm d}] \|D\delta \bar{x}\|_\infty & \bar{u}_i, \bar{\ell}_i \in {\rm I\!R} \textrm{ otherwise}. \end{cases} \end{align*}
+\form#127:\begin{align*} \|D^{-1}Q\delta x\|_\infty &\leq c \varepsilon_\textrm{dua, inf} \|D\delta x\|_\infty, \\ q^T \delta x & \leq - c \varepsilon_\textrm{dua, in} \|D\delta x\|_\infty, \end{align*}
+\form#128:\begin{align*} (E^{-1}\bar{A}\delta \bar{x})_i = \begin{cases} \geq \varepsilon_{\rm dua,inf} \|D\delta \bar{x}\|_\infty & \textrm{if } \bar{u}_i = +\infty \\ \leq -\varepsilon_{\rm d} \|D\delta \bar{x}\|_\infty & \textrm{if } \bar{\ell}_i = -\infty \\ \in [-\varepsilon_{\rm d},\varepsilon_{\rm d}] \|D\delta \bar{x}\|_\infty & \bar{u}_i, \bar{\ell}_i \in {\rm I\!R} \textrm{ otherwise}. \end{cases} \end{align*}
+\form#129:\begin{align*} \|D^{-1}Q\delta x\|_\infty &\leq c \varepsilon_\textrm{dua, inf} \|D\delta x\|_\infty, \\ q^T \delta x & \leq - c \varepsilon_\textrm{dua, inf} \|D\delta x\|_\infty, \end{align*}
+\form#130:\begin{align*} (E^{-1}A\delta x)_i = \begin{cases} \geq \varepsilon_{\rm dua,inf} \|D\delta x\|_\infty & \textrm{if } b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_{\rm dua,inf} \|D\delta x\|_\infty & \textrm{if } b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_{\rm dua,inf},\varepsilon_{\rm dua,inf}] \|D\delta x\|_\infty & b_{\textrm{max},i}, b_{\textrm{min},i} \in {\rm I\!R} \textrm{ otherwise}. \end{cases} \end{align*}
+\form#131:\begin{align*} (E^{-1}A\delta x)_i = \begin{cases} \geq \varepsilon_{\rm dua,inf} \|D\delta x\|_\infty & \textrm{if } b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_{\rm dua,inf} \|D\delta x\|_\infty & \textrm{if } b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_{\rm dua,inf},\varepsilon_{\rm dua,inf}] \|D\delta x\|_\infty & \textrm{if } b_{\textrm{max},i}, b_{\textrm{min},i} \in {\rm I\!R}. \end{cases} \end{align*}
+\form#132:\begin{align*} \|Q\delta x\|_\infty &\leq \varepsilon_\textrm{dua, inf} \|\delta x\|_\infty, \\ q^T \delta x & \leq - \varepsilon_\textrm{dua, inf} \|\delta x\|_\infty, \end{align*}
+\form#133:\begin{align*} (A\delta x)_i = \begin{cases} \geq \varepsilon_{\rm dua,inf} \|\delta x\|_\infty & \textrm{if } b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_{\rm dua,inf} \|\delta x\|_\infty & \textrm{if } b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_{\rm dua,inf},\varepsilon_{\rm dua,inf}] \|\delta x\|_\infty & \textrm{if } b_{\textrm{max},i}, b_{\textrm{min},i} \in {\rm I\!R}. \end{cases} \end{align*}
+\form#134:\begin{align*} \|D^{-1}Q\delta x\|_\infty &\leq c \cdot \varepsilon_\textrm{dua, inf} \|D\delta x\|_\infty, \\ q^T \delta x & \leq - c \cdot \varepsilon_\textrm{dua, inf} \|D\delta x\|_\infty, \end{align*}
+\form#135:$\delta y$
+\form#136:$c^{-1} E\delta y$
+\form#137:$\delta x$
+\form#138:$D\delta x$
+\form#139:$x,y$
+\form#140:$Dx, c^{-1}Ey$
