@@ -1,0 +1,78 @@
+\hypertarget{newton_8c}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/src/newton.c File Reference}
+\label{newton_8c}\index{/home/ben/Documents/Projects/QPALM/src/newton.c@{/home/ben/Documents/Projects/QPALM/src/newton.c}}
+
+
+Functions to calculate the semismooth Newton direction.  
+
+
+{\ttfamily \#include \char`\"{}newton.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}lin\+\_\+alg.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cholmod.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{newton_8c_a2a3cf6a5a9f0b22f35386149aa1e4252}{newton\+\_\+set\+\_\+direction}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Sets work-\/$>$d to the direction calculated by the semismooth Newton method. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{newton_8c_ae27a99e2b3249e8455b72c2e2a977dd8}{set\+\_\+active\+\_\+constraints}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Computes the set of active constraints and stores it in work-\/$>$chol-\/$>$active\+\_\+constraints. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{newton_8c_a43d518127e8561034e35ba18d0e15b31}{set\+\_\+entering\+\_\+leaving\+\_\+constraints}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Determines the entering and leaving constraints and stores them in work-\/$>$chol-\/$>$enter and work-\/$>$chol-\/$>$leave respectively. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Functions to calculate the semismooth Newton direction. 
+
+\begin{DoxyAuthor}{Author}
+Ben Hermans
+\end{DoxyAuthor}
+The functions in this file concern the calculation of the semismooth Newton direction. Factorizing, updating the factorization and solving the linear system are performed by functions in \mbox{\hyperlink{cholmod__interface_8c}{cholmod\+\_\+interface.\+c}}. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{newton_8c_a2a3cf6a5a9f0b22f35386149aa1e4252}\label{newton_8c_a2a3cf6a5a9f0b22f35386149aa1e4252}} 
+\index{newton.c@{newton.c}!newton\_set\_direction@{newton\_set\_direction}}
+\index{newton\_set\_direction@{newton\_set\_direction}!newton.c@{newton.c}}
+\subsubsection{\texorpdfstring{newton\_set\_direction()}{newton\_set\_direction()}}
+{\footnotesize\ttfamily void newton\+\_\+set\+\_\+direction (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Sets work-\/$>$d to the direction calculated by the semismooth Newton method. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{newton_8c_ae27a99e2b3249e8455b72c2e2a977dd8}\label{newton_8c_ae27a99e2b3249e8455b72c2e2a977dd8}} 
+\index{newton.c@{newton.c}!set\_active\_constraints@{set\_active\_constraints}}
+\index{set\_active\_constraints@{set\_active\_constraints}!newton.c@{newton.c}}
+\subsubsection{\texorpdfstring{set\_active\_constraints()}{set\_active\_constraints()}}
+{\footnotesize\ttfamily void set\+\_\+active\+\_\+constraints (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Computes the set of active constraints and stores it in work-\/$>$chol-\/$>$active\+\_\+constraints. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{newton_8c_a43d518127e8561034e35ba18d0e15b31}\label{newton_8c_a43d518127e8561034e35ba18d0e15b31}} 
+\index{newton.c@{newton.c}!set\_entering\_leaving\_constraints@{set\_entering\_leaving\_constraints}}
+\index{set\_entering\_leaving\_constraints@{set\_entering\_leaving\_constraints}!newton.c@{newton.c}}
+\subsubsection{\texorpdfstring{set\_entering\_leaving\_constraints()}{set\_entering\_leaving\_constraints()}}
+{\footnotesize\ttfamily void set\+\_\+entering\+\_\+leaving\+\_\+constraints (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Determines the entering and leaving constraints and stores them in work-\/$>$chol-\/$>$enter and work-\/$>$chol-\/$>$leave respectively. 
+
+Entering constraints are constraints that are in the new but not in the previous set of active constraints. Leaving constraints are constraints that are in the previous but not in the new set of active constraints.
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}

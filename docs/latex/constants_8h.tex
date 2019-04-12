@@ -1,0 +1,386 @@
+\hypertarget{constants_8h}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/include/constants.h File Reference}
+\label{constants_8h}\index{/home/ben/Documents/Projects/QPALM/include/constants.h@{/home/ben/Documents/Projects/QPALM/include/constants.h}}
+
+
+Macros used in Q\+P\+A\+LM.  
+
+
+\subsection*{Macros}
+\begin{Indent}\textbf{ Booleans}\par
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{constants_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{T\+R\+UE}}~1
+\item 
+\#define \mbox{\hyperlink{constants_8h_aa93f0eb578d23995850d61f7d61c55c1}{F\+A\+L\+SE}}~0
+\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Solver status}\par
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{constants_8h_aa07d9d4ae8714d3f166813ccee23a428}{Q\+P\+A\+L\+M\+\_\+\+S\+O\+L\+V\+ED}}~(1)
+\begin{DoxyCompactList}\small\item\em status to indicate the problem is solved to optimality given the specified tolerances \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a1f8128004d34f15364a6eda5ea49914c}{Q\+P\+A\+L\+M\+\_\+\+M\+A\+X\+\_\+\+I\+T\+E\+R\+\_\+\+R\+E\+A\+C\+H\+ED}}~(-\/2)
+\begin{DoxyCompactList}\small\item\em status to indicate termination due to reaching the maximum number of iterations \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a8abdbac2eedeb387b25657e81b0b70a0}{Q\+P\+A\+L\+M\+\_\+\+P\+R\+I\+M\+A\+L\+\_\+\+I\+N\+F\+E\+A\+S\+I\+B\+LE}}~(-\/3)
+\begin{DoxyCompactList}\small\item\em status to indicate the problem is primal infeasible \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a4f078b18254fbab55eb0dbe11a44e6f4}{Q\+P\+A\+L\+M\+\_\+\+D\+U\+A\+L\+\_\+\+I\+N\+F\+E\+A\+S\+I\+B\+LE}}~(-\/4)
+\begin{DoxyCompactList}\small\item\em status to indicate the problem is dual infeasible \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_acbec0c523d324f1ae556a7fde7b83633}{Q\+P\+A\+L\+M\+\_\+\+U\+N\+S\+O\+L\+V\+ED}}~(-\/10)
+\begin{DoxyCompactList}\small\item\em status to indicate the problem is unsolved. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Solver parameters and settings}\par
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{constants_8h_acd517c6f195c75b9dd0f3aad65326f3b}{M\+A\+X\+\_\+\+I\+T\+ER}}~(10000)
+\begin{DoxyCompactList}\small\item\em default maximum number of iterations \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a31527ac41638eec6e9b6dc36946b539a}{E\+P\+S\+\_\+\+A\+BS}}~(1e-\/4)
+\begin{DoxyCompactList}\small\item\em default absolute convergence tolerance \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a62c40728b469a0a6e1f696793569835a}{E\+P\+S\+\_\+\+R\+EL}}~(1e-\/4)
+\begin{DoxyCompactList}\small\item\em default relative convergence tolerance \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_ae97e70b085502d1d8030c1f51da6151b}{E\+P\+S\+\_\+\+A\+B\+S\+\_\+\+IN}}~(1)
+\begin{DoxyCompactList}\small\item\em default intermediate absolute convergence tolerance \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a0771de8aebffeee6adee8b9fea107548}{E\+P\+S\+\_\+\+R\+E\+L\+\_\+\+IN}}~(1)
+\begin{DoxyCompactList}\small\item\em default intermediate relative convergence tolerance \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a3bf4402b9e2ae88e4462c3689f5d22b8}{R\+HO}}~(0.\+1)
+\begin{DoxyCompactList}\small\item\em default tolerance scaling factor \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_ae5bd1f4535dc3f47ac763224bd59b151}{E\+P\+S\+\_\+\+P\+R\+I\+M\+\_\+\+I\+NF}}~(1e-\/4)
+\begin{DoxyCompactList}\small\item\em default primal infeasibility tolerance \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_affd660a2cfd932d25c7aa55031e38c4f}{E\+P\+S\+\_\+\+D\+U\+A\+L\+\_\+\+I\+NF}}~(1e-\/4)
+\begin{DoxyCompactList}\small\item\em default dual infeasibility tolerance \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_aaa169fd8b9a843d1bd57fe1eae032115}{T\+H\+E\+TA}}~(0.\+25)
+\begin{DoxyCompactList}\small\item\em default penalty update criterion parameter \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a3fd2b1bcd7ddcf506237987ad780f495}{D\+E\+L\+TA}}~(10)
+\begin{DoxyCompactList}\small\item\em default penalty update factor \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_acd9147c45c472511828564ceb667938e}{T\+A\+U\+\_\+\+I\+N\+IT}}~(1)
+\begin{DoxyCompactList}\small\item\em default initial stepsize in backtracking \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a6ab5081fb2e4bb477cb72a470b2d6e16}{P\+R\+O\+X\+I\+M\+AL}}~(\mbox{\hyperlink{constants_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{T\+R\+UE}})
+\begin{DoxyCompactList}\small\item\em default use of proximal method of multipliers \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a8659b9de3e544ff142b153b076f30fd5}{G\+A\+M\+MA}}~(1\+E6)
+\begin{DoxyCompactList}\small\item\em default proximal penalty parameter \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a2d22ea31bc3392c2e8f3a2baa94610d4}{G\+A\+M\+M\+A\+\_\+\+U\+PD}}~(10)
+\begin{DoxyCompactList}\small\item\em default proximal penalty update factor \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_acc2c87b648c4995ea704dbae56bfacb1}{G\+A\+M\+M\+A\+\_\+\+M\+AX}}~(1\+E8)
+\begin{DoxyCompactList}\small\item\em default proximal penalty cap \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a10ff10afd2a3179ae42e67a12fd8d7fd}{S\+C\+A\+L\+I\+NG}}~(2)
+\begin{DoxyCompactList}\small\item\em default number of scaling iterations \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a0ec510dd558dfcc57526bdffbb2d42fc}{M\+I\+N\+\_\+\+S\+C\+A\+L\+I\+NG}}~(1e-\/08)
+\begin{DoxyCompactList}\small\item\em Minimum scaling value/$\ast$$\ast$$<$ minimum scaling value $\ast$/. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_af08c400cdf242e8f66b4353f9f3f8096}{M\+A\+X\+\_\+\+S\+C\+A\+L\+I\+NG}}~(1e+04)
+\begin{DoxyCompactList}\small\item\em Maximum scaling value/$\ast$$\ast$$<$ maximum scaling value $\ast$/. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a2117977538fc37cd5f66997e2cfc89bf}{W\+A\+R\+M\+\_\+\+S\+T\+A\+RT}}~(\mbox{\hyperlink{constants_8h_aa93f0eb578d23995850d61f7d61c55c1}{F\+A\+L\+SE}})
+\begin{DoxyCompactList}\small\item\em default warm start setting \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_a42f8c497a1968074f38bf5055c650dca}{V\+E\+R\+B\+O\+SE}}~(\mbox{\hyperlink{constants_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{T\+R\+UE}})
+\begin{DoxyCompactList}\small\item\em default write out progress setting \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_ac0a2840bf4b0b7115794565a2c364ebd}{Q\+P\+A\+L\+M\+\_\+\+N\+U\+LL}}~0
+\begin{DoxyCompactList}\small\item\em N\+U\+LL, if something goes wrong during setup, the workspace pointer is set to this. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_aff445c7a0410a0bbf8969af9a95eef83}{Q\+P\+A\+L\+M\+\_\+\+N\+AN}}~((\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}})0x7fc00000\+U\+L)
+\begin{DoxyCompactList}\small\item\em not a number, used for the solution if the problem is primal or dual infeasible \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{constants_8h_af6915f24c5ded08d422cf326004cbcb0}{Q\+P\+A\+L\+M\+\_\+\+I\+N\+F\+TY}}~((\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}})1e20)
+\begin{DoxyCompactList}\small\item\em infinity, used to indicate one-\/sided constraints \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\subsection{Detailed Description}
+Macros used in Q\+P\+A\+LM. 
+
+\begin{DoxyAuthor}{Author}
+Ben Hermans
+\end{DoxyAuthor}
+This file contains the macros that are used as default settings and to set the solver status. \begin{DoxyWarning}{Warning}
+Verbose is not implemented as of yet. 
+\end{DoxyWarning}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{constants_8h_a3fd2b1bcd7ddcf506237987ad780f495}\label{constants_8h_a3fd2b1bcd7ddcf506237987ad780f495}} 
+\index{constants.h@{constants.h}!DELTA@{DELTA}}
+\index{DELTA@{DELTA}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{DELTA}{DELTA}}
+{\footnotesize\ttfamily \#define D\+E\+L\+TA~(10)}
+
+
+
+default penalty update factor 
+
+\mbox{\Hypertarget{constants_8h_a31527ac41638eec6e9b6dc36946b539a}\label{constants_8h_a31527ac41638eec6e9b6dc36946b539a}} 
+\index{constants.h@{constants.h}!EPS\_ABS@{EPS\_ABS}}
+\index{EPS\_ABS@{EPS\_ABS}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{EPS\_ABS}{EPS\_ABS}}
+{\footnotesize\ttfamily \#define E\+P\+S\+\_\+\+A\+BS~(1e-\/4)}
+
+
+
+default absolute convergence tolerance 
+
+\mbox{\Hypertarget{constants_8h_ae97e70b085502d1d8030c1f51da6151b}\label{constants_8h_ae97e70b085502d1d8030c1f51da6151b}} 
+\index{constants.h@{constants.h}!EPS\_ABS\_IN@{EPS\_ABS\_IN}}
+\index{EPS\_ABS\_IN@{EPS\_ABS\_IN}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{EPS\_ABS\_IN}{EPS\_ABS\_IN}}
+{\footnotesize\ttfamily \#define E\+P\+S\+\_\+\+A\+B\+S\+\_\+\+IN~(1)}
+
+
+
+default intermediate absolute convergence tolerance 
+
+\mbox{\Hypertarget{constants_8h_affd660a2cfd932d25c7aa55031e38c4f}\label{constants_8h_affd660a2cfd932d25c7aa55031e38c4f}} 
+\index{constants.h@{constants.h}!EPS\_DUAL\_INF@{EPS\_DUAL\_INF}}
+\index{EPS\_DUAL\_INF@{EPS\_DUAL\_INF}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{EPS\_DUAL\_INF}{EPS\_DUAL\_INF}}
+{\footnotesize\ttfamily \#define E\+P\+S\+\_\+\+D\+U\+A\+L\+\_\+\+I\+NF~(1e-\/4)}
+
+
+
+default dual infeasibility tolerance 
+
+\mbox{\Hypertarget{constants_8h_ae5bd1f4535dc3f47ac763224bd59b151}\label{constants_8h_ae5bd1f4535dc3f47ac763224bd59b151}} 
+\index{constants.h@{constants.h}!EPS\_PRIM\_INF@{EPS\_PRIM\_INF}}
+\index{EPS\_PRIM\_INF@{EPS\_PRIM\_INF}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{EPS\_PRIM\_INF}{EPS\_PRIM\_INF}}
+{\footnotesize\ttfamily \#define E\+P\+S\+\_\+\+P\+R\+I\+M\+\_\+\+I\+NF~(1e-\/4)}
+
+
+
+default primal infeasibility tolerance 
+
+\mbox{\Hypertarget{constants_8h_a62c40728b469a0a6e1f696793569835a}\label{constants_8h_a62c40728b469a0a6e1f696793569835a}} 
+\index{constants.h@{constants.h}!EPS\_REL@{EPS\_REL}}
+\index{EPS\_REL@{EPS\_REL}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{EPS\_REL}{EPS\_REL}}
+{\footnotesize\ttfamily \#define E\+P\+S\+\_\+\+R\+EL~(1e-\/4)}
+
+
+
+default relative convergence tolerance 
+
+\mbox{\Hypertarget{constants_8h_a0771de8aebffeee6adee8b9fea107548}\label{constants_8h_a0771de8aebffeee6adee8b9fea107548}} 
+\index{constants.h@{constants.h}!EPS\_REL\_IN@{EPS\_REL\_IN}}
+\index{EPS\_REL\_IN@{EPS\_REL\_IN}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{EPS\_REL\_IN}{EPS\_REL\_IN}}
+{\footnotesize\ttfamily \#define E\+P\+S\+\_\+\+R\+E\+L\+\_\+\+IN~(1)}
+
+
+
+default intermediate relative convergence tolerance 
+
+\mbox{\Hypertarget{constants_8h_aa93f0eb578d23995850d61f7d61c55c1}\label{constants_8h_aa93f0eb578d23995850d61f7d61c55c1}} 
+\index{constants.h@{constants.h}!FALSE@{FALSE}}
+\index{FALSE@{FALSE}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{FALSE}{FALSE}}
+{\footnotesize\ttfamily \#define F\+A\+L\+SE~0}
+
+\mbox{\Hypertarget{constants_8h_a8659b9de3e544ff142b153b076f30fd5}\label{constants_8h_a8659b9de3e544ff142b153b076f30fd5}} 
+\index{constants.h@{constants.h}!GAMMA@{GAMMA}}
+\index{GAMMA@{GAMMA}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{GAMMA}{GAMMA}}
+{\footnotesize\ttfamily \#define G\+A\+M\+MA~(1\+E6)}
+
+
+
+default proximal penalty parameter 
+
+\mbox{\Hypertarget{constants_8h_acc2c87b648c4995ea704dbae56bfacb1}\label{constants_8h_acc2c87b648c4995ea704dbae56bfacb1}} 
+\index{constants.h@{constants.h}!GAMMA\_MAX@{GAMMA\_MAX}}
+\index{GAMMA\_MAX@{GAMMA\_MAX}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{GAMMA\_MAX}{GAMMA\_MAX}}
+{\footnotesize\ttfamily \#define G\+A\+M\+M\+A\+\_\+\+M\+AX~(1\+E8)}
+
+
+
+default proximal penalty cap 
+
+\mbox{\Hypertarget{constants_8h_a2d22ea31bc3392c2e8f3a2baa94610d4}\label{constants_8h_a2d22ea31bc3392c2e8f3a2baa94610d4}} 
+\index{constants.h@{constants.h}!GAMMA\_UPD@{GAMMA\_UPD}}
+\index{GAMMA\_UPD@{GAMMA\_UPD}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{GAMMA\_UPD}{GAMMA\_UPD}}
+{\footnotesize\ttfamily \#define G\+A\+M\+M\+A\+\_\+\+U\+PD~(10)}
+
+
+
+default proximal penalty update factor 
+
+\mbox{\Hypertarget{constants_8h_acd517c6f195c75b9dd0f3aad65326f3b}\label{constants_8h_acd517c6f195c75b9dd0f3aad65326f3b}} 
+\index{constants.h@{constants.h}!MAX\_ITER@{MAX\_ITER}}
+\index{MAX\_ITER@{MAX\_ITER}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{MAX\_ITER}{MAX\_ITER}}
+{\footnotesize\ttfamily \#define M\+A\+X\+\_\+\+I\+T\+ER~(10000)}
+
+
+
+default maximum number of iterations 
+
+\mbox{\Hypertarget{constants_8h_af08c400cdf242e8f66b4353f9f3f8096}\label{constants_8h_af08c400cdf242e8f66b4353f9f3f8096}} 
+\index{constants.h@{constants.h}!MAX\_SCALING@{MAX\_SCALING}}
+\index{MAX\_SCALING@{MAX\_SCALING}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{MAX\_SCALING}{MAX\_SCALING}}
+{\footnotesize\ttfamily \#define M\+A\+X\+\_\+\+S\+C\+A\+L\+I\+NG~(1e+04)}
+
+
+
+Maximum scaling value/$\ast$$\ast$$<$ maximum scaling value $\ast$/. 
+
+\mbox{\Hypertarget{constants_8h_a0ec510dd558dfcc57526bdffbb2d42fc}\label{constants_8h_a0ec510dd558dfcc57526bdffbb2d42fc}} 
+\index{constants.h@{constants.h}!MIN\_SCALING@{MIN\_SCALING}}
+\index{MIN\_SCALING@{MIN\_SCALING}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{MIN\_SCALING}{MIN\_SCALING}}
+{\footnotesize\ttfamily \#define M\+I\+N\+\_\+\+S\+C\+A\+L\+I\+NG~(1e-\/08)}
+
+
+
+Minimum scaling value/$\ast$$\ast$$<$ minimum scaling value $\ast$/. 
+
+\mbox{\Hypertarget{constants_8h_a6ab5081fb2e4bb477cb72a470b2d6e16}\label{constants_8h_a6ab5081fb2e4bb477cb72a470b2d6e16}} 
+\index{constants.h@{constants.h}!PROXIMAL@{PROXIMAL}}
+\index{PROXIMAL@{PROXIMAL}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{PROXIMAL}{PROXIMAL}}
+{\footnotesize\ttfamily \#define P\+R\+O\+X\+I\+M\+AL~(\mbox{\hyperlink{constants_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{T\+R\+UE}})}
+
+
+
+default use of proximal method of multipliers 
+
+\mbox{\Hypertarget{constants_8h_a4f078b18254fbab55eb0dbe11a44e6f4}\label{constants_8h_a4f078b18254fbab55eb0dbe11a44e6f4}} 
+\index{constants.h@{constants.h}!QPALM\_DUAL\_INFEASIBLE@{QPALM\_DUAL\_INFEASIBLE}}
+\index{QPALM\_DUAL\_INFEASIBLE@{QPALM\_DUAL\_INFEASIBLE}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{QPALM\_DUAL\_INFEASIBLE}{QPALM\_DUAL\_INFEASIBLE}}
+{\footnotesize\ttfamily \#define Q\+P\+A\+L\+M\+\_\+\+D\+U\+A\+L\+\_\+\+I\+N\+F\+E\+A\+S\+I\+B\+LE~(-\/4)}
+
+
+
+status to indicate the problem is dual infeasible 
+
+\mbox{\Hypertarget{constants_8h_af6915f24c5ded08d422cf326004cbcb0}\label{constants_8h_af6915f24c5ded08d422cf326004cbcb0}} 
+\index{constants.h@{constants.h}!QPALM\_INFTY@{QPALM\_INFTY}}
+\index{QPALM\_INFTY@{QPALM\_INFTY}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{QPALM\_INFTY}{QPALM\_INFTY}}
+{\footnotesize\ttfamily \#define Q\+P\+A\+L\+M\+\_\+\+I\+N\+F\+TY~((\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}})1e20)}
+
+
+
+infinity, used to indicate one-\/sided constraints 
+
+\mbox{\Hypertarget{constants_8h_a1f8128004d34f15364a6eda5ea49914c}\label{constants_8h_a1f8128004d34f15364a6eda5ea49914c}} 
+\index{constants.h@{constants.h}!QPALM\_MAX\_ITER\_REACHED@{QPALM\_MAX\_ITER\_REACHED}}
+\index{QPALM\_MAX\_ITER\_REACHED@{QPALM\_MAX\_ITER\_REACHED}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{QPALM\_MAX\_ITER\_REACHED}{QPALM\_MAX\_ITER\_REACHED}}
+{\footnotesize\ttfamily \#define Q\+P\+A\+L\+M\+\_\+\+M\+A\+X\+\_\+\+I\+T\+E\+R\+\_\+\+R\+E\+A\+C\+H\+ED~(-\/2)}
+
+
+
+status to indicate termination due to reaching the maximum number of iterations 
+
+\mbox{\Hypertarget{constants_8h_aff445c7a0410a0bbf8969af9a95eef83}\label{constants_8h_aff445c7a0410a0bbf8969af9a95eef83}} 
+\index{constants.h@{constants.h}!QPALM\_NAN@{QPALM\_NAN}}
+\index{QPALM\_NAN@{QPALM\_NAN}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{QPALM\_NAN}{QPALM\_NAN}}
+{\footnotesize\ttfamily \#define Q\+P\+A\+L\+M\+\_\+\+N\+AN~((\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}})0x7fc00000\+U\+L)}
+
+
+
+not a number, used for the solution if the problem is primal or dual infeasible 
+
+\mbox{\Hypertarget{constants_8h_ac0a2840bf4b0b7115794565a2c364ebd}\label{constants_8h_ac0a2840bf4b0b7115794565a2c364ebd}} 
+\index{constants.h@{constants.h}!QPALM\_NULL@{QPALM\_NULL}}
+\index{QPALM\_NULL@{QPALM\_NULL}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{QPALM\_NULL}{QPALM\_NULL}}
+{\footnotesize\ttfamily \#define Q\+P\+A\+L\+M\+\_\+\+N\+U\+LL~0}
+
+
+
+N\+U\+LL, if something goes wrong during setup, the workspace pointer is set to this. 
+
+\mbox{\Hypertarget{constants_8h_a8abdbac2eedeb387b25657e81b0b70a0}\label{constants_8h_a8abdbac2eedeb387b25657e81b0b70a0}} 
+\index{constants.h@{constants.h}!QPALM\_PRIMAL\_INFEASIBLE@{QPALM\_PRIMAL\_INFEASIBLE}}
+\index{QPALM\_PRIMAL\_INFEASIBLE@{QPALM\_PRIMAL\_INFEASIBLE}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{QPALM\_PRIMAL\_INFEASIBLE}{QPALM\_PRIMAL\_INFEASIBLE}}
+{\footnotesize\ttfamily \#define Q\+P\+A\+L\+M\+\_\+\+P\+R\+I\+M\+A\+L\+\_\+\+I\+N\+F\+E\+A\+S\+I\+B\+LE~(-\/3)}
+
+
+
+status to indicate the problem is primal infeasible 
+
+\mbox{\Hypertarget{constants_8h_aa07d9d4ae8714d3f166813ccee23a428}\label{constants_8h_aa07d9d4ae8714d3f166813ccee23a428}} 
+\index{constants.h@{constants.h}!QPALM\_SOLVED@{QPALM\_SOLVED}}
+\index{QPALM\_SOLVED@{QPALM\_SOLVED}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{QPALM\_SOLVED}{QPALM\_SOLVED}}
+{\footnotesize\ttfamily \#define Q\+P\+A\+L\+M\+\_\+\+S\+O\+L\+V\+ED~(1)}
+
+
+
+status to indicate the problem is solved to optimality given the specified tolerances 
+
+\mbox{\Hypertarget{constants_8h_acbec0c523d324f1ae556a7fde7b83633}\label{constants_8h_acbec0c523d324f1ae556a7fde7b83633}} 
+\index{constants.h@{constants.h}!QPALM\_UNSOLVED@{QPALM\_UNSOLVED}}
+\index{QPALM\_UNSOLVED@{QPALM\_UNSOLVED}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{QPALM\_UNSOLVED}{QPALM\_UNSOLVED}}
+{\footnotesize\ttfamily \#define Q\+P\+A\+L\+M\+\_\+\+U\+N\+S\+O\+L\+V\+ED~(-\/10)}
+
+
+
+status to indicate the problem is unsolved. 
+
+Only setup function has been called \mbox{\Hypertarget{constants_8h_a3bf4402b9e2ae88e4462c3689f5d22b8}\label{constants_8h_a3bf4402b9e2ae88e4462c3689f5d22b8}} 
+\index{constants.h@{constants.h}!RHO@{RHO}}
+\index{RHO@{RHO}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{RHO}{RHO}}
+{\footnotesize\ttfamily \#define R\+HO~(0.\+1)}
+
+
+
+default tolerance scaling factor 
+
+\mbox{\Hypertarget{constants_8h_a10ff10afd2a3179ae42e67a12fd8d7fd}\label{constants_8h_a10ff10afd2a3179ae42e67a12fd8d7fd}} 
+\index{constants.h@{constants.h}!SCALING@{SCALING}}
+\index{SCALING@{SCALING}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{SCALING}{SCALING}}
+{\footnotesize\ttfamily \#define S\+C\+A\+L\+I\+NG~(2)}
+
+
+
+default number of scaling iterations 
+
+\mbox{\Hypertarget{constants_8h_acd9147c45c472511828564ceb667938e}\label{constants_8h_acd9147c45c472511828564ceb667938e}} 
+\index{constants.h@{constants.h}!TAU\_INIT@{TAU\_INIT}}
+\index{TAU\_INIT@{TAU\_INIT}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{TAU\_INIT}{TAU\_INIT}}
+{\footnotesize\ttfamily \#define T\+A\+U\+\_\+\+I\+N\+IT~(1)}
+
+
+
+default initial stepsize in backtracking 
+
+\mbox{\Hypertarget{constants_8h_aaa169fd8b9a843d1bd57fe1eae032115}\label{constants_8h_aaa169fd8b9a843d1bd57fe1eae032115}} 
+\index{constants.h@{constants.h}!THETA@{THETA}}
+\index{THETA@{THETA}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{THETA}{THETA}}
+{\footnotesize\ttfamily \#define T\+H\+E\+TA~(0.\+25)}
+
+
+
+default penalty update criterion parameter 
+
+\mbox{\Hypertarget{constants_8h_aa8cecfc5c5c054d2875c03e77b7be15d}\label{constants_8h_aa8cecfc5c5c054d2875c03e77b7be15d}} 
+\index{constants.h@{constants.h}!TRUE@{TRUE}}
+\index{TRUE@{TRUE}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{TRUE}{TRUE}}
+{\footnotesize\ttfamily \#define T\+R\+UE~1}
+
+\mbox{\Hypertarget{constants_8h_a42f8c497a1968074f38bf5055c650dca}\label{constants_8h_a42f8c497a1968074f38bf5055c650dca}} 
+\index{constants.h@{constants.h}!VERBOSE@{VERBOSE}}
+\index{VERBOSE@{VERBOSE}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{VERBOSE}{VERBOSE}}
+{\footnotesize\ttfamily \#define V\+E\+R\+B\+O\+SE~(\mbox{\hyperlink{constants_8h_aa8cecfc5c5c054d2875c03e77b7be15d}{T\+R\+UE}})}
+
+
+
+default write out progress setting 
+
+\mbox{\Hypertarget{constants_8h_a2117977538fc37cd5f66997e2cfc89bf}\label{constants_8h_a2117977538fc37cd5f66997e2cfc89bf}} 
+\index{constants.h@{constants.h}!WARM\_START@{WARM\_START}}
+\index{WARM\_START@{WARM\_START}!constants.h@{constants.h}}
+\subsubsection{\texorpdfstring{WARM\_START}{WARM\_START}}
+{\footnotesize\ttfamily \#define W\+A\+R\+M\+\_\+\+S\+T\+A\+RT~(\mbox{\hyperlink{constants_8h_aa93f0eb578d23995850d61f7d61c55c1}{F\+A\+L\+SE}})}
+
+
+
+default warm start setting 
+

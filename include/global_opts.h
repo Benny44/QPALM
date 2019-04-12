@@ -1,3 +1,13 @@
+/**
+ * @file global_opts.h
+ * @author Ben Hermans
+ * @brief Custom memory allocation, print and utility functions, and data types for floats and ints.
+ * @details Memory allocation and print functions depend on whether the code is compiled as a standalone
+ * library or with matlab or python. The data types used for floating point numbers and integer numbers
+ * can be changed here as well. Finally, some customized operations (max, min, mod and abs) are included
+ * as well.
+ */
+
 #ifndef GLOBAL_OPTS_H
 # define GLOBAL_OPTS_H
 
@@ -7,10 +17,10 @@ extern "C" {
 
 #include "cholmod.h"
 
-#define FALSE 0
-#define TRUE 1
-
-/* CHOLMOD data types */
+/**
+ * @name CHOLMOD data types and macros 
+ * @{
+ */
 #ifdef DLONG
 #define Real double
 #define Int SuiteSparse_long
@@ -43,15 +53,27 @@ extern "C" {
 
 #endif
 
+/**
+ * @}
+ */
 
-
-/* DATA CUSTOMIZATIONS (depending on memory manager)-----------------------   */
+/** 
+ * @name Data customizations
+ * @{
+ */
 #  include <stdlib.h>
 
-typedef Real c_float; /* doubles for numerical values  */
-typedef Int c_int; /* for indices */
+typedef Real c_float; /**< doubles for numerical values  */
+typedef Int c_int; /**< long or int for indices */
 
-/* define custom printfs and memory allocation (e.g. matlab/python) */
+/**
+ * @}
+ */
+
+/**
+ * @name Custom memory allocation (e.g. matlab/python)
+ * @{
+ */
 #  ifdef MATLAB
     #   include "mex.h"
 static void* c_calloc(size_t num, size_t size) {
@@ -101,12 +123,17 @@ static void* c_calloc(size_t num, size_t size) {
     #   define c_free PyMem_Free
     #   define c_realloc PyMem_Realloc
 #  else  /* if not MATLAB of Python */
-    #   define c_malloc malloc
-    #   define c_calloc calloc
-    #   define c_free free
-    #   define c_realloc realloc
+    #   define c_malloc malloc    /**< custom malloc */
+    #   define c_calloc calloc    /**< custom calloc */
+    #   define c_free free        /**< custom free */
+    #   define c_realloc realloc  /**< custom realloc */
 
 #  endif /* ifdef MATLAB */
+
+/**
+ * @}
+ */
+
 
 /* PRINTING */
 # ifdef PRINTING
@@ -127,33 +154,36 @@ static void* c_calloc(size_t num, size_t size) {
 #  endif /* ifdef MATLAB */
 
 // Print error macro
-// #define c_eprint(desc...) (c_print("ERROR in %s: ", __FUNCTION__); c_print
-// (stderr, desc); c_print("\n");)
 #  define c_eprint(...) c_print("ERROR in %s: ", __FUNCTION__); c_print( \
     __VA_ARGS__); c_print("\n");
 
 # endif /* ifdef PRINTING */
 
 
-/* CUSTOMIZED OPERATIONS */
+/**
+ * @name Custom operations
+ * @{
+ */
 # ifndef c_absval
-#  define c_absval(x) (((x) < 0) ? -(x) : (x))
+#  define c_absval(x) (((x) < 0) ? -(x) : (x)) /**< absolute value */
 # endif /* ifndef c_absval */
 
 # ifndef c_max
-#  define c_max(a, b) (((a) > (b)) ? (a) : (b))
+#  define c_max(a, b) (((a) > (b)) ? (a) : (b)) /**< maximum of two values */
 # endif /* ifndef c_max */
 
 # ifndef c_min
-#  define c_min(a, b) (((a) < (b)) ? (a) : (b))
+#  define c_min(a, b) (((a) < (b)) ? (a) : (b)) /**< minimum of two values */
 # endif /* ifndef c_min */
 
 # ifndef mod
-#  define mod(a,b) ((((a)%(b))+(b))%(b))
+#  define mod(a,b) ((((a)%(b))+(b))%(b)) /**< modulo operation (positive result for all values) */
 #endif
 
 #include <math.h>
-#  define c_sqrt sqrt
+#  define c_sqrt sqrt /**< square root */
+
+/** @} */
 
 # ifdef __cplusplus
 }

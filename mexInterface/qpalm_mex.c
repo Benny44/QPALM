@@ -2,7 +2,6 @@
 #include <string.h>
 #include "global_opts.h"
 #include "qpalm.h"
-#include "cs.h"
 #include "constants.h"
 #include "cholmod.h"
 #include "cholmod_matlab.h"
@@ -25,7 +24,6 @@ const char* QPALM_INFO_FIELDS[] = {"iter",          //c_int
                                   "iter_out",       //c_int
                                   "status" ,        //char*
                                   "status_val" ,    //c_int
-                                  "obj_val",        //c_float
                                   "pri_res_norm",   //c_float
                                   "dua_res_norm",   //c_float
                                   "dua2_res_norm",  //c_float
@@ -45,7 +43,6 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",      //c_int
                                       "theta",          //c_float
                                       "delta",          //c_float
                                       "tau_init",       //c_float
-                                      "memory",         //c_int
                                       "proximal",       //c_int
                                       "gamma",          //c_int
                                       "gamma_upd",      //c_int
@@ -267,9 +264,6 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
             //dual infeasibility certificates -> NaN values
             setToNaN(mxGetPr(plhs[3]), qpalm_work->data->n);
 
-            // Set objective value to infinity
-            qpalm_work->info->obj_val = mxGetInf();
-
         } else if (qpalm_work->info->status_val == QPALM_DUAL_INFEASIBLE) { //dual infeasible
 
             //primal and dual solutions -> NaN values
@@ -282,8 +276,6 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
             //dual infeasibility certificates
             castToDoubleArr(qpalm_work->delta_x, mxGetPr(plhs[3]), qpalm_work->data->n);
 
-            // Set objective value to -infinity
-            qpalm_work->info->obj_val = -mxGetInf();
         }
 
         plhs[4] = copyInfoToMxStruct(qpalm_work->info); // Info structure
@@ -327,11 +319,6 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
 
         if (!strcmp("QPALM_MAX_ITER_REACHED", constant)){
             plhs[0] = mxCreateDoubleScalar(QPALM_MAX_ITER_REACHED);
-            return;
-        }
-
-        if (!strcmp("QPALM_NON_CVX", constant)){
-            plhs[0] = mxCreateDoubleScalar(QPALM_NON_CVX);
             return;
         }
 
@@ -395,7 +382,6 @@ mxArray* copyInfoToMxStruct(QPALMInfo* info){
   mxSetField(mxPtr, 0, "iter_out",          mxCreateDoubleScalar(info->iter_out));
   mxSetField(mxPtr, 0, "status",        mxCreateString(info->status));
   mxSetField(mxPtr, 0, "status_val",    mxCreateDoubleScalar(info->status_val));
-  mxSetField(mxPtr, 0, "obj_val",       mxCreateDoubleScalar(info->obj_val));
   mxSetField(mxPtr, 0, "pri_res_norm",       mxCreateDoubleScalar(info->pri_res_norm));
   mxSetField(mxPtr, 0, "dua_res_norm",       mxCreateDoubleScalar(info->dua_res_norm));
   mxSetField(mxPtr, 0, "dua2_res_norm",       mxCreateDoubleScalar(info->dua2_res_norm));
@@ -429,7 +415,6 @@ mxArray* copySettingsToMxStruct(QPALMSettings* settings){
   mxSetField(mxPtr, 0, "theta",           mxCreateDoubleScalar(settings->theta));
   mxSetField(mxPtr, 0, "delta",           mxCreateDoubleScalar(settings->delta));
   mxSetField(mxPtr, 0, "tau_init",        mxCreateDoubleScalar(settings->tau_init));
-  mxSetField(mxPtr, 0, "memory",          mxCreateDoubleScalar(settings->memory));
   mxSetField(mxPtr, 0, "proximal",        mxCreateDoubleScalar(settings->proximal));
   mxSetField(mxPtr, 0, "gamma",           mxCreateDoubleScalar(settings->gamma));
   mxSetField(mxPtr, 0, "gamma_upd",       mxCreateDoubleScalar(settings->gamma_upd));
@@ -461,7 +446,6 @@ void copyMxStructToSettings(const mxArray* mxPtr, QPALMSettings* settings){
   settings->theta                     = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "theta"));
   settings->delta                     = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "delta"));
   settings->tau_init                  = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "tau_init"));
-  settings->memory                    = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "memory"));
   settings->proximal                  = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "proximal"));
   settings->gamma                     = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "gamma"));  
   settings->gamma_upd                 = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "gamma_upd"));

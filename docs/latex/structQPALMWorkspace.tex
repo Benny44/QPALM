@@ -1,0 +1,691 @@
+\hypertarget{structQPALMWorkspace}{}\section{Q\+P\+A\+L\+M\+Workspace Struct Reference}
+\label{structQPALMWorkspace}\index{QPALMWorkspace@{QPALMWorkspace}}
+
+
+Q\+P\+A\+LM Workspace.  
+
+
+
+
+{\ttfamily \#include $<$types.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structQPALMData}{Q\+P\+A\+L\+M\+Data}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_aef5a70ffeeade2377480c7cae36a8964}{data}}
+\begin{DoxyCompactList}\small\item\em problem data to work on (possibly scaled) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structQPALMCholmod}{Q\+P\+A\+L\+M\+Cholmod}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_ad848957a0173251709fb56804f6ef10e}{chol}}
+\begin{DoxyCompactList}\small\item\em cholmod variables \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a9e29077d16b88e77e8aae6f06f69ec0c}{settings}}
+\begin{DoxyCompactList}\small\item\em problem settings \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structQPALMScaling}{Q\+P\+A\+L\+M\+Scaling}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a20daf0c6d38c77121e113af63ed726b6}{scaling}}
+\begin{DoxyCompactList}\small\item\em scaling vectors \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structQPALMSolution}{Q\+P\+A\+L\+M\+Solution}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a44a489b6424974f302d679893efae327}{solution}}
+\begin{DoxyCompactList}\small\item\em problem solution \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structQPALMInfo}{Q\+P\+A\+L\+M\+Info}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a37b5c22c01352658c55dadcde7481222}{info}}
+\begin{DoxyCompactList}\small\item\em solver information \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{Indent}\textbf{ Iterates}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a0625a9b426e5e7d81443a107d49730ef}{x}}
+\begin{DoxyCompactList}\small\item\em primal iterate \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a0d81840f72cdb13574669fc62eb44ac9}{y}}
+\begin{DoxyCompactList}\small\item\em dual iterate \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a34572f3d0c831ab6978808954c80f48c}{Ax}}
+\begin{DoxyCompactList}\small\item\em scaled A $\ast$ x \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a9104271b5dc1b242f3d6d5c175dcb0c1}{Qx}}
+\begin{DoxyCompactList}\small\item\em scaled Q $\ast$ x \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_ae807cf93487e8a5e0b658ebdee05a0b1}{Aty}}
+\begin{DoxyCompactList}\small\item\em A\textquotesingle{} $\ast$ y (useful for saving one mat\+\_\+tpose\+\_\+vec) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a6bd9099b5f7a4008be9eddf61bc1bd13}{x\+\_\+prev}}
+\begin{DoxyCompactList}\small\item\em previous primal iterate \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Workspace variables}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a43fba7da6d00e0f05d8ee75b5329f364}{temp\+\_\+m}}
+\begin{DoxyCompactList}\small\item\em placeholder for vector of size m \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_af54ff24e9b647dd2d8e8df2b89c11946}{temp\+\_\+n}}
+\begin{DoxyCompactList}\small\item\em placeholder for vector of size n \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a585c53dd55cbc9aaecd42d224bde483f}{sigma}}
+\begin{DoxyCompactList}\small\item\em penalty vector \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a77e294e1afd9d2489e34fd96ef14b15a}{Axys}}
+\begin{DoxyCompactList}\small\item\em Ax + y./sigma. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a38524247b44059e6989761d6a9159b0a}{z}}
+\begin{DoxyCompactList}\small\item\em projection of Axys onto the constraint set \mbox{[}bmin, bmax\mbox{]} \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a46bd3912583b69f83d5bd3cbb2bee8b2}{pri\+\_\+res}}
+\begin{DoxyCompactList}\small\item\em primal residual \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a4178a4d2bfdb85f18f14e3ddfaec142c}{pri\+\_\+res\+\_\+in}}
+\begin{DoxyCompactList}\small\item\em intermediate primal residual \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a12cd413a80f3e029802beb280e76d348}{yh}}
+\begin{DoxyCompactList}\small\item\em candidate dual update \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_affa4e2fe7facd4e9c1a4cb14c4103a72}{Atyh}}
+\begin{DoxyCompactList}\small\item\em A\textquotesingle{} $\ast$ yh. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_aca74b2322e2dc5427a440a39a16e2c3b}{df}}
+\begin{DoxyCompactList}\small\item\em gradient of the primal objective (+proximal term) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_aa9dafcb9c277f81bb5e6cc5e514e4a51}{x0}}
+\begin{DoxyCompactList}\small\item\em record of the primal iterate during the last dual update \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_addac4a91d2b85cb9e388cd2dc65cb455}{xx0}}
+\begin{DoxyCompactList}\small\item\em x -\/ x0 \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_abc9bf36aa5174f0e7839630d9bef826b}{dphi}}
+\begin{DoxyCompactList}\small\item\em gradient of the Lagrangian \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a771d4ed92094edc40f650ed185178acd}{neg\+\_\+dphi}}
+\begin{DoxyCompactList}\small\item\em -\/dphi, required as the rhs in Cholmod \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a93d1329aebe7dba2d38645412de43f92}{dphi\+\_\+prev}}
+\begin{DoxyCompactList}\small\item\em previous gradient of the Lagrangian \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_afa68534735d876db13ce5deab9f1e953}{d}}
+\begin{DoxyCompactList}\small\item\em primal update step \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Linesearch variables}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_af3614a39bf75c0331f89447caa3d1217}{Qd}}
+\begin{DoxyCompactList}\small\item\em Q $\ast$ d. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_ae40218985461185bbab01576ed8a1ca5}{Ad}}
+\begin{DoxyCompactList}\small\item\em A $\ast$ d. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a5628bcd9c8b6ab0ca4dd5015a0c39fb8}{sqrt\+\_\+sigma}}
+\begin{DoxyCompactList}\small\item\em elementwise sqrt(sigma) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{structQPALMWorkspace_adc663b895fd02bd845677d6e928f029e}{sqrt\+\_\+delta}}
+\begin{DoxyCompactList}\small\item\em sqrt(penalty update factor) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{structQPALMWorkspace_a04c63ad7652fa2b21cd7bfcbfed38b18}{eta}}
+\begin{DoxyCompactList}\small\item\em linesearch parameter \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{structQPALMWorkspace_a68ed6544f86dc7a29a5f7c2fe26ffccc}{beta}}
+\begin{DoxyCompactList}\small\item\em linesearch parameter \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a21bf2ea2cefa8eea9b7c4575d4dbca51}{delta}}
+\begin{DoxyCompactList}\small\item\em linesearch parameter \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_ad2b7da5ef7accd9881a0c65240cc2b36}{alpha}}
+\begin{DoxyCompactList}\small\item\em linesearch parameter \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_ae351edb296d6959659a578a265c3af8a}{temp\+\_\+2m}}
+\begin{DoxyCompactList}\small\item\em placeholder for vector of size 2m \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a2bd4914a52d02e2b11c56863976bb5ff}{delta2}}
+\begin{DoxyCompactList}\small\item\em delta .$\ast$ delta \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a68f6c37d8ac59bda4e2fad32e3935d99}{delta\+\_\+alpha}}
+\begin{DoxyCompactList}\small\item\em delta .$\ast$ alpha \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structarray__element}{array\+\_\+element}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a6428bf5b44e920828469514559b93de8}{s}}
+\begin{DoxyCompactList}\small\item\em alpha ./ delta \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_af1a5130d10eac6f1cca4e989592cffe4}{index\+\_\+L}}
+\begin{DoxyCompactList}\small\item\em index set L (where s$>$0) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a45ccfcbf6d91b05ecac8df1b31dee2b9}{index\+\_\+P}}
+\begin{DoxyCompactList}\small\item\em index set P (where delta$>$0) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a43b0fc9c50417ee9ed33acece1f61563}{index\+\_\+J}}
+\begin{DoxyCompactList}\small\item\em index set J (L xor P) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Termination criteria variables}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{structQPALMWorkspace_a2df42d22fd641d59753042919ab32a64}{eps\+\_\+pri}}
+\begin{DoxyCompactList}\small\item\em primal tolerance \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{structQPALMWorkspace_a66248f1ef4c0895a8a21afefacfd92f1}{eps\+\_\+dua}}
+\begin{DoxyCompactList}\small\item\em dual tolerance \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{structQPALMWorkspace_ab524d1db9548476f2bd2ab17968cbbc4}{eps\+\_\+dua\+\_\+in}}
+\begin{DoxyCompactList}\small\item\em intermediate dual tolerance \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Primal infeasibility variables}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a0454fc1ea5ab776f3cd0a2a4856220e8}{delta\+\_\+y}}
+\begin{DoxyCompactList}\small\item\em difference of consecutive dual iterates \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_ade9257729131b7c2806b5d7ff3cb10b3}{Atdelta\+\_\+y}}
+\begin{DoxyCompactList}\small\item\em A\textquotesingle{} $\ast$ delta\+\_\+y. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Dual infeasibility variables}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a84a2e58667872450dd7de728e98d8532}{delta\+\_\+x}}
+\begin{DoxyCompactList}\small\item\em difference of consecutive primal iterates \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a7a10abcbd6a5e3cb44b7dca2cf679c7a}{Qdelta\+\_\+x}}
+\begin{DoxyCompactList}\small\item\em Q $\ast$ delta\+\_\+x. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a756837945d447a7d5b5eac82ae0b71aa}{Adelta\+\_\+x}}
+\begin{DoxyCompactList}\small\item\em A $\ast$ delta\+\_\+x. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}\textbf{ Temporary vectors used in scaling}\par
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_a2bc2197cd4f371383a791f58b11af6d2}{D\+\_\+temp}}
+\begin{DoxyCompactList}\small\item\em temporary primal variable scaling vectors \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$ \mbox{\hyperlink{structQPALMWorkspace_ac7d0355a7c31ec062df981ff4b8199f8}{E\+\_\+temp}}
+\begin{DoxyCompactList}\small\item\em temporary constraints scaling vectors \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\subsection{Detailed Description}
+Q\+P\+A\+LM Workspace. 
+
+The workspace is the main data structure and is given as a pointer to (almost) all Q\+P\+A\+LM functions. It contains pointers to the settings, the data, return info, solution variables and intermediate workspace variables. 
+
+\subsection{Field Documentation}
+\mbox{\Hypertarget{structQPALMWorkspace_ae40218985461185bbab01576ed8a1ca5}\label{structQPALMWorkspace_ae40218985461185bbab01576ed8a1ca5}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!Ad@{Ad}}
+\index{Ad@{Ad}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{Ad}{Ad}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+Ad}
+
+
+
+A $\ast$ d. 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a756837945d447a7d5b5eac82ae0b71aa}\label{structQPALMWorkspace_a756837945d447a7d5b5eac82ae0b71aa}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!Adelta\_x@{Adelta\_x}}
+\index{Adelta\_x@{Adelta\_x}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{Adelta\_x}{Adelta\_x}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+Adelta\+\_\+x}
+
+
+
+A $\ast$ delta\+\_\+x. 
+
+\mbox{\Hypertarget{structQPALMWorkspace_ad2b7da5ef7accd9881a0c65240cc2b36}\label{structQPALMWorkspace_ad2b7da5ef7accd9881a0c65240cc2b36}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!alpha@{alpha}}
+\index{alpha@{alpha}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{alpha}{alpha}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::alpha}
+
+
+
+linesearch parameter 
+
+\mbox{\Hypertarget{structQPALMWorkspace_ade9257729131b7c2806b5d7ff3cb10b3}\label{structQPALMWorkspace_ade9257729131b7c2806b5d7ff3cb10b3}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!Atdelta\_y@{Atdelta\_y}}
+\index{Atdelta\_y@{Atdelta\_y}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{Atdelta\_y}{Atdelta\_y}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+Atdelta\+\_\+y}
+
+
+
+A\textquotesingle{} $\ast$ delta\+\_\+y. 
+
+\mbox{\Hypertarget{structQPALMWorkspace_ae807cf93487e8a5e0b658ebdee05a0b1}\label{structQPALMWorkspace_ae807cf93487e8a5e0b658ebdee05a0b1}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!Aty@{Aty}}
+\index{Aty@{Aty}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{Aty}{Aty}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+Aty}
+
+
+
+A\textquotesingle{} $\ast$ y (useful for saving one mat\+\_\+tpose\+\_\+vec) 
+
+\mbox{\Hypertarget{structQPALMWorkspace_affa4e2fe7facd4e9c1a4cb14c4103a72}\label{structQPALMWorkspace_affa4e2fe7facd4e9c1a4cb14c4103a72}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!Atyh@{Atyh}}
+\index{Atyh@{Atyh}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{Atyh}{Atyh}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+Atyh}
+
+
+
+A\textquotesingle{} $\ast$ yh. 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a34572f3d0c831ab6978808954c80f48c}\label{structQPALMWorkspace_a34572f3d0c831ab6978808954c80f48c}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!Ax@{Ax}}
+\index{Ax@{Ax}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{Ax}{Ax}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+Ax}
+
+
+
+scaled A $\ast$ x 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a77e294e1afd9d2489e34fd96ef14b15a}\label{structQPALMWorkspace_a77e294e1afd9d2489e34fd96ef14b15a}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!Axys@{Axys}}
+\index{Axys@{Axys}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{Axys}{Axys}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+Axys}
+
+
+
+Ax + y./sigma. 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a68ed6544f86dc7a29a5f7c2fe26ffccc}\label{structQPALMWorkspace_a68ed6544f86dc7a29a5f7c2fe26ffccc}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!beta@{beta}}
+\index{beta@{beta}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{beta}{beta}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} Q\+P\+A\+L\+M\+Workspace\+::beta}
+
+
+
+linesearch parameter 
+
+\mbox{\Hypertarget{structQPALMWorkspace_ad848957a0173251709fb56804f6ef10e}\label{structQPALMWorkspace_ad848957a0173251709fb56804f6ef10e}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!chol@{chol}}
+\index{chol@{chol}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{chol}{chol}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structQPALMCholmod}{Q\+P\+A\+L\+M\+Cholmod}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::chol}
+
+
+
+cholmod variables 
+
+\mbox{\Hypertarget{structQPALMWorkspace_afa68534735d876db13ce5deab9f1e953}\label{structQPALMWorkspace_afa68534735d876db13ce5deab9f1e953}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!d@{d}}
+\index{d@{d}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{d}{d}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::d}
+
+
+
+primal update step 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a2bc2197cd4f371383a791f58b11af6d2}\label{structQPALMWorkspace_a2bc2197cd4f371383a791f58b11af6d2}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!D\_temp@{D\_temp}}
+\index{D\_temp@{D\_temp}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{D\_temp}{D\_temp}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+D\+\_\+temp}
+
+
+
+temporary primal variable scaling vectors 
+
+\mbox{\Hypertarget{structQPALMWorkspace_aef5a70ffeeade2377480c7cae36a8964}\label{structQPALMWorkspace_aef5a70ffeeade2377480c7cae36a8964}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!data@{data}}
+\index{data@{data}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{data}{data}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structQPALMData}{Q\+P\+A\+L\+M\+Data}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::data}
+
+
+
+problem data to work on (possibly scaled) 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a21bf2ea2cefa8eea9b7c4575d4dbca51}\label{structQPALMWorkspace_a21bf2ea2cefa8eea9b7c4575d4dbca51}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!delta@{delta}}
+\index{delta@{delta}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{delta}{delta}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::delta}
+
+
+
+linesearch parameter 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a2bd4914a52d02e2b11c56863976bb5ff}\label{structQPALMWorkspace_a2bd4914a52d02e2b11c56863976bb5ff}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!delta2@{delta2}}
+\index{delta2@{delta2}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{delta2}{delta2}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::delta2}
+
+
+
+delta .$\ast$ delta 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a68f6c37d8ac59bda4e2fad32e3935d99}\label{structQPALMWorkspace_a68f6c37d8ac59bda4e2fad32e3935d99}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!delta\_alpha@{delta\_alpha}}
+\index{delta\_alpha@{delta\_alpha}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{delta\_alpha}{delta\_alpha}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::delta\+\_\+alpha}
+
+
+
+delta .$\ast$ alpha 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a84a2e58667872450dd7de728e98d8532}\label{structQPALMWorkspace_a84a2e58667872450dd7de728e98d8532}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!delta\_x@{delta\_x}}
+\index{delta\_x@{delta\_x}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{delta\_x}{delta\_x}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::delta\+\_\+x}
+
+
+
+difference of consecutive primal iterates 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a0454fc1ea5ab776f3cd0a2a4856220e8}\label{structQPALMWorkspace_a0454fc1ea5ab776f3cd0a2a4856220e8}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!delta\_y@{delta\_y}}
+\index{delta\_y@{delta\_y}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{delta\_y}{delta\_y}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::delta\+\_\+y}
+
+
+
+difference of consecutive dual iterates 
+
+\mbox{\Hypertarget{structQPALMWorkspace_aca74b2322e2dc5427a440a39a16e2c3b}\label{structQPALMWorkspace_aca74b2322e2dc5427a440a39a16e2c3b}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!df@{df}}
+\index{df@{df}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{df}{df}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::df}
+
+
+
+gradient of the primal objective (+proximal term) 
+
+\mbox{\Hypertarget{structQPALMWorkspace_abc9bf36aa5174f0e7839630d9bef826b}\label{structQPALMWorkspace_abc9bf36aa5174f0e7839630d9bef826b}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!dphi@{dphi}}
+\index{dphi@{dphi}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{dphi}{dphi}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::dphi}
+
+
+
+gradient of the Lagrangian 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a93d1329aebe7dba2d38645412de43f92}\label{structQPALMWorkspace_a93d1329aebe7dba2d38645412de43f92}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!dphi\_prev@{dphi\_prev}}
+\index{dphi\_prev@{dphi\_prev}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{dphi\_prev}{dphi\_prev}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::dphi\+\_\+prev}
+
+
+
+previous gradient of the Lagrangian 
+
+\mbox{\Hypertarget{structQPALMWorkspace_ac7d0355a7c31ec062df981ff4b8199f8}\label{structQPALMWorkspace_ac7d0355a7c31ec062df981ff4b8199f8}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!E\_temp@{E\_temp}}
+\index{E\_temp@{E\_temp}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{E\_temp}{E\_temp}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+E\+\_\+temp}
+
+
+
+temporary constraints scaling vectors 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a66248f1ef4c0895a8a21afefacfd92f1}\label{structQPALMWorkspace_a66248f1ef4c0895a8a21afefacfd92f1}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!eps\_dua@{eps\_dua}}
+\index{eps\_dua@{eps\_dua}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{eps\_dua}{eps\_dua}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} Q\+P\+A\+L\+M\+Workspace\+::eps\+\_\+dua}
+
+
+
+dual tolerance 
+
+\mbox{\Hypertarget{structQPALMWorkspace_ab524d1db9548476f2bd2ab17968cbbc4}\label{structQPALMWorkspace_ab524d1db9548476f2bd2ab17968cbbc4}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!eps\_dua\_in@{eps\_dua\_in}}
+\index{eps\_dua\_in@{eps\_dua\_in}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{eps\_dua\_in}{eps\_dua\_in}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} Q\+P\+A\+L\+M\+Workspace\+::eps\+\_\+dua\+\_\+in}
+
+
+
+intermediate dual tolerance 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a2df42d22fd641d59753042919ab32a64}\label{structQPALMWorkspace_a2df42d22fd641d59753042919ab32a64}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!eps\_pri@{eps\_pri}}
+\index{eps\_pri@{eps\_pri}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{eps\_pri}{eps\_pri}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} Q\+P\+A\+L\+M\+Workspace\+::eps\+\_\+pri}
+
+
+
+primal tolerance 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a04c63ad7652fa2b21cd7bfcbfed38b18}\label{structQPALMWorkspace_a04c63ad7652fa2b21cd7bfcbfed38b18}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!eta@{eta}}
+\index{eta@{eta}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{eta}{eta}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} Q\+P\+A\+L\+M\+Workspace\+::eta}
+
+
+
+linesearch parameter 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a43b0fc9c50417ee9ed33acece1f61563}\label{structQPALMWorkspace_a43b0fc9c50417ee9ed33acece1f61563}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!index\_J@{index\_J}}
+\index{index\_J@{index\_J}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{index\_J}{index\_J}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::index\+\_\+J}
+
+
+
+index set J (L xor P) 
+
+\mbox{\Hypertarget{structQPALMWorkspace_af1a5130d10eac6f1cca4e989592cffe4}\label{structQPALMWorkspace_af1a5130d10eac6f1cca4e989592cffe4}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!index\_L@{index\_L}}
+\index{index\_L@{index\_L}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{index\_L}{index\_L}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::index\+\_\+L}
+
+
+
+index set L (where s$>$0) 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a45ccfcbf6d91b05ecac8df1b31dee2b9}\label{structQPALMWorkspace_a45ccfcbf6d91b05ecac8df1b31dee2b9}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!index\_P@{index\_P}}
+\index{index\_P@{index\_P}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{index\_P}{index\_P}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::index\+\_\+P}
+
+
+
+index set P (where delta$>$0) 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a37b5c22c01352658c55dadcde7481222}\label{structQPALMWorkspace_a37b5c22c01352658c55dadcde7481222}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!info@{info}}
+\index{info@{info}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{info}{info}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structQPALMInfo}{Q\+P\+A\+L\+M\+Info}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::info}
+
+
+
+solver information 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a771d4ed92094edc40f650ed185178acd}\label{structQPALMWorkspace_a771d4ed92094edc40f650ed185178acd}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!neg\_dphi@{neg\_dphi}}
+\index{neg\_dphi@{neg\_dphi}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{neg\_dphi}{neg\_dphi}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::neg\+\_\+dphi}
+
+
+
+-\/dphi, required as the rhs in Cholmod 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a46bd3912583b69f83d5bd3cbb2bee8b2}\label{structQPALMWorkspace_a46bd3912583b69f83d5bd3cbb2bee8b2}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!pri\_res@{pri\_res}}
+\index{pri\_res@{pri\_res}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{pri\_res}{pri\_res}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::pri\+\_\+res}
+
+
+
+primal residual 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a4178a4d2bfdb85f18f14e3ddfaec142c}\label{structQPALMWorkspace_a4178a4d2bfdb85f18f14e3ddfaec142c}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!pri\_res\_in@{pri\_res\_in}}
+\index{pri\_res\_in@{pri\_res\_in}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{pri\_res\_in}{pri\_res\_in}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::pri\+\_\+res\+\_\+in}
+
+
+
+intermediate primal residual 
+
+\mbox{\Hypertarget{structQPALMWorkspace_af3614a39bf75c0331f89447caa3d1217}\label{structQPALMWorkspace_af3614a39bf75c0331f89447caa3d1217}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!Qd@{Qd}}
+\index{Qd@{Qd}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{Qd}{Qd}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+Qd}
+
+
+
+Q $\ast$ d. 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a7a10abcbd6a5e3cb44b7dca2cf679c7a}\label{structQPALMWorkspace_a7a10abcbd6a5e3cb44b7dca2cf679c7a}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!Qdelta\_x@{Qdelta\_x}}
+\index{Qdelta\_x@{Qdelta\_x}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{Qdelta\_x}{Qdelta\_x}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+Qdelta\+\_\+x}
+
+
+
+Q $\ast$ delta\+\_\+x. 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a9104271b5dc1b242f3d6d5c175dcb0c1}\label{structQPALMWorkspace_a9104271b5dc1b242f3d6d5c175dcb0c1}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!Qx@{Qx}}
+\index{Qx@{Qx}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{Qx}{Qx}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::\+Qx}
+
+
+
+scaled Q $\ast$ x 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a6428bf5b44e920828469514559b93de8}\label{structQPALMWorkspace_a6428bf5b44e920828469514559b93de8}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!s@{s}}
+\index{s@{s}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{s}{s}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structarray__element}{array\+\_\+element}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::s}
+
+
+
+alpha ./ delta 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a20daf0c6d38c77121e113af63ed726b6}\label{structQPALMWorkspace_a20daf0c6d38c77121e113af63ed726b6}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!scaling@{scaling}}
+\index{scaling@{scaling}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{scaling}{scaling}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structQPALMScaling}{Q\+P\+A\+L\+M\+Scaling}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::scaling}
+
+
+
+scaling vectors 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a9e29077d16b88e77e8aae6f06f69ec0c}\label{structQPALMWorkspace_a9e29077d16b88e77e8aae6f06f69ec0c}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!settings@{settings}}
+\index{settings@{settings}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{settings}{settings}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::settings}
+
+
+
+problem settings 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a585c53dd55cbc9aaecd42d224bde483f}\label{structQPALMWorkspace_a585c53dd55cbc9aaecd42d224bde483f}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!sigma@{sigma}}
+\index{sigma@{sigma}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{sigma}{sigma}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::sigma}
+
+
+
+penalty vector 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a44a489b6424974f302d679893efae327}\label{structQPALMWorkspace_a44a489b6424974f302d679893efae327}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!solution@{solution}}
+\index{solution@{solution}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{solution}{solution}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structQPALMSolution}{Q\+P\+A\+L\+M\+Solution}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::solution}
+
+
+
+problem solution 
+
+\mbox{\Hypertarget{structQPALMWorkspace_adc663b895fd02bd845677d6e928f029e}\label{structQPALMWorkspace_adc663b895fd02bd845677d6e928f029e}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!sqrt\_delta@{sqrt\_delta}}
+\index{sqrt\_delta@{sqrt\_delta}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{sqrt\_delta}{sqrt\_delta}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} Q\+P\+A\+L\+M\+Workspace\+::sqrt\+\_\+delta}
+
+
+
+sqrt(penalty update factor) 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a5628bcd9c8b6ab0ca4dd5015a0c39fb8}\label{structQPALMWorkspace_a5628bcd9c8b6ab0ca4dd5015a0c39fb8}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!sqrt\_sigma@{sqrt\_sigma}}
+\index{sqrt\_sigma@{sqrt\_sigma}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{sqrt\_sigma}{sqrt\_sigma}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::sqrt\+\_\+sigma}
+
+
+
+elementwise sqrt(sigma) 
+
+\mbox{\Hypertarget{structQPALMWorkspace_ae351edb296d6959659a578a265c3af8a}\label{structQPALMWorkspace_ae351edb296d6959659a578a265c3af8a}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!temp\_2m@{temp\_2m}}
+\index{temp\_2m@{temp\_2m}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{temp\_2m}{temp\_2m}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::temp\+\_\+2m}
+
+
+
+placeholder for vector of size 2m 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a43fba7da6d00e0f05d8ee75b5329f364}\label{structQPALMWorkspace_a43fba7da6d00e0f05d8ee75b5329f364}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!temp\_m@{temp\_m}}
+\index{temp\_m@{temp\_m}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{temp\_m}{temp\_m}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::temp\+\_\+m}
+
+
+
+placeholder for vector of size m 
+
+\mbox{\Hypertarget{structQPALMWorkspace_af54ff24e9b647dd2d8e8df2b89c11946}\label{structQPALMWorkspace_af54ff24e9b647dd2d8e8df2b89c11946}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!temp\_n@{temp\_n}}
+\index{temp\_n@{temp\_n}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{temp\_n}{temp\_n}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::temp\+\_\+n}
+
+
+
+placeholder for vector of size n 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a0625a9b426e5e7d81443a107d49730ef}\label{structQPALMWorkspace_a0625a9b426e5e7d81443a107d49730ef}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!x@{x}}
+\index{x@{x}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{x}{x}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::x}
+
+
+
+primal iterate 
+
+\mbox{\Hypertarget{structQPALMWorkspace_aa9dafcb9c277f81bb5e6cc5e514e4a51}\label{structQPALMWorkspace_aa9dafcb9c277f81bb5e6cc5e514e4a51}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!x0@{x0}}
+\index{x0@{x0}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{x0}{x0}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::x0}
+
+
+
+record of the primal iterate during the last dual update 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a6bd9099b5f7a4008be9eddf61bc1bd13}\label{structQPALMWorkspace_a6bd9099b5f7a4008be9eddf61bc1bd13}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!x\_prev@{x\_prev}}
+\index{x\_prev@{x\_prev}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{x\_prev}{x\_prev}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::x\+\_\+prev}
+
+
+
+previous primal iterate 
+
+\mbox{\Hypertarget{structQPALMWorkspace_addac4a91d2b85cb9e388cd2dc65cb455}\label{structQPALMWorkspace_addac4a91d2b85cb9e388cd2dc65cb455}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!xx0@{xx0}}
+\index{xx0@{xx0}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{xx0}{xx0}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::xx0}
+
+
+
+x -\/ x0 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a0d81840f72cdb13574669fc62eb44ac9}\label{structQPALMWorkspace_a0d81840f72cdb13574669fc62eb44ac9}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!y@{y}}
+\index{y@{y}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{y}{y}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::y}
+
+
+
+dual iterate 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a12cd413a80f3e029802beb280e76d348}\label{structQPALMWorkspace_a12cd413a80f3e029802beb280e76d348}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!yh@{yh}}
+\index{yh@{yh}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{yh}{yh}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::yh}
+
+
+
+candidate dual update 
+
+\mbox{\Hypertarget{structQPALMWorkspace_a38524247b44059e6989761d6a9159b0a}\label{structQPALMWorkspace_a38524247b44059e6989761d6a9159b0a}} 
+\index{QPALMWorkspace@{QPALMWorkspace}!z@{z}}
+\index{z@{z}!QPALMWorkspace@{QPALMWorkspace}}
+\subsubsection{\texorpdfstring{z}{z}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}}$\ast$ Q\+P\+A\+L\+M\+Workspace\+::z}
+
+
+
+projection of Axys onto the constraint set \mbox{[}bmin, bmax\mbox{]} 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/include/\mbox{\hyperlink{types_8h}{types.\+h}}\end{DoxyCompactItemize}

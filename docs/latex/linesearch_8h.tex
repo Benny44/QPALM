@@ -1,0 +1,172 @@
+\hypertarget{linesearch_8h}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/include/linesearch.h File Reference}
+\label{linesearch_8h}\index{/home/ben/Documents/Projects/QPALM/include/linesearch.h@{/home/ben/Documents/Projects/QPALM/include/linesearch.h}}
+
+
+Routines to perform exact or backtracking linesearch.  
+
+
+{\ttfamily \#include \char`\"{}types.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}constants.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{linesearch_8h_a29a679672665aebe2f64094fba65160f}{exact\+\_\+linesearch}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Execute exact linesearch (using qsort) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{linesearch_8h_a0280f1cbccd361e737237ffe4c187ee7}{exact\+\_\+linesearch\+\_\+newton}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Execute exact linesearch (using Newton\textquotesingle{}s method) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{linesearch_8h_a6ac57ea5ff25012ad3e89b5956b06b96}{armijo\+\_\+linesearch}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Execute backtracking linesearch with Armijo condition. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{linesearch_8h_ae209633a57657f1a729244619f7df8be}{vec\+\_\+array\+\_\+copy}} (\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, \mbox{\hyperlink{structarray__element}{array\+\_\+element}} $\ast$b, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Helper function to copy vector a in array b (with indices) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{linesearch_8h_acffdd7f23862848722b98489848ca78d}{select\+\_\+subsequence}} (const \mbox{\hyperlink{structarray__element}{array\+\_\+element}} $\ast$a, \mbox{\hyperlink{structarray__element}{array\+\_\+element}} $\ast$b, const \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$L, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Select subsequence based on a set of indices, $b = a(L)$. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} \mbox{\hyperlink{linesearch_8h_ad446681224f354ad209acc44a91b5e1d}{vec\+\_\+prod\+\_\+ind}} (const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$a, const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$b, const \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$L, \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} n)
+\begin{DoxyCompactList}\small\item\em Inner product over index set, $a(L)^T\cdot b(L)$. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{linesearch_8h_ac70138609ef6aa6fabca57aca8681e83}{compare}} (const void $\ast$a, const void $\ast$b)
+\begin{DoxyCompactList}\small\item\em Helper function for qsort. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Routines to perform exact or backtracking linesearch. 
+
+\begin{DoxyAuthor}{Author}
+Ben Hermans
+\end{DoxyAuthor}
+Once the direction is found using the semismooth Newton method, the functions in this file can be called to calculate a stepsize, either using exact linesearch or a backtracking linesearch to satisfy the armijo condition. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{linesearch_8h_a6ac57ea5ff25012ad3e89b5956b06b96}\label{linesearch_8h_a6ac57ea5ff25012ad3e89b5956b06b96}} 
+\index{linesearch.h@{linesearch.h}!armijo\_linesearch@{armijo\_linesearch}}
+\index{armijo\_linesearch@{armijo\_linesearch}!linesearch.h@{linesearch.h}}
+\subsubsection{\texorpdfstring{armijo\_linesearch()}{armijo\_linesearch()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} armijo\+\_\+linesearch (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Execute backtracking linesearch with Armijo condition. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+tau Step size 
+\end{DoxyReturn}
+\mbox{\Hypertarget{linesearch_8h_ac70138609ef6aa6fabca57aca8681e83}\label{linesearch_8h_ac70138609ef6aa6fabca57aca8681e83}} 
+\index{linesearch.h@{linesearch.h}!compare@{compare}}
+\index{compare@{compare}!linesearch.h@{linesearch.h}}
+\subsubsection{\texorpdfstring{compare()}{compare()}}
+{\footnotesize\ttfamily int compare (\begin{DoxyParamCaption}\item[{const void $\ast$}]{a,  }\item[{const void $\ast$}]{b }\end{DoxyParamCaption})}
+
+
+
+Helper function for qsort. 
+
+Carries out comparison between two array\+\_\+elements 
+\begin{DoxyParams}{Parameters}
+{\em a} & Pointer to array element \\
+\hline
+{\em b} & Pointer to array element \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a.\+x $>$ b.\+x 
+\end{DoxyReturn}
+\mbox{\Hypertarget{linesearch_8h_a29a679672665aebe2f64094fba65160f}\label{linesearch_8h_a29a679672665aebe2f64094fba65160f}} 
+\index{linesearch.h@{linesearch.h}!exact\_linesearch@{exact\_linesearch}}
+\index{exact\_linesearch@{exact\_linesearch}!linesearch.h@{linesearch.h}}
+\subsubsection{\texorpdfstring{exact\_linesearch()}{exact\_linesearch()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} exact\+\_\+linesearch (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Execute exact linesearch (using qsort) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+tau Step size 
+\end{DoxyReturn}
+\mbox{\Hypertarget{linesearch_8h_a0280f1cbccd361e737237ffe4c187ee7}\label{linesearch_8h_a0280f1cbccd361e737237ffe4c187ee7}} 
+\index{linesearch.h@{linesearch.h}!exact\_linesearch\_newton@{exact\_linesearch\_newton}}
+\index{exact\_linesearch\_newton@{exact\_linesearch\_newton}!linesearch.h@{linesearch.h}}
+\subsubsection{\texorpdfstring{exact\_linesearch\_newton()}{exact\_linesearch\_newton()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} exact\+\_\+linesearch\+\_\+newton (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Execute exact linesearch (using Newton\textquotesingle{}s method) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+tau Step size 
+\end{DoxyReturn}
+\mbox{\Hypertarget{linesearch_8h_acffdd7f23862848722b98489848ca78d}\label{linesearch_8h_acffdd7f23862848722b98489848ca78d}} 
+\index{linesearch.h@{linesearch.h}!select\_subsequence@{select\_subsequence}}
+\index{select\_subsequence@{select\_subsequence}!linesearch.h@{linesearch.h}}
+\subsubsection{\texorpdfstring{select\_subsequence()}{select\_subsequence()}}
+{\footnotesize\ttfamily void select\+\_\+subsequence (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structarray__element}{array\+\_\+element}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{structarray__element}{array\+\_\+element}} $\ast$}]{b,  }\item[{const \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$}]{L,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Select subsequence based on a set of indices, $b = a(L)$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Input array \\
+\hline
+{\em b} & Outpur array \\
+\hline
+{\em L} & Index set \\
+\hline
+{\em n} & Length of a \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{linesearch_8h_ae209633a57657f1a729244619f7df8be}\label{linesearch_8h_ae209633a57657f1a729244619f7df8be}} 
+\index{linesearch.h@{linesearch.h}!vec\_array\_copy@{vec\_array\_copy}}
+\index{vec\_array\_copy@{vec\_array\_copy}!linesearch.h@{linesearch.h}}
+\subsubsection{\texorpdfstring{vec\_array\_copy()}{vec\_array\_copy()}}
+{\footnotesize\ttfamily void vec\+\_\+array\+\_\+copy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{\mbox{\hyperlink{structarray__element}{array\+\_\+element}} $\ast$}]{b,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Helper function to copy vector a in array b (with indices) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Vector \\
+\hline
+{\em b} & Array (vector with added indices) \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{linesearch_8h_ad446681224f354ad209acc44a91b5e1d}\label{linesearch_8h_ad446681224f354ad209acc44a91b5e1d}} 
+\index{linesearch.h@{linesearch.h}!vec\_prod\_ind@{vec\_prod\_ind}}
+\index{vec\_prod\_ind@{vec\_prod\_ind}!linesearch.h@{linesearch.h}}
+\subsubsection{\texorpdfstring{vec\_prod\_ind()}{vec\_prod\_ind()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} vec\+\_\+prod\+\_\+ind (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{a,  }\item[{const \mbox{\hyperlink{global__opts_8h_a7f1a9fda95e52979658c20a0d134fb15}{c\+\_\+float}} $\ast$}]{b,  }\item[{const \mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}} $\ast$}]{L,  }\item[{\mbox{\hyperlink{global__opts_8h_aa3217a0f49d3e52b74e9dd830c44472f}{c\+\_\+int}}}]{n }\end{DoxyParamCaption})}
+
+
+
+Inner product over index set, $a(L)^T\cdot b(L)$. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Vector \\
+\hline
+{\em b} & Vector \\
+\hline
+{\em L} & Index set \\
+\hline
+{\em n} & Vector length \\
+\hline
+\end{DoxyParams}

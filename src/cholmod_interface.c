@@ -1,3 +1,14 @@
+/**
+ * @file cholmod_interface.c
+ * @author Ben Hermans
+ * @brief Interface and wrapper to cholmod functions
+ * @details This file includes all calls to cholmod functions apart from scaling in scaling.c and memory
+ * allocation/deallocation in the main functions in qpalm.c. It includes all matrix operations, such as
+ * matrix vector products, row- and columnwise norms, cholesky factorizations, factorization updates and
+ * solving the linear system. Finally, all the settings relevant to cholmod (and suitesparse) are included
+ * in this file as well.
+ */
+
 #include "cholmod_interface.h"
 #include "lin_alg.h"
 #include <stdio.h>

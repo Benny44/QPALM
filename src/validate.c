@@ -1,3 +1,11 @@
+/**
+ * @file validate.c
+ * @author Ben Hermans
+ * @brief Validation of the user provided settings and data.
+ * @details The assumptions on the settings can be found in the 
+ * details of the QPALMSettings tab in data structures.
+ */
+
 #include "validate.h"
 #include "lin_alg.h"
 #include "constants.h"
@@ -90,7 +98,7 @@ c_int validate_settings(const QPALMSettings *settings) {
     return 1;
   }
 
-  if (settings->rho <= 0 || settings->rho > 1) {
+  if (settings->rho <= 0 || settings->rho >= 1) {
 # ifdef PRINTING
     c_eprint("rho must be positive and smaller than 1");
 # endif /* ifdef PRINTING */
@@ -113,7 +121,7 @@ c_int validate_settings(const QPALMSettings *settings) {
 
   if (settings->theta > 1) {
 # ifdef PRINTING
-    c_eprint("theta must be smaller than 1");
+    c_eprint("theta must be smaller than ot equal 1");
 # endif /* ifdef PRINTING */
     return 1;
   }
@@ -125,9 +133,9 @@ c_int validate_settings(const QPALMSettings *settings) {
     return 1;
   }
 
-    if (settings->memory <= 0) {
+  if (settings->tau_init <= 0) {
 # ifdef PRINTING
-    c_eprint("LBFGS memory must be greater than 0");
+    c_eprint("tau_init must be greater than 0");
 # endif /* ifdef PRINTING */
     return 1;
   }
@@ -146,9 +154,9 @@ c_int validate_settings(const QPALMSettings *settings) {
     return 1;
   }
 
-   if (settings->gamma_upd <= 1) {
+   if (settings->gamma_upd < 1) {
 # ifdef PRINTING
-    c_eprint("gamma update factor must be greater than 1");
+    c_eprint("gamma update factor must be greater than or equal to 1");
 # endif /* ifdef PRINTING */
     return 1;
   }
@@ -162,7 +170,7 @@ c_int validate_settings(const QPALMSettings *settings) {
 
    if (settings->scaling < 0) {
 # ifdef PRINTING
-    c_eprint("scaling must be greater or equal to zero");
+    c_eprint("scaling must be greater than or equal to zero");
 # endif /* ifdef PRINTING */
     return 1;
   }

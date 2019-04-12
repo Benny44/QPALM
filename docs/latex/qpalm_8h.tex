@@ -1,0 +1,116 @@
+\hypertarget{qpalm_8h}{}\section{/home/ben/\+Documents/\+Projects/\+Q\+P\+A\+L\+M/include/qpalm.h File Reference}
+\label{qpalm_8h}\index{/home/ben/Documents/Projects/QPALM/include/qpalm.h@{/home/ben/Documents/Projects/QPALM/include/qpalm.h}}
+
+
+Q\+P\+A\+LM main solver A\+PI.  
+
+
+{\ttfamily \#include \char`\"{}types.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}global\+\_\+opts.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{Indent}\textbf{ Main solver A\+PI}\par
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{qpalm_8h_a4aa4b201790332b345faf7ca36f54be5}{qpalm\+\_\+set\+\_\+default\+\_\+settings}} (\mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} $\ast$settings)
+\begin{DoxyCompactList}\small\item\em Set default settings from \mbox{\hyperlink{constants_8h}{constants.\+h}} file. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$ \mbox{\hyperlink{qpalm_8h_a6f5ace95da26577065ebe86c135cac6d}{qpalm\+\_\+setup}} (const \mbox{\hyperlink{structQPALMData}{Q\+P\+A\+L\+M\+Data}} $\ast$data, \mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} $\ast$settings, cholmod\+\_\+common $\ast$c)
+\begin{DoxyCompactList}\small\item\em Initialize Q\+P\+A\+LM solver allocating memory. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{qpalm_8h_a17fcba910c32b8518df93617591b1cf1}{qpalm\+\_\+solve}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Solve the quadratic program. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{qpalm_8h_a856ef78171b77f0f526a8d4255e15223}{qpalm\+\_\+cleanup}} (\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$work)
+\begin{DoxyCompactList}\small\item\em Cleanup the workspace by deallocating memory. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\subsection{Detailed Description}
+Q\+P\+A\+LM main solver A\+PI. 
+
+\begin{DoxyAuthor}{Author}
+Ben Hermans
+\end{DoxyAuthor}
+This file contains the main functions that can be called by the user. The user can load the default settings, setup the workspace with data and settings, run the solver, and cleanup the workspace afterwards. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{qpalm_8h_a856ef78171b77f0f526a8d4255e15223}\label{qpalm_8h_a856ef78171b77f0f526a8d4255e15223}} 
+\index{qpalm.h@{qpalm.h}!qpalm\_cleanup@{qpalm\_cleanup}}
+\index{qpalm\_cleanup@{qpalm\_cleanup}!qpalm.h@{qpalm.h}}
+\subsubsection{\texorpdfstring{qpalm\_cleanup()}{qpalm\_cleanup()}}
+{\footnotesize\ttfamily void qpalm\+\_\+cleanup (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Cleanup the workspace by deallocating memory. 
+
+This function should be the called after the user is done using Q\+P\+A\+LM. 
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{qpalm_8h_a4aa4b201790332b345faf7ca36f54be5}\label{qpalm_8h_a4aa4b201790332b345faf7ca36f54be5}} 
+\index{qpalm.h@{qpalm.h}!qpalm\_set\_default\_settings@{qpalm\_set\_default\_settings}}
+\index{qpalm\_set\_default\_settings@{qpalm\_set\_default\_settings}!qpalm.h@{qpalm.h}}
+\subsubsection{\texorpdfstring{qpalm\_set\_default\_settings()}{qpalm\_set\_default\_settings()}}
+{\footnotesize\ttfamily void qpalm\+\_\+set\+\_\+default\+\_\+settings (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} $\ast$}]{settings }\end{DoxyParamCaption})}
+
+
+
+Set default settings from \mbox{\hyperlink{constants_8h}{constants.\+h}} file. 
+
+Assumes settings are already allocated in memory. 
+\begin{DoxyParams}{Parameters}
+{\em settings} & Settings structure \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{qpalm_8h_a6f5ace95da26577065ebe86c135cac6d}\label{qpalm_8h_a6f5ace95da26577065ebe86c135cac6d}} 
+\index{qpalm.h@{qpalm.h}!qpalm\_setup@{qpalm\_setup}}
+\index{qpalm\_setup@{qpalm\_setup}!qpalm.h@{qpalm.h}}
+\subsubsection{\texorpdfstring{qpalm\_setup()}{qpalm\_setup()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}}$\ast$ qpalm\+\_\+setup (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structQPALMData}{Q\+P\+A\+L\+M\+Data}} $\ast$}]{data,  }\item[{\mbox{\hyperlink{structQPALMSettings}{Q\+P\+A\+L\+M\+Settings}} $\ast$}]{settings,  }\item[{cholmod\+\_\+common $\ast$}]{c }\end{DoxyParamCaption})}
+
+
+
+Initialize Q\+P\+A\+LM solver allocating memory. 
+
+All the inputs must be already allocated in memory before calling.
+
+It performs\+:
+\begin{DoxyItemize}
+\item data and settings validation
+\item problem data scaling
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & Problem data \\
+\hline
+{\em settings} & Solver settings \\
+\hline
+{\em c} & Cholmod environment \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Solver environment 
+\end{DoxyReturn}
+\mbox{\Hypertarget{qpalm_8h_a17fcba910c32b8518df93617591b1cf1}\label{qpalm_8h_a17fcba910c32b8518df93617591b1cf1}} 
+\index{qpalm.h@{qpalm.h}!qpalm\_solve@{qpalm\_solve}}
+\index{qpalm\_solve@{qpalm\_solve}!qpalm.h@{qpalm.h}}
+\subsubsection{\texorpdfstring{qpalm\_solve()}{qpalm\_solve()}}
+{\footnotesize\ttfamily void qpalm\+\_\+solve (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structQPALMWorkspace}{Q\+P\+A\+L\+M\+Workspace}} $\ast$}]{work }\end{DoxyParamCaption})}
+
+
+
+Solve the quadratic program. 
+
+The final solver information is stored in the {\itshape work-\/$>$info} structure.
+
+The solution is stored in the {\itshape work-\/$>$solution} structure.
+
+If the problem is primal infeasible, the certificate is stored in {\itshape work-\/$>$delta\+\_\+y}.
+
+If the problem is dual infeasible, the certificate is stored in {\itshape work-\/$>$delta\+\_\+x}.
+
+
+\begin{DoxyParams}{Parameters}
+{\em work} & Workspace \\
+\hline
+\end{DoxyParams}

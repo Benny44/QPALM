@@ -1,7 +1,6 @@
 #include "util.h"
 #include "lin_alg.h"
 #include "global_opts.h"
-#include <stdio.h>
 /**********************
 * Utility Functions  *
 **********************/
@@ -33,7 +32,6 @@ QPALMSettings* copy_settings(QPALMSettings *settings) {
     new->theta        = settings->theta;         
     new->delta        = settings->delta;
     new->tau_init     = settings->tau_init;         
-    new->memory       = settings->memory; 
     new->proximal     = settings->proximal;       
     new->gamma        = settings->gamma;         
     new->gamma_upd    = settings->gamma_upd;     
@@ -60,8 +58,6 @@ void update_status(QPALMInfo *info, c_int status_val) {
                                                             "dual infeasible");
     else if (status_val == QPALM_MAX_ITER_REACHED) c_strcpy(info->status,
                                                             "maximum iterations reached");
-    else if (status_val == QPALM_NON_CVX) c_strcpy(info->status, "problem non convex");
-
 }
 
 
