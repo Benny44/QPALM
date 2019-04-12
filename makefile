@@ -4,11 +4,14 @@ SRCDIR=src
 EDIR=examples
 BDIR=lib
 
-all: lib demo
+all: directories lib demo
 
 lib: $(BDIR)/libqpalm.a
 
-CC=gcc
+ifndef CC
+	CC=gcc
+endif
+
 CFLAGS=-I$(IDIR) -Isuitesparse/include -fPIC -O3 -DPROFILING -Wall -Wextra -DDLONG -fopenmp -fexceptions
 CHOLMOD_LIBS=-lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmetis -lm
 CHOLMOD_LIB_INCLUDE+=-Lsuitesparse/lib -Isuitesparse/metis-5.1.0/include
@@ -25,6 +28,11 @@ LIBS+=$(BLAS)
 ifdef BLAS_PATH
 	BLAS_INCLUDE=-L$(BLAS_PATH)
 	LDLIBS+=$(BLAS_INCLUDE)
+endif
+
+ifdef LAPACK_PATH
+	LAPACK_INCLUDE=-L$(LAPACK_PATH)
+	LDLIBS+=$(LAPACK_INCLUDE)
 endif
 
 _DEPS = qpalm.h scaling.h util.h lin_alg.h validate.h linesearch.h types.h constants.h lbfgs.h global_opts.h termination.h cs.h cholmod_interface.h newton.h
@@ -46,7 +54,11 @@ $(BDIR)/libqpalm.a: $(_OBJ)
 demo: $(OBJ) 
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(LDLIBS)
 
-.PHONY: clean
+.PHONY: clean directories
 
 clean:
 	rm -f $(ODIR)/*.o $(BDIR)/*.a $(EDIR)/*.o demo
+
+directories:
+	mkdir -p obj lib
+
