@@ -3,6 +3,7 @@
 #include "test_basic_qp.h"
 #include "test_prim_inf_qp.h"
 #include "test_dua_inf_qp.h"
+#include "test_cholmod_interface.h"
 
 int main(){
 
@@ -28,6 +29,17 @@ int main(){
         CU_TEST_INFO_NULL,
     };
 
+    /* cholmod interface tests */
+    /* linear algebra tests */
+    CU_TestInfo suite_cholmod[] = {
+        { "test_mat_vec", test_mat_vec},
+        { "test_mat_tpose_vec", test_mat_tpose_vec},
+        { "test_mat_inf_norm_cols", test_mat_inf_norm_cols},
+        { "test_mat_inf_norm_rows", test_mat_inf_norm_rows},
+        { "test_ldlchol", test_ldlchol},
+        CU_TEST_INFO_NULL,
+    };
+
     /* basic qp */
     CU_TestInfo suite_basic_qp[] = {
         { "test_basic_qp", test_basic_qp},
@@ -49,6 +61,7 @@ int main(){
     /* list of suites to be tested */
     CU_SuiteInfo suites[] = {
         { "lin_alg", NULL, NULL, reset_abc, NULL, suite_lin_alg},
+        { "cholmod", cholmod_qp_setup, cholmod_qp_teardown, cholmod_set_QdAd, NULL, suite_cholmod},
         { "basic_qp", NULL, NULL, basic_qp_setup, basic_qp_teardown, suite_basic_qp},
         { "prim_inf_qp", NULL, NULL, prim_inf_qp_setup, prim_inf_qp_teardown, suite_prim_inf_qp},
         { "dua_inf_qp", NULL, NULL, dua_inf_qp_setup, dua_inf_qp_teardown, suite_dua_inf_qp},

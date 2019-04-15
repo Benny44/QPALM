@@ -8,7 +8,6 @@
 #define ANZMAX 4
 #define QNZMAX 2
 
-// Structures
 QPALMWorkspace *work; // Workspace
 
 void basic_qp_setup(void) {
