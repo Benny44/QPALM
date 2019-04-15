@@ -12,6 +12,12 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -88,31 +94,31 @@ Functions</h2></td></tr>
 <tr class="memdesc:ab40f66e01c9ed199883cb983ac7bfbed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix-transpose-vector multiplication.  <a href="#ab40f66e01c9ed199883cb983ac7bfbed">More...</a><br /></td></tr>
 <tr class="separator:ab40f66e01c9ed199883cb983ac7bfbed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a245c8ffca24c21625bca1a5d855ceacf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#a245c8ffca24c21625bca1a5d855ceacf">mat_inf_norm_cols</a> (cholmod_sparse *M, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *E)</td></tr>
-<tr class="memdesc:a245c8ffca24c21625bca1a5d855ceacf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Infinity norm of each matrix column, <img class="formulaInl" alt="$E_i = \|M{(:,i)}\|_\infty$" src="form_2.png"/>.  <a href="#a245c8ffca24c21625bca1a5d855ceacf">More...</a><br /></td></tr>
+<tr class="memdesc:a245c8ffca24c21625bca1a5d855ceacf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Infinity norm of each matrix column, \(E_i = \|M{(:,i)}\|_\infty\).  <a href="#a245c8ffca24c21625bca1a5d855ceacf">More...</a><br /></td></tr>
 <tr class="separator:a245c8ffca24c21625bca1a5d855ceacf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a875648b3a1beed9a6ee638bc79f2c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#a9a875648b3a1beed9a6ee638bc79f2c0">mat_inf_norm_rows</a> (cholmod_sparse *M, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *E)</td></tr>
-<tr class="memdesc:a9a875648b3a1beed9a6ee638bc79f2c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Infinity norm of each matrix row, <img class="formulaInl" alt="$E_i = \|M{(i,:)}\|_\infty$" src="form_3.png"/>.  <a href="#a9a875648b3a1beed9a6ee638bc79f2c0">More...</a><br /></td></tr>
+<tr class="memdesc:a9a875648b3a1beed9a6ee638bc79f2c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Infinity norm of each matrix row, \(E_i = \|M{(i,:)}\|_\infty\).  <a href="#a9a875648b3a1beed9a6ee638bc79f2c0">More...</a><br /></td></tr>
 <tr class="separator:a9a875648b3a1beed9a6ee638bc79f2c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabcf6fd94369ab46e830695da0a96128"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#aabcf6fd94369ab46e830695da0a96128">ldlchol</a> (cholmod_sparse *M, <a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:aabcf6fd94369ab46e830695da0a96128"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of a matrix <img class="formulaInl" alt="$M$" src="form_5.png"/>.  <a href="#aabcf6fd94369ab46e830695da0a96128">More...</a><br /></td></tr>
+<tr class="memdesc:aabcf6fd94369ab46e830695da0a96128"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate \(LDL^T\) factorization of a matrix \(M\).  <a href="#aabcf6fd94369ab46e830695da0a96128">More...</a><br /></td></tr>
 <tr class="separator:aabcf6fd94369ab46e830695da0a96128"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fe1e838ac3f89a1772058904338a849"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#a7fe1e838ac3f89a1772058904338a849">ldlcholQ</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:a7fe1e838ac3f89a1772058904338a849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of <img class="formulaInl" alt="$Q$" src="form_7.png"/>.  <a href="#a7fe1e838ac3f89a1772058904338a849">More...</a><br /></td></tr>
+<tr class="memdesc:a7fe1e838ac3f89a1772058904338a849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate \(LDL^T\) factorization of \(Q\).  <a href="#a7fe1e838ac3f89a1772058904338a849">More...</a><br /></td></tr>
 <tr class="separator:a7fe1e838ac3f89a1772058904338a849"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef86b2766eb92f6550e1b6bbc6019fcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#aef86b2766eb92f6550e1b6bbc6019fcc">ldlcholQAtsigmaA</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:aef86b2766eb92f6550e1b6bbc6019fcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of <img class="formulaInl" alt="$Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$" src="form_9.png"/>, with <img class="formulaInl" alt="$\Sigma=diag(\sigma)$" src="form_10.png"/> and <img class="formulaInl" alt="$a$" src="form_11.png"/> the set of active constraints.  <a href="#aef86b2766eb92f6550e1b6bbc6019fcc">More...</a><br /></td></tr>
+<tr class="memdesc:aef86b2766eb92f6550e1b6bbc6019fcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate \(LDL^T\) factorization of \(Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}\), with \(\Sigma=diag(\sigma)\) and \(a\) the set of active constraints.  <a href="#aef86b2766eb92f6550e1b6bbc6019fcc">More...</a><br /></td></tr>
 <tr class="separator:aef86b2766eb92f6550e1b6bbc6019fcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb3c7409417adc5657d4c67f13bf7a26"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#afb3c7409417adc5657d4c67f13bf7a26">ldlupdate_entering_constraints</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:afb3c7409417adc5657d4c67f13bf7a26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of entering constraints.  <a href="#afb3c7409417adc5657d4c67f13bf7a26">More...</a><br /></td></tr>
+<tr class="memdesc:afb3c7409417adc5657d4c67f13bf7a26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the \(LDL^T\) factorization given a set of entering constraints.  <a href="#afb3c7409417adc5657d4c67f13bf7a26">More...</a><br /></td></tr>
 <tr class="separator:afb3c7409417adc5657d4c67f13bf7a26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2b40552827ed1501207124cb067331b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#ad2b40552827ed1501207124cb067331b">ldldowndate_leaving_constraints</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:ad2b40552827ed1501207124cb067331b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downdate the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of leaving constraints.  <a href="#ad2b40552827ed1501207124cb067331b">More...</a><br /></td></tr>
+<tr class="memdesc:ad2b40552827ed1501207124cb067331b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downdate the \(LDL^T\) factorization given a set of leaving constraints.  <a href="#ad2b40552827ed1501207124cb067331b">More...</a><br /></td></tr>
 <tr class="separator:ad2b40552827ed1501207124cb067331b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a600375b897e61294eabebe282fa236e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#a600375b897e61294eabebe282fa236e3">ldlsolveLD_neg_dphi</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:a600375b897e61294eabebe282fa236e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system <img class="formulaInl" alt="$LDL^T*d = -\nabla \varphi$" src="form_13.png"/>.  <a href="#a600375b897e61294eabebe282fa236e3">More...</a><br /></td></tr>
+<tr class="memdesc:a600375b897e61294eabebe282fa236e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system \(LDL^T*d = -\nabla \varphi\).  <a href="#a600375b897e61294eabebe282fa236e3">More...</a><br /></td></tr>
 <tr class="separator:a600375b897e61294eabebe282fa236e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a554be628f3c65ca260876d465dfacf0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8c.html#a554be628f3c65ca260876d465dfacf0e">cholmod_set_settings</a> (cholmod_common *c)</td></tr>
-<tr class="memdesc:a554be628f3c65ca260876d465dfacf0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cholmod settings to indicate that we use an <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization.  <a href="#a554be628f3c65ca260876d465dfacf0e">More...</a><br /></td></tr>
+<tr class="memdesc:a554be628f3c65ca260876d465dfacf0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cholmod settings to indicate that we use an \(LDL^T\) factorization.  <a href="#a554be628f3c65ca260876d465dfacf0e">More...</a><br /></td></tr>
 <tr class="separator:a554be628f3c65ca260876d465dfacf0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -136,7 +142,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Cholmod settings to indicate that we use an <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization. </p>
+<p>Cholmod settings to indicate that we use an \(LDL^T\) factorization. </p>
 <p class="">In addition, this function sets the suitesparse memory allocation function to our custom functions.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -173,8 +179,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of a matrix <img class="formulaInl" alt="$M$" src="form_5.png"/>. </p>
-<p class="">If work-&gt;settings-&gt;proximal = true, use <img class="formulaInl" alt="$M+\frac{1}{\gamma}*I$" src="form_6.png"/> instead.</p>
+<p>Calculate \(LDL^T\) factorization of a matrix \(M\). </p>
+<p class="">If work-&gt;settings-&gt;proximal = true, use \(M+\frac{1}{\gamma}*I\) instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">M</td><td>Matrix to be factorized </td></tr>
@@ -201,9 +207,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of <img class="formulaInl" alt="$Q$" src="form_7.png"/>. </p>
-<p class=""><img class="formulaInl" alt="$Q$" src="form_7.png"/> is the quadratic part of the objective function.</p>
-<p class="">If work-&gt;settings-&gt;proximal = true, use <img class="formulaInl" alt="$Q+\frac{1}{\gamma}*I$" src="form_8.png"/> instead.</p>
+<p>Calculate \(LDL^T\) factorization of \(Q\). </p>
+<p class="">\(Q\) is the quadratic part of the objective function.</p>
+<p class="">If work-&gt;settings-&gt;proximal = true, use \(Q+\frac{1}{\gamma}*I\) instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
@@ -229,8 +235,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of <img class="formulaInl" alt="$Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$" src="form_9.png"/>, with <img class="formulaInl" alt="$\Sigma=diag(\sigma)$" src="form_10.png"/> and <img class="formulaInl" alt="$a$" src="form_11.png"/> the set of active constraints. </p>
-<p class="">If work-&gt;settings-&gt;proximal = true, use <img class="formulaInl" alt="$Q+\frac{1}{\gamma}*I+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$" src="form_12.png"/> instead.</p>
+<p>Calculate \(LDL^T\) factorization of \(Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}\), with \(\Sigma=diag(\sigma)\) and \(a\) the set of active constraints. </p>
+<p class="">If work-&gt;settings-&gt;proximal = true, use \(Q+\frac{1}{\gamma}*I+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}\) instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
@@ -256,7 +262,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Downdate the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of leaving constraints. </p>
+<p>Downdate the \(LDL^T\) factorization given a set of leaving constraints. </p>
 <p class="">The index set of leaving constraints is assumed to be set in work-&gt;chol-&gt;leave.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -283,7 +289,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Solve the linear system <img class="formulaInl" alt="$LDL^T*d = -\nabla \varphi$" src="form_13.png"/>. </p>
+<p>Solve the linear system \(LDL^T*d = -\nabla \varphi\). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
@@ -309,7 +315,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Update the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of entering constraints. </p>
+<p>Update the \(LDL^T\) factorization given a set of entering constraints. </p>
 <p class="">The index set of entering constraints is assumed to be set in work-&gt;chol-&gt;enter.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -346,7 +352,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Infinity norm of each matrix column, <img class="formulaInl" alt="$E_i = \|M{(:,i)}\|_\infty$" src="form_2.png"/>. </p>
+<p>Infinity norm of each matrix column, \(E_i = \|M{(:,i)}\|_\infty\). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">M</td><td>Sparse input matrix </td></tr>
@@ -383,7 +389,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Infinity norm of each matrix row, <img class="formulaInl" alt="$E_i = \|M{(i,:)}\|_\infty$" src="form_3.png"/>. </p>
+<p>Infinity norm of each matrix row, \(E_i = \|M{(i,:)}\|_\infty\). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">M</td><td>Sparse input matrix </td></tr>
@@ -433,7 +439,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Matrix-transpose-vector multiplication. </p>
-<p class=""><img class="formulaInl" alt="$y = A^T*x$" src="form_1.png"/></p>
+<p class="">\(y = A^T*x\)</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">A</td><td>Sparse matrix </td></tr>
@@ -485,7 +491,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Matrix-vector multiplication. </p>
-<p class=""><img class="formulaInl" alt="$y = A*x$" src="form_0.png"/></p>
+<p class="">\(y = A*x\)</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">A</td><td>Sparse matrix </td></tr>

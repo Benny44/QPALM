@@ -12,6 +12,12 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -139,7 +145,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Calculates the infinity norm of the dual residual and the residual of the subproblem and stores them in work-&gt;info-&gt;dua_res_norm and work-&gt;info-&gt;dua2_res_norm respectively. </p>
-<p class="">The dual residual is given by <img class="formulaInl" alt="$\nabla \varphi$" src="form_40.png"/>. In the scaled case, the residual used for checking is unscaled and is <img class="formulaInl" alt="$D^{-1}\nabla \varphi$" src="form_41.png"/> instead. If the work-&gt;settings-&gt;proximal is true, then the dual residual is <img class="formulaInl" alt="$\nabla \varphi - \frac{1}{\gamma}(x-x_0)$" src="form_42.png"/>. If work-&gt;settings-&gt;proximal is true and the problem is scaled, then the dual residual is <img class="formulaInl" alt="$D^{-1}(\nabla \varphi - \frac{1}{\gamma}(x-x_0))$" src="form_43.png"/>. The residual of the subproblem is <img class="formulaInl" alt="$\nabla \varphi$" src="form_40.png"/> or <img class="formulaInl" alt="$D^{-1}\nabla \varphi$" src="form_41.png"/> in the scaled case.</p>
+<p class="">The dual residual is given by \(\nabla \varphi\). In the scaled case, the residual used for checking is unscaled and is \(D^{-1}\nabla \varphi\) instead. If the work-&gt;settings-&gt;proximal is true, then the dual residual is \(\nabla \varphi - \frac{1}{\gamma}(x-x_0)\). If work-&gt;settings-&gt;proximal is true and the problem is scaled, then the dual residual is \(D^{-1}(\nabla \varphi - \frac{1}{\gamma}(x-x_0))\). The residual of the subproblem is \(\nabla \varphi\) or \(D^{-1}\nabla \varphi\) in the scaled case.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
@@ -166,7 +172,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Calculates the dual tolerance for the problem and current subproblem and stores them in work-&gt;eps_dua and worl-&gt;eps_dua_in respectively. </p>
-<p class="">For the dual tolerance an absolute and relative contribution are added. It is given by <img class="formulaInl" alt="$\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|Qx\|_\infty, \|q\|_\infty, \|A^T y\|_\infty)$" src="form_46.png"/>. In the scaled case, the relative contributions are unscaled and the primal tolerance is given by <img class="formulaInl" alt="$\epsilon_\textrm{abs} + \epsilon_\textrm{rel}c^{-1}\textrm{max}(\|D^{-1}Qx\|_\infty, \|D^{-1}q\|_\infty, \|D^{-1}A^T y\|_\infty)$" src="form_47.png"/>. The tolerance for the subproblem is given by the same formulas, with <img class="formulaInl" alt="$\epsilon_\textrm{abs,in}$" src="form_48.png"/> and <img class="formulaInl" alt="$\epsilon_\textrm{rel,in}$" src="form_49.png"/> instead of <img class="formulaInl" alt="$\epsilon_\textrm{abs}$" src="form_50.png"/> and <img class="formulaInl" alt="$\epsilon_\textrm{rel}$" src="form_51.png"/>.</p>
+<p class="">For the dual tolerance an absolute and relative contribution are added. It is given by \(\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|Qx\|_\infty, \|q\|_\infty, \|A^T y\|_\infty)\). In the scaled case, the relative contributions are unscaled and the primal tolerance is given by \(\epsilon_\textrm{abs} + \epsilon_\textrm{rel}c^{-1}\textrm{max}(\|D^{-1}Qx\|_\infty, \|D^{-1}q\|_\infty, \|D^{-1}A^T y\|_\infty)\). The tolerance for the subproblem is given by the same formulas, with \(\epsilon_\textrm{abs,in}\) and \(\epsilon_\textrm{rel,in}\) instead of \(\epsilon_\textrm{abs}\) and \(\epsilon_\textrm{rel}\).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
@@ -193,7 +199,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Calculates the infinity norm of the primal residual and stores it in work-&gt;info-&gt;pri_res_norm. </p>
-<p class="">The primal residual is given by <img class="formulaInl" alt="$Ax-z$" src="form_38.png"/>. In the scaled case, the residual used for checking is unscaled and is <img class="formulaInl" alt="$E^{-1}(Ax-z)$" src="form_39.png"/> instead.</p>
+<p class="">The primal residual is given by \(Ax-z\). In the scaled case, the residual used for checking is unscaled and is \(E^{-1}(Ax-z)\) instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
@@ -220,7 +226,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Calculates the primal tolerance and stores it in work-&gt;eps_pri. </p>
-<p class="">For the primal tolerance an absolute and relative contribution are added. It is given by <img class="formulaInl" alt="$\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|Ax\|_\infty, \|z\|_\infty)$" src="form_44.png"/>. In the scaled case, the relative contributions are unscaled and the primal tolerance is given by <img class="formulaInl" alt="$\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|E^{-1}Ax\|_\infty, \|E^{-1}z\|_\infty)$" src="form_45.png"/>.</p>
+<p class="">For the primal tolerance an absolute and relative contribution are added. It is given by \(\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|Ax\|_\infty, \|z\|_\infty)\). In the scaled case, the relative contributions are unscaled and the primal tolerance is given by \(\epsilon_\textrm{abs} + \epsilon_\textrm{rel} \textrm{max}(\|E^{-1}Ax\|_\infty, \|E^{-1}z\|_\infty)\).</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
@@ -330,19 +336,19 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Check whether the problem is dual infeasible. </p>
-<p class="">The infeasibility criterion used here was introduced in <a class="el" href="citelist.html#CITEREF_osqp-infeasibility">[1]</a>. The problem is dual infeasible if for <img class="formulaInl" alt="$\delta x = x-x_\textrm{prev} \neq 0$" src="form_58.png"/> the following condtions hold: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\begin{align*} \|Q\delta x\|_\infty &amp;\leq \varepsilon_\textrm{dua, inf} \|\delta x\|_\infty, \\ q^T \delta x &amp; \leq - \varepsilon_\textrm{dua, inf} \|\delta x\|_\infty, \end{align*}" src="form_59.png"/>
+<p class="">The infeasibility criterion used here was introduced in <a class="el" href="citelist.html#CITEREF_osqp-infeasibility">[1]</a>. The problem is dual infeasible if for \(\delta x = x-x_\textrm{prev} \neq 0\) the following condtions hold: </p><p class="formulaDsp">
+\begin{align*} \|Q\delta x\|_\infty &amp;\leq \varepsilon_\textrm{dua, inf} \|\delta x\|_\infty, \\ q^T \delta x &amp; \leq - \varepsilon_\textrm{dua, inf} \|\delta x\|_\infty, \end{align*}
 </p>
 <p class="formulaDsp">
-<img class="formulaDsp" alt="\begin{align*} (A\delta x)_i = \begin{cases} \geq \varepsilon_{\rm dua,inf} \|\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_{\rm dua,inf} \|\delta x\|_\infty &amp; \textrm{if } b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_{\rm dua,inf},\varepsilon_{\rm dua,inf}] \|\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i}, b_{\textrm{min},i} \in {\rm I\!R}. \end{cases} \end{align*}" src="form_60.png"/>
+\begin{align*} (A\delta x)_i = \begin{cases} \geq \varepsilon_{\rm dua,inf} \|\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_{\rm dua,inf} \|\delta x\|_\infty &amp; \textrm{if } b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_{\rm dua,inf},\varepsilon_{\rm dua,inf}] \|\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i}, b_{\textrm{min},i} \in {\rm I\!R}. \end{cases} \end{align*}
 </p>
 <p> In case the problems is scaled the conditions turn into the following: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\begin{align*} \|D^{-1}Q\delta x\|_\infty &amp;\leq c \cdot \varepsilon_\textrm{dua, inf} \|D\delta x\|_\infty, \\ q^T \delta x &amp; \leq - c \cdot \varepsilon_\textrm{dua, inf} \|D\delta x\|_\infty, \end{align*}" src="form_61.png"/>
+\begin{align*} \|D^{-1}Q\delta x\|_\infty &amp;\leq c \cdot \varepsilon_\textrm{dua, inf} \|D\delta x\|_\infty, \\ q^T \delta x &amp; \leq - c \cdot \varepsilon_\textrm{dua, inf} \|D\delta x\|_\infty, \end{align*}
 </p>
 <p class="formulaDsp">
-<img class="formulaDsp" alt="\begin{align*} (E^{-1}A\delta x)_i = \begin{cases} \geq \varepsilon_{\rm dua,inf} \|D\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_{\rm dua,inf} \|D\delta x\|_\infty &amp; \textrm{if } b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_{\rm dua,inf},\varepsilon_{\rm dua,inf}] \|D\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i}, b_{\textrm{min},i} \in {\rm I\!R}. \end{cases} \end{align*}" src="form_62.png"/>
+\begin{align*} (E^{-1}A\delta x)_i = \begin{cases} \geq \varepsilon_{\rm dua,inf} \|D\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i} = +\infty \\ \leq -\varepsilon_{\rm dua,inf} \|D\delta x\|_\infty &amp; \textrm{if } b_{\textrm{min},i} = -\infty \\ \in [-\varepsilon_{\rm dua,inf},\varepsilon_{\rm dua,inf}] \|D\delta x\|_\infty &amp; \textrm{if } b_{\textrm{max},i}, b_{\textrm{min},i} \in {\rm I\!R}. \end{cases} \end{align*}
 </p>
-<p class="">If the above conditions hold, <img class="formulaInl" alt="$\delta x$" src="form_63.png"/>, or in the scaled case <img class="formulaInl" alt="$D\delta x$" src="form_64.png"/>, is the certificate of dual infeasibility.</p>
+<p class="">If the above conditions hold, \(\delta x\), or in the scaled case \(D\delta x\), is the certificate of dual infeasibility.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
@@ -370,13 +376,13 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Check whether the problem is primal infeasible. </p>
-<p class="">The infeasibility criterion used here was introduced in <a class="el" href="citelist.html#CITEREF_osqp-infeasibility">[1]</a>. The problem is primal infeasible if for <img class="formulaInl" alt="$\delta y = \Sigma\bigl(Ax-z)\bigr) \neq 0$" src="form_52.png"/>, with <img class="formulaInl" alt="$\Sigma = \textrm{diag}(\sigma)$" src="form_53.png"/> the following condtions hold: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\begin{align*} \|A^T \delta y\|_\infty &amp; \leq \varepsilon_\textrm{prim,inf} \|\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- &amp; \leq -\varepsilon_\textrm{prim,inf} \|\delta y\|_\infty. \end{align*}" src="form_54.png"/>
+<p class="">The infeasibility criterion used here was introduced in <a class="el" href="citelist.html#CITEREF_osqp-infeasibility">[1]</a>. The problem is primal infeasible if for \(\delta y = \Sigma\bigl(Ax-z)\bigr) \neq 0\), with \(\Sigma = \textrm{diag}(\sigma)\) the following condtions hold: </p><p class="formulaDsp">
+\begin{align*} \|A^T \delta y\|_\infty &amp; \leq \varepsilon_\textrm{prim,inf} \|\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- &amp; \leq -\varepsilon_\textrm{prim,inf} \|\delta y\|_\infty. \end{align*}
 </p>
 <p> In case the problems is scaled the conditions turn into the following: </p><p class="formulaDsp">
-<img class="formulaDsp" alt="\begin{align*} \|D^{-1}A^T \delta y\|_\infty &amp; \leq \varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- &amp; \leq -\varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty. \end{align*}" src="form_55.png"/>
+\begin{align*} \|D^{-1}A^T \delta y\|_\infty &amp; \leq \varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty, \\ b_\textrm{max}^T [\delta y]_+ + b_\textrm{min}^T [\delta y]_- &amp; \leq -\varepsilon_\textrm{prim,inf} \|E\delta y\|_\infty. \end{align*}
 </p>
-<p class="">If the above conditions hold, <img class="formulaInl" alt="$\delta y$" src="form_56.png"/>, or in the scaled case <img class="formulaInl" alt="$c^{-1} E\delta y$" src="form_57.png"/>, is the certificate of primal infeasibility.</p>
+<p class="">If the above conditions hold, \(\delta y\), or in the scaled case \(c^{-1} E\delta y\), is the certificate of primal infeasibility.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
@@ -431,7 +437,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Helper function to store the (unscaled) solution in the solution struct. </p>
-<p class="">The primal/dual solution <img class="formulaInl" alt="$x,y$" src="form_65.png"/> is copied to work-&gt;solution-&gt;x, work-&gt;solution-&gt;y. In case the problem is scaled, the soltution is first unscaled, and the solution vectors <img class="formulaInl" alt="$Dx, c^{-1}Ey$" src="form_66.png"/> are stored in work-&gt;solution-&gt;x, work-&gt;solution-&gt;y.</p>
+<p class="">The primal/dual solution \(x,y\) is copied to work-&gt;solution-&gt;x, work-&gt;solution-&gt;y. In case the problem is scaled, the soltution is first unscaled, and the solution vectors \(Dx, c^{-1}Ey\) are stored in work-&gt;solution-&gt;x, work-&gt;solution-&gt;y.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
