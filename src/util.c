@@ -1,3 +1,11 @@
+/**
+ * @file util.c
+ * @author Ben Hermans
+ * @brief Utility functions.
+ * @details This file contains some utility functions, to copy the settings, initialize the penalty parameters,
+ * initialize the iterates, update the solver status and time the algorithm.
+ */
+
 #include "util.h"
 #include "lin_alg.h"
 #include "global_opts.h"
