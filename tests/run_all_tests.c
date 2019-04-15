@@ -11,12 +11,23 @@ int main(){
     CU_TestInfo test_lin_alg[] = {
         { "test_vec_set_scalar", test_vec_set_scalar},
         { "test_vec_set_scalar_int", test_vec_set_scalar_int},
+        { "test_vec_mult_scalar", test_vec_mult_scalar},
+        { "test_vec_prod", test_vec_prod},
+        { "test_vec_add_scaled", test_vec_add_scaled},
+        { "test_vec_norm_inf", test_vec_norm_inf},
+        { "test_vec_ew_recipr", test_vec_ew_recipr},
+        { "test_vec_ew_max_vec", test_vec_ew_max_vec},
+        { "test_vec_ew_min_vec", test_vec_ew_min_vec},
+        { "test_vec_ew_mid_vec", test_vec_ew_mid_vec},
+        { "test_vec_ew_prod", test_vec_ew_prod},
+        { "test_vec_ew_div", test_vec_ew_div},
+        { "test_vec_ew_sqrt", test_vec_ew_sqrt},
         CU_TEST_INFO_NULL,
     };
 
     /* list of suites to be tested */
     CU_SuiteInfo suites[] = {
-        { "lin_alg", NULL, NULL, NULL, NULL, test_lin_alg},
+        { "lin_alg", NULL, NULL, reset_abc, NULL, test_lin_alg},
         CU_SUITE_INFO_NULL,
     };
 
