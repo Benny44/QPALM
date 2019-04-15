@@ -1,4 +1,3 @@
-#include "global_opts.h"
 void reset_abc(void);
 
 void test_vec_set_scalar(void);

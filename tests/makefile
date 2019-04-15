@@ -6,18 +6,18 @@ BDIR=lib
 
 all: directories lib tests
 
-__OBJ = test_lin_alg.o
+__OBJ = test_lin_alg.o test_basic_qp.o
 _OBJ = $(patsubst %,$(ODIR)/%, $(__OBJ))
 OBJ = run_all_tests.o $(_OBJ)
 
-_DEPS = test_lin_alg.h
+_DEPS = test_lin_alg.h test_basic_qp.h
 DEPS = $(patsubst %, $(IDIR)/%, $(_DEPS))
 
 ifndef CC
 	CC=gcc
 endif
 
-CFLAGS=-I$(IDIR) -I../$(IDIR) -I../suitesparse/include -fPIC -O3 -Wall -Wextra -fopenmp -fexceptions `pkg-config --cflags cunit` `pkg-config --libs cunit` -fuse-ld=gold
+CFLAGS=-I$(IDIR) -I../$(IDIR) -I../suitesparse/include -fPIC -O3 -Wall -DDLONG -Wextra -fopenmp -fexceptions `pkg-config --cflags cunit` `pkg-config --libs cunit` -fuse-ld=gold
 CHOLMOD_LIBS=-lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmetis -lm
 CHOLMOD_LIB_INCLUDE+=-L../suitesparse/lib -I../suitesparse/metis-5.1.0/include
 

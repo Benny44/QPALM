@@ -1,5 +1,6 @@
 #include <CUnit/Basic.h>
 #include "test_lin_alg.h"
+#include "test_basic_qp.h"
 
 int main(){
 
@@ -8,7 +9,7 @@ int main(){
         return CU_get_error();
 
     /* linear algebra tests */
-    CU_TestInfo test_lin_alg[] = {
+    CU_TestInfo suite_lin_alg[] = {
         { "test_vec_set_scalar", test_vec_set_scalar},
         { "test_vec_set_scalar_int", test_vec_set_scalar_int},
         { "test_vec_mult_scalar", test_vec_mult_scalar},
@@ -25,9 +26,16 @@ int main(){
         CU_TEST_INFO_NULL,
     };
 
+    /* basic qp */
+    CU_TestInfo suite_basic_qp[] = {
+        { "test_basic_qp", test_basic_qp},
+        CU_TEST_INFO_NULL,
+    };
+
     /* list of suites to be tested */
     CU_SuiteInfo suites[] = {
-        { "lin_alg", NULL, NULL, reset_abc, NULL, test_lin_alg},
+        { "lin_alg", NULL, NULL, reset_abc, NULL, suite_lin_alg},
+        { "basic_qp", NULL, NULL, basic_qp_setup, basic_qp_teardown, suite_basic_qp},
         CU_SUITE_INFO_NULL,
     };
 
