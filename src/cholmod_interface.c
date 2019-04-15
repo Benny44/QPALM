@@ -16,13 +16,26 @@
 void mat_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, cholmod_common *c) {
     double one [2] = {1,0};
     double zero [2] = {0,0};
-    CHOLMOD(sdmult)(A, 0, one, zero, x, y, c);
+    if (x!=y) {
+      CHOLMOD(sdmult)(A, 0, one, zero, x, y, c);
+    } else {
+      cholmod_dense* x2 = CHOLMOD(copy_dense)(x, c);
+      CHOLMOD(sdmult)(A, 0, one, zero, x2, y, c);
+      CHOLMOD(free_dense)(&x2, c);
+    }
+    
 }
 
 void mat_tpose_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, cholmod_common *c) {
     double one [2] = {1,0};
     double zero [2] = {0,0};
-    CHOLMOD(sdmult)(A, 1, one, zero, x, y, c);
+    if (x!=y) {
+      CHOLMOD(sdmult)(A, 1, one, zero, x, y, c);
+    } else {
+      cholmod_dense* x2 = CHOLMOD(copy_dense)(x, c);
+      CHOLMOD(sdmult)(A, 1, one, zero, x2, y, c);
+      CHOLMOD(free_dense)(&x2, c);
+    }
 }
 
 void mat_inf_norm_cols(cholmod_sparse *M, c_float *E) {
