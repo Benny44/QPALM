@@ -11,7 +11,7 @@
 // Structures
 QPALMWorkspace *work; // Workspace
 
-void basic_qp_setup(void) {
+void prim_inf_qp_setup(void) {
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
@@ -22,8 +22,8 @@ void basic_qp_setup(void) {
     data->m = M;
     c_float q[N] = {1, -2};
     data->q = q;
-    c_float bmin[M] = {-5, -10, -2};
-    c_float bmax[M] = {5, 10, 3};
+    c_float bmin[M] = {-5, -10, 16};
+    c_float bmax[M] = {5, 10, 20};
     data->bmin = bmin;
     data->bmax = bmax;
 
@@ -65,19 +65,13 @@ void basic_qp_setup(void) {
     c_free(settings);
 }
 
-void basic_qp_teardown(void) {
+void prim_inf_qp_teardown(void) {
     qpalm_cleanup(work);
 }
 
-void test_basic_qp(void) {
+void test_prim_inf_qp(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 4.0/3.0, 1e-5);
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_PRIMAL_INFEASIBLE);
 }
-
-  
-
-  

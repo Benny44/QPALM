@@ -1,6 +1,8 @@
 #include <CUnit/Basic.h>
 #include "test_lin_alg.h"
 #include "test_basic_qp.h"
+#include "test_prim_inf_qp.h"
+#include "test_dua_inf_qp.h"
 
 int main(){
 
@@ -32,10 +34,24 @@ int main(){
         CU_TEST_INFO_NULL,
     };
 
+    /* primal infeasible qp */
+    CU_TestInfo suite_prim_inf_qp[] = {
+        { "test_prim_inf_qp", test_prim_inf_qp},
+        CU_TEST_INFO_NULL,
+    };
+    
+    /* primal infeasible qp */
+    CU_TestInfo suite_dua_inf_qp[] = {
+        { "test_dua_inf_qp", test_dua_inf_qp},
+        CU_TEST_INFO_NULL,
+    };
+    
     /* list of suites to be tested */
     CU_SuiteInfo suites[] = {
         { "lin_alg", NULL, NULL, reset_abc, NULL, suite_lin_alg},
         { "basic_qp", NULL, NULL, basic_qp_setup, basic_qp_teardown, suite_basic_qp},
+        { "prim_inf_qp", NULL, NULL, prim_inf_qp_setup, prim_inf_qp_teardown, suite_prim_inf_qp},
+        { "dua_inf_qp", NULL, NULL, dua_inf_qp_setup, dua_inf_qp_teardown, suite_dua_inf_qp},
         CU_SUITE_INFO_NULL,
     };
 

@@ -5,25 +5,25 @@
 
 #define N 2
 #define M 3
-#define ANZMAX 4
+#define ANZMAX 6
 #define QNZMAX 2
 
 // Structures
 QPALMWorkspace *work; // Workspace
 
-void basic_qp_setup(void) {
+void dua_inf_qp_setup(void) {
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
-    settings->eps_abs = 1e-6;
-    settings->eps_rel = 1e-6;
+    settings->eps_abs = 1e-8;
+    settings->eps_rel = 1e-8;
 
     QPALMData *data    = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
     data->m = M;
     c_float q[N] = {1, -2};
     data->q = q;
-    c_float bmin[M] = {-5, -10, -2};
-    c_float bmax[M] = {5, 10, 3};
+    c_float bmin[M] = {-5, -10, -20};
+    c_float bmax[M] = {5, 10, 20};
     data->bmin = bmin;
     data->bmax = bmax;
 
@@ -35,9 +35,10 @@ void basic_qp_setup(void) {
     Ax = A->x;
     Ap = A->p;
     Ai = A->i;
-    Ax[0] = 1.0; Ax[1] = 1.0; Ax[2] = 1.0; Ax[3] = 1.0; 
-    Ap[0] = 0; Ap[1] = 2; Ap[2] = 4;
-    Ai[0] = 0; Ai[1] = 2; Ai[2] = 1; Ai[3] = 2;
+    Ax[0] = 1.0; Ax[1] = 1.0; Ax[2] = 1.0; Ax[3] = 1.0; Ax[4] = 1.0; Ax[5] = 1.0; 
+    Ap[0] = 0; Ap[1] = 3; Ap[2] = 6;
+    Ai[0] = 0; Ai[1] = 1; Ai[2] = 2; Ai[3] = 0; Ai[4] = 1; Ai[5] = 2;
+
 
     cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
     c_float *Qx;
@@ -45,7 +46,7 @@ void basic_qp_setup(void) {
     Qx = Q->x;
     Qp = Q->p;
     Qi = Q->i;
-    Qx[0] = 1.0; Qx[1] = 1.5; 
+    Qx[0] = 0.0; Qx[1] = 0.0; 
     Qp[0] = 0; Qp[1] = 1; Qp[2] = 2;
     Qi[0] = 0; Qi[1] = 1; 
 
@@ -65,19 +66,13 @@ void basic_qp_setup(void) {
     c_free(settings);
 }
 
-void basic_qp_teardown(void) {
+void dua_inf_qp_teardown(void) {
     qpalm_cleanup(work);
 }
 
-void test_basic_qp(void) {
+void test_dua_inf_qp(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 4.0/3.0, 1e-5);
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_DUAL_INFEASIBLE);
 }
-
-  
-
-  

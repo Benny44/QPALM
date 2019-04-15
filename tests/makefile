@@ -6,11 +6,11 @@ BDIR=lib
 
 all: directories lib tests
 
-__OBJ = test_lin_alg.o test_basic_qp.o
+__OBJ = test_lin_alg.o test_basic_qp.o test_prim_inf_qp.o test_dua_inf_qp.o
 _OBJ = $(patsubst %,$(ODIR)/%, $(__OBJ))
 OBJ = run_all_tests.o $(_OBJ)
 
-_DEPS = test_lin_alg.h test_basic_qp.h
+_DEPS = test_lin_alg.h test_basic_qp.h test_prim_inf_qp.h test_dua_inf_qp.h
 DEPS = $(patsubst %, $(IDIR)/%, $(_DEPS))
 
 ifndef CC
