@@ -16,7 +16,7 @@ ifndef CC
 	CC=gcc
 endif
 
-CFLAGS=-I$(IDIR) -Isuitesparse/include -fPIC -O3 -DPROFILING -Wall -Wextra -DDLONG -fopenmp -fexceptions
+CFLAGS=-I$(IDIR) -Isuitesparse/include -fPIC -DPROFILING -Wall -Wextra -DDLONG -fopenmp -fexceptions -fprofile-arcs -ftest-coverage
 CHOLMOD_LIBS=-lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmetis -lm
 CHOLMOD_LIB_INCLUDE+=-Lsuitesparse/lib -Isuitesparse/metis-5.1.0/include
 

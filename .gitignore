@@ -19,3 +19,6 @@ lib/
 *.vscode
 *.code-workspace
 buildAndTest.sh
+*.gcno
+*.gcda
+*.info

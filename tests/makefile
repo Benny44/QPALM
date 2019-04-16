@@ -6,18 +6,18 @@ BDIR=lib
 
 all: directories lib tests
 
-__OBJ = test_lin_alg.o test_cholmod_interface.o test_basic_qp.o test_prim_inf_qp.o test_dua_inf_qp.o
+__OBJ = test_lin_alg.o test_cholmod_interface.o test_basic_qp.o test_prim_inf_qp.o test_dua_inf_qp.o test_validate.o
 _OBJ = $(patsubst %,$(ODIR)/%, $(__OBJ))
 OBJ = run_all_tests.o $(_OBJ)
 
-_DEPS = test_lin_alg.h test_cholmod_interface.h test_basic_qp.h test_prim_inf_qp.h test_dua_inf_qp.h
+_DEPS = test_lin_alg.h test_cholmod_interface.h test_basic_qp.h test_prim_inf_qp.h test_dua_inf_qp.h test_validate.h
 DEPS = $(patsubst %, $(IDIR)/%, $(_DEPS))
 
 ifndef CC
 	CC=gcc
 endif
 
-CFLAGS=-I$(IDIR) -I../$(IDIR) -I../suitesparse/include -fPIC -O3 -Wall -DDLONG -Wextra -fopenmp -fexceptions `pkg-config --cflags cunit` `pkg-config --libs cunit` -fuse-ld=gold
+CFLAGS=-I$(IDIR) -I../$(IDIR) -I../suitesparse/include -fPIC -Wall -DDLONG -Wextra -fopenmp -fexceptions `pkg-config --cflags cunit` `pkg-config --libs cunit` -fuse-ld=gold -fprofile-arcs -ftest-coverage
 CHOLMOD_LIBS=-lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmetis -lm
 CHOLMOD_LIB_INCLUDE+=-L../suitesparse/lib -I../suitesparse/metis-5.1.0/include
 

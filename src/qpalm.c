@@ -50,7 +50,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   QPALMWorkspace *work; // Workspace
 
   // Validate data
-  if (validate_data(data)) {
+  if (!validate_data(data)) {
 # ifdef PRINTING
     c_eprint("Data validation returned failure");
 # endif /* ifdef PRINTING */
@@ -58,7 +58,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   }
 
   // Validate settings
-  if (validate_settings(settings)) {
+  if (!validate_settings(settings)) {
 # ifdef PRINTING
     c_eprint("Settings validation returned failure");
 # endif /* ifdef PRINTING */

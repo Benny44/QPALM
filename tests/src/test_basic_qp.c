@@ -9,14 +9,18 @@
 #define QNZMAX 2
 
 QPALMWorkspace *work; // Workspace
+QPALMSettings *settings;
+QPALMData *data;
+cholmod_common *c;
 
-void basic_qp_setup(void) {
-    QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
+
+void basic_qp_suite_setup(void) {
+    settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
     settings->eps_rel = 1e-6;
 
-    QPALMData *data    = (QPALMData *)c_malloc(sizeof(QPALMData));
+    data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
     data->m = M;
     c_float q[N] = {1, -2};
@@ -26,19 +30,19 @@ void basic_qp_setup(void) {
     data->bmin = bmin;
     data->bmax = bmax;
 
-    cholmod_common c;
-    CHOLMOD(start)(&c);
-    cholmod_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, &c);
+    cholmod_common common;
+    c = &common;
+    CHOLMOD(start)(c);
+    cholmod_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
     c_float *Ax;
     c_int *Ai, *Ap;
     Ax = A->x;
     Ap = A->p;
     Ai = A->i;
-    Ax[0] = 1.0; Ax[1] = 1.0; Ax[2] = 1.0; Ax[3] = 1.0; 
+    Ax[0] = 1.0; Ax[1] = 1.0; Ax[2] = 1.0; Ax[3] = 1.0;
     Ap[0] = 0; Ap[1] = 2; Ap[2] = 4;
     Ai[0] = 0; Ai[1] = 2; Ai[2] = 1; Ai[3] = 2;
-
-    cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
+    cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
     c_float *Qx;
     c_int *Qi, *Qp;
     Qx = Q->x;
@@ -50,25 +54,65 @@ void basic_qp_setup(void) {
 
     data->A = A;
     data->Q = Q;
-    CHOLMOD(finish)(&c);
-    // Setup workspace
-    work = qpalm_setup(data, settings, &c);
-
-    // Clean setup
-    CHOLMOD(start)(&c);
-    CHOLMOD(free_sparse)(&data->Q, &c);
-    CHOLMOD(free_sparse)(&data->A, &c);
-    CHOLMOD(finish)(&c);
-
-    c_free(data);
-    c_free(settings);
+    CHOLMOD(finish)(c); 
+   
 }
 
-void basic_qp_teardown(void) {
+void basic_qp_suite_teardown(void) {
+    c_free(settings);
+    // Clean setup
+    CHOLMOD(start)(c);
+    CHOLMOD(free_sparse)(&data->Q, c);
+    CHOLMOD(free_sparse)(&data->A, c);
+    CHOLMOD(finish)(c);
+    c_free(data);
+}
+
+void basic_qp_test_teardown(void) {
     qpalm_cleanup(work);
 }
 
+
+
 void test_basic_qp(void) {
+    // Setup workspace
+    work = qpalm_setup(data, settings, c);
+    // Solve Problem
+    qpalm_solve(work);
+
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -1, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 4.0/3.0, 1e-5);
+}
+
+void test_basic_qp_unscaled(void) {
+    // Setup workspace
+    settings->scaling = 0;
+    work = qpalm_setup(data, settings, c);
+    // Solve Problem
+    qpalm_solve(work);
+
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -1, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 4.0/3.0, 1e-5);
+}
+void test_basic_qp_noprox(void) {
+    // Setup workspace
+    settings->proximal = FALSE;
+    settings->scaling = 2;
+    work = qpalm_setup(data, settings, c);
+    // Solve Problem
+    qpalm_solve(work);
+
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -1, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 4.0/3.0, 1e-5);
+}
+void test_basic_qp_noprox_unscaled(void) {
+    // Setup workspace
+    settings->proximal = FALSE;
+    settings->scaling = 0;
+    work = qpalm_setup(data, settings, c);
     // Solve Problem
     qpalm_solve(work);
 
