@@ -1,6 +1,7 @@
 #include "qpalm.h"
 #include "global_opts.h"
 #include "constants.h"
+#include "util.h"
 #include <CUnit/CUnit.h>
 
 #define N 2
@@ -25,8 +26,8 @@ void basic_qp_suite_setup(void) {
     data->m = M;
     c_float q[N] = {1, -2};
     data->q = q;
-    c_float bmin[M] = {-5, -10, -2};
-    c_float bmax[M] = {5, 10, 3};
+    c_float bmin[M] = {-0.1, -0.3, -0.2};
+    c_float bmax[M] = {0.1, 0.3, 0.3};
     data->bmin = bmin;
     data->bmax = bmax;
 
@@ -81,8 +82,8 @@ void test_basic_qp(void) {
     qpalm_solve(work);
 
     CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 4.0/3.0, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
 }
 
 void test_basic_qp_unscaled(void) {
@@ -93,8 +94,8 @@ void test_basic_qp_unscaled(void) {
     qpalm_solve(work);
 
     CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 4.0/3.0, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
 }
 void test_basic_qp_noprox(void) {
     // Setup workspace
@@ -105,8 +106,8 @@ void test_basic_qp_noprox(void) {
     qpalm_solve(work);
 
     CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 4.0/3.0, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
 }
 void test_basic_qp_noprox_unscaled(void) {
     // Setup workspace
@@ -117,10 +118,78 @@ void test_basic_qp_noprox_unscaled(void) {
     qpalm_solve(work);
 
     CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 4.0/3.0, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
 }
 
-  
+void test_basic_qp_warm_start(void) {
+    // Setup workspace
+    settings->scaling = 2;
+    settings->proximal = TRUE;
+    settings->warm_start = TRUE;
+    work = qpalm_setup(data, settings, c);
+    c_float x[N] = {-0.1, 0.3};
+    c_float y[M] = {-0.9, 1.55, 0.0};
+    warm_start(work, x, y);
 
-  
+    // Solve Problem
+    qpalm_solve(work);
+    CU_ASSERT_TRUE(work->info->iter < 2);
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+}
+
+void test_basic_qp_warm_start_unscaled(void) {
+    // Setup workspace
+    settings->scaling = 0;
+    settings->proximal = TRUE;
+    settings->warm_start = TRUE;
+    work = qpalm_setup(data, settings, c);
+    c_float x[N] = {-0.1, 0.3};
+    c_float y[M] = {-0.9, 1.55, 0.0};
+    warm_start(work, x, y);
+
+    // Solve Problem
+    qpalm_solve(work);
+    CU_ASSERT_TRUE(work->info->iter < 2);
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+}
+
+void test_basic_qp_warm_start_noprox(void) {
+    // Setup workspace
+    settings->scaling = 2;
+    settings->proximal = FALSE;
+    settings->warm_start = TRUE;
+    work = qpalm_setup(data, settings, c);
+    c_float x[N] = {-0.1, 0.3};
+    c_float y[M] = {-0.9, 1.55, 0.0};
+    warm_start(work, x, y);
+
+    // Solve Problem
+    qpalm_solve(work);
+    CU_ASSERT_TRUE(work->info->iter < 2);
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+}
+
+void test_basic_qp_warm_start_noprox_unscaled(void) {
+    // Setup workspace
+    settings->scaling = 0;
+    settings->proximal = FALSE;
+    settings->warm_start = TRUE;
+    work = qpalm_setup(data, settings, c);
+    c_float x[N] = {-0.1, 0.3};
+    c_float y[M] = {-0.9, 1.55, 0.0};
+    warm_start(work, x, y);
+
+    // Solve Problem
+    qpalm_solve(work);
+    CU_ASSERT_TRUE(work->info->iter < 2);
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
+    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+}

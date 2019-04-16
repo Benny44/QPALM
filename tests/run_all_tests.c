@@ -45,7 +45,11 @@ int main(){
         { "test_basic_qp", test_basic_qp},
         { "test_basic_qp_unscaled", test_basic_qp_unscaled},
         { "test_basic_qp_noprox", test_basic_qp_noprox},
-        { "test_basic_qp_noprox_unscaled", test_basic_qp_noprox_unscaled},        
+        { "test_basic_qp_noprox_unscaled", test_basic_qp_noprox_unscaled},
+        { "test_basic_qp_warm_start", test_basic_qp_warm_start},     
+        { "test_basic_qp_warm_start_unscaled", test_basic_qp_warm_start_unscaled},     
+        { "test_basic_qp_warm_start_noprox", test_basic_qp_warm_start_noprox},     
+        { "test_basic_qp_warm_start_noprox_unscaled", test_basic_qp_warm_start_noprox_unscaled},     
         CU_TEST_INFO_NULL,
     };
 

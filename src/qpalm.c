@@ -81,6 +81,10 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
     qpalm_tic(work->timer);
   # endif /* ifdef PROFILING */
 
+  // Copy settings
+  work->settings = copy_settings(settings);
+  work->sqrt_delta = c_sqrt(work->settings->delta);
+
   size_t n = data->n;
   size_t m = data->m;
 
@@ -110,14 +114,16 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->Aty      = c_calloc(n, sizeof(c_float));
 
   work->x0 = c_calloc(n, sizeof(c_float));
-  // Initialize variables x, x_prev, y, Qx and Ax
-  cold_start(work);
 
   // Workspace variables
   work->temp_m   = c_calloc(m, sizeof(c_float));
   work->temp_n   = c_calloc(n, sizeof(c_float));
   work->sigma = c_calloc(m, sizeof(c_float));
-  initialize_sigma(work);
+    
+  // If warm-start will not be used, cold start variables x, x0, x_prev, y, Qx, Ax and init sigma
+  if (!work->settings->warm_start) {
+    warm_start(work, NULL, NULL);
+  }
 
   work->z  = c_calloc(m, sizeof(c_float));
   work->Axys = c_calloc(m, sizeof(c_float));
@@ -149,10 +155,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->delta_x  = c_calloc(n, sizeof(c_float));
   work->Qdelta_x = c_calloc(n, sizeof(c_float));
   work->Adelta_x = c_calloc(m, sizeof(c_float));
-
-  // Copy settings
-  work->settings = copy_settings(settings);
-  work->sqrt_delta = c_sqrt(work->settings->delta);
 
   // Perform scaling
   if (settings->scaling) {
