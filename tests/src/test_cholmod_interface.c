@@ -86,6 +86,12 @@ void test_mat_vec(void){
     mat_vec(Q, work->chol->Qd, work->chol->Qd, &work->chol->c);
     CU_ASSERT_DOUBLE_EQUAL(work->Qd[0], 1.6, TOL);
     CU_ASSERT_DOUBLE_EQUAL(work->Qd[1], -2.1, TOL);
+    work->Qd[0] = 1.1; work->Qd[1] = -0.5;
+
+    mat_tpose_vec(Q, work->chol->Qd, work->chol->Qd, &work->chol->c);
+    CU_ASSERT_DOUBLE_EQUAL(work->Qd[0], 1.6, TOL);
+    CU_ASSERT_DOUBLE_EQUAL(work->Qd[1], -2.1, TOL);
+
 }
 
 void test_mat_tpose_vec(void){

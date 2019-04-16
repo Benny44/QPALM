@@ -31,7 +31,6 @@ int main(){
     };
 
     /* cholmod interface tests */
-    /* linear algebra tests */
     CU_TestInfo suite_cholmod[] = {
         { "test_mat_vec", test_mat_vec},
         { "test_mat_tpose_vec", test_mat_tpose_vec},
