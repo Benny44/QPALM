@@ -1,10 +1,9 @@
 /**
  * @file linesearch.h
  * @author Ben Hermans
- * @brief Routines to perform exact or backtracking linesearch.
+ * @brief Routines to perform exact linesearch.
  * @details Once the direction is found using the semismooth Newton method, the functions in this file can 
- * be called to calculate a stepsize, either using exact linesearch or a backtracking linesearch to
- * satisfy the armijo condition.
+ * be called to calculate a stepsize with exact linesearch.
  */
 
 #ifndef LINESEARCH_H
@@ -21,22 +20,6 @@
  * @return tau Step size
  */
 c_float exact_linesearch(QPALMWorkspace *work);
-
-/**
- * Execute exact linesearch (using Newton's method)
- * 
- * @param work Workspace
- * @return tau Step size
- */
-c_float exact_linesearch_newton(QPALMWorkspace *work);
-
-/**
- * Execute backtracking linesearch with Armijo condition
- * 
- * @param work Workspace
- * @return tau Step size
- */
-c_float armijo_linesearch(QPALMWorkspace *work);
 
 /**
  * Helper function to copy vector a in array b (with indices)

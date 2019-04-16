@@ -311,8 +311,6 @@ void qpalm_solve(QPALMWorkspace *work) {
       
       tau = exact_linesearch(work);
 
-      // tau = armijo_linesearch(work);
-      // tau = exact_linesearch_newton(work);
       //x_prev = x
       prea_vec_copy(work->x, work->x_prev, n);
       //dphi_prev = dphi 
