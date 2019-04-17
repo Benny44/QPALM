@@ -23,7 +23,7 @@ install:
       - sudo gem install coveralls-lcov 
 before_script:  
 script:
-  - make test TCOV=yes
+  - make travis TCOV=yes
 cache:
   apt: true
   bundler: true
