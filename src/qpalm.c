@@ -244,7 +244,15 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
         prea_vec_copy(work->Qd, work->Qx, work->data->n);
       }
       mat_vec(work->data->A, work->chol->neg_dphi, work->chol->Ad, &work->chol->c);
-      prea_vec_copy(work->Ad, work->Ax, work->data->m);   
+      prea_vec_copy(work->Ad, work->Ax, work->data->m);
+
+
+      // printf("Ax: \n");
+      // for (int i = 0; i < work->data->m; i++) {
+      //   printf("%.32f ", work->Ax[i]);
+      // }
+      // printf("\n");
+
     } else {
       vec_set_scalar(work->x, 0., work->data->n);
       vec_set_scalar(work->x_prev, 0., work->data->n);
@@ -265,8 +273,9 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
     
     initialize_sigma(work);
     vec_ew_sqrt(work->sigma, work->sqrt_sigma, work->data->m);
-    prea_vec_copy(work->sqrt_sigma, work->chol->At_scale->x, work->data->m);
-    if (work->chol->At_sqrt_sigma) CHOLMOD(free_dense)(&work->chol->At_sqrt_sigma, &work->chol->c);
+    c_float *At_scalex = work->chol->At_scale->x;
+    prea_vec_copy(work->sqrt_sigma, At_scalex, work->data->m);
+    if (work->chol->At_sqrt_sigma) CHOLMOD(free_sparse)(&work->chol->At_sqrt_sigma, &work->chol->c);
     work->chol->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, &work->chol->c);
     CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
 
