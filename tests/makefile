@@ -17,17 +17,22 @@ ifndef CC
 	CC=gcc
 endif
 
-CFLAGS=-I$(IDIR) -I../$(IDIR) -I../suitesparse/include -fPIC -Wall -DDLONG -Wextra -fopenmp -fexceptions `pkg-config --cflags cunit` `pkg-config --libs cunit` -fuse-ld=gold -fprofile-arcs -ftest-coverage
+CFLAGS=-I$(IDIR) -I../$(IDIR) -I../suitesparse/include -fPIC -Wall -DDLONG -Wextra -fopenmp -fexceptions 
 CHOLMOD_LIBS=-lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmetis -lm
 CHOLMOD_LIB_INCLUDE+=-L../suitesparse/lib -I../suitesparse/metis-5.1.0/include
 
 LIBS+=$(CHOLMOD_LIBS)
 LDLIBS+=$(CHOLMOD_LIB_INCLUDE)
 
+#Testing and checking coverage (also used in travis)
+ifeq ($(TCOV),yes)
+	CFLAGS+= `pkg-config --cflags cunit` `pkg-config --libs cunit` -fuse-ld=gold -fprofile-arcs -ftest-coverage
+	BLAS=-lblas -llapack
+endif
 
 #We need blas and lapack to compile. The user can specify this by running make BLAS="-lblas_library -llapack_library" BLAS_PATH=path/to/blas
 ifndef BLAS
-	BLAS=-lmwblas -lmwlapack
+	BLAS=-lblas -llapack
 endif
 LIBS+=$(BLAS)
 

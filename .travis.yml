@@ -1,0 +1,33 @@
+
+language: c
+sudo: required
+dist: trusty
+compiler: gcc
+branches:
+  only:
+  - master
+  - development
+addons:
+  apt:
+    packages:
+      - libcunit1 
+      - libcunit1-doc 
+      - libcunit1-dev
+      - lcov
+      - valgrind
+      - libblas-dev
+      - liblapack-dev
+before_install:
+      - make clean
+install:
+      - sudo gem install coveralls-lcov 
+before_script:  
+script:
+  - make test TCOV=yes
+cache:
+  apt: true
+  bundler: true
+after_success:
+  - lcov --directory ./obj --capture --output-file coverage.info
+  - lcov --list coverage.info
+
