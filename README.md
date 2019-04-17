@@ -18,9 +18,16 @@ Basic demos are available for the different ways to call the solver.
 * For the C-version of QPALM, check out examples/qpalm_demo.c.
 * For the matlab version of QPALM, check out examples/qpalm_matlab_demo.m.
 
+## Documentation
+
+You can now find the the documentation [online](https://benny44.github.io/QPALM/).
+
 ## Tests
 
-In progress
+To run the automated tests, do
+```
+make test BLAS=... BLAS_PATH=...
+```
 
 ## Benchmarks (random QPs)
 
