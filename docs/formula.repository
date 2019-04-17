@@ -73,3 +73,14 @@
 \form#72:$\in \{0,1\}$
 \form#73:$>=1$
 \form#74:$>=\gamma$
+\form#75:\begin{align*} \textrm{minimize} &\frac{1}{2}x^T Q x + q^T x \\ \textrm{subject to} &b_\textrm{min} \leq \Ax \b_textrm{max} \end{align*}
+\form#76:\begin{align*} \textrm{minimize} &\frac{1}{2}x^T Q x + q^T x \\ \textrm{subject to} &b_\textrm{min} \leq Ax \b_textrm{max} \end{align*}
+\form#77:\begin{align*} \textrm{minimize} &\frac{1}{2}x^T Q x + q^T x \\ \textrm{subject to} &b_\textrm{min} \leq Ax b_\textrm{max} \end{align*}
+\form#78:\begin{align*} \textrm{minimize } &\frac{1}{2}x^T Q x + q^T x \\ \textrm{subject to } &b_\textrm{min} \leq Ax b_\textrm{max} \end{align*}
+\form#79:\begin{align*} \textrm{minimize } &\frac{1}{2}x^T Q x + q^T x \\ \textrm{subject to } &b_\textrm{min} \leq Ax \leq b_\textrm{max} \end{align*}
+\form#80:\begin{align*} \Huge \textrm{minimize } &\frac{1}{2}x^T Q x + q^T x \\ \textrm{subject to } &b_\textrm{min} \leq Ax \leq b_\textrm{max} \end{align*}
+\form#81:\begin{equation*} \mbox{\Large\( \textrm{minimize } &\frac{1}{2}x^T Q x + q^T x \\ \textrm{subject to } &b_\textrm{min} \leq Ax \leq b_\textrm{max} \)} \end{equation*}
+\form#82:\begin{equation*} \mbox{\Large\( \textrm{minimize } \frac{1}{2}x^T Q x + q^T x \\ \textrm{subject to } b_\textrm{min} \leq Ax \leq b_\textrm{max} \)} \end{equation*}
+\form#83:\begin{align*} \mbox{\Large\( \textrm{minimize } \)} & \mbox{\Large\( \frac{1}{2}x^T Q x + q^T x \)} \\ \mbox{\Large\( \textrm{subject to } \)} & \mbox{\Large\( b_\textrm{min} \leq Ax \leq b_\textrm{max} \)} \end{align*}
+\form#84:\begin{align*} \mbox{\Large\( \textrm{minimize \hspace{2cm}} \)} & \mbox{\Large\( \frac{1}{2}x^T Q x + q^T x \)} \\ \mbox{\Large\( \textrm{subject to } \)} & \mbox{\Large\( b_\textrm{min} \leq Ax \leq b_\textrm{max} \)} \end{align*}
+\form#85:\begin{align*} \mbox{\Large\( \textrm{minimize \hspace{1cm}} \)} & \mbox{\Large\( \frac{1}{2}x^T Q x + q^T x \)} \\ \mbox{\Large\( \textrm{subject to \hspace{1cm}} \)} & \mbox{\Large\( b_\textrm{min} \leq Ax \leq b_\textrm{max} \)} \end{align*}

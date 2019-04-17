@@ -6,7 +6,6 @@ var searchData=
   ['ad',['Ad',['../structQPALMCholmod.html#a56224cbea98a1f5555eb08701b1e97d5',1,'QPALMCholmod::Ad()'],['../structQPALMWorkspace.html#ae40218985461185bbab01576ed8a1ca5',1,'QPALMWorkspace::Ad()']]],
   ['adelta_5fx',['Adelta_x',['../structQPALMWorkspace.html#a756837945d447a7d5b5eac82ae0b71aa',1,'QPALMWorkspace']]],
   ['alpha',['alpha',['../structQPALMWorkspace.html#ad2b7da5ef7accd9881a0c65240cc2b36',1,'QPALMWorkspace']]],
-  ['armijo_5flinesearch',['armijo_linesearch',['../linesearch_8c.html#a6ac57ea5ff25012ad3e89b5956b06b96',1,'armijo_linesearch(QPALMWorkspace *work):&#160;linesearch.c'],['../linesearch_8h.html#a6ac57ea5ff25012ad3e89b5956b06b96',1,'armijo_linesearch(QPALMWorkspace *work):&#160;linesearch.c']]],
   ['array_5felement',['array_element',['../structarray__element.html',1,'array_element'],['../types_8h.html#a1a267f5ef932417d8207c7f0a1ae1801',1,'array_element():&#160;types.h']]],
   ['at_5fscale',['At_scale',['../structQPALMCholmod.html#a21442e539bbff4c9a2cba6f94f067b96',1,'QPALMCholmod']]],
   ['at_5fsqrt_5fsigma',['At_sqrt_sigma',['../structQPALMCholmod.html#a26018b83bc91c059f03950f66862320c',1,'QPALMCholmod']]],

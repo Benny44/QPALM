@@ -4,7 +4,7 @@
  * @brief QPALM main solver API.
  * @details This file contains the main functions that can be called by the user.
  * The user can load the default settings, setup the workspace with data and settings,
- * run the solver, and cleanup the workspace afterwards.
+ * warm_start the primal and dual variables, run the solver, and cleanup the workspace afterwards.
  */
 
 #ifndef QPALM_H
@@ -51,7 +51,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data,
 
 
 /**
- * Warm start workspace variables x, x_0, x_prev, y, Ax, Qx and sigma
+ * Warm start workspace variables x, x_0, x_prev, Ax, Qx, y and sigma
  * 
  * If x_warm_start or y_warm_start is given as NULL, then the related variables
  * will be initialized to 0. This function also initializes the penalty parameters

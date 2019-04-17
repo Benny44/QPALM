@@ -64,7 +64,7 @@ extern "C" {
 # define GAMMA_UPD (10)         /**< default proximal penalty update factor */
 # define GAMMA_MAX (1E8)        /**< default proximal penalty cap */
 
-# define SCALING (2)            /**< default number of scaling iterations */
+# define SCALING (10)            /**< default number of scaling iterations */
 # define MIN_SCALING (1e-08)    /**< minimum scaling value *////< Minimum scaling value
 # define MAX_SCALING (1e+04)    /**< maximum scaling value *////< Maximum scaling value
 

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['newton_2ec',['newton.c',['../newton_8c.html',1,'']]],
-  ['newton_2eh',['newton.h',['../newton_8h.html',1,'']]]
+  ['mainpage_2edox',['mainpage.dox',['../mainpage_8dox.html',1,'']]]
 ];

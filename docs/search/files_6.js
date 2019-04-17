@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['termination_2ec',['termination.c',['../termination_8c.html',1,'']]],
-  ['termination_2eh',['termination.h',['../termination_8h.html',1,'']]],
-  ['types_2eh',['types.h',['../types_8h.html',1,'']]]
+  ['scaling_2ec',['scaling.c',['../scaling_8c.html',1,'']]],
+  ['scaling_2eh',['scaling.h',['../scaling_8h.html',1,'']]]
 ];

@@ -210,7 +210,7 @@ classdef qpalm < handle
             if(nargout)
                 varargout{1} = out;
             end
-            delete(this);
+%             delete(this);
             return;
         end
 

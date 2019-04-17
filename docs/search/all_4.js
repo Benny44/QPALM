@@ -14,6 +14,5 @@ var searchData=
   ['eps_5frel',['eps_rel',['../structQPALMSettings.html#a9b84087d61f10c22632bd6924e33691c',1,'QPALMSettings::eps_rel()'],['../constants_8h.html#a62c40728b469a0a6e1f696793569835a',1,'EPS_REL():&#160;constants.h']]],
   ['eps_5frel_5fin',['eps_rel_in',['../structQPALMSettings.html#a3772b3f15b95f5d913f9a7e892e070dd',1,'QPALMSettings::eps_rel_in()'],['../constants_8h.html#a0771de8aebffeee6adee8b9fea107548',1,'EPS_REL_IN():&#160;constants.h']]],
   ['eta',['eta',['../structQPALMWorkspace.html#a04c63ad7652fa2b21cd7bfcbfed38b18',1,'QPALMWorkspace']]],
-  ['exact_5flinesearch',['exact_linesearch',['../linesearch_8c.html#a29a679672665aebe2f64094fba65160f',1,'exact_linesearch(QPALMWorkspace *work):&#160;linesearch.c'],['../linesearch_8h.html#a29a679672665aebe2f64094fba65160f',1,'exact_linesearch(QPALMWorkspace *work):&#160;linesearch.c']]],
-  ['exact_5flinesearch_5fnewton',['exact_linesearch_newton',['../linesearch_8c.html#a0280f1cbccd361e737237ffe4c187ee7',1,'exact_linesearch_newton(QPALMWorkspace *work):&#160;linesearch.c'],['../linesearch_8h.html#a0280f1cbccd361e737237ffe4c187ee7',1,'exact_linesearch_newton(QPALMWorkspace *work):&#160;linesearch.c']]]
+  ['exact_5flinesearch',['exact_linesearch',['../linesearch_8c.html#a29a679672665aebe2f64094fba65160f',1,'exact_linesearch(QPALMWorkspace *work):&#160;linesearch.c'],['../linesearch_8h.html#a29a679672665aebe2f64094fba65160f',1,'exact_linesearch(QPALMWorkspace *work):&#160;linesearch.c']]]
 ];

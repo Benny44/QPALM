@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['scaling_2ec',['scaling.c',['../scaling_8c.html',1,'']]],
-  ['scaling_2eh',['scaling.h',['../scaling_8h.html',1,'']]]
+  ['qpalm_2ec',['qpalm.c',['../qpalm_8c.html',1,'']]],
+  ['qpalm_2eh',['qpalm.h',['../qpalm_8h.html',1,'']]]
 ];
