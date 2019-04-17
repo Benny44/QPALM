@@ -46,21 +46,6 @@ void c_strcpy(char       dest[],
 void update_status(QPALMInfo *info,
                    c_int     status_val);
 
-// /**
-//  * Cold start workspace variables x, x_0, x_prev, y, Ax and Qx
-//  * @param work Workspace
-//  */
-// void cold_start(QPALMWorkspace *work);
-
-/**
- * Warm start workspace variables x, x_0, x_prev, y, Ax and Qx
- * @param work Workspace
- * @param x_warm_start Warm start for the primal variables
- * @param y_warm_start Warm start for the dual variables
- */
-void warm_start(QPALMWorkspace *work, 
-                c_float        *x_warm_start, 
-                c_float        *y_warm_start);
 
 /**
  * Initialize penalty factors from initial x

@@ -68,53 +68,6 @@ void update_status(QPALMInfo *info, c_int status_val) {
                                                             "maximum iterations reached");
 }
 
-void warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_warm_start) {
-    if (x_warm_start != NULL) {
-      prea_vec_copy(x_warm_start, work->x, work->data->n);
-      // Scale initial vectors x, xprev, x0, if they are warm-started
-      if (work->settings->scaling) {
-        vec_ew_prod(work->x, work->scaling->Dinv, work->x, work->data->n);
-        prea_vec_copy(work->x, work->x0, work->data->n);
-        prea_vec_copy(work->x, work->x_prev, work->data->n);
-      } else {
-        prea_vec_copy(work->x, work->x0, work->data->n);
-        prea_vec_copy(work->x, work->x_prev, work->data->n);
-      }
-      //NB to link to cholmod here d and chol->neg_dphi are used as x
-      work->d = work->chol->neg_dphi->x;
-      prea_vec_copy(work->x, work->d, work->data->n);
-
-      mat_vec(work->data->Q, work->chol->neg_dphi, work->chol->Qd, &work->chol->c);
-      if (work->settings->proximal) {
-        vec_add_scaled(work->Qd, work->x, work->Qx, 1/work->settings->gamma, work->data->n);
-      } else {
-        prea_vec_copy(work->Qd, work->Qx, work->data->n);
-      }
-      mat_vec(work->data->A, work->chol->neg_dphi, work->chol->Ad, &work->chol->c);
-      prea_vec_copy(work->Ad, work->Ax, work->data->m);   
-    } else {
-      vec_set_scalar(work->x, 0., work->data->n);
-      vec_set_scalar(work->x_prev, 0., work->data->n);
-      vec_set_scalar(work->x0, 0., work->data->n);
-      vec_set_scalar(work->Qx, 0., work->data->n);
-      vec_set_scalar(work->Ax, 0., work->data->m);
-    }
-
-    if (y_warm_start != NULL) {
-      prea_vec_copy(y_warm_start, work->y, work->data->m);
-      if (work->settings->scaling) {
-        vec_ew_prod(work->y, work->scaling->Einv, work->y, work->data->m);
-        vec_mult_scalar(work->y, work->scaling->c, work->data->m);
-      }
-    } else {
-      vec_set_scalar(work->y, 0., work->data->m);
-    }
-    
-    initialize_sigma(work);
-
-    
-}
-
 
 void initialize_sigma(QPALMWorkspace *work) {
     c_float f = 0.5*vec_prod(work->x, work->Qx, work->data->n) + vec_prod(work->data->q, work->x, work->data->n);

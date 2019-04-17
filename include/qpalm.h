@@ -50,6 +50,20 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data,
                           cholmod_common    *c);
 
 
+/**
+ * Warm start workspace variables x, x_0, x_prev, y, Ax, Qx and sigma
+ * 
+ * If x_warm_start or y_warm_start is given as NULL, then the related variables
+ * will be initialized to 0. This function also initializes the penalty parameters
+ * sigma and the matrix Asqrtsigma.
+ * 
+ * @param work Workspace
+ * @param x_warm_start Warm start for the primal variables
+ * @param y_warm_start Warm start for the dual variables
+ */
+void qpalm_warm_start(QPALMWorkspace *work, 
+                c_float        *x_warm_start, 
+                c_float        *y_warm_start);
 
 /**
  * Solve the quadratic program.

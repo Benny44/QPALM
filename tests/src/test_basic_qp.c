@@ -1,7 +1,6 @@
 #include "qpalm.h"
 #include "global_opts.h"
 #include "constants.h"
-#include "util.h"
 #include <CUnit/CUnit.h>
 
 #define N 2
@@ -130,7 +129,7 @@ void test_basic_qp_warm_start(void) {
     work = qpalm_setup(data, settings, c);
     c_float x[N] = {-0.1, 0.3};
     c_float y[M] = {-0.9, 1.55, 0.0};
-    warm_start(work, x, y);
+    qpalm_warm_start(work, x, y);
 
     // Solve Problem
     qpalm_solve(work);
@@ -148,7 +147,7 @@ void test_basic_qp_warm_start_unscaled(void) {
     work = qpalm_setup(data, settings, c);
     c_float x[N] = {-0.1, 0.3};
     c_float y[M] = {-0.9, 1.55, 0.0};
-    warm_start(work, x, y);
+    qpalm_warm_start(work, x, y);
 
     // Solve Problem
     qpalm_solve(work);
@@ -166,7 +165,7 @@ void test_basic_qp_warm_start_noprox(void) {
     work = qpalm_setup(data, settings, c);
     c_float x[N] = {-0.1, 0.3};
     c_float y[M] = {-0.9, 1.55, 0.0};
-    warm_start(work, x, y);
+    qpalm_warm_start(work, x, y);
 
     // Solve Problem
     qpalm_solve(work);
@@ -184,7 +183,7 @@ void test_basic_qp_warm_start_noprox_unscaled(void) {
     work = qpalm_setup(data, settings, c);
     c_float x[N] = {-0.1, 0.3};
     c_float y[M] = {-0.9, 1.55, 0.0};
-    warm_start(work, x, y);
+    qpalm_warm_start(work, x, y);
 
     // Solve Problem
     qpalm_solve(work);
