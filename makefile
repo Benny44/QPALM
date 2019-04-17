@@ -7,8 +7,11 @@ TESTDIR=tests
 
 all: directories lib demo
 
-test: 
+test: suitesparselib
 	(cd $(TESTDIR) && $(MAKE) )
+
+suitesparselib: 
+	(cd suitesparse && $(MAKE) lib )
 
 lib: $(BDIR)/libqpalm.a
 
