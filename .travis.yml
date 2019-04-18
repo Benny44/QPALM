@@ -1,7 +1,7 @@
 
 language: c
 sudo: required
-dist: trusty
+dist: xenial
 compiler: gcc
 branches:
   only:
@@ -19,10 +19,6 @@ addons:
       - valgrind
       - libblas-dev
       - liblapack-dev
-      - g++-4.9
-      - gcc-4.9
-env:
-  - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 before_install:
   - make clean
 install:
