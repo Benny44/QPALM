@@ -25,7 +25,7 @@ LIBS+=$(CHOLMOD_LIBS)
 LDLIBS+=$(CHOLMOD_LIB_INCLUDE)
 
 #Testing and checking coverage (also used in travis)
-ifeq ($(TCOV),yes)
+ifeq ($(COV),yes)
 	CFLAGS+= `pkg-config --cflags cunit` `pkg-config --libs cunit` -fuse-ld=gold -fprofile-arcs -ftest-coverage
 	BLAS=-lblas -llapack
 endif
