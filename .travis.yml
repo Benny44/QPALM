@@ -9,8 +9,8 @@ branches:
   - development
 addons:
   apt:
-     sources:
-       - ubuntu-toolchain-r-test
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
       - libcunit1 
       - libcunit1-doc 
@@ -22,11 +22,11 @@ addons:
       - g++-4.9
       - gcc-4.9
 env:
-   - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+  - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 before_install:
-      - make clean
+  - make clean
 install:
-      - sudo gem install coveralls-lcov 
+  - sudo gem install coveralls-lcov 
 before_script:  
 script:
   - make travis TCOV=yes
