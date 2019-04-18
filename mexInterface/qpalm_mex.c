@@ -51,25 +51,6 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",      //c_int
                                       "warm_start",     //c_int
                                       "verbose"};       //c_int
 
-const char* QPALM_DATA_FIELDS[] = {"n",     //c_int
-                                   "m",     //c_int
-                                   "Q",     //csc
-                                   "A",     //csc
-                                   "q",     //c_float*
-                                   "bmin",  //c_float*
-                                   "bmax"}; //c_float*
-
-const char* QPALM_SCALING_FIELDS[] = {"D",       //c_float*
-                                      "E",       //c_float*
-                                      "Dinv",    //c_float*
-                                      "Einv"};   //c_float*
-
-
-const char* QPALM_WORKSPACE_FIELDS[] = {"data",
-                                       "lbfgs",
-                                       "scaling",
-                                       "settings"};
-
 
 // internal utility functions
 void      castToDoubleArr(c_float *arr, double* arr_out, size_t len);

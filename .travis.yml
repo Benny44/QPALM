@@ -20,6 +20,7 @@ addons:
       - libblas-dev
       - liblapack-dev
       - g++-4.9
+      - gcc-4.9
 env:
    - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 before_install:
