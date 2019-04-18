@@ -379,16 +379,16 @@ void qpalm_solve(QPALMWorkspace *work) {
       // d=newton()
       newton_set_direction(work);
       
-      tau = exact_linesearch(work);
+      work->tau = exact_linesearch(work);
 
       //x_prev = x
       prea_vec_copy(work->x, work->x_prev, n);
       //dphi_prev = dphi 
       prea_vec_copy(work->dphi, work->dphi_prev, n);
       //x = x+tau*d
-      vec_add_scaled(work->x, work->d, work->x, tau, n);
-      vec_mult_scalar(work->Qd, tau, n); //Qdx used in dua_infeas check
-      vec_mult_scalar(work->Ad, tau, m); //Adx used in dua_infeas check
+      vec_add_scaled(work->x, work->d, work->x, work->tau, n);
+      vec_mult_scalar(work->Qd, work->tau, n); //Qdx used in dua_infeas check
+      vec_mult_scalar(work->Ad, work->tau, m); //Adx used in dua_infeas check
       vec_add_scaled(work->Qx, work->Qd, work->Qx, 1, n);
       vec_add_scaled(work->Ax, work->Ad, work->Ax, 1, m);
     }

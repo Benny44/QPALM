@@ -193,6 +193,7 @@ typedef struct {
    * @name Linesearch variables
    * @{
    */
+  c_float tau;        ///< stepsize
   c_float *Qd;        ///< Q * d
   c_float *Ad;        ///< A * d
   c_float *sqrt_sigma; ///< elementwise sqrt(sigma)
