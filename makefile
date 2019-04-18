@@ -14,7 +14,7 @@ endif
 
 all: directories lib demo
 
-travis: suitesparselib test
+travis: directories suitesparselib test
 
 test: 
 	( cd $(TESTDIR) && $(MAKE) )
