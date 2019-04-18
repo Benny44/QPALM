@@ -192,7 +192,7 @@ sig_updated = true; %Reset lbfgs initially and perform gradient descent step
 
 
 %Initialization for Qdx and Adx used in is_dual_infeasible;
-tau = 0; Qd = zeros(n,1); Ad = zeros(m,1);
+tau = 0; Qd = zeros(n,1); Ad = zeros(m,1); d = zeros(n,1);
 
 %Precompute for ldlupdate
 Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
@@ -225,6 +225,9 @@ for k = 1:maxiter
    
    dy = yh-y; Atdy = Atyh - Aty;
    dx = x-x_prev; Qdx = Qd*tau; Adx = Ad*tau;
+   if proximal 
+       Qdx2 = Qdx - tau/gamma*d;
+   end
    
    if nrm_rd <= eps_dual && nrm_rp <= eps_primal
        stats.status = 'solved';
@@ -233,7 +236,7 @@ for k = 1:maxiter
        stats.status = 'primal_infeasible';
        stats.pinf_certificate = 1/c_scale*(E_scale.*dy);
        break
-   elseif is_dual_infeasible(dx, Qdx, q, Adx, bmin, bmax, D_scale, E_scale, c_scale, eps_dinf)
+   elseif is_dual_infeasible(dx, Qdx2, q, Adx, bmin, bmax, D_scale, E_scale, c_scale, eps_dinf)
        stats.status = 'dual_infeasible';
        stats.dinf_certificate = D_scale.*dx;
        break

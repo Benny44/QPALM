@@ -17,7 +17,7 @@ Q = sprandsym(n, 9e-1, 1e-8, 1);
 % Q=sparse(n,n);
 q = 100*randn(n,1);
 
-load('dual-bug.mat')
+% load('dual-bug.mat')
 
 fprintf('nnz A: %d, nnz Q: %d\n', nnz(A), nnz(Q));
 
@@ -32,7 +32,7 @@ settings.eps_abs = 1e-4;
 settings.eps_rel = 1e-4;
 settings.delta   = 10;
 % settings.memory  = 10;
-settings.proximal = false;
+settings.proximal = true;
 solver.setup(Q, q, A, lb, ub, settings);
 tic
 % profile on;
