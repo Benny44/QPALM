@@ -72,7 +72,8 @@ run_all_tests.o: run_all_tests.c $(DEPS)
 run_all_tests: $(OBJ) 
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(LDLIBS)
 	rm -f run_all_tests.o
-	./run_all_tests
+	#For travis LD_LIBRARY_PATH seems to be required
+	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):../suitesparse/lib:../lib ./run_all_tests
 	
 
 .PHONY: clean
