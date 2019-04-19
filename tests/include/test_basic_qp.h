@@ -1,5 +1,5 @@
-void basic_qp_suite_setup(void);
-void basic_qp_suite_teardown(void);
+int basic_qp_suite_setup(void);
+int basic_qp_suite_teardown(void);
 void basic_qp_test_teardown(void);
 
 void test_basic_qp(void);

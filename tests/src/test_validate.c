@@ -11,7 +11,7 @@
 QPALMSettings *settings;
 QPALMData *data;
 
-void validate_suite_setup(void) {
+int validate_suite_setup(void) {
 
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
@@ -22,6 +22,14 @@ void validate_suite_setup(void) {
     data->bmin = bmin;
     data->bmax = bmax;
 
+    return 0;
+}
+
+int validate_suite_teardown(void) {
+    c_free(settings);
+    c_free(data);
+
+    return 0;
 }
 
 void validate_test_setup(void) {
@@ -41,10 +49,7 @@ void validate_test_setup(void) {
     data->bmax = bmax;
 }
 
-void validate_suite_teardown(void) {
-    c_free(settings);
-    c_free(data);
-}
+
 
 /* Data validation */
 void test_correct_data(void) {

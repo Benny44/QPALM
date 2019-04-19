@@ -14,7 +14,7 @@ QPALMSettings *settings;
 QPALMData *data;
 cholmod_common *c;
 
-void dua_inf_qp_suite_setup(void) {
+int dua_inf_qp_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
@@ -57,9 +57,11 @@ void dua_inf_qp_suite_setup(void) {
     data->A = A;
     data->Q = Q;
     CHOLMOD(finish)(c);
+
+    return 0;
 }
 
-void dua_inf_qp_suite_teardown(void) {
+int dua_inf_qp_suite_teardown(void) {
     c_free(settings);
     // Clean setup
     CHOLMOD(start)(c);
@@ -67,6 +69,8 @@ void dua_inf_qp_suite_teardown(void) {
     CHOLMOD(free_sparse)(&data->A, c);
     CHOLMOD(finish)(c);
     c_free(data);
+
+    return 0;
 }
 
 

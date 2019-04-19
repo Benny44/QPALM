@@ -1,5 +1,5 @@
-void cholmod_qp_setup(void);
-void cholmod_qp_teardown(void);
+int cholmod_qp_setup(void);
+int cholmod_qp_teardown(void);
 void cholmod_set_QdAd(void);
 
 void test_mat_vec(void);

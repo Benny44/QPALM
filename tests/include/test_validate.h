@@ -1,6 +1,7 @@
-void validate_suite_setup(void);
+int validate_suite_setup(void);
+int validate_suite_teardown(void);
 void validate_test_setup(void);
-void validate_suite_teardown(void);
+
 
 void test_correct_data(void);
 void test_missing_data(void);
