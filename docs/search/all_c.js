@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['q',['q',['../structQPALMData.html#aa6775bd0b50250223ddd66115da68a12',1,'QPALMData::q()'],['../structQPALMData.html#a9b440bae03198195823e1e3f5154a611',1,'QPALMData::Q()']]],
+  ['qpalm_3a_20proximal_20augmented_20lagrangian_20solver_20for_20quadratic_20programs',['QPALM: Proximal Augmented Lagrangian Solver for Quadratic Programs',['../index.html',1,'']]],
+  ['q',['Q',['../structQPALMData.html#a9b440bae03198195823e1e3f5154a611',1,'QPALMData::Q()'],['../structQPALMData.html#aa6775bd0b50250223ddd66115da68a12',1,'QPALMData::q()']]],
   ['qd',['Qd',['../structQPALMCholmod.html#abaedb802a939e9ee04577c87bb9f25cc',1,'QPALMCholmod::Qd()'],['../structQPALMWorkspace.html#af3614a39bf75c0331f89447caa3d1217',1,'QPALMWorkspace::Qd()']]],
   ['qdelta_5fx',['Qdelta_x',['../structQPALMWorkspace.html#a7a10abcbd6a5e3cb44b7dca2cf679c7a',1,'QPALMWorkspace']]],
   ['qpalm_2ec',['qpalm.c',['../qpalm_8c.html',1,'']]],
@@ -19,6 +20,7 @@ var searchData=
   ['qpalm_5ftic',['qpalm_tic',['../util_8h.html#aae57226ec767e15f27d88e97df093b41',1,'util.h']]],
   ['qpalm_5ftoc',['qpalm_toc',['../util_8h.html#a6eecdaf6f3f1c4bf0ab1067a5e7e69da',1,'util.h']]],
   ['qpalm_5funsolved',['QPALM_UNSOLVED',['../constants_8h.html#acbec0c523d324f1ae556a7fde7b83633',1,'constants.h']]],
+  ['qpalm_5fwarm_5fstart',['qpalm_warm_start',['../qpalm_8c.html#a40dba45b28017437a74e31d43dcb8933',1,'qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_warm_start):&#160;qpalm.c'],['../qpalm_8h.html#a40dba45b28017437a74e31d43dcb8933',1,'qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_warm_start):&#160;qpalm.c']]],
   ['qpalmcholmod',['QPALMCholmod',['../structQPALMCholmod.html',1,'']]],
   ['qpalmdata',['QPALMData',['../structQPALMData.html',1,'']]],
   ['qpalminfo',['QPALMInfo',['../structQPALMInfo.html',1,'']]],

@@ -1,0 +1,36 @@
+
+language: c
+sudo: required
+dist: xenial
+compiler: gcc
+branches:
+  only:
+  - master
+  - development
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libcunit1 
+      - libcunit1-doc 
+      - libcunit1-dev
+      - lcov
+      - valgrind
+      - libblas-dev
+      - liblapack-dev
+before_install:
+  - make clean
+install:
+  - gem install coveralls-lcov 
+before_script:  
+script:
+  - make travis COV=yes
+cache:
+  apt: true
+  bundler: true
+after_success:
+  - cd obj
+  - lcov --directory . --capture --o coverage.info
+  - lcov --list coverage.info
+  - coveralls-lcov coverage.info

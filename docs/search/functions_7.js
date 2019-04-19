@@ -1,5 +1,10 @@
 var searchData=
 [
-  ['prea_5fint_5fvec_5fcopy',['prea_int_vec_copy',['../lin__alg_8c.html#a9b0e1b0ffa9c3c0247a9a4a87a22dff6',1,'prea_int_vec_copy(const c_int *a, c_int *b, c_int n):&#160;lin_alg.c'],['../lin__alg_8h.html#a9b0e1b0ffa9c3c0247a9a4a87a22dff6',1,'prea_int_vec_copy(const c_int *a, c_int *b, c_int n):&#160;lin_alg.c']]],
-  ['prea_5fvec_5fcopy',['prea_vec_copy',['../lin__alg_8c.html#acef53b3d399e7361c0d24b9bbd3ca8a6',1,'prea_vec_copy(const c_float *a, c_float *b, c_int n):&#160;lin_alg.c'],['../lin__alg_8h.html#acef53b3d399e7361c0d24b9bbd3ca8a6',1,'prea_vec_copy(const c_float *a, c_float *b, c_int n):&#160;lin_alg.c']]]
+  ['qpalm_5fcleanup',['qpalm_cleanup',['../qpalm_8c.html#a856ef78171b77f0f526a8d4255e15223',1,'qpalm_cleanup(QPALMWorkspace *work):&#160;qpalm.c'],['../qpalm_8h.html#a856ef78171b77f0f526a8d4255e15223',1,'qpalm_cleanup(QPALMWorkspace *work):&#160;qpalm.c']]],
+  ['qpalm_5fset_5fdefault_5fsettings',['qpalm_set_default_settings',['../qpalm_8c.html#a4aa4b201790332b345faf7ca36f54be5',1,'qpalm_set_default_settings(QPALMSettings *settings):&#160;qpalm.c'],['../qpalm_8h.html#a4aa4b201790332b345faf7ca36f54be5',1,'qpalm_set_default_settings(QPALMSettings *settings):&#160;qpalm.c']]],
+  ['qpalm_5fsetup',['qpalm_setup',['../qpalm_8c.html#a6f5ace95da26577065ebe86c135cac6d',1,'qpalm_setup(const QPALMData *data, QPALMSettings *settings, cholmod_common *c):&#160;qpalm.c'],['../qpalm_8h.html#a6f5ace95da26577065ebe86c135cac6d',1,'qpalm_setup(const QPALMData *data, QPALMSettings *settings, cholmod_common *c):&#160;qpalm.c']]],
+  ['qpalm_5fsolve',['qpalm_solve',['../qpalm_8c.html#a17fcba910c32b8518df93617591b1cf1',1,'qpalm_solve(QPALMWorkspace *work):&#160;qpalm.c'],['../qpalm_8h.html#a17fcba910c32b8518df93617591b1cf1',1,'qpalm_solve(QPALMWorkspace *work):&#160;qpalm.c']]],
+  ['qpalm_5ftic',['qpalm_tic',['../util_8h.html#aae57226ec767e15f27d88e97df093b41',1,'util.h']]],
+  ['qpalm_5ftoc',['qpalm_toc',['../util_8h.html#a6eecdaf6f3f1c4bf0ab1067a5e7e69da',1,'util.h']]],
+  ['qpalm_5fwarm_5fstart',['qpalm_warm_start',['../qpalm_8c.html#a40dba45b28017437a74e31d43dcb8933',1,'qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_warm_start):&#160;qpalm.c'],['../qpalm_8h.html#a40dba45b28017437a74e31d43dcb8933',1,'qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_warm_start):&#160;qpalm.c']]]
 ];

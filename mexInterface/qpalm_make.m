@@ -1,11 +1,10 @@
 function qpalm_make (metis_path)
-%QPALM_MAKE compiles the CHOLMOD mexFunctions
+%QPALM_MAKE compiles the QPALM mexFunction
 %
 % Example:
 %   qpalm_make
 %
 % QPALM relies on CHOLMOD and AMD and COLAMD, and optionally CCOLAMD, CAMD, and METIS.
-% You must type the qpalm_make command while in the QPALM/mexInterface directory.
 
 close all
 
@@ -63,12 +62,12 @@ end
 have_metis = exist (metis_path, 'dir') ;
 
 if (have_metis)
-    fprintf ('Compiling CHOLMOD with METIS 5.1.0 for MATLAB Version %s\n', v) ;
+%     fprintf ('Compiling CHOLMOD with METIS 5.1.0 for MATLAB Version %s\n', v) ;
     include = [include ' -I' metis_path '/include'] ;
     include = [include ' -I' metis_path '/GKlib'] ;
     include = [include ' -I' metis_path '/libmetis'] ;
 else
-    fprintf ('Compiling CHOLMOD without METIS for MATLAB Version %s\n', v) ;
+%     fprintf ('Compiling CHOLMOD without METIS for MATLAB Version %s\n', v) ;
     include = ['-DNPARTITION ' include] ;
 end
 
@@ -79,7 +78,7 @@ flags = [flags ' -DMATLAB_MEX_FILE -DNMALLOC'];
  %---------------------------------------------------------------------------
 
  % This is exceedingly ugly.  The MATLAB mex command needs to be told where to
- % fine the LAPACK and BLAS libraries, which is a real portability nightmare.
+ % find the LAPACK and BLAS libraries, which is a real portability nightmare.
 
 if (pc)
     if (verLessThan ('matlab', '7.5'))
@@ -97,7 +96,7 @@ end
 
 if (is64 && ~verLessThan ('matlab', '7.8'))
     % versions 7.8 and later on 64-bit platforms use a 64-bit BLAS
-    fprintf ('with 64-bit BLAS\n') ;
+%     fprintf ('with 64-bit BLAS\n') ;
     flags = [flags ' -DBLAS64'] ;
 end
 
@@ -279,28 +278,6 @@ qpalm_src_path = '../src';
 for i = 1:length (qpalm_src)
     qpalm_src {i} = [qpalm_src_path '/' qpalm_src{i}] ;
 end
-cholmod_mex_src = { ...
-    '../suitesparse/CHOLMOD/MATLAB/analyze', ...
-    '../suitesparse/CHOLMOD/MATLAB/bisect', ...
-    '../suitesparse/CHOLMOD/MATLAB/chol2', ...
-    '../suitesparse/CHOLMOD/MATLAB/cholmod2', ...
-    '../suitesparse/CHOLMOD/MATLAB/etree2', ...
-    '../suitesparse/CHOLMOD/MATLAB/lchol', ...
-    '../suitesparse/CHOLMOD/MATLAB/ldlchol', ...
-    '../suitesparse/CHOLMOD/MATLAB/ldlsolve', ...
-    '../suitesparse/CHOLMOD/MATLAB/ldlupdate', ...
-    '../suitesparse/CHOLMOD/MATLAB/ldlrowmod', ...
-    '../suitesparse/CHOLMOD/MATLAB/metis', ...
-    '../suitesparse/CHOLMOD/MATLAB/spsym', ...
-    '../suitesparse/CHOLMOD/MATLAB/nesdis', ...
-    '../suitesparse/CHOLMOD/MATLAB/septree', ...
-    '../suitesparse/CHOLMOD/MATLAB/resymbol', ...
-    '../suitesparse/CHOLMOD/MATLAB/sdmult', ...
-    '../suitesparse/CHOLMOD/MATLAB/sparse2', ...
-    '../suitesparse/CHOLMOD/MATLAB/symbfact2', ...
-    '../suitesparse/CHOLMOD/MATLAB/mread', ...
-    '../suitesparse/CHOLMOD/MATLAB/mwrite', ...
-    '../suitesparse/CHOLMOD/MATLAB/lxbpattern', '../suitesparse/CHOLMOD/MATLAB/lsubsolve' } ;   % <=== these 2 are just for testing
 
 if (pc)
     % Windows does not have drand48 and srand48, required by METIS.  Use
@@ -322,7 +299,7 @@ if (have_metis)
 end
 
 kk = 0 ;
-cflags = 'CFLAGS="\$CFLAGS -std=c99 -fbounds-check -Wall -Wextra -fPIC -DMATLAB -O3 -DPROFILING -DPRINTING"';
+cflags = 'CFLAGS="\$CFLAGS -std=c99 -fPIC -DMATLAB -O3 -DPROFILING -DPRINTING"';
 flags = [cflags ' ' flags];
 
 for f = source

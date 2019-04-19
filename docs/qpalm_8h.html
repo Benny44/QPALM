@@ -19,6 +19,7 @@
 });
 </script><script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -93,6 +94,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a6f5ace95da26577065ebe86c135cac6d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a6f5ace95da26577065ebe86c135cac6d">qpalm_setup</a> (const <a class="el" href="structQPALMData.html">QPALMData</a> *data, <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings, cholmod_common *c)</td></tr>
 <tr class="memdesc:a6f5ace95da26577065ebe86c135cac6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize QPALM solver allocating memory.  <a href="#a6f5ace95da26577065ebe86c135cac6d">More...</a><br /></td></tr>
 <tr class="separator:a6f5ace95da26577065ebe86c135cac6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40dba45b28017437a74e31d43dcb8933"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a40dba45b28017437a74e31d43dcb8933">qpalm_warm_start</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *x_warm_start, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *y_warm_start)</td></tr>
+<tr class="memdesc:a40dba45b28017437a74e31d43dcb8933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Warm start workspace variables x, x_0, x_prev, Ax, Qx, y and sigma.  <a href="#a40dba45b28017437a74e31d43dcb8933">More...</a><br /></td></tr>
+<tr class="separator:a40dba45b28017437a74e31d43dcb8933"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17fcba910c32b8518df93617591b1cf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a17fcba910c32b8518df93617591b1cf1">qpalm_solve</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
 <tr class="memdesc:a17fcba910c32b8518df93617591b1cf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the quadratic program.  <a href="#a17fcba910c32b8518df93617591b1cf1">More...</a><br /></td></tr>
 <tr class="separator:a17fcba910c32b8518df93617591b1cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -103,7 +107,7 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">QPALM main solver API. </p>
 <dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
-<p>This file contains the main functions that can be called by the user. The user can load the default settings, setup the workspace with data and settings, run the solver, and cleanup the workspace afterwards. </p>
+<p>This file contains the main functions that can be called by the user. The user can load the default settings, setup the workspace with data and settings, warm_start the primal and dual variables, run the solver, and cleanup the workspace afterwards. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a856ef78171b77f0f526a8d4255e15223"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a856ef78171b77f0f526a8d4255e15223">&#9670;&nbsp;</a></span>qpalm_cleanup()</h2>
@@ -231,6 +235,51 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a40dba45b28017437a74e31d43dcb8933"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40dba45b28017437a74e31d43dcb8933">&#9670;&nbsp;</a></span>qpalm_warm_start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void qpalm_warm_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramname"><em>x_warm_start</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramname"><em>y_warm_start</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Warm start workspace variables x, x_0, x_prev, Ax, Qx, y and sigma. </p>
+<p class="">If x_warm_start or y_warm_start is given as NULL, then the related variables will be initialized to 0. This function also initializes the penalty parameters sigma and the matrix Asqrtsigma.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+    <tr><td class="paramname">x_warm_start</td><td>Warm start for the primal variables </td></tr>
+    <tr><td class="paramname">y_warm_start</td><td>Warm start for the dual variables </td></tr>
   </table>
   </dd>
 </dl>

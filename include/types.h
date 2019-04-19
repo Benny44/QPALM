@@ -163,7 +163,7 @@ typedef struct {
   c_float *Qx;       ///< scaled Q * x
   c_float *Aty;      ///< A' * y (useful for saving one mat_tpose_vec)
   c_float *x_prev;   ///< previous primal iterate
-
+  c_int initialized; ///< flag whether the iterates were initialized or not
   /** @} */
 
   /**
@@ -193,6 +193,7 @@ typedef struct {
    * @name Linesearch variables
    * @{
    */
+  c_float tau;        ///< stepsize
   c_float *Qd;        ///< Q * d
   c_float *Ad;        ///< A * d
   c_float *sqrt_sigma; ///< elementwise sqrt(sigma)

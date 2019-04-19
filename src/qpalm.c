@@ -50,7 +50,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   QPALMWorkspace *work; // Workspace
 
   // Validate data
-  if (validate_data(data)) {
+  if (!validate_data(data)) {
 # ifdef PRINTING
     c_eprint("Data validation returned failure");
 # endif /* ifdef PRINTING */
@@ -58,7 +58,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   }
 
   // Validate settings
-  if (validate_settings(settings)) {
+  if (!validate_settings(settings)) {
 # ifdef PRINTING
     c_eprint("Settings validation returned failure");
 # endif /* ifdef PRINTING */
@@ -80,6 +80,10 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
     work->timer = c_malloc(sizeof(QPALMTimer));
     qpalm_tic(work->timer);
   # endif /* ifdef PROFILING */
+
+  // Copy settings
+  work->settings = copy_settings(settings);
+  work->sqrt_delta = c_sqrt(work->settings->delta);
 
   size_t n = data->n;
   size_t m = data->m;
@@ -110,14 +114,13 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->Aty      = c_calloc(n, sizeof(c_float));
 
   work->x0 = c_calloc(n, sizeof(c_float));
-  // Initialize variables x, x_prev, y, Qx and Ax
-  cold_start(work);
+
+  work->initialized = FALSE;
 
   // Workspace variables
   work->temp_m   = c_calloc(m, sizeof(c_float));
   work->temp_n   = c_calloc(n, sizeof(c_float));
   work->sigma = c_calloc(m, sizeof(c_float));
-  initialize_sigma(work);
 
   work->z  = c_calloc(m, sizeof(c_float));
   work->Axys = c_calloc(m, sizeof(c_float));
@@ -149,10 +152,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->delta_x  = c_calloc(n, sizeof(c_float));
   work->Qdelta_x = c_calloc(n, sizeof(c_float));
   work->Adelta_x = c_calloc(m, sizeof(c_float));
-
-  // Copy settings
-  work->settings = copy_settings(settings);
-  work->sqrt_delta = c_sqrt(work->settings->delta);
 
   // Perform scaling
   if (settings->scaling) {
@@ -195,10 +194,11 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
   work->chol->enter = c_calloc(m, sizeof(c_int));
   work->chol->leave = c_calloc(m, sizeof(c_int));
   work->chol->At_scale = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, &work->chol->c);
-  vec_ew_sqrt(work->sigma, work->sqrt_sigma, work->data->m);
-  prea_vec_copy(work->sqrt_sigma, work->chol->At_scale->x, work->data->m);
-  work->chol->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, &work->chol->c);
-  CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+
+  // If warm-start will not be used, cold start variables x, x0, x_prev, y, Qx, Ax and init sigma
+  if (!work->settings->warm_start) {
+    qpalm_warm_start(work, NULL, NULL);
+  }
 
   // Allocate solution
   work->solution    = c_calloc(1, sizeof(QPALMSolution));
@@ -221,12 +221,82 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
 }
 
 
+void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_warm_start) {
+    if (x_warm_start != NULL) {
+      prea_vec_copy(x_warm_start, work->x, work->data->n);
+      // Scale initial vectors x, xprev, x0, if they are warm-started
+      if (work->settings->scaling) {
+        vec_ew_prod(work->x, work->scaling->Dinv, work->x, work->data->n);
+        prea_vec_copy(work->x, work->x0, work->data->n);
+        prea_vec_copy(work->x, work->x_prev, work->data->n);
+      } else {
+        prea_vec_copy(work->x, work->x0, work->data->n);
+        prea_vec_copy(work->x, work->x_prev, work->data->n);
+      }
+      //NB to link to cholmod here d and chol->neg_dphi are used as x
+      work->d = work->chol->neg_dphi->x;
+      prea_vec_copy(work->x, work->d, work->data->n);
+
+      mat_vec(work->data->Q, work->chol->neg_dphi, work->chol->Qd, &work->chol->c);
+      if (work->settings->proximal) {
+        vec_add_scaled(work->Qd, work->x, work->Qx, 1/work->settings->gamma, work->data->n);
+      } else {
+        prea_vec_copy(work->Qd, work->Qx, work->data->n);
+      }
+      mat_vec(work->data->A, work->chol->neg_dphi, work->chol->Ad, &work->chol->c);
+      prea_vec_copy(work->Ad, work->Ax, work->data->m);
+
+
+      // printf("Ax: \n");
+      // for (int i = 0; i < work->data->m; i++) {
+      //   printf("%.32f ", work->Ax[i]);
+      // }
+      // printf("\n");
+
+    } else {
+      vec_set_scalar(work->x, 0., work->data->n);
+      vec_set_scalar(work->x_prev, 0., work->data->n);
+      vec_set_scalar(work->x0, 0., work->data->n);
+      vec_set_scalar(work->Qx, 0., work->data->n);
+      vec_set_scalar(work->Ax, 0., work->data->m);
+    }
+
+    if (y_warm_start != NULL) {
+      prea_vec_copy(y_warm_start, work->y, work->data->m);
+      if (work->settings->scaling) {
+        vec_ew_prod(work->y, work->scaling->Einv, work->y, work->data->m);
+        vec_mult_scalar(work->y, work->scaling->c, work->data->m);
+      }
+    } else {
+      vec_set_scalar(work->y, 0., work->data->m);
+    }
+    
+    initialize_sigma(work);
+    vec_ew_sqrt(work->sigma, work->sqrt_sigma, work->data->m);
+    c_float *At_scalex = work->chol->At_scale->x;
+    prea_vec_copy(work->sqrt_sigma, At_scalex, work->data->m);
+    if (work->chol->At_sqrt_sigma) CHOLMOD(free_sparse)(&work->chol->At_sqrt_sigma, &work->chol->c);
+    work->chol->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, &work->chol->c);
+    CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+
+    work->initialized = TRUE;
+}
+
+
 void qpalm_solve(QPALMWorkspace *work) {
 
   #ifdef PROFILING
   qpalm_tic(work->timer); // Start timer
   #endif /* ifdef PROFILING */
   
+  //Check if the internal variables were correctly initialized. A path that leads to
+  //incorrect initialization (and subsequent program crash) is that the user forgets
+  //to call qpalm_warm_start while having set settings->warm_start=TRUE, which causes 
+  //qpalm_setup to not initialized the variables.
+  if (!work->initialized) {
+    qpalm_warm_start(work, NULL, NULL);
+  }
+
   //Initialize CHOLMOD and its settings
   CHOLMOD(start)(&work->chol->c);
   cholmod_set_settings(&work->chol->c);
@@ -309,18 +379,16 @@ void qpalm_solve(QPALMWorkspace *work) {
       // d=newton()
       newton_set_direction(work);
       
-      tau = exact_linesearch(work);
+      work->tau = exact_linesearch(work);
 
-      // tau = armijo_linesearch(work);
-      // tau = exact_linesearch_newton(work);
       //x_prev = x
       prea_vec_copy(work->x, work->x_prev, n);
       //dphi_prev = dphi 
       prea_vec_copy(work->dphi, work->dphi_prev, n);
       //x = x+tau*d
-      vec_add_scaled(work->x, work->d, work->x, tau, n);
-      vec_mult_scalar(work->Qd, tau, n); //Qdx used in dua_infeas check
-      vec_mult_scalar(work->Ad, tau, m); //Adx used in dua_infeas check
+      vec_add_scaled(work->x, work->d, work->x, work->tau, n);
+      vec_mult_scalar(work->Qd, work->tau, n); //Qdx used in dua_infeas check
+      vec_mult_scalar(work->Ad, work->tau, m); //Adx used in dua_infeas check
       vec_add_scaled(work->Qx, work->Qd, work->Qx, 1, n);
       vec_add_scaled(work->Ax, work->Ad, work->Ax, 1, m);
     }

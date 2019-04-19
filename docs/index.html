@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>QPALM: Main Page</title>
+<title>QPALM: QPALM: Proximal Augmented Lagrangian Solver for Quadratic Programs</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,6 +19,7 @@
 });
 </script><script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -67,11 +68,32 @@ $(function() {
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">QPALM Documentation</div>  </div>
+<div class="title">QPALM: Proximal Augmented Lagrangian Solver for Quadratic Programs </div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><h1><a class="anchor" id="intro_sec"></a>
+Introduction</h1>
+<p class="">This is a C implementation of QPALM, a proximal augmented Lagrangian based solver for quadratic programs. QPALM solves problems of the form: </p><p class="formulaDsp">
+\begin{align*} \mbox{\Large\( \textrm{minimize \hspace{1cm}} \)} &amp; \mbox{\Large\( \frac{1}{2}x^T Q x + q^T x \)} \\ \mbox{\Large\( \textrm{subject to \hspace{1cm}} \)} &amp; \mbox{\Large\( b_\textrm{min} \leq Ax \leq b_\textrm{max} \)} \end{align*}
+</p>
+<h1><a class="anchor" id="install_sec"></a>
+Installation</h1>
+<p class="">Make sure to clone this repository with the submodules (suitesparse). If this is the first time you are using QPALM, after cloning run </p><div class="fragment"><div class="line">git submodule update --init </div></div><!-- fragment --> <h2><a class="anchor" id="c"></a>
+Compiling the C library</h2>
+<p class="">The C library can be compiled by running make. The library requires BLAS and LAPACK. Therefore, the user may need to specify where to find these libraries. The user can do this by using </p><div class="fragment"><div class="line">make BLAS=&quot;-lblas_library -llapack_library&quot; BLAS_PATH=path/to/blas LAPACK_PATH=path/to/lapack</div></div><!-- fragment --><p> This results in a C callable library libqpalm.a in the lib directory. The user's application would need to <code>#include</code> <code>"qpalm.h"</code>. Furthermore, it needs to be linked to the qpalm and cholmod (and blas/lapack) libraries. This requires compiling suitesparse and linking with the following flags: </p><div class="fragment"><div class="line">-lqpalm -LQPALM/lib -IQPALM/include -Lsuitesparse/lib -Isuitesparse/include -Isuitesparse/metis-5.1.0/include -lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmetis -lm </div></div><!-- fragment --><h2><a class="anchor" id="mex"></a>
+Compiling the Mex interface</h2>
+<p class="">Add QPALM/mexInterface to your Matlab path and run <code>qpalm_make.m</code>. With this command, you compile the cholmod and qpalm source files, and finally the qpalm Mex interface. This might take a little bit of time (less than one minute).</p>
+<h1><a class="anchor" id="example"></a>
+Using QPALM</h1>
+<p class="">Using QPALM from Matlab is extremely simple. Here is an example </p><div class="fragment"><div class="line">%% Generate data</div><div class="line">m = 300;n = 50;</div><div class="line">A = sprandn(m, n, 1e-1, 1e-4); </div><div class="line">lb = -2*ones(m,1);</div><div class="line">ub =  2*ones(m,1);</div><div class="line">Q = sprandsym(n, 1e-1, 1e-4, 1);</div><div class="line">q = 10*randn(n,1);</div><div class="line"></div><div class="line">%% Solve with qpalm</div><div class="line">solver = qpalm;</div><div class="line">settings = solver.default_settings();</div><div class="line">% Optionally set some settings</div><div class="line">settings.max_iter = 1000;</div><div class="line">settings.eps_abs = 1e-4;</div><div class="line">settings.eps_rel = 1e-4;</div><div class="line"></div><div class="line">solver.setup(Q, q, A, lb, ub, settings);</div><div class="line"></div><div class="line">res = solver.solve();</div><div class="line"></div><div class="line">% The solver is started by default from x = y = 0. The user can specify</div><div class="line">% warm start variables by running    </div><div class="line">%</div><div class="line">% solver.setup(Q, q, A, lb, ub, x, y, settings);</div><div class="line">%</div><div class="line">% or on the fly anywhere after the setup command by using</div><div class="line">%</div><div class="line">% solver.warm_start(x, y);</div></div><!-- fragment --><h1><a class="anchor" id="cite"></a>
+Citing QPALM</h1>
+<p class="">To be updated soon.</p>
+<h1><a class="anchor" id="license"></a>
+License</h1>
+<p class="">TBD </p>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

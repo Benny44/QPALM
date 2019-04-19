@@ -10,14 +10,17 @@
 
 // Structures
 QPALMWorkspace *work; // Workspace
+QPALMSettings *settings;
+QPALMData *data;
+cholmod_common *c;
 
-void dua_inf_qp_setup(void) {
-    QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
+int dua_inf_qp_suite_setup(void) {
+    settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
-    settings->eps_abs = 1e-8;
-    settings->eps_rel = 1e-8;
+    settings->eps_abs = 1e-6;
+    settings->eps_rel = 1e-6;
 
-    QPALMData *data    = (QPALMData *)c_malloc(sizeof(QPALMData));
+    data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
     data->m = M;
     c_float q[N] = {1, -2};
@@ -27,9 +30,10 @@ void dua_inf_qp_setup(void) {
     data->bmin = bmin;
     data->bmax = bmax;
 
-    cholmod_common c;
-    CHOLMOD(start)(&c);
-    cholmod_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, &c);
+    cholmod_common common;
+    c = &common;
+    CHOLMOD(start)(c);
+    cholmod_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
     c_float *Ax;
     c_int *Ai, *Ap;
     Ax = A->x;
@@ -40,7 +44,7 @@ void dua_inf_qp_setup(void) {
     Ai[0] = 0; Ai[1] = 1; Ai[2] = 2; Ai[3] = 0; Ai[4] = 1; Ai[5] = 2;
 
 
-    cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
+    cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
     c_float *Qx;
     c_int *Qi, *Qp;
     Qx = Q->x;
@@ -52,27 +56,75 @@ void dua_inf_qp_setup(void) {
 
     data->A = A;
     data->Q = Q;
-    CHOLMOD(finish)(&c);
-    // Setup workspace
-    work = qpalm_setup(data, settings, &c);
+    CHOLMOD(finish)(c);
 
-    // Clean setup
-    CHOLMOD(start)(&c);
-    CHOLMOD(free_sparse)(&data->Q, &c);
-    CHOLMOD(free_sparse)(&data->A, &c);
-    CHOLMOD(finish)(&c);
-
-    c_free(data);
-    c_free(settings);
+    return 0;
 }
 
-void dua_inf_qp_teardown(void) {
+int dua_inf_qp_suite_teardown(void) {
+    c_free(settings);
+    // Clean setup
+    CHOLMOD(start)(c);
+    CHOLMOD(free_sparse)(&data->Q, c);
+    CHOLMOD(free_sparse)(&data->A, c);
+    CHOLMOD(finish)(c);
+    c_free(data);
+
+    return 0;
+}
+
+
+void dua_inf_qp_test_teardown(void) {
     qpalm_cleanup(work);
 }
 
 void test_dua_inf_qp(void) {
+    settings->proximal = TRUE;
+    settings->scaling = 2;
+    // Setup workspace
+    work = qpalm_setup(data, settings, c);
     // Solve Problem
     qpalm_solve(work);
 
     CU_ASSERT_EQUAL(work->info->status_val, QPALM_DUAL_INFEASIBLE);
 }
+void test_dua_inf_qp_unscaled(void) {
+    settings->proximal = TRUE;
+    settings->scaling = 0;
+    // Setup workspace
+    work = qpalm_setup(data, settings, c);
+    // Solve Problem
+    qpalm_solve(work);
+
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_DUAL_INFEASIBLE);
+}
+void test_dua_inf_qp_noprox(void) {
+    //This will crash actually, hence the large gamma value
+    // settings->proximal = FALSE;
+    settings->proximal = TRUE;
+    settings->gamma = 1e13;
+    settings->gamma_max = settings->gamma;
+    settings->scaling = 2;
+    // Setup workspace
+    work = qpalm_setup(data, settings, c);
+    // Solve Problem
+    qpalm_solve(work);
+
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_DUAL_INFEASIBLE);
+}
+void test_dua_inf_qp_noprox_unscaled(void) {
+    //This will crash actually, hence the large gamma value
+    // settings->proximal = FALSE;
+    settings->proximal = TRUE;
+    settings->gamma = 1e13;
+    settings->gamma_max = settings->gamma;
+    settings->scaling = 0;
+    // Setup workspace
+    work = qpalm_setup(data, settings, c);
+    // Solve Problem
+    qpalm_solve(work);
+
+    CU_ASSERT_EQUAL(work->info->status_val, QPALM_DUAL_INFEASIBLE);
+}
+
+

@@ -17,6 +17,8 @@ Q = sprandsym(n, 9e-1, 1e-8, 1);
 % Q=sparse(n,n);
 q = 100*randn(n,1);
 
+% load('dual-bug.mat')
+
 fprintf('nnz A: %d, nnz Q: %d\n', nnz(A), nnz(Q));
 
 %% QPALM C
@@ -28,8 +30,8 @@ settings.scaling = 10;
 settings.max_iter = 10000;
 settings.eps_abs = 1e-4;
 settings.eps_rel = 1e-4;
-settings.delta   = 1.2;
-settings.memory  = 10;
+settings.delta   = 10;
+% settings.memory  = 10;
 settings.proximal = true;
 solver.setup(Q, q, A, lb, ub, settings);
 tic
@@ -57,10 +59,10 @@ osqp_settings.max_iter = settings.max_iter;
 osqp_settings.eps_abs = settings.eps_abs;
 osqp_settings.eps_rel = settings.eps_rel;
 osqp_settings.verbose = settings.verbose; osqp_settings.verbose = false;
-osqp_settings.adaptive_rho = 1;
-osqp_settings.adaptive_rho_tolerance = 5;
+% osqp_settings.adaptive_rho = 1;
+% osqp_settings.adaptive_rho_tolerance = 5;
 % osqp_settings.linsys_solver ='mkl pardiso';
-osqp_settings.check_termination = 25;
+% osqp_settings.check_termination = 25;
 solver.setup(Q, q, A, lb, ub, osqp_settings);
 tic
 res_osqp = solver.solve();
@@ -73,18 +75,19 @@ opts.eps_abs = settings.eps_abs;
 opts.eps_rel = settings.eps_rel;
 opts.eps_abs_in = settings.eps_abs_in;
 opts.eps_rel_in = settings.eps_rel_in;
-opts.memory  = settings.memory;
+% opts.memory  = settings.memory;
 opts.maxiter = settings.max_iter;
 opts.rho     = settings.rho;
 opts.theta   = settings.theta;
 opts.scaling = 'simple';
-opts.scaling_iter = settings.scaling; opts.scaling_iter = 2;
+opts.scaling_iter = settings.scaling; 
+% opts.scaling = 2;
 
 opts.solver  = 'newton';
 % opts.solver = 'newton';
 opts.scalar_sig = false;
 opts.lbfgs_precon = false;
-opts.proximal = true;
+opts.proximal = settings.proximal;
 % opts.scalar_sig = true;
 tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(Q,q,A,lb,ub,[],[],opts);qpalm_time = toc
 display(stats_qpalm.status)
@@ -119,7 +122,7 @@ fprintf('Iterations |    %3d       |    %3d          |    %3d   \n',...
     res_osqp.info.iter,...
     stats_qpalm.iter)
 fprintf('Runtime    |   %3.2e   |    %3.2e     |    %3.2e   \n',...
-    QPALMCtime,...
+    res_qpalm.info.run_time,...
     res_osqp.info.run_time,...
     qpalm_time)
 fprintf('Setup time |   %3.2e   |    %3.2e     |    %3.2e   \n',...
@@ -130,13 +133,13 @@ fprintf('Solve time |   %3.2e   |    %3.2e     |    %3.2e   \n',...
     res_qpalm.info.solve_time,...
     res_osqp.info.solve_time,...
     0)
-% fprintf('Violation  |   %3.2e   |    %3.2e     |    %3.2e   \n', ...
-%     QPALMCfeas, ...
-%     OSQPfeas,...
-%     0)
-% fprintf('Objective  | %3.2e    |    %3.2e    |  %3.2e \n', ...
-%     QPALMCobj, ...
-%     OSQPobj,...
-%     QPALMobj)
+fprintf('Violation  |   %3.2e   |    %3.2e     |    %3.2e   \n', ...
+    QPALMCfeas, ...
+    OSQPfeas,...
+    0)
+fprintf('Objective  | %3.2e    |    %3.2e    |  %3.2e \n', ...
+    QPALMCobj, ...
+    OSQPobj,...
+    QPALMobj)
 
 

@@ -7,8 +7,21 @@ TESTDIR=tests
 
 all: directories lib demo
 
+travis: directories suitesparselib test
+
 test: 
-	(cd $(TESTDIR) && $(MAKE) )
+	( cd $(TESTDIR) && $(MAKE) )
+
+suitesparselib: 
+	( cd suitesparse && $(MAKE) metis)
+	( cd suitesparse/SuiteSparse_config && $(MAKE) )
+	( cd suitesparse/AMD && $(MAKE) library )
+	( cd suitesparse/BTF && $(MAKE) library )
+	( cd suitesparse/CAMD && $(MAKE) library )
+	( cd suitesparse/CCOLAMD && $(MAKE) library )
+	( cd suitesparse/COLAMD && $(MAKE) library )
+	( cd suitesparse/CHOLMOD && $(MAKE) library )
+	( cd suitesparse/LDL && $(MAKE) library )
 
 lib: $(BDIR)/libqpalm.a
 
@@ -16,16 +29,23 @@ ifndef CC
 	CC=gcc
 endif
 
-CFLAGS=-I$(IDIR) -Isuitesparse/include -fPIC -O3 -DPROFILING -Wall -Wextra -DDLONG -fopenmp -fexceptions
+CFLAGS=-I$(IDIR) -Isuitesparse/include -fPIC -DPROFILING -Wall -Wextra -DDLONG -fopenmp -fexceptions
 CHOLMOD_LIBS=-lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmetis -lm
 CHOLMOD_LIB_INCLUDE+=-Lsuitesparse/lib -Isuitesparse/metis-5.1.0/include
 
 LIBS+=$(CHOLMOD_LIBS)
 LDLIBS +=$(CHOLMOD_LIB_INCLUDE)
 
+#Testing and checking coverage (also used in travis)
+ifeq ($(COV),yes)
+	CFLAGS+= `pkg-config --cflags cunit` `pkg-config --libs cunit` -fuse-ld=gold -fprofile-arcs -ftest-coverage
+	BLAS=-lblas -llapack
+	export BLAS
+endif
+
 #We need blas and lapack to compile. The user can specify this by running make BLAS="-lblas_library -llapack_library" BLAS_PATH=path/to/blas
 ifndef BLAS
-	BLAS=-lmwblas -lmwlapack
+	BLAS=-lblas -llapack
 endif
 LIBS+=$(BLAS)
 

@@ -14,7 +14,7 @@ QPALMWorkspace *work; // Workspace
 cholmod_sparse *A; // MxN matrix
 cholmod_sparse *Q; //NxN symmetric matrix
 
-void cholmod_qp_setup(void) {
+int cholmod_qp_setup(void) {
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
@@ -60,9 +60,11 @@ void cholmod_qp_setup(void) {
 
     c_free(data);
     c_free(settings);
+
+    return 0;
 }
 
-void cholmod_qp_teardown(void) {
+int cholmod_qp_teardown(void) {
     qpalm_cleanup(work);
 
     cholmod_common c;
@@ -70,6 +72,8 @@ void cholmod_qp_teardown(void) {
     CHOLMOD(free_sparse)(&Q, &c);
     CHOLMOD(free_sparse)(&A, &c);
     CHOLMOD(finish)(&c);
+
+    return 0;
 }
 
 void cholmod_set_QdAd(void) {
@@ -86,6 +90,12 @@ void test_mat_vec(void){
     mat_vec(Q, work->chol->Qd, work->chol->Qd, &work->chol->c);
     CU_ASSERT_DOUBLE_EQUAL(work->Qd[0], 1.6, TOL);
     CU_ASSERT_DOUBLE_EQUAL(work->Qd[1], -2.1, TOL);
+    work->Qd[0] = 1.1; work->Qd[1] = -0.5;
+
+    mat_tpose_vec(Q, work->chol->Qd, work->chol->Qd, &work->chol->c);
+    CU_ASSERT_DOUBLE_EQUAL(work->Qd[0], 1.6, TOL);
+    CU_ASSERT_DOUBLE_EQUAL(work->Qd[1], -2.1, TOL);
+
 }
 
 void test_mat_tpose_vec(void){

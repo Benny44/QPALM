@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['newton_5fset_5fdirection',['newton_set_direction',['../newton_8c.html#a2a3cf6a5a9f0b22f35386149aa1e4252',1,'newton_set_direction(QPALMWorkspace *work):&#160;newton.c'],['../newton_8h.html#a2a3cf6a5a9f0b22f35386149aa1e4252',1,'newton_set_direction(QPALMWorkspace *work):&#160;newton.c']]]
+  ['prea_5fint_5fvec_5fcopy',['prea_int_vec_copy',['../lin__alg_8c.html#a9b0e1b0ffa9c3c0247a9a4a87a22dff6',1,'prea_int_vec_copy(const c_int *a, c_int *b, c_int n):&#160;lin_alg.c'],['../lin__alg_8h.html#a9b0e1b0ffa9c3c0247a9a4a87a22dff6',1,'prea_int_vec_copy(const c_int *a, c_int *b, c_int n):&#160;lin_alg.c']]],
+  ['prea_5fvec_5fcopy',['prea_vec_copy',['../lin__alg_8c.html#acef53b3d399e7361c0d24b9bbd3ca8a6',1,'prea_vec_copy(const c_float *a, c_float *b, c_int n):&#160;lin_alg.c'],['../lin__alg_8h.html#acef53b3d399e7361c0d24b9bbd3ca8a6',1,'prea_vec_copy(const c_float *a, c_float *b, c_int n):&#160;lin_alg.c']]]
 ];

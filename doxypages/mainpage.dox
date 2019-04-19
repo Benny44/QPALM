@@ -1,0 +1,76 @@
+/*! \mainpage QPALM: Proximal Augmented Lagrangian Solver for Quadratic Programs
+ *
+ * \section intro_sec Introduction
+ *
+ * This is a C implementation of QPALM, a proximal augmented Lagrangian based solver for quadratic programs.
+ * QPALM solves problems of the form:
+ * @f{align*}{ 
+ * \mbox{\Large\( 
+     \textrm{minimize \hspace{1cm}} \)} & \mbox{\Large\( \frac{1}{2}x^T Q x + q^T x \)} \\
+ * \mbox{\Large\( \textrm{subject to \hspace{1cm}} \)} & \mbox{\Large\(  b_\textrm{min} \leq Ax \leq b_\textrm{max} 
+ * \)}
+ * @f}
+ * 
+ * \section install_sec Installation
+ * Make sure to clone this repository with the submodules (suitesparse). If this is the first time you are using QPALM, after cloning run 
+ * \code{.sh}
+ * git submodule update --init 
+ * \endcode
+ * \subsection c Compiling the C library
+ * The C library can be compiled by running make. The library requires BLAS and LAPACK. Therefore, the user may need to
+ * specify where to find these libraries. The user can do this by using 
+ * \code{.sh}
+ * make BLAS="-lblas_library -llapack_library" BLAS_PATH=path/to/blas LAPACK_PATH=path/to/lapack
+ * \endcode
+ * This results in a C callable library libqpalm.a in the lib directory. The user's application would need to \c #include \c "qpalm.h".
+ * Furthermore, it needs to be linked to the qpalm and cholmod (and blas/lapack) libraries. This requires compiling suitesparse and linking with the following flags:
+ * \code{.sh}
+ * -lqpalm -LQPALM/lib -IQPALM/include -Lsuitesparse/lib -Isuitesparse/include -Isuitesparse/metis-5.1.0/include -lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmetis -lm 
+ * \endcode
+ * 
+ * \subsection mex Compiling the Mex interface
+ * Add QPALM/mexInterface to your Matlab path and run \c qpalm_make.m. With this command, you compile the cholmod and qpalm source files, and finally the qpalm Mex 
+ * interface. This might take a little bit of time (less than one minute).
+ * 
+ * \section example Using QPALM
+ * 
+ * Using QPALM from Matlab is extremely simple. Here is an example
+ * \code{.unparsed}
+ * %% Generate data
+ * m = 300;n = 50;
+ * A = sprandn(m, n, 1e-1, 1e-4); 
+ * lb = -2*ones(m,1);
+ * ub =  2*ones(m,1);
+ * Q = sprandsym(n, 1e-1, 1e-4, 1);
+ * q = 10*randn(n,1);
+ * 
+ * %% Solve with qpalm
+ * solver = qpalm;
+ * settings = solver.default_settings();
+ * % Optionally set some settings
+ * settings.max_iter = 1000;
+ * settings.eps_abs = 1e-4;
+ * settings.eps_rel = 1e-4;
+ * 
+ * solver.setup(Q, q, A, lb, ub, settings);
+ * 
+ * res = solver.solve();
+ * 
+ * % The solver is started by default from x = y = 0. The user can specify
+ * % warm start variables by running    
+ * %
+ * % solver.setup(Q, q, A, lb, ub, x, y, settings);
+ * %
+ * % or on the fly anywhere after the setup command by using
+ * %
+ * % solver.warm_start(x, y);
+ * \endcode
+ * 
+ * \section cite Citing QPALM
+ * 
+ * To be updated soon.
+ * 
+ * \section license License
+ * 
+ * TBD
+ */

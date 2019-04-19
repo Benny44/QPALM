@@ -2,19 +2,19 @@
 #include <string.h>
 #include "global_opts.h"
 #include "qpalm.h"
+#include "util.h"
 #include "constants.h"
 #include "cholmod.h"
 #include "cholmod_matlab.h"
 #include "cholmod_function.h"
 
 //Modes of operation
-#define MODE_INIT "new"
 #define MODE_DEFAULT_SETTINGS "default_settings"
 #define MODE_RETRIEVE_CONSTANT "constant"
 #define MODE_SETUP "setup"
+#define MODE_WARM_START "warm_start"
 #define MODE_SOLVE "solve"
 #define MODE_DELETE "delete"
-#define MODE_OPTIMIZE "optimize"
 
 // QPALM work identifier
 static QPALMWorkspace* qpalm_work = NULL;  
@@ -51,25 +51,6 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",      //c_int
                                       "warm_start",     //c_int
                                       "verbose"};       //c_int
 
-const char* QPALM_DATA_FIELDS[] = {"n",     //c_int
-                                   "m",     //c_int
-                                   "Q",     //csc
-                                   "A",     //csc
-                                   "q",     //c_float*
-                                   "bmin",  //c_float*
-                                   "bmax"}; //c_float*
-
-const char* QPALM_SCALING_FIELDS[] = {"D",       //c_float*
-                                      "E",       //c_float*
-                                      "Dinv",    //c_float*
-                                      "Einv"};   //c_float*
-
-
-const char* QPALM_WORKSPACE_FIELDS[] = {"data",
-                                       "lbfgs",
-                                       "scaling",
-                                       "settings"};
-
 
 // internal utility functions
 void      castToDoubleArr(c_float *arr, double* arr_out, size_t len);
@@ -99,6 +80,7 @@ void exitFcn() {
  * qpalm_mex('default_settings');
  * qpalm_mex('constant', constant_name)
  * qpalm_mex('setup',n,m,Q,q,A,bmin,bmax,theSettings);
+ * qpalm_mex('warm_start', x, y);
  * [out.x, out.y, out.prim_inf_cert, out.dual_inf_cert, out.info] = qpalm_mex('solve');
  * qpalm_mex('delete');
  *
@@ -147,7 +129,6 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
 
     }
     else if (strcmp(cmd, MODE_SETUP) == 0) {
-
 
         //throw an error if this is called more than once
         if(qpalm_work != NULL){
@@ -217,13 +198,42 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         return;
 
 
+    } else if (strcmp(cmd, MODE_WARM_START) == 0) {
+        if (nlhs != 0 || nrhs != 3 ){
+          mexErrMsgTxt("Solve : wrong number of inputs / outputs");
+        }
+        if(!qpalm_work){
+            mexErrMsgTxt("Work is not setup.");
+        }
+
+        c_float *x, *y;
+
+        const mxArray* xmatlab  = prhs[1];
+        const mxArray* ymatlab  = prhs[2];
+
+        if (mxIsEmpty(xmatlab)) {
+            x = NULL;
+        } else {
+            x = mxGetData(xmatlab);
+        }
+            
+        if (mxIsEmpty(ymatlab)) {
+            y = NULL;
+        } else {
+            y = mxGetData(ymatlab);
+        }
+
+        qpalm_warm_start(qpalm_work, x, y);
+
+        return;
+
     } else if (strcmp(cmd, MODE_SOLVE) == 0) { // SOLVE
 
         if (nlhs != 5 || nrhs != 1){
           mexErrMsgTxt("Solve : wrong number of inputs / outputs");
         }
         if(!qpalm_work){
-            mexErrMsgTxt("No problem data has been given.");
+            mexErrMsgTxt("Work is not setup.");
         }
         
         qpalm_solve(qpalm_work);

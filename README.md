@@ -1,5 +1,8 @@
 # QPALM
 
+[![Build Status](https://travis-ci.com/Benny44/QPALM.svg?branch=master)](https://travis-ci.com/Benny44/QPALM)
+[![Coverage Status](https://coveralls.io/repos/github/Benny44/QPALM/badge.svg?branch=master)](https://coveralls.io/github/Benny44/QPALM?branch=master)
+
 A proximal augmented Lagrangian method for QPs using semismooth Newton direction and exact line search.
 
 ## Installation
@@ -18,9 +21,16 @@ Basic demos are available for the different ways to call the solver.
 * For the C-version of QPALM, check out examples/qpalm_demo.c.
 * For the matlab version of QPALM, check out examples/qpalm_matlab_demo.m.
 
+## Documentation
+
+You can now find the the documentation [online](https://benny44.github.io/QPALM/).
+
 ## Tests
 
-In progress
+To run the automated tests, do
+```
+make test BLAS=... BLAS_PATH=...
+```
 
 ## Benchmarks (random QPs)
 

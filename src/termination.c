@@ -202,14 +202,29 @@ c_int is_dual_infeasible(QPALMWorkspace *work) {
         }
     }
     //NB Qdx = work->Qd (= tau*Qd of the previous iteration)
-    if (work->settings->scaling) {
-        vec_ew_prod(work->scaling->Dinv, work->Qd, work->temp_n, work->data->n);
-        return (vec_norm_inf(work->temp_n, work->data->n) <= work->scaling->c*eps_dinf_norm_Ddx)
-            && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -work->scaling->c*eps_dinf_norm_Ddx);
+    //NB Qdx = work->Qd - tau/gamma*d (= tau*Qd of the previous iteration) if proximal is used
+    if (work->settings->proximal) {
+        vec_add_scaled(work->Qd, work->d, work->temp_n, -work->tau/work->settings->gamma, work->data->n);
+        if (work->settings->scaling) {
+            vec_ew_prod(work->scaling->Dinv, work->temp_n, work->temp_n, work->data->n);
+            return (vec_norm_inf(work->temp_n, work->data->n) <= work->scaling->c*eps_dinf_norm_Ddx)
+                && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -work->scaling->c*eps_dinf_norm_Ddx);
+        } else {
+            return (vec_norm_inf(work->temp_n, work->data->n) <= eps_dinf_norm_Ddx)
+                && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -eps_dinf_norm_Ddx);
+        }
     } else {
-        return (vec_norm_inf(work->Qd, work->data->n) <= eps_dinf_norm_Ddx)
-            && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -eps_dinf_norm_Ddx);
+        if (work->settings->scaling) {
+            vec_ew_prod(work->scaling->Dinv, work->Qd, work->temp_n, work->data->n);
+            return (vec_norm_inf(work->temp_n, work->data->n) <= work->scaling->c*eps_dinf_norm_Ddx)
+                && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -work->scaling->c*eps_dinf_norm_Ddx);
+        } else {
+            return (vec_norm_inf(work->Qd, work->data->n) <= eps_dinf_norm_Ddx)
+                && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -eps_dinf_norm_Ddx);
+        }
     }
+
+    
     
 }
 

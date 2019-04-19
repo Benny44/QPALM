@@ -69,16 +69,6 @@ void update_status(QPALMInfo *info, c_int status_val) {
 }
 
 
-void cold_start(QPALMWorkspace *work) {
-    vec_set_scalar(work->x, 0., work->data->n);
-    vec_set_scalar(work->x_prev, 0., work->data->n);
-    vec_set_scalar(work->x0, 0., work->data->n);
-    vec_set_scalar(work->y, 0., work->data->m);
-    vec_set_scalar(work->Qx, 0., work->data->n);
-    vec_set_scalar(work->Ax, 0., work->data->m);
-}
-
-
 void initialize_sigma(QPALMWorkspace *work) {
     c_float f = 0.5*vec_prod(work->x, work->Qx, work->data->n) + vec_prod(work->data->q, work->x, work->data->n);
     vec_ew_mid_vec(work->Ax, work->data->bmin, work->data->bmax, work->temp_m, work->data->m);
