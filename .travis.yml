@@ -22,7 +22,7 @@ addons:
 before_install:
   - make clean
 install:
-  - sudo gem install coveralls-lcov 
+  - gem install coveralls-lcov 
 before_script:  
 script:
   - make travis COV=yes
@@ -30,6 +30,7 @@ cache:
   apt: true
   bundler: true
 after_success:
-  - lcov --directory ./obj --capture --output-file coverage.info
+  - cd obj
+  - lcov --directory . --capture --o coverage.info
   - lcov --list coverage.info
-
+  - coveralls-lcov coverage.info
