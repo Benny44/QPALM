@@ -12,10 +12,8 @@ obj/
 lib/
 *.lp
 *.fig
-*.png
 *.eps
 *.oqp
-!randomQP.png
 *.vscode
 *.code-workspace
 buildAndTest.sh
