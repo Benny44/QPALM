@@ -12,12 +12,6 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-});
-</script><script type="text/javascript" async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -105,34 +99,34 @@ Functions</h2></td></tr>
 <tr class="memdesc:ad2b16385215cc97fab370ecf8754637c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mulitply vector with a constant scale factor.  <a href="#ad2b16385215cc97fab370ecf8754637c">More...</a><br /></td></tr>
 <tr class="separator:ad2b16385215cc97fab370ecf8754637c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc44881d029f117e072274407c05a3e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lin__alg_8c.html#afc44881d029f117e072274407c05a3e9">vec_prod</a> (const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *b, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:afc44881d029f117e072274407c05a3e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inner product between two vectors, \(a^T \cdot b\).  <a href="#afc44881d029f117e072274407c05a3e9">More...</a><br /></td></tr>
+<tr class="memdesc:afc44881d029f117e072274407c05a3e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inner product between two vectors, <img class="formulaInl" alt="$a^T \cdot b$" src="form_14.png"/>.  <a href="#afc44881d029f117e072274407c05a3e9">More...</a><br /></td></tr>
 <tr class="separator:afc44881d029f117e072274407c05a3e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f2e0a1fdaeed893ee9bab859690f601"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lin__alg_8c.html#a7f2e0a1fdaeed893ee9bab859690f601">vec_ew_prod</a> (const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *b, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *c, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:a7f2e0a1fdaeed893ee9bab859690f601"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise product, \(c_i = a_i\cdot b_i\).  <a href="#a7f2e0a1fdaeed893ee9bab859690f601">More...</a><br /></td></tr>
+<tr class="memdesc:a7f2e0a1fdaeed893ee9bab859690f601"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise product, <img class="formulaInl" alt="$c_i = a_i\cdot b_i$" src="form_21.png"/>.  <a href="#a7f2e0a1fdaeed893ee9bab859690f601">More...</a><br /></td></tr>
 <tr class="separator:a7f2e0a1fdaeed893ee9bab859690f601"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f157bdd5a89e6c4e35245fcb2e6a0c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lin__alg_8c.html#a5f157bdd5a89e6c4e35245fcb2e6a0c0">vec_ew_div</a> (const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *b, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *c, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:a5f157bdd5a89e6c4e35245fcb2e6a0c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise division, \(c_i = a_i/b_i\).  <a href="#a5f157bdd5a89e6c4e35245fcb2e6a0c0">More...</a><br /></td></tr>
+<tr class="memdesc:a5f157bdd5a89e6c4e35245fcb2e6a0c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise division, <img class="formulaInl" alt="$c_i = a_i/b_i$" src="form_22.png"/>.  <a href="#a5f157bdd5a89e6c4e35245fcb2e6a0c0">More...</a><br /></td></tr>
 <tr class="separator:a5f157bdd5a89e6c4e35245fcb2e6a0c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af110358505394931e126cd77e8f2f4f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lin__alg_8c.html#af110358505394931e126cd77e8f2f4f1">vec_add_scaled</a> (const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *b, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *c, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> sc, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:af110358505394931e126cd77e8f2f4f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scaled addition of one vector to another vector, \(c_i = a_i + sc\cdot b_i\).  <a href="#af110358505394931e126cd77e8f2f4f1">More...</a><br /></td></tr>
+<tr class="memdesc:af110358505394931e126cd77e8f2f4f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scaled addition of one vector to another vector, <img class="formulaInl" alt="$c_i = a_i + sc\cdot b_i$" src="form_15.png"/>.  <a href="#af110358505394931e126cd77e8f2f4f1">More...</a><br /></td></tr>
 <tr class="separator:af110358505394931e126cd77e8f2f4f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3321b732daba283fe149c52029170825"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lin__alg_8c.html#a3321b732daba283fe149c52029170825">vec_norm_inf</a> (const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:a3321b732daba283fe149c52029170825"><td class="mdescLeft">&#160;</td><td class="mdescRight">Infinity norm of a vector, \(\|a\|_\infty\).  <a href="#a3321b732daba283fe149c52029170825">More...</a><br /></td></tr>
+<tr class="memdesc:a3321b732daba283fe149c52029170825"><td class="mdescLeft">&#160;</td><td class="mdescRight">Infinity norm of a vector, <img class="formulaInl" alt="$\|a\|_\infty$" src="form_16.png"/>.  <a href="#a3321b732daba283fe149c52029170825">More...</a><br /></td></tr>
 <tr class="separator:a3321b732daba283fe149c52029170825"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68f8236fc8e682d70ba8c3842f02630d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lin__alg_8c.html#a68f8236fc8e682d70ba8c3842f02630d">vec_ew_recipr</a> (const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *b, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:a68f8236fc8e682d70ba8c3842f02630d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise reciprocal \(b_i = 1/a_i\).  <a href="#a68f8236fc8e682d70ba8c3842f02630d">More...</a><br /></td></tr>
+<tr class="memdesc:a68f8236fc8e682d70ba8c3842f02630d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise reciprocal <img class="formulaInl" alt="$b_i = 1/a_i$" src="form_17.png"/>.  <a href="#a68f8236fc8e682d70ba8c3842f02630d">More...</a><br /></td></tr>
 <tr class="separator:a68f8236fc8e682d70ba8c3842f02630d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3019bdc59e67a535b465def905975b93"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lin__alg_8c.html#a3019bdc59e67a535b465def905975b93">vec_ew_max_vec</a> (const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *b, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *c, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:a3019bdc59e67a535b465def905975b93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise maximum between vectors, \(c_i = \textrm{max}(a_i, b_i)\).  <a href="#a3019bdc59e67a535b465def905975b93">More...</a><br /></td></tr>
+<tr class="memdesc:a3019bdc59e67a535b465def905975b93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise maximum between vectors, <img class="formulaInl" alt="$c_i = \textrm{max}(a_i, b_i)$" src="form_18.png"/>.  <a href="#a3019bdc59e67a535b465def905975b93">More...</a><br /></td></tr>
 <tr class="separator:a3019bdc59e67a535b465def905975b93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18f068101d520ac81ee880854b1789a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lin__alg_8c.html#a18f068101d520ac81ee880854b1789a9">vec_ew_min_vec</a> (const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *b, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *c, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:a18f068101d520ac81ee880854b1789a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise minimum between vectors, \(c_i = \textrm{min}(a_i, b_i)\).  <a href="#a18f068101d520ac81ee880854b1789a9">More...</a><br /></td></tr>
+<tr class="memdesc:a18f068101d520ac81ee880854b1789a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise minimum between vectors, <img class="formulaInl" alt="$c_i = \textrm{min}(a_i, b_i)$" src="form_19.png"/>.  <a href="#a18f068101d520ac81ee880854b1789a9">More...</a><br /></td></tr>
 <tr class="separator:a18f068101d520ac81ee880854b1789a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abeba762f440a0ce4ef3026285093acff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lin__alg_8c.html#abeba762f440a0ce4ef3026285093acff">vec_ew_mid_vec</a> (const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *bmin, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *bmax, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *c, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:abeba762f440a0ce4ef3026285093acff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise mid between vectors, \(c_i = \textrm{max}(b_{\textrm{min},i}, \textrm{min}(a_i, b_{\textrm{max},i}))\).  <a href="#abeba762f440a0ce4ef3026285093acff">More...</a><br /></td></tr>
+<tr class="memdesc:abeba762f440a0ce4ef3026285093acff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise mid between vectors, <img class="formulaInl" alt="$c_i = \textrm{max}(b_{\textrm{min},i}, \textrm{min}(a_i, b_{\textrm{max},i}))$" src="form_20.png"/>.  <a href="#abeba762f440a0ce4ef3026285093acff">More...</a><br /></td></tr>
 <tr class="separator:abeba762f440a0ce4ef3026285093acff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90ce916f6cac7bb37f1318aebbd64ee8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lin__alg_8c.html#a90ce916f6cac7bb37f1318aebbd64ee8">vec_ew_sqrt</a> (const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *a, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *b, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="memdesc:a90ce916f6cac7bb37f1318aebbd64ee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise square root, \(b_i = \sqrt{a_i}\).  <a href="#a90ce916f6cac7bb37f1318aebbd64ee8">More...</a><br /></td></tr>
+<tr class="memdesc:a90ce916f6cac7bb37f1318aebbd64ee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Elementwise square root, <img class="formulaInl" alt="$b_i = \sqrt{a_i}$" src="form_23.png"/>.  <a href="#a90ce916f6cac7bb37f1318aebbd64ee8">More...</a><br /></td></tr>
 <tr class="separator:a90ce916f6cac7bb37f1318aebbd64ee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -272,7 +266,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Scaled addition of one vector to another vector, \(c_i = a_i + sc\cdot b_i\). </p>
+<p>Scaled addition of one vector to another vector, <img class="formulaInl" alt="$c_i = a_i + sc\cdot b_i$" src="form_15.png"/>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Input vector </td></tr>
@@ -363,7 +357,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Elementwise division, \(c_i = a_i/b_i\). </p>
+<p>Elementwise division, <img class="formulaInl" alt="$c_i = a_i/b_i$" src="form_22.png"/>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Input vector </td></tr>
@@ -414,7 +408,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Elementwise maximum between vectors, \(c_i = \textrm{max}(a_i, b_i)\). </p>
+<p>Elementwise maximum between vectors, <img class="formulaInl" alt="$c_i = \textrm{max}(a_i, b_i)$" src="form_18.png"/>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Input vector </td></tr>
@@ -471,7 +465,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Elementwise mid between vectors, \(c_i = \textrm{max}(b_{\textrm{min},i}, \textrm{min}(a_i, b_{\textrm{max},i}))\). </p>
+<p>Elementwise mid between vectors, <img class="formulaInl" alt="$c_i = \textrm{max}(b_{\textrm{min},i}, \textrm{min}(a_i, b_{\textrm{max},i}))$" src="form_20.png"/>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Input vector </td></tr>
@@ -523,7 +517,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Elementwise minimum between vectors, \(c_i = \textrm{min}(a_i, b_i)\). </p>
+<p>Elementwise minimum between vectors, <img class="formulaInl" alt="$c_i = \textrm{min}(a_i, b_i)$" src="form_19.png"/>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Input vector </td></tr>
@@ -574,7 +568,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Elementwise product, \(c_i = a_i\cdot b_i\). </p>
+<p>Elementwise product, <img class="formulaInl" alt="$c_i = a_i\cdot b_i$" src="form_21.png"/>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Input vector </td></tr>
@@ -619,7 +613,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Elementwise reciprocal \(b_i = 1/a_i\). </p>
+<p>Elementwise reciprocal <img class="formulaInl" alt="$b_i = 1/a_i$" src="form_17.png"/>. </p>
 <p class="">This function is used in scaling.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -664,7 +658,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Elementwise square root, \(b_i = \sqrt{a_i}\). </p>
+<p>Elementwise square root, <img class="formulaInl" alt="$b_i = \sqrt{a_i}$" src="form_23.png"/>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Input vector </td></tr>
@@ -746,7 +740,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Infinity norm of a vector, \(\|a\|_\infty\). </p>
+<p>Infinity norm of a vector, <img class="formulaInl" alt="$\|a\|_\infty$" src="form_16.png"/>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Vector </td></tr>
@@ -790,7 +784,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Inner product between two vectors, \(a^T \cdot b\). </p>
+<p>Inner product between two vectors, <img class="formulaInl" alt="$a^T \cdot b$" src="form_14.png"/>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>Vector </td></tr>
