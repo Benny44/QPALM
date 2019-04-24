@@ -1,6 +1,6 @@
 clear;close all;clc
-m = 500;n = 30;
-rng(1)
+m = 500;n = 300;
+% rng(1)
 A = sprandn(m, n, 5e-1,1e-1);
 % A = sparse(ones(m,n));
 lb = -2*ones(m,1);
@@ -8,6 +8,9 @@ ub =  2*ones(m,1);
 % Q = sparse(ones(n,n));
 Q = sprandsym(n, 5e-1, 1e-1, 1); %Q=sparse(n,n);
 q = 10*randn(n,1);
+
+% load('dual-bug-nl.mat')
+
 
 x0 = [18.141378485712202
   36.896595037645973
@@ -547,15 +550,15 @@ y0 = [0
 solver = qpalm;
 settings = solver.default_settings();
 % settings.verbose = true;
-settings.proximal = true;
+settings.proximal = false;
 settings.scaling = 2;
-settings.max_iter = 1000;
+settings.max_iter = 100;
 settings.eps_abs = 1e-4;
 settings.eps_rel = 1e-4;
 settings.tau_init = 1.5;
 
 % tic
-solver.setup(Q, q, A, lb, ub, x0, y0, settings); 
+solver.setup(Q, q, A, lb, ub, settings); 
 res = solver.solve();
 fprintf('QPALM C \n');
 fprintf('Elapsed time is %f seconds\n', res.info.run_time);
@@ -592,7 +595,7 @@ opts.proximal = settings.proximal;
 % opts.scalar_sig = true;
 fprintf('QPALM MATLAB \n');
 
-tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(Q,q,A,lb,ub,x0,y0,opts);toc
+tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(Q,q,A,lb,ub,[],[],opts);toc
 display(stats_qpalm.status)
 % 
 % opts.proximal = true;

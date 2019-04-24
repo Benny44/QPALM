@@ -198,6 +198,12 @@ tau = 0; Qd = zeros(n,1); Ad = zeros(m,1); d = zeros(n,1);
 Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
 Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
+newton_lagrange = true; %flag to try newton_lagrange
+newton_lagrange_used = false;
+y_next = zeros(m,1);
+
+
+
 for k = 1:maxiter
    Axys = Ax+y./sig;
    z    = min(max(Axys,bmin),bmax);                         % z-update 
@@ -224,10 +230,20 @@ for k = 1:maxiter
    eps_dual_in  = eps_abs_in + eps_rel_in*rel_d;  % inner dual eps
    
    dy = yh-y; Atdy = Atyh - Aty;
-   dx = x-x_prev; Qdx = Qd*tau; Adx = Ad*tau;
+   dx = x-x_prev; 
+   if ~newton_lagrange_used
+       Qdx = Qd*tau; 
+       Adx = Ad*tau;
+   end
    if proximal 
        Qdx2 = Qdx - tau/gamma*d;
+   else
+       Qdx2 = Qdx;
    end
+       
+       
+   
+   newton_lagrange_used = false;
    
    if nrm_rd <= eps_dual && nrm_rp <= eps_primal
        stats.status = 'solved';
@@ -280,6 +296,7 @@ for k = 1:maxiter
                Qx = Q*x; 
            end
        end
+       newton_lagrange = true; %Try Newton-Lagrange after dual update
    else
       if strcmp(solver, 'newton') 
           % Newton direction
@@ -323,6 +340,70 @@ for k = 1:maxiter
           else
               LD = ldlchol(Q);
               d = -ldlsolve (LD,dphi);
+          end
+          newton_lagrange = true; %Always try Newton-Lagrange
+          if newton_lagrange
+              newton_lagrange = false;
+              fprintf('Try Newton Lagrange\n');
+              x_next = x+d;
+              y_next(active_cnstrs) = yh(active_cnstrs)+Asig(active_cnstrs,:)*d;
+              y_next(~active_cnstrs) = 0;
+              Qd = Q*d;
+              Qx_next = Qx + Qd;
+              Ad = A*d;
+              Ax_next = Ax+Ad;
+              z_next = min(max(Ax_next+y_next./sig,bmin),bmax);
+              phi_old = max(norm(df+Aty,inf), norm(rp,inf));
+              %TODO reuse info in the next iterate and in linesearch
+              Aty_next = A'*y_next;
+              phi_next = max(norm(Qx_next+q+Aty_next, inf), norm(Ax_next-z_next, inf));
+              if (phi_next) < 0.5*phi_old
+                  newton_lagrange = true;
+                  
+                  fprintf('Use the Newton Lagrange update\n');
+                  % Store previous values (lbfgs)
+                  x_prev  = x;
+%                   x0      = x;
+                  dphi_prev = dphi;
+                  Qdx     = Qx_next-Qx;
+                  Adx     = Ax_next-Ax;
+                  newton_lagrange_used = true;
+                  % Update
+                  x     = x_next;
+                  Ax    = Ax_next;
+                  Qx    = Qx_next;
+                  y     = y_next;
+                  Aty   = Aty_next;
+    
+%                   if K > 1
+%                       if scalar_sig
+%                           adj_sig  = norm(rp,inf)>theta*norm(rpK,inf);
+%                       else
+%                           adj_sig  = (abs(rp)>theta*abs(rpK))&active_cnstrs;
+%                       end
+%                       sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
+%                       sig_updated = true;
+%                   end
+                  if K>1
+                      stats.iter_in(K) = k-(sum(stats.iter_in));
+                  else
+                      stats.iter_in(K) = k;
+                  end
+                  active_cnstrs_old = active_cnstrs;
+                  if proximal
+                      x0=x;
+                      if gamma ~= gammaMax
+                          Q=Q-1/gamma*speye(n);
+                          gamma=min(gamma*gammaUpd, gammaMax);
+                          Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
+                          Qx = Q*x; 
+                      end
+                  end
+                  
+                  K = K+1;
+                  rpK = Ax_next-z_next;
+                  continue; %Skip the linesearch
+              end 
           end
           
       elseif strcmp(solver, 'lbfgs')
