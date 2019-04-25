@@ -3,6 +3,7 @@
 #include "test_basic_qp.h"
 #include "test_prim_inf_qp.h"
 #include "test_dua_inf_qp.h"
+#include "test_degen_hess.h"
 #include "test_cholmod_interface.h"
 #include "test_validate.h"
 
@@ -71,6 +72,12 @@ int main(){
         CU_TEST_INFO_NULL,
     };
 
+    /* degenerate hessian example from Joris */
+    CU_TestInfo suite_degen_hess[] = {
+        { "test_degen_hess", test_degen_hess},
+        CU_TEST_INFO_NULL,
+    };
+
     /* validation functions */
     CU_TestInfo suite_validation[] = {
         { "test_correct_data", test_correct_data},
@@ -96,6 +103,7 @@ int main(){
         { "basic_qp", basic_qp_suite_setup, basic_qp_suite_teardown, NULL, basic_qp_test_teardown, suite_basic_qp},
         { "prim_inf_qp", prim_inf_qp_suite_setup, prim_inf_qp_suite_teardown, NULL, prim_inf_qp_test_teardown, suite_prim_inf_qp},
         { "dua_inf_qp", dua_inf_qp_suite_setup, dua_inf_qp_suite_teardown, NULL, dua_inf_qp_test_teardown,suite_dua_inf_qp},
+        { "degen_hess", degen_hess_suite_setup, degen_hess_suite_teardown, NULL, degen_hess_test_teardown,suite_degen_hess},
         { "validation", validate_suite_setup, validate_suite_teardown, validate_test_setup, NULL, suite_validation},
         CU_SUITE_INFO_NULL,
     };
