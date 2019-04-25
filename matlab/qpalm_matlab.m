@@ -227,6 +227,8 @@ for k = 1:maxiter
    dx = x-x_prev; Qdx = Qd*tau; Adx = Ad*tau;
    if proximal 
        Qdx2 = Qdx - tau/gamma*d;
+   else
+       Qdx2 = Qdx;
    end
    
    if nrm_rd <= eps_dual && nrm_rp <= eps_primal
@@ -275,9 +277,10 @@ for k = 1:maxiter
            x0=x;
            if gamma ~= gammaMax
                Q=Q-1/gamma*speye(n);
+               Qx = Qx-1/gamma*x; 
                gamma=min(gamma*gammaUpd, gammaMax);
                Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
-               Qx = Q*x; 
+               Qx = Qx+1/gamma*x; 
            end
        end
    else
