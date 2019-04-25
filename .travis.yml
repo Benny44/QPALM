@@ -23,7 +23,9 @@ before_install:
   - make clean
 install:
   - gem install coveralls-lcov 
-before_script:  
+before_script:
+  - LD_LIBRARY_PATH="$LD_LIBRARY_PATH":suitesparse/lib:lib
+  - export LD_LIBRARY_PATH  
 script:
   - make travis COV=yes
 cache:
