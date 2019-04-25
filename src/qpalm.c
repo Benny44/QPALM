@@ -46,7 +46,7 @@ void qpalm_set_default_settings(QPALMSettings *settings) {
 }
 
 
-QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, cholmod_common *c) {
+QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings, cholmod_common *c) {
   QPALMWorkspace *work; // Workspace
 
   // Validate data

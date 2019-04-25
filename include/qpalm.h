@@ -46,7 +46,7 @@ void qpalm_set_default_settings(QPALMSettings *settings);
  * @return              Solver environment
  */
 QPALMWorkspace* qpalm_setup(const QPALMData *data,
-                          QPALMSettings     *settings,
+                          const QPALMSettings     *settings,
                           cholmod_common    *c);
 
 

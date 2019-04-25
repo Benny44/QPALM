@@ -25,7 +25,7 @@ void c_strcpy(char dest[], const char source[]) {
 }
 
 
-QPALMSettings* copy_settings(QPALMSettings *settings) {
+QPALMSettings* copy_settings(const QPALMSettings *settings) {
     QPALMSettings *new = c_malloc(sizeof(QPALMSettings));
 
     // Copy settings
