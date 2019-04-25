@@ -35,6 +35,8 @@ int validate_suite_setup(void) {
 
 int validate_suite_teardown(void) {
     c_free(settings);
+    c_free(data->bmin);
+    c_free(data->bmax);
     c_free(data);
 
     return 0;
@@ -55,11 +57,6 @@ void validate_test_setup(void) {
 
     data->bmin[0] = -1.0; data->bmin[1] = -1.0; data->bmin[2] = -1.0;
     data->bmax[0] = 1.0; data->bmax[1] = 1.0; data->bmax[2] = 1.0;
-    // data->m = 3;
-    // c_float bmin[3] = {-1.0, -1.0, -1.0};
-    // c_float bmax[3] = {1.0, 1.0, 1.0};
-    // data->bmin = bmin;
-    // data->bmax = bmax;
 }
 
 

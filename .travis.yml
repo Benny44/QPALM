@@ -34,3 +34,5 @@ after_success:
   - lcov --directory . --capture --o coverage.info
   - lcov --list coverage.info
   - coveralls-lcov coverage.info
+  - cd ..
+  - valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose tests/run_all_tests

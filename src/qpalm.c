@@ -222,6 +222,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, QPALMSettings *settings, chol
 
 
 void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_warm_start) {
+    CHOLMOD(start)(&work->chol->c);
     if (x_warm_start != NULL) {
       prea_vec_copy(x_warm_start, work->x, work->data->n);
       // Scale initial vectors x, xprev, x0, if they are warm-started
@@ -245,13 +246,6 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
       }
       mat_vec(work->data->A, work->chol->neg_dphi, work->chol->Ad, &work->chol->c);
       prea_vec_copy(work->Ad, work->Ax, work->data->m);
-
-
-      // printf("Ax: \n");
-      // for (int i = 0; i < work->data->m; i++) {
-      //   printf("%.32f ", work->Ax[i]);
-      // }
-      // printf("\n");
 
     } else {
       vec_set_scalar(work->x, 0., work->data->n);
@@ -280,6 +274,8 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
     CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
 
     work->initialized = TRUE;
+    CHOLMOD(finish)(&work->chol->c);
+
 }
 
 

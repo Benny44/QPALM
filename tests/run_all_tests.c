@@ -92,7 +92,7 @@ int main(){
     /* list of suites to be tested */
     CU_SuiteInfo suites[] = {
         { "lin_alg", NULL, NULL, reset_abc, NULL, suite_lin_alg},
-        { "cholmod", cholmod_qp_setup, cholmod_qp_teardown, cholmod_set_QdAd, NULL, suite_cholmod},
+        { "cholmod", cholmod_suite_setup, cholmod_suite_teardown, cholmod_test_setup, cholmod_test_teardown, suite_cholmod},
         { "basic_qp", basic_qp_suite_setup, basic_qp_suite_teardown, NULL, basic_qp_test_teardown, suite_basic_qp},
         { "prim_inf_qp", prim_inf_qp_suite_setup, prim_inf_qp_suite_teardown, NULL, prim_inf_qp_test_teardown, suite_prim_inf_qp},
         { "dua_inf_qp", dua_inf_qp_suite_setup, dua_inf_qp_suite_teardown, NULL, dua_inf_qp_test_teardown,suite_dua_inf_qp},
