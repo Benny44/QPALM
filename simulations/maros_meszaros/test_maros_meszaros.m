@@ -20,9 +20,9 @@ out_maha             = cell(1, ll);
 out_osqp             = cell(1, ll);
 new                  = {};
 
-options.qpalm_matlab = true;
-options.qpalm_c = false;
-options.osqp = true;
+options.qpalm_matlab = false;
+options.qpalm_c = true;
+options.osqp = false;
 options.qpoases = false;
 options.gurobi = false;
 
@@ -38,13 +38,17 @@ Iter_osqp = [];
 Iter_qpoases = [];
 Iter_gurobi = [];
 
+maros_files = {};
+
 
 
 for i = 1:ll
     baseFileName = Filename{i};
     new{i}       = char(baseFileName(1:end-4));
     fullFileName = fullfile(baseFileName);
+    maros_files{i} = fullFileName;
     fprintf(1, 'Now reading %s\n', fullFileName);
+    
     matData{i}   = load(fullFileName);
     n            = matData{i}.n;
     m            = matData{i}.m;
