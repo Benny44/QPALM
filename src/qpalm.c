@@ -366,8 +366,10 @@ void qpalm_solve(QPALMWorkspace *work) {
       vec_set_scalar_int(work->chol->active_constraints_old, FALSE, work->data->m);
 
       if(work->settings->proximal) {
+        c_float prev_gamma = work->settings->gamma;
         work->settings->gamma = c_min(work->settings->gamma*work->settings->gamma_upd, work->settings->gamma_max);
         prea_vec_copy(work->x, work->x0, n);
+        vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->settings->gamma - 1/prev_gamma, work->data->n);
       }
 
       iter_out++;
