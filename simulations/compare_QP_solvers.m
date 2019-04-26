@@ -7,7 +7,7 @@ t = zeros(n,1);
 
 VERBOSE = false;
 SCALING_ITER = 10;
-MAXITER = 500;
+MAXITER = 5000;
 MAX_TIME = 10000;
 
 if ~isfield(options, 'EPS_ABS')
@@ -98,6 +98,8 @@ if options.qpalm_c
         settings.eps_rel_in = min(EPS_REL*1e6, 1);
         settings.eps_abs = EPS_ABS;
         settings.eps_rel = EPS_REL;
+        settings.eps_prim_inf = EPS_ABS;
+        settings.eps_dual_inf = EPS_ABS;
 %         settings.delta   = 10;
 %         settings.memory  = 20;
         
