@@ -410,6 +410,89 @@ void qpalm_solve(QPALMWorkspace *work) {
 }
 
 
+void qpalm_update_settings(QPALMWorkspace* work, const QPALMSettings *settings) {
+  // Validate settings
+  if (!validate_settings(settings)) {
+    # ifdef PRINTING
+      c_eprint("Settings validation returned failure");
+    # endif /* ifdef PRINTING */
+    work = QPALM_NULL;
+    return;
+  }
+
+  if (work->settings->scaling > settings->scaling) {
+    # ifdef PRINTING
+      c_eprint("Decreasing the number of scaling iterations is not allowed");
+    # endif /* ifdef PRINTING */
+    work = QPALM_NULL;
+    return;
+  } else if (work->settings->scaling < settings->scaling) {
+    // Save current scaling vectors
+    prea_vec_copy(work->scaling->D, work->temp_n, work->data->n);
+    prea_vec_copy(work->scaling->E, work->temp_m, work->data->m);
+
+    // Perform the remaining scaling iterations
+    work->settings->scaling -= settings->scaling;
+    scale_data(work);
+
+    // Compute the total scaling vectors
+    vec_ew_prod(work->scaling->D, work->temp_n, work->scaling->D, work->data->n);
+    vec_ew_prod(work->scaling->E, work->temp_m, work->scaling->E, work->data->m);
+    // Save the inverses
+    vec_ew_recipr(work->scaling->D, work->scaling->Dinv, work->data->n);
+    vec_ew_recipr(work->scaling->E, work->scaling->Einv, work->data->m);
+  }
+ 
+  // Copy settings
+  work->settings = copy_settings(settings);
+  work->sqrt_delta = c_sqrt(work->settings->delta);
+}
+
+void qpalm_update_bounds(QPALMWorkspace *work, const c_float *bmin, const c_float *bmax) {
+  // Validate bounds
+  size_t j;
+  size_t m = work->data->m;
+  for (j = 0; j < m; j++) {
+    if (bmin[j] > bmax[j]) {
+      # ifdef PRINTING
+        c_eprint("Lower bound at index %d is greater than upper bound: %.4e > %.4e",
+                (int)j, data->bmin[j], data->bmax[j]);
+      # endif /* ifdef PRINTING */
+      work = QPALM_NULL;
+      return;
+    }
+  }
+
+  prea_vec_copy(bmin, work->data->bmin, m);      
+  prea_vec_copy(bmax, work->data->bmax, m);
+  if (work->settings->scaling) {
+    vec_ew_prod(work->scaling->E, work->data->bmin, work->data->bmin, m);
+    vec_ew_prod(work->scaling->E, work->data->bmax, work->data->bmax, m);
+  }
+}
+
+void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
+  size_t n = work->data->n;
+  prea_vec_copy(q, work->data->q, n);      
+  if (work->settings->scaling) {
+    vec_ew_prod(work->scaling->D, work->data->q, work->data->q, n);    
+    // Update cost scaling scalar
+    c_float c_old = work->scaling->c;
+    vec_add_scaled(work->data->q, work->Qx, work->temp_n, work->scaling->cinv, n);
+    work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->temp_n, n));
+    work->scaling->cinv = 1/work->scaling->c;
+    vec_mult_scalar(work->data->q, work->scaling->c, n);
+    CHOLMOD(start)(&work->chol->c);
+    cholmod_dense *c = CHOLMOD(ones)(1,1,CHOLMOD_REAL, &work->chol->c);
+    c_float *cx = c->x;
+    cx[0] = work->scaling->c/c_old;
+    CHOLMOD(scale)(c, CHOLMOD_SCALAR, work->data->Q, &work->chol->c);
+    CHOLMOD(free_dense)(&c, &work->chol->c);
+    CHOLMOD(finish)(&work->chol->c);
+  }
+}
+
+
 void qpalm_cleanup(QPALMWorkspace *work) {
   
   if (work) { // If workspace has been allocated

@@ -6,9 +6,9 @@
  * @warning Verbose is not implemented as of yet.
  */
 #ifndef CONSTANTS_H
-# define CONSTANTS_H
+#define CONSTANTS_H
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
 # endif // ifdef __cplusplus
 

@@ -25,9 +25,7 @@ void scale_data(QPALMWorkspace *work) {
     size_t n = work->data->n;
     size_t m = work->data->m;
     vec_set_scalar(work->scaling->D, 1, n);
-    vec_set_scalar(work->scaling->Dinv, 1, n);
     vec_set_scalar(work->scaling->E, 1, m);
-    vec_set_scalar(work->scaling->Einv, 1, m);
     
     c_int i;
     //Ruiz on constraint matrix A
