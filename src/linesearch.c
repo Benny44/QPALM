@@ -130,7 +130,7 @@ void vec_array_copy(c_float *a, array_element* b, size_t n) {
 
 void select_subsequence(const array_element *a, array_element *b, const c_int *L, size_t n) {
     size_t i;
-    c_int nb_elements = 0;
+    size_t nb_elements = 0;
     for (i = 0; i < n; i++) {
         if (L[i]) {
             b[nb_elements] = a[i];
