@@ -12,41 +12,43 @@
 #include <stdlib.h> //for sorting
 
 c_float exact_linesearch(QPALMWorkspace *work) {
-
+    size_t n = work->data->n;
+    size_t m = work->data->m;
     //Qd
     mat_vec(work->data->Q, work->chol->d, work->chol->Qd, &work->chol->c);
     if (work->settings->proximal) {
-        vec_add_scaled(work->Qd, work->d, work->Qd, 1/work->settings->gamma, work->data->n);
+        vec_add_scaled(work->Qd, work->d, work->Qd, 1/work->settings->gamma, n);
     }
     //Ad
     mat_vec(work->data->A, work->chol->d, work->chol->Ad, &work->chol->c);
     //eta = d'*Qd
-    work->eta = vec_prod(work->d, work->Qd, work->data->n);
+    work->eta = vec_prod(work->d, work->Qd, n);
     //beta = d'*df
-    work->beta = vec_prod(work->d, work->df, work->data->n);
+    work->beta = vec_prod(work->d, work->df, n);
 
     //delta = [-sqrt(sigma).*Ad; sqrt(sigma).*Ad]
-    vec_ew_prod(work->sqrt_sigma, work->Ad, work->temp_m, work->data->m);
-    prea_vec_copy(work->temp_m, work->delta + work->data->m, work->data->m); //shifted copy
-    vec_mult_scalar(work->temp_m, -1, work->data->m);
-    prea_vec_copy(work->temp_m, work->delta, work->data->m); 
+    vec_ew_prod(work->sqrt_sigma, work->Ad, work->temp_m, m);
+    prea_vec_copy(work->temp_m, work->delta + m, m); //shifted copy
+    vec_mult_scalar(work->temp_m, -1, m);
+    prea_vec_copy(work->temp_m, work->delta, m); 
     //alpha = [(y+sigma.*(Ax-bmin))./sigma_sqrt; (-y+sigma.*(bmax-Ax))./sigma_sqrt]
-    vec_add_scaled(work->Ax, work->data->bmin, work->temp_m, -1, work->data->m);
-    vec_ew_prod(work->sigma, work->temp_m, work->temp_m, work->data->m);
-    vec_add_scaled(work->y, work->temp_m, work->temp_m, 1, work->data->m);
-    vec_ew_div(work->temp_m, work->sqrt_sigma, work->temp_m, work->data->m);
-    prea_vec_copy(work->temp_m, work->alpha, work->data->m);
-    vec_add_scaled(work->data->bmax, work->Ax, work->temp_m, -1, work->data->m);
-    vec_ew_prod(work->sigma, work->temp_m, work->temp_m, work->data->m);
-    vec_add_scaled(work->temp_m, work->y, work->temp_m, -1, work->data->m);
-    vec_ew_div(work->temp_m, work->sqrt_sigma, work->temp_m, work->data->m);
-    prea_vec_copy(work->temp_m, work->alpha + work->data->m, work->data->m); //shifted copy
+    vec_add_scaled(work->Ax, work->data->bmin, work->temp_m, -1, m);
+    vec_ew_prod(work->sigma, work->temp_m, work->temp_m, m);
+    vec_add_scaled(work->y, work->temp_m, work->temp_m, 1, m);
+    vec_ew_div(work->temp_m, work->sqrt_sigma, work->temp_m, m);
+    prea_vec_copy(work->temp_m, work->alpha, m);
+    vec_add_scaled(work->data->bmax, work->Ax, work->temp_m, -1, m);
+    vec_ew_prod(work->sigma, work->temp_m, work->temp_m, m);
+    vec_add_scaled(work->temp_m, work->y, work->temp_m, -1, m);
+    vec_ew_div(work->temp_m, work->sqrt_sigma, work->temp_m, m);
+    prea_vec_copy(work->temp_m, work->alpha + m, m); //shifted copy
     // s = alpha./delta
-    vec_ew_div(work->alpha, work->delta, work->temp_2m, work->data->m*2);
-    vec_array_copy(work->temp_2m, work->s, work->data->m*2);
+    vec_ew_div(work->alpha, work->delta, work->temp_2m, m*2);
+    vec_array_copy(work->temp_2m, work->s, m*2);
     // index_L = s>0
-    c_int nL = 0;
-    for (size_t i=0; i<work->data->m*2; i++){
+    size_t nL = 0;
+    size_t i;
+    for (i = 0; i<m*2; i++){
         if (work->temp_2m[i] > 0) {
             work->index_L[i] = 1;
             nL++;
@@ -56,10 +58,10 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     };
 
     //s = s(indL)
-    select_subsequence(work->s, work->s, work->index_L, work->data->m*2);
+    select_subsequence(work->s, work->s, work->index_L, m*2);
 
     // index_P = delta > 0
-    for (size_t i=0; i<work->data->m*2; i++){
+    for (i = 0; i<m*2; i++){
         if (work->delta[i] > 0) {
             work->index_P[i] = 1;
         } else {
@@ -67,7 +69,7 @@ c_float exact_linesearch(QPALMWorkspace *work) {
         }     
     };
     // index_J = (P&~L)|(~P&L);
-    for (size_t i=0; i<work->data->m*2; i++){
+    for (i = 0; i<m*2; i++){
         if ((work->index_P[i] + work->index_L[i]) == 1) {
             work->index_J[i] = 1;
         } else {
@@ -78,19 +80,19 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     // a = eta+delta(J)'*delta(J);
     // b = beta-delta(J)'*alpha(J);
     c_float a, b;
-    a = work->eta + vec_prod_ind(work->delta, work->delta, work->index_J, work->data->m*2);
-    b = work->beta - vec_prod_ind(work->delta, work->alpha, work->index_J, work->data->m*2);
+    a = work->eta + vec_prod_ind(work->delta, work->delta, work->index_J, m*2);
+    b = work->beta - vec_prod_ind(work->delta, work->alpha, work->index_J, m*2);
     // return 0;
     //s = sort(s)
-    // qsort(work->s, work->data->m*2, sizeof(array_element), compare);
+    // qsort(work->s, m*2, sizeof(array_element), compare);
     qsort(work->s, nL, sizeof(array_element), compare);
     
     if (nL == 0 || a*work->s[0].x+b > 0) {
         return -b/a; 
     }
 
-    c_int i = 0;
-    c_int iz;
+    i = 0;
+    size_t iz;
     while (i < nL-1) {
         iz = work->s[i].i;
         if (work->index_P[iz]) {
@@ -114,11 +116,11 @@ c_float exact_linesearch(QPALMWorkspace *work) {
 
 }
 
-void vec_array_copy(c_float *a, array_element* b, c_int n) {
-    c_int i;
+void vec_array_copy(c_float *a, array_element* b, size_t n) {
+    size_t i;
     array_element ae;
 
-    for (i=0; i < n; i++) {
+    for (i = 0; i < n; i++) {
         ae.x = a[i];
         ae.i = i;
         b[i] = ae; 
@@ -126,10 +128,10 @@ void vec_array_copy(c_float *a, array_element* b, c_int n) {
 
 }
 
-void select_subsequence(const array_element *a, array_element *b, const c_int *L, c_int n) {
-    c_int i;
+void select_subsequence(const array_element *a, array_element *b, const c_int *L, size_t n) {
+    size_t i;
     c_int nb_elements = 0;
-    for (i=0; i < n; i++) {
+    for (i = 0; i < n; i++) {
         if (L[i]) {
             b[nb_elements] = a[i];
             nb_elements++;
@@ -137,9 +139,9 @@ void select_subsequence(const array_element *a, array_element *b, const c_int *L
     }
 }
 
-c_float vec_prod_ind(const c_float *a, const c_float *b, const c_int *L, c_int n) {
+c_float vec_prod_ind(const c_float *a, const c_float *b, const c_int *L, size_t n) {
   c_float prod = 0.0;
-  c_int   i; // Index
+  size_t i;
 
   for (i = 0; i < n; i++) {
       if (L[i]) {

@@ -21,3 +21,4 @@ tests/run_all_tests
 *.gcno
 *.gcda
 *.info
+*.log

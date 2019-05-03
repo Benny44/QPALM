@@ -49,26 +49,28 @@ void calculate_residuals_and_tolerances(QPALMWorkspace *work) {
 }
 
 void calculate_primal_residual(QPALMWorkspace *work) {
+    size_t m = work->data->m;
     if (work->settings->scaling) {
-        vec_ew_prod(work->scaling->Einv, work->pri_res, work->temp_m, work->data->m);
-        work->info->pri_res_norm = vec_norm_inf(work->temp_m, work->data->m);
+        vec_ew_prod(work->scaling->Einv, work->pri_res, work->temp_m, m);
+        work->info->pri_res_norm = vec_norm_inf(work->temp_m, m);
     } else {
-        work->info->pri_res_norm = vec_norm_inf(work->pri_res, work->data->m);
+        work->info->pri_res_norm = vec_norm_inf(work->pri_res, m);
     }
 }
 
 void calculate_dual_residuals(QPALMWorkspace *work) {
+    size_t n = work->data->n;
     if (work->settings->scaling) {
         if (work->settings->proximal) {
-            vec_add_scaled(work->x, work->x0, work->xx0, -1, work->data->n);
-            vec_add_scaled(work->dphi, work->xx0, work->temp_n, -1/work->settings->gamma, work->data->n);
-            vec_ew_prod(work->scaling->Dinv, work->temp_n, work->temp_n, work->data->n);
-            work->info->dua_res_norm = vec_norm_inf(work->temp_n, work->data->n);
-            vec_ew_prod(work->scaling->Dinv, work->dphi, work->temp_n, work->data->n);
-            work->info->dua2_res_norm = vec_norm_inf(work->temp_n, work->data->n);
+            vec_add_scaled(work->x, work->x0, work->xx0, -1, n);
+            vec_add_scaled(work->dphi, work->xx0, work->temp_n, -1/work->settings->gamma, n);
+            vec_ew_prod(work->scaling->Dinv, work->temp_n, work->temp_n, n);
+            work->info->dua_res_norm = vec_norm_inf(work->temp_n, n);
+            vec_ew_prod(work->scaling->Dinv, work->dphi, work->temp_n, n);
+            work->info->dua2_res_norm = vec_norm_inf(work->temp_n, n);
         } else {
-            vec_ew_prod(work->scaling->Dinv, work->dphi, work->temp_n, work->data->n);
-            work->info->dua_res_norm = vec_norm_inf(work->temp_n, work->data->n);
+            vec_ew_prod(work->scaling->Dinv, work->dphi, work->temp_n, n);
+            work->info->dua_res_norm = vec_norm_inf(work->temp_n, n);
             work->info->dua2_res_norm = work->info->dua_res_norm;
         } 
         work->info->dua_res_norm *= work->scaling->cinv;
@@ -76,45 +78,47 @@ void calculate_dual_residuals(QPALMWorkspace *work) {
             
     } else {
         if (work->settings->proximal) {
-            vec_add_scaled(work->x, work->x0, work->xx0, -1, work->data->n);
-            vec_add_scaled(work->dphi, work->xx0, work->temp_n, -1/work->settings->gamma, work->data->n);
-            work->info->dua_res_norm = vec_norm_inf(work->temp_n, work->data->n);
-            work->info->dua2_res_norm = vec_norm_inf(work->dphi, work->data->n);
+            vec_add_scaled(work->x, work->x0, work->xx0, -1, n);
+            vec_add_scaled(work->dphi, work->xx0, work->temp_n, -1/work->settings->gamma, n);
+            work->info->dua_res_norm = vec_norm_inf(work->temp_n, n);
+            work->info->dua2_res_norm = vec_norm_inf(work->dphi, n);
         } else {
-            work->info->dua_res_norm = vec_norm_inf(work->dphi, work->data->n);
+            work->info->dua_res_norm = vec_norm_inf(work->dphi, n);
             work->info->dua2_res_norm = work->info->dua_res_norm;
         }
     }
 }
 
 void calculate_primal_tolerance(QPALMWorkspace *work) {
+    size_t m = work->data->m;
     if (work->settings->scaling) {
         /**NB Implementation detail: store Einv*Ax and Einv*z in temp_2m. 
          * The infinity norm of that vector is equal to the maximum
          * of the infinity norms of Einv*Ax and Einv*z.*/
-        vec_ew_prod(work->scaling->Einv, work->Ax, work->temp_2m, work->data->m);
-        vec_ew_prod(work->scaling->Einv, work->z, work->temp_2m + work->data->m, work->data->m);
-        work->eps_pri =  work->settings->eps_abs + work->settings->eps_rel*vec_norm_inf(work->temp_2m, work->data->m);                  
+        vec_ew_prod(work->scaling->Einv, work->Ax, work->temp_2m, m);
+        vec_ew_prod(work->scaling->Einv, work->z, work->temp_2m + m, m);
+        work->eps_pri =  work->settings->eps_abs + work->settings->eps_rel*vec_norm_inf(work->temp_2m, m);                  
     } else {
         work->eps_pri =  work->settings->eps_abs + work->settings->eps_rel*c_max(
-                                vec_norm_inf(work->Ax, work->data->m),
-                                vec_norm_inf(work->z, work->data->m));
+                                vec_norm_inf(work->Ax, m),
+                                vec_norm_inf(work->z, m));
     }
 }
 
 void calculate_dual_tolerances(QPALMWorkspace *work) {
+    size_t n = work->data->n;
     c_float norm_DinvQx, norm_Dinvq, norm_DinvAtyh, max_norm;
     if (work->settings->scaling) {
-        vec_ew_prod(work->scaling->Dinv, work->Qx, work->temp_n, work->data->n);
-        norm_DinvQx = vec_norm_inf(work->temp_n, work->data->n);
-        vec_ew_prod(work->scaling->Dinv, work->data->q, work->temp_n, work->data->n);
-        norm_Dinvq = vec_norm_inf(work->temp_n, work->data->n);
-        vec_ew_prod(work->scaling->Dinv, work->Atyh, work->temp_n, work->data->n);
-        norm_DinvAtyh = vec_norm_inf(work->temp_n, work->data->n);
+        vec_ew_prod(work->scaling->Dinv, work->Qx, work->temp_n, n);
+        norm_DinvQx = vec_norm_inf(work->temp_n, n);
+        vec_ew_prod(work->scaling->Dinv, work->data->q, work->temp_n, n);
+        norm_Dinvq = vec_norm_inf(work->temp_n, n);
+        vec_ew_prod(work->scaling->Dinv, work->Atyh, work->temp_n, n);
+        norm_DinvAtyh = vec_norm_inf(work->temp_n, n);
     } else {
-        norm_DinvQx = vec_norm_inf(work->Qx, work->data->n);
-        norm_Dinvq = vec_norm_inf(work->data->q, work->data->n);
-        norm_DinvAtyh = vec_norm_inf(work->Atyh, work->data->n);
+        norm_DinvQx = vec_norm_inf(work->Qx, n);
+        norm_Dinvq = vec_norm_inf(work->data->q, n);
+        norm_DinvAtyh = vec_norm_inf(work->Atyh, n);
     }
     
     max_norm = c_max(norm_DinvQx, c_max(norm_Dinvq, norm_DinvAtyh));
@@ -130,71 +134,72 @@ c_int is_solved(QPALMWorkspace *work) {
 }
 
 c_int is_primal_infeasible(QPALMWorkspace *work) {
+    size_t n = work->data->n;
+    size_t m = work->data->m;
     c_float eps_pinf_norm_Edy;
 
     //dy = yh-y
-    vec_add_scaled(work->yh, work->y, work->delta_y, -1, work->data->m);
+    vec_add_scaled(work->yh, work->y, work->delta_y, -1, m);
     if (work->settings->scaling) {
         //Edy = E.*dy
-        vec_ew_prod(work->scaling->E, work->delta_y, work->temp_m, work->data->m);
-        eps_pinf_norm_Edy = work->settings->eps_prim_inf*
-        vec_norm_inf(work->temp_m, work->data->m);
+        vec_ew_prod(work->scaling->E, work->delta_y, work->temp_m, m);
+        eps_pinf_norm_Edy = work->settings->eps_prim_inf*vec_norm_inf(work->temp_m, m);
     } else {
-        eps_pinf_norm_Edy = work->settings->eps_prim_inf*
-        vec_norm_inf(work->delta_y, work->data->m);
+        eps_pinf_norm_Edy = work->settings->eps_prim_inf*vec_norm_inf(work->delta_y, m);
     }
      
     if (eps_pinf_norm_Edy == 0) { //dy == 0
         return 0;
     }
 
-    vec_add_scaled(work->Atyh, work->Aty, work->Atdelta_y, -1, work->data->n);
+    vec_add_scaled(work->Atyh, work->Aty, work->Atdelta_y, -1, n);
     if (work->settings->scaling) {
-        vec_ew_prod(work->scaling->Dinv, work->Atdelta_y, work->Atdelta_y, work->data->n);
+        vec_ew_prod(work->scaling->Dinv, work->Atdelta_y, work->Atdelta_y, n);
     }
 
     //out_of_bounds = bmax'*max(dy,0) + bmin'*min(dy,0)
     c_float out_of_bounds = 0;
-    for(size_t i=0; i < work->data->m; i++) {
+    for(size_t i=0; i < m; i++) {
         out_of_bounds += work->data->bmax[i]*c_max(work->delta_y[i], 0)
             + work->data->bmin[i]*c_min(work->delta_y[i], 0);
     }
 
-    return (vec_norm_inf(work->Atdelta_y, work->data->n) <= eps_pinf_norm_Edy)
+    return (vec_norm_inf(work->Atdelta_y, n) <= eps_pinf_norm_Edy)
         && (out_of_bounds <= -eps_pinf_norm_Edy);
     
 }
 
 c_int is_dual_infeasible(QPALMWorkspace *work) {
     c_float eps_dinf_norm_Ddx;
+    size_t n = work->data->n;
+    size_t m = work->data->m;
 
     //dx = x-x_prev
-    vec_add_scaled(work->x, work->x_prev, work->delta_x, -1, work->data->n);
+    vec_add_scaled(work->x, work->x_prev, work->delta_x, -1, n);
     if (work->settings->scaling) {
         //D*dx
-        vec_ew_prod(work->scaling->D, work->delta_x, work->temp_n, work->data->n);
-        eps_dinf_norm_Ddx = work->settings->eps_dual_inf*
-                                vec_norm_inf(work->temp_n, work->data->n);
+        vec_ew_prod(work->scaling->D, work->delta_x, work->temp_n, n);
+        eps_dinf_norm_Ddx = work->settings->eps_dual_inf*vec_norm_inf(work->temp_n, n);
     } else {
-        eps_dinf_norm_Ddx = work->settings->eps_dual_inf*
-                                vec_norm_inf(work->delta_x, work->data->n);
+        eps_dinf_norm_Ddx = work->settings->eps_dual_inf*vec_norm_inf(work->delta_x, n);
     }
     
     if (eps_dinf_norm_Ddx == 0) { //dx == 0
         return 0;
     }
 
+    size_t k;
     //NB Adx = work->Ad (= tau*Ad of the previous iteration)
     if (work->settings->scaling) {
-        vec_ew_prod(work->scaling->Einv, work->Ad, work->Adelta_x, work->data->m);
-        for (size_t k = 0; k < work->data->m; k++) {
+        vec_ew_prod(work->scaling->Einv, work->Ad, work->Adelta_x, m);
+        for (k = 0; k < m; k++) {
             if ((work->data->bmax[k] < QPALM_INFTY && work->Adelta_x[k] >= eps_dinf_norm_Ddx)
                 || (work->data->bmin[k] > -QPALM_INFTY && work->Adelta_x[k] <= -eps_dinf_norm_Ddx)) {
                 return 0;
             }
         }      
     } else {
-        for (size_t k = 0; k < work->data->m; k++) {
+        for (k = 0; k < m; k++) {
             if ((work->data->bmax[k] < QPALM_INFTY && work->Ad[k] >= eps_dinf_norm_Ddx)
                 || (work->data->bmin[k] > -QPALM_INFTY && work->Ad[k] <= -eps_dinf_norm_Ddx)) {
                 return 0;
@@ -204,23 +209,23 @@ c_int is_dual_infeasible(QPALMWorkspace *work) {
     //NB Qdx = work->Qd (= tau*Qd of the previous iteration)
     //NB Qdx = work->Qd - tau/gamma*d (= tau*Qd of the previous iteration) if proximal is used
     if (work->settings->proximal) {
-        vec_add_scaled(work->Qd, work->d, work->temp_n, -work->tau/work->settings->gamma, work->data->n);
+        vec_add_scaled(work->Qd, work->d, work->temp_n, -work->tau/work->settings->gamma, n);
         if (work->settings->scaling) {
-            vec_ew_prod(work->scaling->Dinv, work->temp_n, work->temp_n, work->data->n);
-            return (vec_norm_inf(work->temp_n, work->data->n) <= work->scaling->c*eps_dinf_norm_Ddx)
-                && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -work->scaling->c*eps_dinf_norm_Ddx);
+            vec_ew_prod(work->scaling->Dinv, work->temp_n, work->temp_n, n);
+            return (vec_norm_inf(work->temp_n, n) <= work->scaling->c*eps_dinf_norm_Ddx)
+                && (vec_prod(work->data->q, work->delta_x, n) <= -work->scaling->c*eps_dinf_norm_Ddx);
         } else {
-            return (vec_norm_inf(work->temp_n, work->data->n) <= eps_dinf_norm_Ddx)
-                && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -eps_dinf_norm_Ddx);
+            return (vec_norm_inf(work->temp_n, n) <= eps_dinf_norm_Ddx)
+                && (vec_prod(work->data->q, work->delta_x, n) <= -eps_dinf_norm_Ddx);
         }
     } else {
         if (work->settings->scaling) {
-            vec_ew_prod(work->scaling->Dinv, work->Qd, work->temp_n, work->data->n);
-            return (vec_norm_inf(work->temp_n, work->data->n) <= work->scaling->c*eps_dinf_norm_Ddx)
-                && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -work->scaling->c*eps_dinf_norm_Ddx);
+            vec_ew_prod(work->scaling->Dinv, work->Qd, work->temp_n, n);
+            return (vec_norm_inf(work->temp_n, n) <= work->scaling->c*eps_dinf_norm_Ddx)
+                && (vec_prod(work->data->q, work->delta_x, n) <= -work->scaling->c*eps_dinf_norm_Ddx);
         } else {
-            return (vec_norm_inf(work->Qd, work->data->n) <= eps_dinf_norm_Ddx)
-                && (vec_prod(work->data->q, work->delta_x, work->data->n) <= -eps_dinf_norm_Ddx);
+            return (vec_norm_inf(work->Qd, n) <= eps_dinf_norm_Ddx)
+                && (vec_prod(work->data->q, work->delta_x, n) <= -eps_dinf_norm_Ddx);
         }
     }
 

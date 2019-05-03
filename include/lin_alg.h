@@ -29,8 +29,8 @@ extern "C" {
  * @param n Vector length
  * @return Copy of a
  */
-c_float* vec_copy(c_float *a,
-                  c_int    n);
+c_float* vec_copy(const c_float *a,
+                  size_t         n);
 
 /** 
  * Copy vector a into preallocated vector b.
@@ -41,7 +41,7 @@ c_float* vec_copy(c_float *a,
  */
 void prea_vec_copy(const c_float *a,
                    c_float       *b,
-                   c_int          n);
+                   size_t         n);
 
 /**
  * Copy integer vector a into preallocated vector b.
@@ -52,7 +52,7 @@ void prea_vec_copy(const c_float *a,
  */
 void prea_int_vec_copy(const c_int *a,
                        c_int       *b,
-                       c_int        n);
+                       size_t       n);
 
 /**
  * Fill float vector with a scalar value.
@@ -63,7 +63,7 @@ void prea_int_vec_copy(const c_int *a,
  */
 void vec_set_scalar(c_float *a,
                     c_float  sc,
-                    c_int    n);
+                    size_t   n);
 
 /**
  * Fill int vector with a scalar value.
@@ -74,7 +74,7 @@ void vec_set_scalar(c_float *a,
  */
 void vec_set_scalar_int(c_int *a, 
                         c_int  sc, 
-                        c_int  n);
+                        size_t n);
 
 /**
  * Mulitply vector with a constant scale factor.
@@ -85,7 +85,7 @@ void vec_set_scalar_int(c_int *a,
  */
 void vec_mult_scalar(c_float *a,
                      c_float  sc,
-                     c_int    n);
+                     size_t   n);
 
 /** 
  * Inner product between two vectors, @f$a^T \cdot b@f$. 
@@ -97,7 +97,7 @@ void vec_mult_scalar(c_float *a,
  */
 c_float vec_prod(const c_float *a,
                  const c_float *b,
-                 c_int          n);
+                 size_t         n);
 
 /**
  * Scaled addition of one vector to another vector, @f$c_i = a_i + sc\cdot b_i@f$ 
@@ -112,7 +112,7 @@ void vec_add_scaled(const c_float *a,
                     const c_float *b,
                     c_float       *c,
                     c_float        sc,
-                    c_int          n);
+                    size_t         n);
 
 /**
  * Infinity norm of a vector, @f$\|a\|_\infty@f$
@@ -122,7 +122,7 @@ void vec_add_scaled(const c_float *a,
  * @return Infinity norm of a
  */
 c_float vec_norm_inf(const c_float *a,
-                     c_int          n);
+                     size_t         n);
 
 /**
  * Elementwise reciprocal @f$b_i = 1/a_i@f$.
@@ -135,7 +135,7 @@ c_float vec_norm_inf(const c_float *a,
  */
 void vec_ew_recipr(const c_float *a,
                    c_float       *b,
-                   c_int          n);
+                   size_t         n);
 
 /** 
  * Elementwise maximum between vectors, @f$c_i = \textrm{max}(a_i, b_i)@f$.
@@ -148,7 +148,7 @@ void vec_ew_recipr(const c_float *a,
 void vec_ew_max_vec(const c_float *a,
                     const c_float *b,
                     c_float       *c,
-                    c_int          n);
+                    size_t         n);
 
 /** 
  * Elementwise minimum between vectors, @f$c_i = \textrm{min}(a_i, b_i)@f$.
@@ -161,7 +161,7 @@ void vec_ew_max_vec(const c_float *a,
 void vec_ew_min_vec(const c_float *a,
                     const c_float *b,
                     c_float       *c,
-                    c_int          n);
+                    size_t         n);
 
 /** 
  * Elementwise mid between vectors, @f$c_i = \textrm{max}(b_{\textrm{min},i}, \textrm{min}(a_i, b_{\textrm{max},i}))@f$.
@@ -176,7 +176,7 @@ void vec_ew_mid_vec(const c_float *a,
                     const c_float *bmin,
                     const c_float *bmax,
                     c_float       *c,
-                    c_int          n);
+                    size_t         n);
 
 /**
  * Elementwise product, @f$c_i = a_i\cdot b_i@f$.
@@ -189,7 +189,7 @@ void vec_ew_mid_vec(const c_float *a,
 void vec_ew_prod(const c_float *a,
                  const c_float *b,
                  c_float       *c,
-                 c_int          n);
+                 size_t         n);
 
 /**
  * Elementwise division, @f$c_i = a_i/b_i@f$.
@@ -202,7 +202,7 @@ void vec_ew_prod(const c_float *a,
 void vec_ew_div(const c_float *a,
                 const c_float *b,
                 c_float       *c,
-                c_int          n);
+                size_t         n);
 
 /** 
  * Elementwise square root, @f$b_i = \sqrt{a_i}@f$ 
@@ -213,7 +213,7 @@ void vec_ew_div(const c_float *a,
  */
 void vec_ew_sqrt(const c_float *a,
                  c_float       *b,
-                 c_int          n);
+                 size_t         n);
 
 
 /**

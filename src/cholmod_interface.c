@@ -39,38 +39,39 @@ void mat_tpose_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, cholmo
 }
 
 void mat_inf_norm_cols(cholmod_sparse *M, c_float *E) {
-  // size_t j, i;
+  size_t j;
+  c_int k;
   c_float *Mx = M->x;
   c_int *Mp = M->p;
 
   // Initialize zero max elements
-  for (size_t j = 0; j < M->ncol; j++) {
+  for (j = 0; j < M->ncol; j++) {
     E[j] = 0.;
   }
 
   // Compute maximum across columns
-  for (size_t j = 0; j < M->ncol; j++) {
-    for (c_int i = Mp[j]; i < Mp[j + 1]; i++) {
-      E[j] = c_max(c_absval(Mx[i]), E[j]);
+  for (j = 0; j < M->ncol; j++) {
+    for (k = Mp[j]; k < Mp[j + 1]; k++) {
+      E[j] = c_max(c_absval(Mx[k]), E[j]);
     }
   }
 }
 
 void mat_inf_norm_rows(cholmod_sparse *M, c_float *E) {
-  // size_t i, j, k;
+  size_t j;
+  c_int i, k;
   c_int *Mp = M->p;
   c_int *Mi = M->i;
   c_float *Mx = M->x;
  
   // Initialize zero max elements
-  for (size_t j = 0; j < M->nrow; j++) {
+  for (j = 0; j < M->nrow; j++) {
     E[j] = 0.;
   }
 
   // Compute maximum across rows
-  c_int i;
-  for (size_t j = 0; j < M->ncol; j++) {
-    for (c_int k = Mp[j]; k < Mp[j + 1]; k++) {
+  for (j = 0; j < M->ncol; j++) {
+    for (k = Mp[j]; k < Mp[j + 1]; k++) {
       i    = Mi[k];
       E[i] = c_max(c_absval(Mx[k]), E[i]);
     }

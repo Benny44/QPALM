@@ -96,14 +96,14 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
 
   // Copy problem data into workspace
   work->data       = c_calloc(1, sizeof(QPALMData));
-  work->data->n    = data->n;                             // Number of variables
-  work->data->m    = data->m;                             // Number of linear constraints
-  work->data->bmin = vec_copy(data->bmin, m);       // Lower bounds on constraints
-  work->data->bmax = vec_copy(data->bmax, m);       // Upper bounds on constraints
-  work->data->q    = vec_copy(data->q, n);          // Linear part of cost function
+  work->data->n    = data->n;           
+  work->data->m    = data->m;                   
+  work->data->bmin = vec_copy(data->bmin, m);      
+  work->data->bmax = vec_copy(data->bmax, m);       
+  work->data->q    = vec_copy(data->q, n);          
 
-  work->data->A    = CHOLMOD(copy_sparse)(data->A, &work->chol->c);               // Linear constraints matrix
-  work->data->Q    = CHOLMOD(copy_sparse)(data->Q, &work->chol->c);                // Cost function matrix
+  work->data->A    = CHOLMOD(copy_sparse)(data->A, &work->chol->c);    
+  work->data->Q    = CHOLMOD(copy_sparse)(data->Q, &work->chol->c);     
 
   // Allocate internal solver variables 
   work->x        = c_calloc(n, sizeof(c_float));
@@ -222,54 +222,57 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
 
 
 void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_warm_start) {
+    size_t n = work->data->n;
+    size_t m = work->data->m;
     CHOLMOD(start)(&work->chol->c);
     if (x_warm_start != NULL) {
-      prea_vec_copy(x_warm_start, work->x, work->data->n);
+      prea_vec_copy(x_warm_start, work->x, n);
       // Scale initial vectors x, xprev, x0, if they are warm-started
       if (work->settings->scaling) {
-        vec_ew_prod(work->x, work->scaling->Dinv, work->x, work->data->n);
-        prea_vec_copy(work->x, work->x0, work->data->n);
-        prea_vec_copy(work->x, work->x_prev, work->data->n);
+        vec_ew_prod(work->x, work->scaling->Dinv, work->x, n);
+        prea_vec_copy(work->x, work->x0, n);
+        prea_vec_copy(work->x, work->x_prev, n);
       } else {
-        prea_vec_copy(work->x, work->x0, work->data->n);
-        prea_vec_copy(work->x, work->x_prev, work->data->n);
+        prea_vec_copy(work->x, work->x0, n);
+        prea_vec_copy(work->x, work->x_prev, n);
       }
       //NB to link to cholmod here d and chol->neg_dphi are used as x
       work->d = work->chol->neg_dphi->x;
-      prea_vec_copy(work->x, work->d, work->data->n);
+      prea_vec_copy(work->x, work->d, n);
 
       mat_vec(work->data->Q, work->chol->neg_dphi, work->chol->Qd, &work->chol->c);
       if (work->settings->proximal) {
-        vec_add_scaled(work->Qd, work->x, work->Qx, 1/work->settings->gamma, work->data->n);
+        vec_add_scaled(work->Qd, work->x, work->Qx, 1/work->settings->gamma, n);
       } else {
-        prea_vec_copy(work->Qd, work->Qx, work->data->n);
+        prea_vec_copy(work->Qd, work->Qx, n);
       }
       mat_vec(work->data->A, work->chol->neg_dphi, work->chol->Ad, &work->chol->c);
-      prea_vec_copy(work->Ad, work->Ax, work->data->m);
+      prea_vec_copy(work->Ad, work->Ax, m);
 
     } else {
-      vec_set_scalar(work->x, 0., work->data->n);
-      vec_set_scalar(work->x_prev, 0., work->data->n);
-      vec_set_scalar(work->x0, 0., work->data->n);
-      vec_set_scalar(work->Qx, 0., work->data->n);
-      vec_set_scalar(work->Ax, 0., work->data->m);
+      vec_set_scalar(work->x, 0., n);
+      vec_set_scalar(work->x_prev, 0., n);
+      vec_set_scalar(work->x0, 0., n);
+      vec_set_scalar(work->Qx, 0., n);
+      vec_set_scalar(work->Ax, 0., m);
     }
 
     if (y_warm_start != NULL) {
-      prea_vec_copy(y_warm_start, work->y, work->data->m);
+      prea_vec_copy(y_warm_start, work->y, m);
       if (work->settings->scaling) {
-        vec_ew_prod(work->y, work->scaling->Einv, work->y, work->data->m);
-        vec_mult_scalar(work->y, work->scaling->c, work->data->m);
+        vec_ew_prod(work->y, work->scaling->Einv, work->y, m);
+        vec_mult_scalar(work->y, work->scaling->c, m);
       }
     } else {
-      vec_set_scalar(work->y, 0., work->data->m);
+      vec_set_scalar(work->y, 0., m);
     }
     
     initialize_sigma(work);
-    vec_ew_sqrt(work->sigma, work->sqrt_sigma, work->data->m);
+    vec_ew_sqrt(work->sigma, work->sqrt_sigma, m);
     c_float *At_scalex = work->chol->At_scale->x;
-    prea_vec_copy(work->sqrt_sigma, At_scalex, work->data->m);
-    if (work->chol->At_sqrt_sigma) CHOLMOD(free_sparse)(&work->chol->At_sqrt_sigma, &work->chol->c);
+    prea_vec_copy(work->sqrt_sigma, At_scalex, m);
+    if (work->chol->At_sqrt_sigma) 
+      CHOLMOD(free_sparse)(&work->chol->At_sqrt_sigma, &work->chol->c);
     work->chol->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, &work->chol->c);
     CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
 
@@ -288,7 +291,7 @@ void qpalm_solve(QPALMWorkspace *work) {
   //Check if the internal variables were correctly initialized. A path that leads to
   //incorrect initialization (and subsequent program crash) is that the user forgets
   //to call qpalm_warm_start while having set settings->warm_start=TRUE, which causes 
-  //qpalm_setup to not initialized the variables.
+  //qpalm_setup to not initialize some variables.
   if (!work->initialized) {
     qpalm_warm_start(work, NULL, NULL);
   }
@@ -302,7 +305,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
   c_int iter;
   c_int iter_out = 0;
-  c_float tau;
+  size_t k;
 
   for (iter = 0; iter < work->settings->max_iter; iter++) {
 
@@ -349,7 +352,7 @@ void qpalm_solve(QPALMWorkspace *work) {
                                         work->settings->rho*work->settings->eps_rel_in);
       if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
         c_float *At_scalex = work->chol->At_scale->x;
-        for (size_t k = 0; k < m; k++) {
+        for (k = 0; k < m; k++) {
           if (c_absval(work->pri_res[k]) > work->settings->theta*c_absval(work->pri_res_in[k])) {
             work->sigma[k] *= work->settings->delta;
             work->sqrt_sigma[k] *= work->sqrt_delta;
@@ -363,13 +366,13 @@ void qpalm_solve(QPALMWorkspace *work) {
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
       
       work->chol->reset_newton = TRUE;
-      vec_set_scalar_int(work->chol->active_constraints_old, FALSE, work->data->m);
+      vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
 
       if(work->settings->proximal) {
         c_float prev_gamma = work->settings->gamma;
         work->settings->gamma = c_min(work->settings->gamma*work->settings->gamma_upd, work->settings->gamma_max);
         prea_vec_copy(work->x, work->x0, n);
-        vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->settings->gamma - 1/prev_gamma, work->data->n);
+        vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->settings->gamma - 1/prev_gamma, n);
       }
 
       iter_out++;
