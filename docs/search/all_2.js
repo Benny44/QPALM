@@ -27,5 +27,5 @@ var searchData=
   ['cinv',['cinv',['../structQPALMScaling.html#aaea7f6c4b7a75e588c98f37f3f20a0d7',1,'QPALMScaling']]],
   ['compare',['compare',['../linesearch_8c.html#ac70138609ef6aa6fabca57aca8681e83',1,'compare(const void *a, const void *b):&#160;linesearch.c'],['../linesearch_8h.html#ac70138609ef6aa6fabca57aca8681e83',1,'compare(const void *a, const void *b):&#160;linesearch.c']]],
   ['constants_2eh',['constants.h',['../constants_8h.html',1,'']]],
-  ['copy_5fsettings',['copy_settings',['../util_8c.html#afc6f0428587fb1ede055b075aa6f7ca2',1,'copy_settings(QPALMSettings *settings):&#160;util.c'],['../util_8h.html#afc6f0428587fb1ede055b075aa6f7ca2',1,'copy_settings(QPALMSettings *settings):&#160;util.c']]]
+  ['copy_5fsettings',['copy_settings',['../util_8c.html#a59c8e0cefe0eb9a61da6d50ade8a15f3',1,'copy_settings(const QPALMSettings *settings):&#160;util.c'],['../util_8h.html#a59c8e0cefe0eb9a61da6d50ade8a15f3',1,'copy_settings(const QPALMSettings *settings):&#160;util.c']]]
 ];
