@@ -8,6 +8,7 @@
  */
 
 #include "qpalm.h"
+#include "global_opts.h"
 #include "constants.h"
 #include "validate.h"
 #include "lin_alg.h"
@@ -37,7 +38,7 @@ void qpalm_set_default_settings(QPALMSettings *settings) {
   settings->delta         = (c_float)DELTA;          /* penalty update factor */
   settings->tau_init      = (c_float)TAU_INIT;       /* initial stepsize for backtracking */
   settings->proximal      = PROXIMAL;                /* boolean, proximal method of multipliers*/
-  settings->gamma         = (c_float)GAMMA;          /* proximal penalty parameter */
+  settings->gamma_init    = (c_float)GAMMA_INIT;     /* proximal penalty parameter */
   settings->gamma_upd     = (c_float)GAMMA_UPD;      /* proximal penalty update factor*/
   settings->gamma_max     = (c_float)GAMMA_MAX;      /* proximal penalty parameter cap*/
   settings->scaling       = SCALING;                 /* boolean, scaling */
@@ -84,6 +85,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   // Copy settings
   work->settings = copy_settings(settings);
   work->sqrt_delta = c_sqrt(work->settings->delta);
+  work->gamma = work->settings->gamma_init;
 
   size_t n = data->n;
   size_t m = data->m;
@@ -230,19 +232,17 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
       // Scale initial vectors x, xprev, x0, if they are warm-started
       if (work->settings->scaling) {
         vec_ew_prod(work->x, work->scaling->Dinv, work->x, n);
-        prea_vec_copy(work->x, work->x0, n);
-        prea_vec_copy(work->x, work->x_prev, n);
-      } else {
-        prea_vec_copy(work->x, work->x0, n);
-        prea_vec_copy(work->x, work->x_prev, n);
       }
-      //NB to link to cholmod here d and chol->neg_dphi are used as x
-      work->d = work->chol->neg_dphi->x;
-      prea_vec_copy(work->x, work->d, n);
+      prea_vec_copy(work->x, work->x0, n);
+      prea_vec_copy(work->x, work->x_prev, n);
+      
+      //NB to link to cholmod here neg_dphi and chol->neg_dphi are used as x
+      // work->d = work->chol->neg_dphi->x;
+      prea_vec_copy(work->x, work->neg_dphi, n);
 
       mat_vec(work->data->Q, work->chol->neg_dphi, work->chol->Qd, &work->chol->c);
       if (work->settings->proximal) {
-        vec_add_scaled(work->Qd, work->x, work->Qx, 1/work->settings->gamma, n);
+        vec_add_scaled(work->Qd, work->x, work->Qx, 1/work->gamma, n);
       } else {
         prea_vec_copy(work->Qd, work->Qx, n);
       }
@@ -324,7 +324,7 @@ void qpalm_solve(QPALMWorkspace *work) {
     if (work->settings->proximal) {
       //df = Qx + q +1/gamma*(x-x0)
       // NB work->Qx contains Qx+1/gamma*x
-      vec_add_scaled(work->df, work->x0, work->df, -1/work->settings->gamma, n);
+      vec_add_scaled(work->df, work->x0, work->df, -1/work->gamma, n);
     }
     // Atyh = A'*yh
     mat_tpose_vec(work->data->A, work->chol->yh, work->chol->Atyh, &work->chol->c);
@@ -369,10 +369,10 @@ void qpalm_solve(QPALMWorkspace *work) {
       vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
 
       if(work->settings->proximal) {
-        c_float prev_gamma = work->settings->gamma;
-        work->settings->gamma = c_min(work->settings->gamma*work->settings->gamma_upd, work->settings->gamma_max);
+        c_float prev_gamma = work->gamma;
+        work->gamma = c_min(work->gamma*work->settings->gamma_upd, work->settings->gamma_max);
         prea_vec_copy(work->x, work->x0, n);
-        vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->settings->gamma - 1/prev_gamma, n);
+        vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->gamma - 1/prev_gamma, n);
       }
 
       iter_out++;
@@ -444,6 +444,7 @@ void qpalm_update_settings(QPALMWorkspace* work, const QPALMSettings *settings) 
   }
  
   // Copy settings
+  c_free(work->settings);
   work->settings = copy_settings(settings);
   work->sqrt_delta = c_sqrt(work->settings->delta);
 }
@@ -452,22 +453,33 @@ void qpalm_update_bounds(QPALMWorkspace *work, const c_float *bmin, const c_floa
   // Validate bounds
   size_t j;
   size_t m = work->data->m;
-  for (j = 0; j < m; j++) {
-    if (bmin[j] > bmax[j]) {
-      # ifdef PRINTING
-        c_eprint("Lower bound at index %d is greater than upper bound: %.4e > %.4e",
-                (int)j, data->bmin[j], data->bmax[j]);
-      # endif /* ifdef PRINTING */
-      work = QPALM_NULL;
-      return;
+  if (bmin != NULL && bmax != NULL) {
+    for (j = 0; j < m; j++) {
+      if (bmin[j] > bmax[j]) {
+        # ifdef PRINTING
+          c_eprint("Lower bound at index %d is greater than upper bound: %.4e > %.4e",
+                  (int)j, work->data->bmin[j], work->data->bmax[j]);
+        # endif /* ifdef PRINTING */
+        work = QPALM_NULL;
+        return;
+      }
     }
   }
-
-  prea_vec_copy(bmin, work->data->bmin, m);      
-  prea_vec_copy(bmax, work->data->bmax, m);
+  
+  if (bmin != NULL) {
+      prea_vec_copy(bmin, work->data->bmin, m); 
+  }
+  if (bmax != NULL) {
+      prea_vec_copy(bmax, work->data->bmax, m);
+  }     
+  
   if (work->settings->scaling) {
-    vec_ew_prod(work->scaling->E, work->data->bmin, work->data->bmin, m);
-    vec_ew_prod(work->scaling->E, work->data->bmax, work->data->bmax, m);
+    if (bmin != NULL) {
+      vec_ew_prod(work->scaling->E, work->data->bmin, work->data->bmin, m);
+    }
+    if (bmax != NULL) {
+      vec_ew_prod(work->scaling->E, work->data->bmax, work->data->bmax, m);
+    } 
   }
 }
 
@@ -478,6 +490,9 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, n);    
     // Update cost scaling scalar
     c_float c_old = work->scaling->c;
+    if (work->settings->proximal) {
+      vec_add_scaled(work->Qx, work->x, work->Qx, -1/work->gamma, work->data->n);
+    }
     vec_add_scaled(work->data->q, work->Qx, work->temp_n, work->scaling->cinv, n);
     work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->temp_n, n));
     work->scaling->cinv = 1/work->scaling->c;
@@ -489,7 +504,20 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
     CHOLMOD(scale)(c, CHOLMOD_SCALAR, work->data->Q, &work->chol->c);
     CHOLMOD(free_dense)(&c, &work->chol->c);
     CHOLMOD(finish)(&work->chol->c);
+
+    vec_mult_scalar(work->Qx, work->scaling->c/c_old, n);
+    if (work->settings->proximal) {
+      work->gamma = work->settings->gamma_init;
+      vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->gamma, work->data->n);    
+    }
   }
+
+  vec_set_scalar_int(work->chol->active_constraints_old, FALSE, work->data->m);
+  work->chol->reset_newton = TRUE;
+  update_status(work->info, QPALM_UNSOLVED);
+  work->initialized = FALSE;
+  work->gamma = work->settings->gamma_init;
+
 }
 
 

@@ -111,8 +111,8 @@ void test_dua_inf_qp_noprox(void) {
     //This will crash actually, hence the large gamma value
     // settings->proximal = FALSE;
     settings->proximal = TRUE;
-    settings->gamma = 1e13;
-    settings->gamma_max = settings->gamma;
+    settings->gamma_init = 1e13;
+    settings->gamma_max = settings->gamma_init;
     settings->scaling = 2;
     // Setup workspace
     work = qpalm_setup(data, settings, c);
@@ -125,8 +125,8 @@ void test_dua_inf_qp_noprox_unscaled(void) {
     //This will crash actually, hence the large gamma value
     // settings->proximal = FALSE;
     settings->proximal = TRUE;
-    settings->gamma = 1e13;
-    settings->gamma_max = settings->gamma;
+    settings->gamma_init = 1e13;
+    settings->gamma_max = settings->gamma_init;
     settings->scaling = 0;
     // Setup workspace
     work = qpalm_setup(data, settings, c);

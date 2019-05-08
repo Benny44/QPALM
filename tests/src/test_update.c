@@ -86,7 +86,7 @@ void test_update_settings(void) {
     CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
     CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
 
-    settings->gamma *= 10;
+    settings->gamma_init *= 10;
     settings->theta = 0.9;
     settings->proximal = FALSE;
 

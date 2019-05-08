@@ -17,7 +17,7 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     //Qd
     mat_vec(work->data->Q, work->chol->d, work->chol->Qd, &work->chol->c);
     if (work->settings->proximal) {
-        vec_add_scaled(work->Qd, work->d, work->Qd, 1/work->settings->gamma, n);
+        vec_add_scaled(work->Qd, work->d, work->Qd, 1/work->gamma, n);
     }
     //Ad
     mat_vec(work->data->A, work->chol->d, work->chol->Ad, &work->chol->c);

@@ -98,6 +98,8 @@ void qpalm_update_settings(QPALMWorkspace      *work,
 /**
  * Update the lower and upper bounds.
  * 
+ * Use NULL to indicate that one the bounds does not change.
+ * 
  * @param work Workspace
  * @param bmin New lower bounds
  * @param bmax New upper bounds

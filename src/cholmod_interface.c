@@ -84,7 +84,7 @@ void ldlchol(cholmod_sparse *M, QPALMWorkspace *work) {
   }
   work->chol->LD = CHOLMOD(analyze) (M, &work->chol->c) ;
   if (work->settings->proximal) {
-    double beta [2] = {1.0/work->settings->gamma,0};
+    double beta [2] = {1.0/work->gamma,0};
     CHOLMOD(factorize_p) (M, beta, NULL, 0, work->chol->LD, &work->chol->c);
   } else {
     CHOLMOD(factorize) (M, work->chol->LD, &work->chol->c);
@@ -92,7 +92,7 @@ void ldlchol(cholmod_sparse *M, QPALMWorkspace *work) {
   if ((&work->chol->c)->status != CHOLMOD_OK) {
       (&work->chol->c)->supernodal = CHOLMOD_SIMPLICIAL;
       if (work->settings->proximal) {
-        double beta [2] = {1.0/work->settings->gamma,0};
+        double beta [2] = {1.0/work->gamma,0};
         CHOLMOD(factorize_p) (M, beta, NULL, 0, work->chol->LD, &work->chol->c);
       } else {
         CHOLMOD(factorize) (M, work->chol->LD, &work->chol->c);

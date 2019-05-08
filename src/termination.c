@@ -63,7 +63,7 @@ void calculate_dual_residuals(QPALMWorkspace *work) {
     if (work->settings->scaling) {
         if (work->settings->proximal) {
             vec_add_scaled(work->x, work->x0, work->xx0, -1, n);
-            vec_add_scaled(work->dphi, work->xx0, work->temp_n, -1/work->settings->gamma, n);
+            vec_add_scaled(work->dphi, work->xx0, work->temp_n, -1/work->gamma, n);
             vec_ew_prod(work->scaling->Dinv, work->temp_n, work->temp_n, n);
             work->info->dua_res_norm = vec_norm_inf(work->temp_n, n);
             vec_ew_prod(work->scaling->Dinv, work->dphi, work->temp_n, n);
@@ -79,7 +79,7 @@ void calculate_dual_residuals(QPALMWorkspace *work) {
     } else {
         if (work->settings->proximal) {
             vec_add_scaled(work->x, work->x0, work->xx0, -1, n);
-            vec_add_scaled(work->dphi, work->xx0, work->temp_n, -1/work->settings->gamma, n);
+            vec_add_scaled(work->dphi, work->xx0, work->temp_n, -1/work->gamma, n);
             work->info->dua_res_norm = vec_norm_inf(work->temp_n, n);
             work->info->dua2_res_norm = vec_norm_inf(work->dphi, n);
         } else {
@@ -209,7 +209,7 @@ c_int is_dual_infeasible(QPALMWorkspace *work) {
     //NB Qdx = work->Qd (= tau*Qd of the previous iteration)
     //NB Qdx = work->Qd - tau/gamma*d (= tau*Qd of the previous iteration) if proximal is used
     if (work->settings->proximal) {
-        vec_add_scaled(work->Qd, work->d, work->temp_n, -work->tau/work->settings->gamma, n);
+        vec_add_scaled(work->Qd, work->d, work->temp_n, -work->tau/work->gamma, n);
         if (work->settings->scaling) {
             vec_ew_prod(work->scaling->Dinv, work->temp_n, work->temp_n, n);
             return (vec_norm_inf(work->temp_n, n) <= work->scaling->c*eps_dinf_norm_Ddx)

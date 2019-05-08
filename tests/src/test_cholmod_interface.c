@@ -133,7 +133,7 @@ void test_ldlchol(void){
 
     // with proximal
     work->settings->proximal = TRUE;
-    work->settings->gamma = 1e3;
+    work->gamma = 1e3;
     ldlchol(Q, work);
     ldlsolveLD_neg_dphi(work);
     CU_ASSERT_DOUBLE_EQUAL(work->d[0], 3.989028924198480, TOL);

@@ -35,7 +35,7 @@ QPALMSettings* copy_settings(const QPALMSettings *settings) {
     new->delta        = settings->delta;
     new->tau_init     = settings->tau_init;         
     new->proximal     = settings->proximal;       
-    new->gamma        = settings->gamma;         
+    new->gamma_init   = settings->gamma_init;         
     new->gamma_upd    = settings->gamma_upd;     
     new->gamma_max    = settings->gamma_max;     
     new->scaling      = settings->scaling;      
@@ -83,6 +83,7 @@ void initialize_sigma(QPALMWorkspace *work) {
     vec_ew_mid_vec(work->Ax, work->data->bmin, work->data->bmax, work->temp_m, m);
     vec_add_scaled(work->Ax, work->temp_m, work->temp_m, -1, m);
     c_float dist2 = vec_prod(work->temp_m, work->temp_m, m);
+
     vec_set_scalar(work->sigma, c_max(1e-8, c_min(2e1*c_max(1,c_absval(f))/c_max(1,0.5*dist2),1e8)), m);
 }
 

@@ -153,16 +153,16 @@ void test_delta_out_of_bounds(void){
 }
 
 void test_gamma_out_of_bounds(void){
-    settings->gamma = 0;
+    settings->gamma_init = 0;
     CU_ASSERT_FALSE(validate_settings(settings));
-    settings->gamma = 1e5;
+    settings->gamma_init = 1e5;
     
     settings->gamma_upd = 0.5;
     CU_ASSERT_FALSE(validate_settings(settings));
     settings->gamma_upd = 1;
     CU_ASSERT_TRUE(validate_settings(settings));
 
-    settings->gamma_max = settings->gamma;
+    settings->gamma_max = settings->gamma_init;
     CU_ASSERT_TRUE(validate_settings(settings));
     settings->gamma_max /= 10;
     CU_ASSERT_FALSE(validate_settings(settings));
