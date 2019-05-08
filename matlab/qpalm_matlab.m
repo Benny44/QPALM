@@ -189,7 +189,7 @@ end
 
 K = 1; 
 sig_updated = true; %Reset lbfgs initially and perform gradient descent step
-
+reset_newton = true;
 
 %Initialization for Qdx and Adx used in is_dual_infeasible;
 tau = 0; Qd = zeros(n,1); Ad = zeros(m,1); d = zeros(n,1);
@@ -205,6 +205,9 @@ y_next = zeros(m,1);
 
 
 for k = 1:maxiter
+    stats.gamma(k) = gamma;
+    stats.sigma(:,k) = sig;
+    
    Axys = Ax+y./sig;
    z    = min(max(Axys,bmin),bmax);                         % z-update 
    rp   = Ax-z;                                             % primal residual
@@ -286,7 +289,7 @@ for k = 1:maxiter
            stats.iter_in(K) = k;
        end
        K   = K+1;
-       active_cnstrs_old = [];
+       reset_newton = true;
        if proximal
            x0=x;
            if gamma ~= gammaMax
@@ -304,6 +307,14 @@ for k = 1:maxiter
           active_cnstrs = (Axys<bmin | Axys>bmax);
           na = nnz(active_cnstrs);
           stats.nact(k) = na;
+          if (isempty(active_cnstrs_old))
+              stats.nact_changed(k) = na;
+          else
+              stats.nact_changed(k) = sum(abs(active_cnstrs-active_cnstrs_old));
+              if reset_newton
+                  stats.nact_changed(k) = -1*stats.nact_changed(k);
+              end
+          end
           if na
               switch linsys
                   case 0 % sparse backslash
@@ -315,7 +326,8 @@ for k = 1:maxiter
                           d = -(Q+A(active_cnstrs,:)'*diag(sig(active_cnstrs))*A(active_cnstrs,:))\dphi;
                       end
                   case 2% ldlchol 2
-                      [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old);
+                      [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton);
+                      reset_newton = false;
     %                   LD = ldlchol(Q+A(active_cnstrs,:)'*spdiags(sig(active_cnstrs),0,na,na)*A(active_cnstrs,:));
     %                   d  = -ldlsolve (LD,dphi);
                   case 3% lchol  3
@@ -668,10 +680,6 @@ function [x,y,Q,q,A,bmin,bmax,D,E,c] = simple_equilibration(x,y,Q,q,A,bmin,bmax,
     Q = Dm*(Q*Dm);
     q = D.*q;
     bmin = E.*bmin; bmax = E.*bmax;
-% Make A have unit row norms
-% D = speye(n);
-% E = sparse(1:m,1:m,1./vecnorm(A,2,2),m,m);
-% A = E*A; bmin = E*bmin; bmax = E*bmax;
 
     x = x./D; y = (y./E);
 
