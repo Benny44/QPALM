@@ -199,6 +199,9 @@ Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
 Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
 for k = 1:maxiter
+    stats.gamma(k) = gamma;
+    stats.sigma(:,k) = sig;
+    
    Axys = Ax+y./sig;
    z    = min(max(Axys,bmin),bmax);                         % z-update 
    rp   = Ax-z;                                             % primal residual

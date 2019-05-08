@@ -1,5 +1,5 @@
 clear;close all;clc
-m = 500;n = 30;
+m = 500;n = 300;
 rng(1)
 A = sprandn(m, n, 5e-1,1e-1);
 % A = sparse(ones(m,n));
