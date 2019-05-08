@@ -1,5 +1,4 @@
 #include "qpalm.h"
-#include "cs.h"
 #include "constants.h"
 #include "global_opts.h"
 #include "cholmod.h"

@@ -178,8 +178,7 @@ classdef qpalm < handle
            return;
         end
 
-%         %%
-% 
+        %% Warm start primal and dual variables
         function warm_start(this, x, y)
             % WARM_START warm start primal and/or dual variables
             %
@@ -200,6 +199,34 @@ classdef qpalm < handle
             qpalm_mex('warm_start',x,y);
 
         end
+        
+        %% Update functions
+        function update_q(this, q)
+            % UPDATE_Q update the linear part of the cost
+            %
+            %   update_q(q)
+            
+            if (~isempty(q))
+                q = full(q(:));
+            end
+            qpalm_mex('update_q', q);
+        end
+        
+        function update_bounds(this, bmin, bmax)
+            % UPDATE_BOUNDS update the lower and upper bounds of the linear
+            % constraints. Use empty matrices to denote bounds that are not
+            % updated.
+            %
+            %   update_bounds(bmin, bmax)
+            if (~isempty(bmin))
+                bmin = full(bmin(:));
+            end
+            if (~isempty(bmax))
+                bmax = full(bmax(:));
+            end
+            qpalm_mex('update_bounds', bmin, bmax);
+        end
+            
 
         %% Solve function
         function varargout = solve(this, varargin)

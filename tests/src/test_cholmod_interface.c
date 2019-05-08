@@ -13,8 +13,10 @@
 QPALMWorkspace *work; // Workspace
 cholmod_sparse *A; // MxN matrix
 cholmod_sparse *Q; //NxN symmetric matrix
+cholmod_common common, *c;
 
-int cholmod_qp_setup(void) {
+
+int cholmod_suite_setup(void) {
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
@@ -30,9 +32,9 @@ int cholmod_qp_setup(void) {
     data->bmin = bmin;
     data->bmax = bmax;
 
-    cholmod_common c;
-    CHOLMOD(start)(&c);
-    A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, &c);
+    c = &common;
+    CHOLMOD(start)(c);
+    A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
     c_float *Ax;
     c_int *Ai, *Ap;
     Ax = A->x;
@@ -42,7 +44,7 @@ int cholmod_qp_setup(void) {
     Ap[0] = 0; Ap[1] = 3; Ap[2] = 5;
     Ai[0] = 0; Ai[1] = 1; Ai[2] = 2; Ai[3] = 0; Ai[4] = 1;
 
-    Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
+    Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
     c_float *Qx;
     c_int *Qi, *Qp;
     Qx = Q->x;
@@ -54,9 +56,9 @@ int cholmod_qp_setup(void) {
 
     data->A = A;
     data->Q = Q;
-    CHOLMOD(finish)(&c);
+    CHOLMOD(finish)(c);
     // Setup workspace
-    work = qpalm_setup(data, settings, &c);
+    work = qpalm_setup(data, settings, c);
 
     c_free(data);
     c_free(settings);
@@ -64,21 +66,25 @@ int cholmod_qp_setup(void) {
     return 0;
 }
 
-int cholmod_qp_teardown(void) {
+int cholmod_suite_teardown(void) {
     qpalm_cleanup(work);
 
-    cholmod_common c;
-    CHOLMOD(start)(&c);
-    CHOLMOD(free_sparse)(&Q, &c);
-    CHOLMOD(free_sparse)(&A, &c);
-    CHOLMOD(finish)(&c);
+    CHOLMOD(start)(c);
+    CHOLMOD(free_sparse)(&Q, c);
+    CHOLMOD(free_sparse)(&A, c);
+    CHOLMOD(finish)(c);
 
     return 0;
 }
 
-void cholmod_set_QdAd(void) {
+void cholmod_test_setup(void) {
     work->Qd[0] = 1.1; work->Qd[1] = -0.5;
     work->Ad[0] = 1.1; work->Ad[1] = -0.5; work->Ad[2] = 20;
+    CHOLMOD(start)(&work->chol->c);
+}
+
+void cholmod_test_teardown(void) {
+    CHOLMOD(finish)(&work->chol->c);
 }
 
 void test_mat_vec(void){
@@ -127,7 +133,7 @@ void test_ldlchol(void){
 
     // with proximal
     work->settings->proximal = TRUE;
-    work->settings->gamma = 1e3;
+    work->gamma = 1e3;
     ldlchol(Q, work);
     ldlsolveLD_neg_dphi(work);
     CU_ASSERT_DOUBLE_EQUAL(work->d[0], 3.989028924198480, TOL);

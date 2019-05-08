@@ -14,18 +14,12 @@
 **********************/
 
 void c_strcpy(char dest[], const char source[]) {
-    int i = 0;
-
-    while (1) {
-        dest[i] = source[i];
-
-        if (dest[i] == '\0') break;
-        i++;
-    }
+    size_t i;
+    for(i = 0; (dest[i] = source[i]) != '\0'; i++);
 }
 
 
-QPALMSettings* copy_settings(QPALMSettings *settings) {
+QPALMSettings* copy_settings(const QPALMSettings *settings) {
     QPALMSettings *new = c_malloc(sizeof(QPALMSettings));
 
     // Copy settings
@@ -41,7 +35,7 @@ QPALMSettings* copy_settings(QPALMSettings *settings) {
     new->delta        = settings->delta;
     new->tau_init     = settings->tau_init;         
     new->proximal     = settings->proximal;       
-    new->gamma        = settings->gamma;         
+    new->gamma_init   = settings->gamma_init;         
     new->gamma_upd    = settings->gamma_upd;     
     new->gamma_max    = settings->gamma_max;     
     new->scaling      = settings->scaling;      
@@ -51,30 +45,46 @@ QPALMSettings* copy_settings(QPALMSettings *settings) {
     return new;
 }
 
-
 void update_status(QPALMInfo *info, c_int status_val) {
     // Update status value
     info->status_val = status_val;
 
     // Update status string depending on status val
-    if (status_val == QPALM_SOLVED) c_strcpy(info->status, "solved");
-
-    else if (status_val == QPALM_PRIMAL_INFEASIBLE) c_strcpy(info->status,
-                                                            "primal infeasible");
-    else if (status_val == QPALM_UNSOLVED) c_strcpy(info->status, "unsolved");
-    else if (status_val == QPALM_DUAL_INFEASIBLE) c_strcpy(info->status,
-                                                            "dual infeasible");
-    else if (status_val == QPALM_MAX_ITER_REACHED) c_strcpy(info->status,
-                                                            "maximum iterations reached");
+    switch (status_val)
+    {
+    case QPALM_SOLVED:
+      c_strcpy(info->status, "solved");
+      break;
+    case QPALM_PRIMAL_INFEASIBLE:
+      c_strcpy(info->status, "primal infeasible");
+      break;
+    case QPALM_DUAL_INFEASIBLE:
+      c_strcpy(info->status, "dual infeasible");
+      break;
+    case QPALM_MAX_ITER_REACHED:
+      c_strcpy(info->status, "maximum iterations reached");
+      break;
+    case QPALM_UNSOLVED:
+      c_strcpy(info->status, "unsolved");
+      break;
+    
+    default:
+      #ifdef PRINTING
+        c_eprint("Unrecognised status value %d", status_val);
+      #endif
+      break;
+    }
 }
 
-
 void initialize_sigma(QPALMWorkspace *work) {
-    c_float f = 0.5*vec_prod(work->x, work->Qx, work->data->n) + vec_prod(work->data->q, work->x, work->data->n);
-    vec_ew_mid_vec(work->Ax, work->data->bmin, work->data->bmax, work->temp_m, work->data->m);
-    vec_add_scaled(work->Ax, work->temp_m, work->temp_m, -1, work->data->m);
-    c_float dist2 = vec_prod(work->temp_m, work->temp_m, work->data->m);
-    vec_set_scalar(work->sigma, c_max(1e-8, c_min(2e1*c_max(1,c_absval(f))/c_max(1,0.5*dist2),1e8)), work->data->m);
+    size_t n = work->data->n;
+    size_t m = work->data->m;
+    c_float f = 0.5*vec_prod(work->x, work->Qx, n) + vec_prod(work->data->q, work->x, n);
+    vec_ew_mid_vec(work->Ax, work->data->bmin, work->data->bmax, work->temp_m, m);
+    vec_add_scaled(work->Ax, work->temp_m, work->temp_m, -1, m);
+    c_float dist2 = vec_prod(work->temp_m, work->temp_m, m);
+
+    vec_set_scalar(work->sigma, c_max(1e-8, c_min(2e1*c_max(1,c_absval(f))/c_max(1,0.5*dist2),1e8)), m);
 }
 
 /*******************

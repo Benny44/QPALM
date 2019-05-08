@@ -8,6 +8,8 @@
 
 #include <CUnit/CUnit.h>
 
+#define M 3
+
 QPALMSettings *settings;
 QPALMData *data;
 
@@ -16,17 +18,25 @@ int validate_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
-    data->m = 3;
-    c_float bmin[3] = {-1.0, -1.0, -1.0};
-    c_float bmax[3] = {1.0, 1.0, 1.0};
-    data->bmin = bmin;
-    data->bmax = bmax;
+    data->m = M;
+    // c_float bmin[3] = {-1.0, -1.0, -1.0};
+    // c_float bmax[3] = {1.0, 1.0, 1.0};
+    // data->bmin = bmin;
+    // data->bmax = bmax;
+
+    data->bmin = c_calloc(M,sizeof(c_float));
+    data->bmin[0] = -1.0; data->bmin[1] = -1.0; data->bmin[2] = -1.0; 
+    data->bmax = c_calloc(M,sizeof(c_float));
+    data->bmax[0] = 1.0; data->bmax[1] = 1.0; data->bmax[2] = 1.0; 
+
 
     return 0;
 }
 
 int validate_suite_teardown(void) {
     c_free(settings);
+    c_free(data->bmin);
+    c_free(data->bmax);
     c_free(data);
 
     return 0;
@@ -35,6 +45,9 @@ int validate_suite_teardown(void) {
 void validate_test_setup(void) {
     if (data==NULL) {
         data = (QPALMData *)c_malloc(sizeof(QPALMData));
+        data->m = M;
+        data->bmin = c_calloc(M,sizeof(c_float));
+        data->bmax = c_calloc(M,sizeof(c_float));
     }
     if (settings == NULL) {
         settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
@@ -42,11 +55,8 @@ void validate_test_setup(void) {
     
     qpalm_set_default_settings(settings);
 
-    data->m = 3;
-    c_float bmin[3] = {-1.0, -1.0, -1.0};
-    c_float bmax[3] = {1.0, 1.0, 1.0};
-    data->bmin = bmin;
-    data->bmax = bmax;
+    data->bmin[0] = -1.0; data->bmin[1] = -1.0; data->bmin[2] = -1.0;
+    data->bmax[0] = 1.0; data->bmax[1] = 1.0; data->bmax[2] = 1.0;
 }
 
 
@@ -57,6 +67,8 @@ void test_correct_data(void) {
 }
 
 void test_missing_data(void) {
+    c_free(data->bmin);
+    c_free(data->bmax);
     c_free(data);
     data=NULL;    
     CU_ASSERT_FALSE(validate_data(data));    
@@ -141,16 +153,16 @@ void test_delta_out_of_bounds(void){
 }
 
 void test_gamma_out_of_bounds(void){
-    settings->gamma = 0;
+    settings->gamma_init = 0;
     CU_ASSERT_FALSE(validate_settings(settings));
-    settings->gamma = 1e5;
+    settings->gamma_init = 1e5;
     
     settings->gamma_upd = 0.5;
     CU_ASSERT_FALSE(validate_settings(settings));
     settings->gamma_upd = 1;
     CU_ASSERT_TRUE(validate_settings(settings));
 
-    settings->gamma_max = settings->gamma;
+    settings->gamma_max = settings->gamma_init;
     CU_ASSERT_TRUE(validate_settings(settings));
     settings->gamma_max /= 10;
     CU_ASSERT_FALSE(validate_settings(settings));

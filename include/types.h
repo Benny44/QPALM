@@ -109,9 +109,9 @@ typedef struct {
   c_float delta;         ///< penalty update factor @details @note Assumption: @f$>1@f$
   c_float tau_init;      ///< initial stepsize in backtracking @details @note Assumption: @f$>0@f$
   c_int   proximal;      ///< boolean, use proximal method of multipliers or not @details @note Assumption: @f$\in \{0,1\}@f$ 
-  c_float gamma;         ///< proximal penalty parameter @details @note Assumption: @f$>0@f$
+  c_float gamma_init;    ///< initial proximal penalty parameter @details @note Assumption: @f$>0@f$
   c_float gamma_upd;     ///< proximal penalty update factor @details @note Assumption: @f$>=1@f$
-  c_float gamma_max;     ///< proximal penalty parameter cap @details @note Assumption: @f$>=\gamma@f$
+  c_float gamma_max;     ///< proximal penalty parameter cap @details @note Assumption: @f$>=\gamma_\textrm{init}@f$
   c_int   scaling;       ///< scaling iterations, if 0 then scaling is disabled @details @note Assumption: @f$>=0@f$
   c_int   verbose;       ///< boolean, write out progress @details @note Assumption:@f$\in \{0,1\}@f$
   c_int   warm_start;    ///< boolean, warm start @details @note Assumption: @f$\in \{0,1\}@f$
@@ -173,6 +173,7 @@ typedef struct {
   c_float *temp_m;     ///< placeholder for vector of size m
   c_float *temp_n;     ///< placeholder for vector of size n
   c_float *sigma;      ///< penalty vector
+  c_float gamma;       ///< proximal penalty factor
   c_float *Axys;       ///< Ax + y./sigma
   c_float *z;          ///< projection of Axys onto the constraint set [bmin, bmax]
   c_float *pri_res;    ///< primal residual

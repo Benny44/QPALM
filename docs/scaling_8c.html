@@ -82,8 +82,8 @@ $(function() {
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae571f80a4da8e7e83f6a3c644be0c618"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="scaling_8c.html#ae571f80a4da8e7e83f6a3c644be0c618">limit_scaling</a> (<a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *D, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> n)</td></tr>
-<tr class="separator:ae571f80a4da8e7e83f6a3c644be0c618"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d8255033fe7895a885af496fc510407"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="scaling_8c.html#a6d8255033fe7895a885af496fc510407">limit_scaling</a> (<a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *D, size_t n)</td></tr>
+<tr class="separator:a6d8255033fe7895a885af496fc510407"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3735b6c9c3aeeddfb3bb0982ae5f70ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="scaling_8c.html#a3735b6c9c3aeeddfb3bb0982ae5f70ba">scale_data</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
 <tr class="memdesc:a3735b6c9c3aeeddfb3bb0982ae5f70ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scale problem matrices.  <a href="#a3735b6c9c3aeeddfb3bb0982ae5f70ba">More...</a><br /></td></tr>
 <tr class="separator:a3735b6c9c3aeeddfb3bb0982ae5f70ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -93,8 +93,8 @@ Functions</h2></td></tr>
 <dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
 <p>This file includes the routine that is called during setup to scale the problem data, and initial guesses if the problem is warm-started. Scaling the problem is useful to prevent large changes in the active set and to guard against ill-conditioning in the objective function. </p><dl class="section note"><dt>Note</dt><dd>The function in this file makes use of the cholmod scale routines. </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="ae571f80a4da8e7e83f6a3c644be0c618"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae571f80a4da8e7e83f6a3c644be0c618">&#9670;&nbsp;</a></span>limit_scaling()</h2>
+<a id="a6d8255033fe7895a885af496fc510407"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d8255033fe7895a885af496fc510407">&#9670;&nbsp;</a></span>limit_scaling()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -108,7 +108,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a>&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>n</em>&#160;</td>
         </tr>
         <tr>

@@ -12,8 +12,8 @@
 #include <stdio.h>
 
 // Set values lower than threshold MIN_SCALING to 1 and larger than MAX_SCALING to MAX_SCALING
-void limit_scaling(c_float *D, c_int n) {
-  c_int i;
+void limit_scaling(c_float *D, size_t n) {
+  size_t i;
 
   for (i = 0; i < n; i++) {
     D[i] = D[i] < MIN_SCALING ? 1.0 : D[i];
@@ -22,11 +22,10 @@ void limit_scaling(c_float *D, c_int n) {
 }
 
 void scale_data(QPALMWorkspace *work) {
-
-    vec_set_scalar(work->scaling->D, 1, work->data->n);
-    vec_set_scalar(work->scaling->Dinv, 1, work->data->n);
-    vec_set_scalar(work->scaling->E, 1, work->data->m);
-    vec_set_scalar(work->scaling->Einv, 1, work->data->m);
+    size_t n = work->data->n;
+    size_t m = work->data->m;
+    vec_set_scalar(work->scaling->D, 1, n);
+    vec_set_scalar(work->scaling->E, 1, m);
     
     c_int i;
     //Ruiz on constraint matrix A
@@ -37,16 +36,16 @@ void scale_data(QPALMWorkspace *work) {
         mat_inf_norm_rows(work->data->A, work->E_temp);
 
         // Set to 1 values with 0 norms (avoid crazy scaling)
-        limit_scaling(work->D_temp, work->data->n);
-        limit_scaling(work->E_temp, work->data->m);
+        limit_scaling(work->D_temp, n);
+        limit_scaling(work->E_temp, m);
 
         // Take square root of norms
-        vec_ew_sqrt(work->D_temp, work->D_temp, work->data->n);
-        vec_ew_sqrt(work->E_temp, work->E_temp, work->data->m);
+        vec_ew_sqrt(work->D_temp, work->D_temp, n);
+        vec_ew_sqrt(work->E_temp, work->E_temp, m);
 
         // 1./D and 1./E
-        vec_ew_recipr(work->D_temp, work->D_temp, work->data->n);
-        vec_ew_recipr(work->E_temp, work->E_temp, work->data->m);
+        vec_ew_recipr(work->D_temp, work->D_temp, n);
+        vec_ew_recipr(work->E_temp, work->E_temp, m);
 
         // Equilibrate matrix A
         // A <- EAD
@@ -54,21 +53,21 @@ void scale_data(QPALMWorkspace *work) {
         CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_COL, work->data->A, &work->chol->c);
 
         // Update equilibration matrices D and E
-        vec_ew_prod(work->scaling->D, work->D_temp, work->scaling->D, work->data->n);
-        vec_ew_prod(work->scaling->E, work->E_temp, work->scaling->E, work->data->m);
+        vec_ew_prod(work->scaling->D, work->D_temp, work->scaling->D, n);
+        vec_ew_prod(work->scaling->E, work->E_temp, work->scaling->E, m);
 
     }
 
     // Equilibrate matrix Q and vector q
     // Q <- DQD, q <- Dq
-    prea_vec_copy(work->scaling->D, work->D_temp, work->data->n);
+    prea_vec_copy(work->scaling->D, work->D_temp, n);
     CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_SYM, work->data->Q, &work->chol->c);
-    vec_ew_prod(work->scaling->D, work->data->q, work->data->q, work->data->n);
+    vec_ew_prod(work->scaling->D, work->data->q, work->data->q, n);
 
     // Cost scaling
-    vec_add_scaled(work->Qx, work->data->q, work->temp_n, 1, work->data->n);
-    work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->temp_n, work->data->n));
-    vec_mult_scalar(work->data->q, work->scaling->c, work->data->n);
+    vec_add_scaled(work->Qx, work->data->q, work->temp_n, 1, n);
+    work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->temp_n, n));
+    vec_mult_scalar(work->data->q, work->scaling->c, n);
     cholmod_dense *c = CHOLMOD(ones)(1,1,CHOLMOD_REAL, &work->chol->c);
     c_float *cx = c->x;
     cx[0] = work->scaling->c;
@@ -76,12 +75,12 @@ void scale_data(QPALMWorkspace *work) {
     CHOLMOD(free_dense)(&c, &work->chol->c);
 
     // Store cinv, Dinv, Einv
-    vec_ew_recipr(work->scaling->D, work->scaling->Dinv, work->data->n);
-    vec_ew_recipr(work->scaling->E, work->scaling->Einv, work->data->m);
+    vec_ew_recipr(work->scaling->D, work->scaling->Dinv, n);
+    vec_ew_recipr(work->scaling->E, work->scaling->Einv, m);
     work->scaling->cinv = 1/work->scaling->c;
 
     // Scale problem vectors l, u
-    vec_ew_prod(work->scaling->E, work->data->bmin, work->data->bmin, work->data->m);
-    vec_ew_prod(work->scaling->E, work->data->bmax, work->data->bmax, work->data->m);
+    vec_ew_prod(work->scaling->E, work->data->bmin, work->data->bmin, m);
+    vec_ew_prod(work->scaling->E, work->data->bmax, work->data->bmax, m);
 
 }

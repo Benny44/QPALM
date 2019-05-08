@@ -26,7 +26,7 @@ extern "C" {
  * @param  settings Settings to be copied
  * @return          New settings structure
  */
-QPALMSettings* copy_settings(QPALMSettings *settings);
+QPALMSettings* copy_settings(const QPALMSettings *settings);
 
 
 /**

@@ -38,10 +38,14 @@ LDLIBS +=$(CHOLMOD_LIB_INCLUDE)
 
 #Testing and checking coverage (also used in travis)
 ifeq ($(COV),yes)
-	CFLAGS+= `pkg-config --cflags cunit` `pkg-config --libs cunit` -fuse-ld=gold -fprofile-arcs -ftest-coverage
+	OPTIMIZATION=-O
+	CFLAGS+= `pkg-config --cflags cunit` `pkg-config --libs cunit` -fuse-ld=gold -fprofile-arcs -ftest-coverage -g
 	BLAS=-lblas -llapack
 	export BLAS
+else
+	OPTIMIZATION=-O3
 endif
+CFLAGS+=$(OPTIMIZATION)
 
 #We need blas and lapack to compile. The user can specify this by running make BLAS="-lblas_library -llapack_library" BLAS_PATH=path/to/blas
 ifndef BLAS

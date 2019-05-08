@@ -12,10 +12,8 @@ obj/
 lib/
 *.lp
 *.fig
-*.png
 *.eps
 *.oqp
-!randomQP.png
 *.vscode
 *.code-workspace
 buildAndTest.sh
@@ -23,3 +21,4 @@ tests/run_all_tests
 *.gcno
 *.gcda
 *.info
+*.log

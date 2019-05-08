@@ -12,6 +12,7 @@ QPALMWorkspace *work; // Workspace
 QPALMSettings *settings;
 QPALMData *data;
 cholmod_common *c;
+cholmod_common common;
 
 
 int basic_qp_suite_setup(void) {
@@ -23,14 +24,14 @@ int basic_qp_suite_setup(void) {
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
     data->m = M;
-    c_float q[N] = {1, -2};
-    data->q = q;
-    c_float bmin[M] = {-0.1, -0.3, -0.2};
-    c_float bmax[M] = {0.1, 0.3, 0.3};
-    data->bmin = bmin;
-    data->bmax = bmax;
+    data->q = c_calloc(N,sizeof(c_float));
+    data->q[0] = 1; data->q[1] = -2; 
+    data->bmin = c_calloc(M,sizeof(c_float));
+    data->bmin[0] = -0.1; data->bmin[1] = -0.3; data->bmin[2] = -0.2; 
+    data->bmax = c_calloc(M,sizeof(c_float));
+    data->bmax[0] = 0.1; data->bmax[1] = 0.3; data->bmax[2] = 0.2; 
 
-    cholmod_common common;
+    // cholmod_common common;
     c = &common;
     CHOLMOD(start)(c);
     cholmod_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
@@ -65,6 +66,9 @@ int basic_qp_suite_teardown(void) {
     CHOLMOD(free_sparse)(&data->Q, c);
     CHOLMOD(free_sparse)(&data->A, c);
     CHOLMOD(finish)(c);
+    c_free(data->q);
+    c_free(data->bmin);
+    c_free(data->bmax);
     c_free(data);
     return 0;
 }

@@ -4,7 +4,8 @@
  * @brief QPALM main solver API.
  * @details This file contains the main functions that can be called by the user.
  * The user can load the default settings, setup the workspace with data and settings,
- * warm_start the primal and dual variables, run the solver, and cleanup the workspace afterwards.
+ * warm_start the primal and dual variables, run the solver, update the settings, bounds 
+ * and linear part of the cost, and finally cleanup the workspace afterwards.
  */
 
 #ifndef QPALM_H
@@ -45,9 +46,9 @@ void qpalm_set_default_settings(QPALMSettings *settings);
  * @param  c            Cholmod environment
  * @return              Solver environment
  */
-QPALMWorkspace* qpalm_setup(const QPALMData *data,
-                          QPALMSettings     *settings,
-                          cholmod_common    *c);
+QPALMWorkspace* qpalm_setup(const QPALMData     *data,
+                            const QPALMSettings *settings,
+                            cholmod_common      *c);
 
 
 /**
@@ -62,8 +63,8 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data,
  * @param y_warm_start Warm start for the dual variables
  */
 void qpalm_warm_start(QPALMWorkspace *work, 
-                c_float        *x_warm_start, 
-                c_float        *y_warm_start);
+                      c_float        *x_warm_start, 
+                      c_float        *y_warm_start);
 
 /**
  * Solve the quadratic program.
@@ -82,6 +83,40 @@ void qpalm_warm_start(QPALMWorkspace *work,
  */
 void qpalm_solve(QPALMWorkspace *work);
 
+
+/**
+ * Update the settings to the new settings.
+ * 
+ * @warning Decreasing settings->scaling is not allowed. Increasing it is possible.
+ * 
+ * @param work Workspace
+ * @param settings New settings
+ */
+void qpalm_update_settings(QPALMWorkspace      *work, 
+                           const QPALMSettings *settings);
+
+/**
+ * Update the lower and upper bounds.
+ * 
+ * Use NULL to indicate that one of the bounds does not change.
+ * 
+ * @param work Workspace
+ * @param bmin New lower bounds
+ * @param bmax New upper bounds
+ */
+void qpalm_update_bounds(QPALMWorkspace *work,
+                         const c_float  *bmin, 
+                         const c_float  *bmax);
+
+/**
+ * Update the linear part of the cost.
+ * 
+ * This causes an update of the cost scaling factor as well.
+ * 
+ * @param work Workspace
+ * @param q Linear part of the objective
+ */
+void qpalm_update_q(QPALMWorkspace *work, const c_float *q);
 
 
 /**

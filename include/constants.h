@@ -6,9 +6,9 @@
  * @warning Verbose is not implemented as of yet.
  */
 #ifndef CONSTANTS_H
-# define CONSTANTS_H
+#define CONSTANTS_H
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
 # endif // ifdef __cplusplus
 
@@ -60,7 +60,7 @@ extern "C" {
 # define TAU_INIT (1)           /**< default initial stepsize in backtracking */
 
 # define PROXIMAL (TRUE)        /**< default use of proximal method of multipliers */
-# define GAMMA (1E6)            /**< default proximal penalty parameter */
+# define GAMMA_INIT (1E6)       /**< default initial proximal penalty parameter */
 # define GAMMA_UPD (10)         /**< default proximal penalty update factor */
 # define GAMMA_MAX (1E8)        /**< default proximal penalty cap */
 

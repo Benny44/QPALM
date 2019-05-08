@@ -3,8 +3,10 @@
 #include "test_basic_qp.h"
 #include "test_prim_inf_qp.h"
 #include "test_dua_inf_qp.h"
+#include "test_degen_hess.h"
 #include "test_cholmod_interface.h"
 #include "test_validate.h"
+#include "test_update.h"
 
 int main(){
 
@@ -71,6 +73,20 @@ int main(){
         CU_TEST_INFO_NULL,
     };
 
+    /* degenerate hessian example from Joris */
+    CU_TestInfo suite_degen_hess[] = {
+        { "test_degen_hess", test_degen_hess},
+        CU_TEST_INFO_NULL,
+    };
+
+    /* update */
+    CU_TestInfo suite_update[] = {
+        { "test_update_settings", test_update_settings},
+        { "test_update_bounds", test_update_bounds},
+        { "test_update_q", test_update_q},
+        CU_TEST_INFO_NULL,
+    };
+
     /* validation functions */
     CU_TestInfo suite_validation[] = {
         { "test_correct_data", test_correct_data},
@@ -92,10 +108,12 @@ int main(){
     /* list of suites to be tested */
     CU_SuiteInfo suites[] = {
         { "lin_alg", NULL, NULL, reset_abc, NULL, suite_lin_alg},
-        { "cholmod", cholmod_qp_setup, cholmod_qp_teardown, cholmod_set_QdAd, NULL, suite_cholmod},
+        { "cholmod", cholmod_suite_setup, cholmod_suite_teardown, cholmod_test_setup, cholmod_test_teardown, suite_cholmod},
         { "basic_qp", basic_qp_suite_setup, basic_qp_suite_teardown, NULL, basic_qp_test_teardown, suite_basic_qp},
         { "prim_inf_qp", prim_inf_qp_suite_setup, prim_inf_qp_suite_teardown, NULL, prim_inf_qp_test_teardown, suite_prim_inf_qp},
         { "dua_inf_qp", dua_inf_qp_suite_setup, dua_inf_qp_suite_teardown, NULL, dua_inf_qp_test_teardown,suite_dua_inf_qp},
+        { "degen_hess", degen_hess_suite_setup, degen_hess_suite_teardown, NULL, degen_hess_test_teardown,suite_degen_hess},
+        { "suite_update", update_suite_setup, update_suite_teardown, NULL, NULL, suite_update},
         { "validation", validate_suite_setup, validate_suite_teardown, validate_test_setup, NULL, suite_validation},
         CU_SUITE_INFO_NULL,
     };

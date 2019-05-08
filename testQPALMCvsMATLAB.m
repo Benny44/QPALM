@@ -562,10 +562,21 @@ solver.setup(Q, q, A, lb, ub, settings);
 res = solver.solve();
 fprintf('QPALM C \n');
 fprintf('Elapsed time is %f seconds\n', res.info.run_time);
-% QPALMtime = toc
-% tic
-% res = solver.optimize(Q, q, A, lb, ub, settings);
-% QPALMtime = toc
+
+%Test update bounds and q
+
+x_warm = [];
+y_warm = [];
+% 
+% q = 10*randn(n,1);
+% lb = zeros(m,1);
+% solver.update_q(q);
+% solver.update_bounds(lb, ub);
+% % solver.warm_start(x_warm, y_warm);
+% res = solver.solve();
+% fprintf('QPALM C after update q and warm start \n');
+% fprintf('Elapsed time is %f seconds\n', res.info.run_time);
+
 %% Quadprog
 
 % tic
@@ -595,7 +606,7 @@ opts.proximal = settings.proximal;
 % opts.scalar_sig = true;
 fprintf('QPALM MATLAB \n');
 
-tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(Q,q,A,lb,ub,[],[],opts);toc
+tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(Q,q,A,lb,ub,x_warm,y_warm,opts);toc
 display(stats_qpalm.status)
 % 
 % opts.proximal = true;

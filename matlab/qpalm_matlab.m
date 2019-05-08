@@ -291,9 +291,10 @@ for k = 1:maxiter
            x0=x;
            if gamma ~= gammaMax
                Q=Q-1/gamma*speye(n);
+               Qx = Qx-1/gamma*x; 
                gamma=min(gamma*gammaUpd, gammaMax);
                Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
-               Qx = Q*x; 
+               Qx = Qx+1/gamma*x; 
            end
        end
        newton_lagrange = true; %Try Newton-Lagrange after dual update
@@ -671,14 +672,18 @@ function [x,y,Q,q,A,bmin,bmax,D,E,c] = simple_equilibration(x,y,Q,q,A,bmin,bmax,
 % D = speye(n);
 % E = sparse(1:m,1:m,1./vecnorm(A,2,2),m,m);
 % A = E*A; bmin = E*bmin; bmax = E*bmax;
+
+    x = x./D; y = (y./E);
+
     c = 1;
     if (scaling_iter)
         c = 1/max(1, norm(Q*x+q,inf)); %Add cost scaling 10.2.2 Birgin/Martinez
     end
     Q = c*Q; q=c*q;
    
+    y = c*y;
 
-    x = x./D; y = c*(y./E);
+    
 end
 
 %% ========================================================================
