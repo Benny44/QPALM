@@ -15,7 +15,7 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'scaling_iter')
-    scaling_iter = 10; %'ruiz'
+    scaling_iter = 2; %'ruiz'
 else
     scaling_iter = opts.scaling_iter;
 end
@@ -36,10 +36,11 @@ Qx = Q*x;
 Aty = A'*y;
 
 if nargin<8 || ~isfield(opts,'sig')
-    f = 0.5*(x'*Qx)+q'*x;
-    dist = Ax-min(max(Ax,bmin),bmax);
-    dist2 = dist'*dist;
-    sig = max(1e-8,min(2e1*max(1,abs(f))/max(1,0.5*dist2),1e8))*ones(m,1);
+%     f = 0.5*(x'*Qx)+q'*x;
+%     dist = Ax-min(max(Ax,bmin),bmax);
+%     dist2 = dist'*dist;
+%     sig = max(1e-8,min(2e1*max(1,abs(f))/max(1,0.5*dist2),1e8))*ones(m,1);
+    sig = 5*ones(m,1);
 else
     sig = opts.sig.*ones(m,1);
 end
@@ -146,7 +147,7 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'gamma')
-    gamma = 1e6;
+    gamma = 1e1;
 else
     gamma = opts.gamma;
 end
@@ -158,7 +159,7 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'gammaMax')
-    gammaMax = 1e8;
+    gammaMax = 1e6;
 else
     gammaMax = opts.gammaMax;
 end
@@ -355,7 +356,7 @@ for k = 1:maxiter
               LD = ldlchol(Q);
               d = -ldlsolve (LD,dphi);
           end
-          newton_lagrange = true; %Always try Newton-Lagrange
+          newton_lagrange = false; %Always try Newton-Lagrange
           stats.nl(k) = false;
 
           if newton_lagrange
@@ -526,6 +527,7 @@ stats.iter_out = K;
 stats.sig = sig;
 stats.LD = LD;
 stats.active_cnstrs = active_cnstrs;
+stats.sum_nact_changed = sum(abs(stats.nact_changed));
 if K>1
     stats.iter_in(K) = k-(sum(stats.iter_in));
 else
@@ -691,9 +693,9 @@ function [x,y,Q,q,A,bmin,bmax,D,E,c] = simple_equilibration(x,y,Q,q,A,bmin,bmax,
     x = x./D; y = (y./E);
 
     c = 1;
-    if (scaling_iter)
+%     if (scaling_iter)
         c = 1/max(1, norm(Q*x+q,inf)); %Add cost scaling 10.2.2 Birgin/Martinez
-    end
+%     end
     Q = c*Q; q=c*q;
    
     y = c*y;
