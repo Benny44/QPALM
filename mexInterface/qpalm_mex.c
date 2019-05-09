@@ -50,6 +50,7 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",      //c_int
                                       "gamma_upd",      //c_float
                                       "gamma_max",      //c_float
                                       "scaling",        //c_int
+                                      "nonconvex",      //c_int
                                       "warm_start",     //c_int
                                       "verbose"};       //c_int
 
@@ -443,6 +444,7 @@ mxArray* copySettingsToMxStruct(QPALMSettings* settings){
   mxSetField(mxPtr, 0, "gamma_upd",       mxCreateDoubleScalar(settings->gamma_upd));
   mxSetField(mxPtr, 0, "gamma_max",       mxCreateDoubleScalar(settings->gamma_max));
   mxSetField(mxPtr, 0, "scaling",         mxCreateDoubleScalar(settings->scaling));
+  mxSetField(mxPtr, 0, "nonconvex",       mxCreateDoubleScalar(settings->nonconvex));
   mxSetField(mxPtr, 0, "warm_start",      mxCreateDoubleScalar(settings->warm_start));
   mxSetField(mxPtr, 0, "verbose",         mxCreateDoubleScalar(settings->verbose));
 
@@ -474,6 +476,7 @@ void copyMxStructToSettings(const mxArray* mxPtr, QPALMSettings* settings){
   settings->gamma_upd                 = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "gamma_upd"));
   settings->gamma_max                 = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "gamma_max"));
   settings->scaling                   = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "scaling"));
+  settings->nonconvex                 = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "nonconvex"));
   settings->warm_start                = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "warm_start"));
   settings->verbose                   = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "verbose"));
 
