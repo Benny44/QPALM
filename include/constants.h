@@ -68,6 +68,7 @@ extern "C" {
 # define MIN_SCALING (1e-08)    /**< minimum scaling value *////< Minimum scaling value
 # define MAX_SCALING (1e+04)    /**< maximum scaling value *////< Maximum scaling value
 
+# define NONCONVEX (FALSE)       /**< default use of nonconvex adjustments */
 # define WARM_START (FALSE)     /**< default warm start setting */
 # define VERBOSE (TRUE)         /**< default write out progress setting */
 

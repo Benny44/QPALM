@@ -20,6 +20,7 @@
 #include "cholmod_function.h"
 #include "cholmod_interface.h"
 #include "newton.h"
+#include "nonconvex.h"
 
 /**********************
 * Main API Functions *
@@ -42,6 +43,7 @@ void qpalm_set_default_settings(QPALMSettings *settings) {
   settings->gamma_upd     = (c_float)GAMMA_UPD;      /* proximal penalty update factor*/
   settings->gamma_max     = (c_float)GAMMA_MAX;      /* proximal penalty parameter cap*/
   settings->scaling       = SCALING;                 /* boolean, scaling */
+  settings->nonconvex     = NONCONVEX;               /* boolean, nonconvex */
   settings->warm_start    = WARM_START;              /* boolean, warm start solver */
   settings->verbose       = VERBOSE;                 /* boolean, write out progress */
 }
@@ -200,6 +202,11 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   // If warm-start will not be used, cold start variables x, x0, x_prev, y, Qx, Ax and init sigma
   if (!work->settings->warm_start) {
     qpalm_warm_start(work, NULL, NULL);
+  }
+
+  // Set parameters in case the QP is nonconvex
+  if (work->settings->nonconvex) {
+    set_settings_nonconvex(work);
   }
 
   // Allocate solution

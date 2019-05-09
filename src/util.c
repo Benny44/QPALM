@@ -38,7 +38,8 @@ QPALMSettings* copy_settings(const QPALMSettings *settings) {
     new->gamma_init   = settings->gamma_init;         
     new->gamma_upd    = settings->gamma_upd;     
     new->gamma_max    = settings->gamma_max;     
-    new->scaling      = settings->scaling;      
+    new->scaling      = settings->scaling;    
+    new->nonconvex    = settings->nonconvex;  
     new->verbose      = settings->verbose; 
     new->warm_start   = settings->warm_start;      
 

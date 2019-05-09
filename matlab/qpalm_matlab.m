@@ -183,10 +183,10 @@ else
 end
 
 if nonconvex
-    proximal = true;
     lambda = minimum_eig(Q);
     lambda_adj = lambda - 1e-3; %adjust for tolerance
     if lambda_adj < 0
+        proximal = true;
         gamma = 1/abs(lambda_adj);
         gammaMax = gamma;
     end

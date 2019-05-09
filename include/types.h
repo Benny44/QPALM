@@ -113,6 +113,7 @@ typedef struct {
   c_float gamma_upd;     ///< proximal penalty update factor @details @note Assumption: @f$>=1@f$
   c_float gamma_max;     ///< proximal penalty parameter cap @details @note Assumption: @f$>=\gamma_\textrm{init}@f$
   c_int   scaling;       ///< scaling iterations, if 0 then scaling is disabled @details @note Assumption: @f$>=0@f$
+  c_int   nonconvex;     ///< boolean, indicates whether the QP is nonconvex @details @note Assumption: @f$\in \{0,1\}@f$ 
   c_int   verbose;       ///< boolean, write out progress @details @note Assumption:@f$\in \{0,1\}@f$
   c_int   warm_start;    ///< boolean, warm start @details @note Assumption: @f$\in \{0,1\}@f$
 } QPALMSettings;
