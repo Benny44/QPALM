@@ -225,6 +225,7 @@ for k = 1:maxiter
    end
    nrm_rp = norm(rp./E_scale,inf);
    stats.nrm_rd(k) = nrm_rd;
+   stats.nrm_rdy(k) = norm((df-1/gamma*(x-x0)+Aty)./D_scale,inf)/c_scale; %norm dphi for y instead of yh
    stats.nrm_rp(k) = nrm_rp;
 
    eps_primal   = eps_abs + eps_rel*max(norm(Ax./E_scale,inf),norm(z./E_scale,inf));            % primal eps
@@ -355,25 +356,30 @@ for k = 1:maxiter
               d = -ldlsolve (LD,dphi);
           end
           newton_lagrange = true; %Always try Newton-Lagrange
+          stats.nl(k) = false;
+
           if newton_lagrange
               newton_lagrange = false;
               fprintf('Try Newton Lagrange\n');
               x_next = x+d;
-              y_next(active_cnstrs) = yh(active_cnstrs)+Asig(active_cnstrs,:)*d;
+              Ad = A*d;
+              y_next(active_cnstrs) = yh(active_cnstrs)+sig(active_cnstrs).*Ad(active_cnstrs);
               y_next(~active_cnstrs) = 0;
               Qd = Q*d;
               Qx_next = Qx + Qd;
-              Ad = A*d;
+              
               Ax_next = Ax+Ad;
               z_next = min(max(Ax_next+y_next./sig,bmin),bmax);
               phi_old = max(norm(df+Aty,inf), norm(rp,inf));
               %TODO reuse info in the next iterate and in linesearch
               Aty_next = A'*y_next;
               phi_next = max(norm(Qx_next+q+Aty_next, inf), norm(Ax_next-z_next, inf));
-              if (phi_next) < 0.5*phi_old
+              if phi_next < 0.5*phi_old
                   newton_lagrange = true;
                   
                   fprintf('Use the Newton Lagrange update\n');
+                  
+                  stats.nl(k) = true;
                   % Store previous values (lbfgs)
                   x_prev  = x;
 %                   x0      = x;
@@ -405,6 +411,7 @@ for k = 1:maxiter
                   active_cnstrs_old = active_cnstrs;
                   if proximal
                       x0=x;
+                      gammaMax = gammaMax*10; %Allow gamma to go higher if NL is accepted
                       if gamma ~= gammaMax
                           Q=Q-1/gamma*speye(n);
                           gamma=min(gamma*gammaUpd, gammaMax);

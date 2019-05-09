@@ -1,5 +1,5 @@
 clear;close all;clc
-m = 500;n = 300;
+m = 2000;n = 300;
 rng(1)
 A = sprandn(m, n, 5e-1,1e-1);
 % A = sparse(ones(m,n));
@@ -553,8 +553,8 @@ settings = solver.default_settings();
 settings.proximal = false;
 settings.scaling = 2;
 settings.max_iter = 100;
-settings.eps_abs = 1e-4;
-settings.eps_rel = 1e-4;
+settings.eps_abs = 1e-10;
+settings.eps_rel = 1e-10;
 settings.tau_init = 1.5;
 
 % tic
