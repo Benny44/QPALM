@@ -147,9 +147,9 @@ c_int validate_settings(const QPALMSettings *settings) {
     return FALSE;
   }
 
-   if (settings->gamma <= 0) {
+   if (settings->gamma_init <= 0) {
 # ifdef PRINTING
-    c_eprint("gamma must be positive");
+    c_eprint("gamma_init must be positive");
 # endif /* ifdef PRINTING */
     return FALSE;
   }
@@ -161,7 +161,7 @@ c_int validate_settings(const QPALMSettings *settings) {
     return FALSE;
   }
 
-   if (settings->gamma_max < settings->gamma) {
+   if (settings->gamma_max < settings->gamma_init) {
 # ifdef PRINTING
     c_eprint("gamma max must be greater than or equal to gamma");
 # endif /* ifdef PRINTING */

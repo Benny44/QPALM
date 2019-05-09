@@ -77,6 +77,7 @@ $(function() {
 <p>QPALM main solver API.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="qpalm_8h_source.html">qpalm.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="global__opts_8h_source.html">global_opts.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="constants_8h_source.html">constants.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="validate_8h_source.html">validate.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="lin__alg_8h_source.html">lin_alg.h</a>&quot;</code><br />
@@ -94,15 +95,24 @@ Functions</h2></td></tr>
 <tr class="memitem:a4aa4b201790332b345faf7ca36f54be5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8c.html#a4aa4b201790332b345faf7ca36f54be5">qpalm_set_default_settings</a> (<a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings)</td></tr>
 <tr class="memdesc:a4aa4b201790332b345faf7ca36f54be5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set default settings from <a class="el" href="constants_8h.html" title="Macros used in QPALM.">constants.h</a> file.  <a href="#a4aa4b201790332b345faf7ca36f54be5">More...</a><br /></td></tr>
 <tr class="separator:a4aa4b201790332b345faf7ca36f54be5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f5ace95da26577065ebe86c135cac6d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8c.html#a6f5ace95da26577065ebe86c135cac6d">qpalm_setup</a> (const <a class="el" href="structQPALMData.html">QPALMData</a> *data, <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings, cholmod_common *c)</td></tr>
-<tr class="memdesc:a6f5ace95da26577065ebe86c135cac6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize QPALM solver allocating memory.  <a href="#a6f5ace95da26577065ebe86c135cac6d">More...</a><br /></td></tr>
-<tr class="separator:a6f5ace95da26577065ebe86c135cac6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae42559ed7e48a9a814083b4e5681e737"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8c.html#ae42559ed7e48a9a814083b4e5681e737">qpalm_setup</a> (const <a class="el" href="structQPALMData.html">QPALMData</a> *data, const <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings, cholmod_common *c)</td></tr>
+<tr class="memdesc:ae42559ed7e48a9a814083b4e5681e737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize QPALM solver allocating memory.  <a href="#ae42559ed7e48a9a814083b4e5681e737">More...</a><br /></td></tr>
+<tr class="separator:ae42559ed7e48a9a814083b4e5681e737"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40dba45b28017437a74e31d43dcb8933"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8c.html#a40dba45b28017437a74e31d43dcb8933">qpalm_warm_start</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *x_warm_start, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *y_warm_start)</td></tr>
 <tr class="memdesc:a40dba45b28017437a74e31d43dcb8933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Warm start workspace variables x, x_0, x_prev, Ax, Qx, y and sigma.  <a href="#a40dba45b28017437a74e31d43dcb8933">More...</a><br /></td></tr>
 <tr class="separator:a40dba45b28017437a74e31d43dcb8933"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17fcba910c32b8518df93617591b1cf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8c.html#a17fcba910c32b8518df93617591b1cf1">qpalm_solve</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
 <tr class="memdesc:a17fcba910c32b8518df93617591b1cf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the quadratic program.  <a href="#a17fcba910c32b8518df93617591b1cf1">More...</a><br /></td></tr>
 <tr class="separator:a17fcba910c32b8518df93617591b1cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a349f4343b96fb674a823ae6e03634ff7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8c.html#a349f4343b96fb674a823ae6e03634ff7">qpalm_update_settings</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, const <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings)</td></tr>
+<tr class="memdesc:a349f4343b96fb674a823ae6e03634ff7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the settings to the new settings.  <a href="#a349f4343b96fb674a823ae6e03634ff7">More...</a><br /></td></tr>
+<tr class="separator:a349f4343b96fb674a823ae6e03634ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a586e7a22d9ed41fb2d477490fdabc875"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8c.html#a586e7a22d9ed41fb2d477490fdabc875">qpalm_update_bounds</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *bmin, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *bmax)</td></tr>
+<tr class="memdesc:a586e7a22d9ed41fb2d477490fdabc875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the lower and upper bounds.  <a href="#a586e7a22d9ed41fb2d477490fdabc875">More...</a><br /></td></tr>
+<tr class="separator:a586e7a22d9ed41fb2d477490fdabc875"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6fc63096cd84c85c7e4a31ab950a00b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8c.html#ac6fc63096cd84c85c7e4a31ab950a00b">qpalm_update_q</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *q)</td></tr>
+<tr class="memdesc:ac6fc63096cd84c85c7e4a31ab950a00b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the linear part of the cost.  <a href="#ac6fc63096cd84c85c7e4a31ab950a00b">More...</a><br /></td></tr>
+<tr class="separator:ac6fc63096cd84c85c7e4a31ab950a00b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a856ef78171b77f0f526a8d4255e15223"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8c.html#a856ef78171b77f0f526a8d4255e15223">qpalm_cleanup</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
 <tr class="memdesc:a856ef78171b77f0f526a8d4255e15223"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleanup the workspace by deallocating memory.  <a href="#a856ef78171b77f0f526a8d4255e15223">More...</a><br /></td></tr>
 <tr class="separator:a856ef78171b77f0f526a8d4255e15223"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,8 +174,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6f5ace95da26577065ebe86c135cac6d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f5ace95da26577065ebe86c135cac6d">&#9670;&nbsp;</a></span>qpalm_setup()</h2>
+<a id="ae42559ed7e48a9a814083b4e5681e737"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae42559ed7e48a9a814083b4e5681e737">&#9670;&nbsp;</a></span>qpalm_setup()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,7 +189,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structQPALMSettings.html">QPALMSettings</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *&#160;</td>
           <td class="paramname"><em>settings</em>, </td>
         </tr>
         <tr>
@@ -238,6 +248,127 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a586e7a22d9ed41fb2d477490fdabc875"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a586e7a22d9ed41fb2d477490fdabc875">&#9670;&nbsp;</a></span>qpalm_update_bounds()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void qpalm_update_bounds </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramname"><em>bmin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramname"><em>bmax</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update the lower and upper bounds. </p>
+<p class="">Use NULL to indicate that one of the bounds does not change.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+    <tr><td class="paramname">bmin</td><td>New lower bounds </td></tr>
+    <tr><td class="paramname">bmax</td><td>New upper bounds </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac6fc63096cd84c85c7e4a31ab950a00b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6fc63096cd84c85c7e4a31ab950a00b">&#9670;&nbsp;</a></span>qpalm_update_q()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void qpalm_update_q </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramname"><em>q</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update the linear part of the cost. </p>
+<p class="">This causes an update of the cost scaling factor as well.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+    <tr><td class="paramname">q</td><td>Linear part of the objective </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a349f4343b96fb674a823ae6e03634ff7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a349f4343b96fb674a823ae6e03634ff7">&#9670;&nbsp;</a></span>qpalm_update_settings()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void qpalm_update_settings </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *&#160;</td>
+          <td class="paramname"><em>settings</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update the settings to the new settings. </p>
+<dl class="section warning"><dt>Warning</dt><dd>Decreasing settings-&gt;scaling is not allowed. Increasing it is possible.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+    <tr><td class="paramname">settings</td><td>New settings </td></tr>
   </table>
   </dd>
 </dl>

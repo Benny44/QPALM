@@ -30,7 +30,7 @@ c_float exact_linesearch(QPALMWorkspace *work);
  */
 void vec_array_copy(c_float       *a, 
                     array_element *b, 
-                    c_int          n);
+                    size_t         n);
 
 /**
  * Select subsequence based on a set of indices, @f$b = a(L)@f$ 
@@ -43,7 +43,7 @@ void vec_array_copy(c_float       *a,
 void select_subsequence(const array_element *a, 
                         array_element       *b,
                         const c_int         *L,
-                        c_int                n);
+                        size_t               n);
 
 /**
  * Inner product over index set, @f$a(L)^T\cdot b(L)@f$ 
@@ -56,7 +56,7 @@ void select_subsequence(const array_element *a,
 c_float vec_prod_ind(const c_float *a,
                      const c_float *b,
                      const c_int   *L,
-                     c_int          n);
+                     size_t         n);
 
 /**
  * Helper function for qsort

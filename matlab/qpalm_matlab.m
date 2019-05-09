@@ -15,7 +15,7 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'scaling_iter')
-    scaling_iter = 10; %'ruiz'
+    scaling_iter = 2; %'ruiz'
 else
     scaling_iter = opts.scaling_iter;
 end
@@ -36,10 +36,11 @@ Qx = Q*x;
 Aty = A'*y;
 
 if nargin<8 || ~isfield(opts,'sig')
-    f = 0.5*(x'*Qx)+q'*x;
-    dist = Ax-min(max(Ax,bmin),bmax);
-    dist2 = dist'*dist;
-    sig = max(1e-8,min(2e1*max(1,abs(f))/max(1,0.5*dist2),1e8))*ones(m,1);
+%     f = 0.5*(x'*Qx)+q'*x;
+%     dist = Ax-min(max(Ax,bmin),bmax);
+%     dist2 = dist'*dist;
+%     sig = max(1e-8,min(2e1*max(1,abs(f))/max(1,0.5*dist2),1e8))*ones(m,1);
+    sig = 5*ones(m,1);
 else
     sig = opts.sig.*ones(m,1);
 end
@@ -146,7 +147,7 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'gamma')
-    gamma = 1e6;
+    gamma = 1e1;
 else
     gamma = opts.gamma;
 end
@@ -158,7 +159,7 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'gammaMax')
-    gammaMax = 1e8;
+    gammaMax = 1e6;
 else
     gammaMax = opts.gammaMax;
 end
@@ -189,7 +190,7 @@ end
 
 K = 1; 
 sig_updated = true; %Reset lbfgs initially and perform gradient descent step
-
+reset_newton = true;
 
 %Initialization for Qdx and Adx used in is_dual_infeasible;
 tau = 0; Qd = zeros(n,1); Ad = zeros(m,1); d = zeros(n,1);
@@ -198,7 +199,16 @@ tau = 0; Qd = zeros(n,1); Ad = zeros(m,1); d = zeros(n,1);
 Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
 Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
+newton_lagrange = true; %flag to try newton_lagrange
+newton_lagrange_used = false;
+y_next = zeros(m,1);
+
+
+
 for k = 1:maxiter
+    stats.gamma(k) = gamma;
+    stats.sigma(:,k) = sig;
+    
    Axys = Ax+y./sig;
    z    = min(max(Axys,bmin),bmax);                         % z-update 
    rp   = Ax-z;                                             % primal residual
@@ -216,6 +226,7 @@ for k = 1:maxiter
    end
    nrm_rp = norm(rp./E_scale,inf);
    stats.nrm_rd(k) = nrm_rd;
+   stats.nrm_rdy(k) = norm((df-1/gamma*(x-x0)+Aty)./D_scale,inf)/c_scale; %norm dphi for y instead of yh
    stats.nrm_rp(k) = nrm_rp;
 
    eps_primal   = eps_abs + eps_rel*max(norm(Ax./E_scale,inf),norm(z./E_scale,inf));            % primal eps
@@ -224,12 +235,20 @@ for k = 1:maxiter
    eps_dual_in  = eps_abs_in + eps_rel_in*rel_d;  % inner dual eps
    
    dy = yh-y; Atdy = Atyh - Aty;
-   dx = x-x_prev; Qdx = Qd*tau; Adx = Ad*tau;
+   dx = x-x_prev; 
+   if ~newton_lagrange_used
+       Qdx = Qd*tau; 
+       Adx = Ad*tau;
+   end
    if proximal 
        Qdx2 = Qdx - tau/gamma*d;
    else
        Qdx2 = Qdx;
    end
+       
+       
+   
+   newton_lagrange_used = false;
    
    if nrm_rd <= eps_dual && nrm_rp <= eps_primal
        stats.status = 'solved';
@@ -272,7 +291,7 @@ for k = 1:maxiter
            stats.iter_in(K) = k;
        end
        K   = K+1;
-       active_cnstrs_old = [];
+       reset_newton = true;
        if proximal
            x0=x;
            if gamma ~= gammaMax
@@ -283,12 +302,21 @@ for k = 1:maxiter
                Qx = Qx+1/gamma*x; 
            end
        end
+       newton_lagrange = true; %Try Newton-Lagrange after dual update
    else
       if strcmp(solver, 'newton') 
           % Newton direction
           active_cnstrs = (Axys<bmin | Axys>bmax);
           na = nnz(active_cnstrs);
           stats.nact(k) = na;
+          if (isempty(active_cnstrs_old))
+              stats.nact_changed(k) = na;
+          else
+              stats.nact_changed(k) = sum(abs(active_cnstrs-active_cnstrs_old));
+              if reset_newton
+                  stats.nact_changed(k) = -1*stats.nact_changed(k);
+              end
+          end
           if na
               switch linsys
                   case 0 % sparse backslash
@@ -300,7 +328,8 @@ for k = 1:maxiter
                           d = -(Q+A(active_cnstrs,:)'*diag(sig(active_cnstrs))*A(active_cnstrs,:))\dphi;
                       end
                   case 2% ldlchol 2
-                      [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old);
+                      [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton);
+                      reset_newton = false;
     %                   LD = ldlchol(Q+A(active_cnstrs,:)'*spdiags(sig(active_cnstrs),0,na,na)*A(active_cnstrs,:));
     %                   d  = -ldlsolve (LD,dphi);
                   case 3% lchol  3
@@ -326,6 +355,76 @@ for k = 1:maxiter
           else
               LD = ldlchol(Q);
               d = -ldlsolve (LD,dphi);
+          end
+          newton_lagrange = false; %Always try Newton-Lagrange
+          stats.nl(k) = false;
+
+          if newton_lagrange
+              newton_lagrange = false;
+              fprintf('Try Newton Lagrange\n');
+              x_next = x+d;
+              Ad = A*d;
+              y_next(active_cnstrs) = yh(active_cnstrs)+sig(active_cnstrs).*Ad(active_cnstrs);
+              y_next(~active_cnstrs) = 0;
+              Qd = Q*d;
+              Qx_next = Qx + Qd;
+              
+              Ax_next = Ax+Ad;
+              z_next = min(max(Ax_next+y_next./sig,bmin),bmax);
+              phi_old = max(norm(df+Aty,inf), norm(rp,inf));
+              %TODO reuse info in the next iterate and in linesearch
+              Aty_next = A'*y_next;
+              phi_next = max(norm(Qx_next+q+Aty_next, inf), norm(Ax_next-z_next, inf));
+              if phi_next < 0.5*phi_old
+                  newton_lagrange = true;
+                  
+                  fprintf('Use the Newton Lagrange update\n');
+                  
+                  stats.nl(k) = true;
+                  % Store previous values (lbfgs)
+                  x_prev  = x;
+%                   x0      = x;
+                  dphi_prev = dphi;
+                  Qdx     = Qx_next-Qx;
+                  Adx     = Ax_next-Ax;
+                  newton_lagrange_used = true;
+                  % Update
+                  x     = x_next;
+                  Ax    = Ax_next;
+                  Qx    = Qx_next;
+                  y     = y_next;
+                  Aty   = Aty_next;
+    
+%                   if K > 1
+%                       if scalar_sig
+%                           adj_sig  = norm(rp,inf)>theta*norm(rpK,inf);
+%                       else
+%                           adj_sig  = (abs(rp)>theta*abs(rpK))&active_cnstrs;
+%                       end
+%                       sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
+%                       sig_updated = true;
+%                   end
+                  if K>1
+                      stats.iter_in(K) = k-(sum(stats.iter_in));
+                  else
+                      stats.iter_in(K) = k;
+                  end
+                  active_cnstrs_old = active_cnstrs;
+                  if proximal
+                      x0=x;
+                      gammaMax = gammaMax*10; %Allow gamma to go higher if NL is accepted
+                      if gamma ~= gammaMax
+                          Q=Q-1/gamma*speye(n);
+                          gamma=min(gamma*gammaUpd, gammaMax);
+                          Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
+                          Qx = Q*x; 
+                      end
+                  end
+                  
+                  K = K+1;
+                  rpK = Ax_next-z_next;
+                  continue; %Skip the linesearch
+              end 
           end
           
       elseif strcmp(solver, 'lbfgs')
@@ -428,6 +527,7 @@ stats.iter_out = K;
 stats.sig = sig;
 stats.LD = LD;
 stats.active_cnstrs = active_cnstrs;
+stats.sum_nact_changed = sum(abs(stats.nact_changed));
 if K>1
     stats.iter_in(K) = k-(sum(stats.iter_in));
 else
@@ -589,18 +689,18 @@ function [x,y,Q,q,A,bmin,bmax,D,E,c] = simple_equilibration(x,y,Q,q,A,bmin,bmax,
     Q = Dm*(Q*Dm);
     q = D.*q;
     bmin = E.*bmin; bmax = E.*bmax;
-% Make A have unit row norms
-% D = speye(n);
-% E = sparse(1:m,1:m,1./vecnorm(A,2,2),m,m);
-% A = E*A; bmin = E*bmin; bmax = E*bmax;
+
+    x = x./D; y = (y./E);
+
     c = 1;
-    if (scaling_iter)
+%     if (scaling_iter)
         c = 1/max(1, norm(Q*x+q,inf)); %Add cost scaling 10.2.2 Birgin/Martinez
-    end
+%     end
     Q = c*Q; q=c*q;
    
+    y = c*y;
 
-    x = x./D; y = c*(y./E);
+    
 end
 
 %% ========================================================================
