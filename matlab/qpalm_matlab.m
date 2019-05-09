@@ -176,6 +176,22 @@ else
 end
     
 
+if nargin<8 || ~isfield(opts,'nonconvex')
+    nonconvex = false;
+else
+    nonconvex = opts.nonconvex;
+end
+
+if nonconvex
+    proximal = true;
+    lambda = minimum_eig(Q);
+    lambda_adj = lambda - 1e-3; %adjust for tolerance
+    if lambda_adj < 0
+        gamma = 1/abs(lambda_adj);
+        gammaMax = gamma;
+    end
+end
+
 if proximal
     Q = Q+1/gamma*speye(n);
     Qx = Q*x;

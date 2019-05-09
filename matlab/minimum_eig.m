@@ -1,4 +1,4 @@
-function [ lambda ] = mimimum_eig( A )
+function [ lambda ] = minimum_eig( A )
 %Calculate the minimum eigenvalue of A. This can be done in two steps:
 %1) Calculate the maximum (absolute value) eigenvalue of A, lambda_max. 
 %If this is negative, we are done. Else
