@@ -16,11 +16,38 @@ extern "C" {
 
 #include "types.h"
 
+/**
+ * Calculate the minimum eigenvalue of @f$Q@f$
+ * 
+ * The routine can be broken down into two steps.
+ * 1) Compute @f$\lambda =@f$ the maximum (in absolute value) eigenvalue of @f$Q@f$. If this is negative, then return.
+ * 2) Compute the maximum (in absolute value) eigenvalue of @f$Q - \lambda*I@f$. This is the smallest eigenvalue
+ * of @f$Q@f$ offset by the initial @f$\lambda@f$, so return after adjusting.
+ * 
+ * @param work Workspace
+ */
 c_float minimum_eigenvalue_Q(QPALMWorkspace *work);
 
+/**
+ * Calculate the maximum (in absolute value) eigenvalue of @f$ Q + \gamma*I @f$
+ * 
+ * This routine implements a simple version of power iterations. 
+ * 
+ * @param work Workspace
+ * @param gamma Offset 
+ */
 c_float power_iterations_Q(QPALMWorkspace *work, 
                          c_float         gamma);
 
+/**
+ * Set the proximal parameters for nonconvex QPs.
+ * 
+ * QPALM can deal with nonconvex QPs, by setting the initial and maximal proximal penalty small enough 
+ * (smaller than @f$ \frac{1}{|\lambda_\textrm{min}|} @f$). This ensures positive definiteness of 
+ * @f$ Q + \frac{1}{\gamma}I @f$ during the iterations.
+ * 
+ * @param work Workspace
+ */
 void set_settings_nonconvex(QPALMWorkspace *work);
 
 

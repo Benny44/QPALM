@@ -9,5 +9,6 @@ var searchData=
   ['max_5fiter',['max_iter',['../structQPALMSettings.html#abde94c03c9e4331e2ec9939746653371',1,'QPALMSettings::max_iter()'],['../constants_8h.html#acd517c6f195c75b9dd0f3aad65326f3b',1,'MAX_ITER():&#160;constants.h']]],
   ['max_5fscaling',['MAX_SCALING',['../constants_8h.html#af08c400cdf242e8f66b4353f9f3f8096',1,'constants.h']]],
   ['min_5fscaling',['MIN_SCALING',['../constants_8h.html#a0ec510dd558dfcc57526bdffbb2d42fc',1,'constants.h']]],
+  ['minimum_5feigenvalue_5fq',['minimum_eigenvalue_Q',['../nonconvex_8c.html#adf42de4281a489f3fe92bf12fb0b7384',1,'minimum_eigenvalue_Q(QPALMWorkspace *work):&#160;nonconvex.c'],['../nonconvex_8h.html#adf42de4281a489f3fe92bf12fb0b7384',1,'minimum_eigenvalue_Q(QPALMWorkspace *work):&#160;nonconvex.c']]],
   ['mod',['mod',['../global__opts_8h.html#a8effeb3246f2f663f5c53b0a997b4374',1,'global_opts.h']]]
 ];
