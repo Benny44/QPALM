@@ -6,11 +6,11 @@ BDIR=lib
 
 all: directories lib tests
 
-__OBJ = test_lin_alg.o test_cholmod_interface.o test_basic_qp.o test_prim_inf_qp.o test_dua_inf_qp.o test_degen_hess.o test_update.o test_validate.o
+__OBJ = test_lin_alg.o test_cholmod_interface.o test_basic_qp.o test_prim_inf_qp.o test_dua_inf_qp.o test_degen_hess.o test_update.o test_validate.o test_nonconvex_qp.o
 _OBJ = $(patsubst %,$(ODIR)/%, $(__OBJ))
 OBJ = run_all_tests.o $(_OBJ)
 
-_DEPS = test_lin_alg.h test_cholmod_interface.h test_basic_qp.h test_prim_inf_qp.h test_dua_inf_qp.h test_degen_hess.h test_update.h test_validate.h
+_DEPS = test_lin_alg.h test_cholmod_interface.h test_basic_qp.h test_prim_inf_qp.h test_dua_inf_qp.h test_degen_hess.h test_update.h test_validate.h test_nonconvex_qp.h
 DEPS = $(patsubst %, $(IDIR)/%, $(_DEPS))
 
 ifndef CC
