@@ -215,8 +215,6 @@ tau = 0; Qd = zeros(n,1); Ad = zeros(m,1); d = zeros(n,1);
 Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
 Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
-newton_lagrange = true; %flag to try newton_lagrange
-newton_lagrange_used = false;
 y_next = zeros(m,1);
 
 
@@ -242,7 +240,6 @@ for k = 1:maxiter
    end
    nrm_rp = norm(rp./E_scale,inf);
    stats.nrm_rd(k) = nrm_rd;
-   stats.nrm_rdy(k) = norm((df-1/gamma*(x-x0)+Aty)./D_scale,inf)/c_scale; %norm dphi for y instead of yh
    stats.nrm_rp(k) = nrm_rp;
 
    eps_primal   = eps_abs + eps_rel*max(norm(Ax./E_scale,inf),norm(z./E_scale,inf));            % primal eps
@@ -252,20 +249,12 @@ for k = 1:maxiter
    
    dy = yh-y; Atdy = Atyh - Aty;
    dx = x-x_prev; 
-   if ~newton_lagrange_used
-       Qdx = Qd*tau; 
-       Adx = Ad*tau;
-   end
    if proximal 
        Qdx2 = Qdx - tau/gamma*d;
    else
        Qdx2 = Qdx;
    end
-       
-       
-   
-   newton_lagrange_used = false;
-   
+          
    if nrm_rd <= eps_dual && nrm_rp <= eps_primal
        stats.status = 'solved';
        break
@@ -293,11 +282,6 @@ for k = 1:maxiter
            
            Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
            Asig      = (sparse(1:m,1:m,sig,m,m)*A);
-           
-%            if strcmp(scaling,'outer_iter') %perform this here when sig is known
-%                [x,Q,q,A,D_scale] = outer_iter_scaling(x,Q,q,A,sig,D_scale);
-%                Qx = Q*x; 
-%            end
   
        end
        rpK = rp;
@@ -318,7 +302,6 @@ for k = 1:maxiter
                Qx = Qx+1/gamma*x; 
            end
        end
-       newton_lagrange = true; %Try Newton-Lagrange after dual update
    else
       if strcmp(solver, 'newton') 
           % Newton direction
@@ -371,76 +354,6 @@ for k = 1:maxiter
           else
               LD = ldlchol(Q);
               d = -ldlsolve (LD,dphi);
-          end
-          newton_lagrange = false; %Always try Newton-Lagrange
-          stats.nl(k) = false;
-
-          if newton_lagrange
-              newton_lagrange = false;
-              fprintf('Try Newton Lagrange\n');
-              x_next = x+d;
-              Ad = A*d;
-              y_next(active_cnstrs) = yh(active_cnstrs)+sig(active_cnstrs).*Ad(active_cnstrs);
-              y_next(~active_cnstrs) = 0;
-              Qd = Q*d;
-              Qx_next = Qx + Qd;
-              
-              Ax_next = Ax+Ad;
-              z_next = min(max(Ax_next+y_next./sig,bmin),bmax);
-              phi_old = max(norm(df+Aty,inf), norm(rp,inf));
-              %TODO reuse info in the next iterate and in linesearch
-              Aty_next = A'*y_next;
-              phi_next = max(norm(Qx_next+q+Aty_next, inf), norm(Ax_next-z_next, inf));
-              if phi_next < 0.5*phi_old
-                  newton_lagrange = true;
-                  
-                  fprintf('Use the Newton Lagrange update\n');
-                  
-                  stats.nl(k) = true;
-                  % Store previous values (lbfgs)
-                  x_prev  = x;
-%                   x0      = x;
-                  dphi_prev = dphi;
-                  Qdx     = Qx_next-Qx;
-                  Adx     = Ax_next-Ax;
-                  newton_lagrange_used = true;
-                  % Update
-                  x     = x_next;
-                  Ax    = Ax_next;
-                  Qx    = Qx_next;
-                  y     = y_next;
-                  Aty   = Aty_next;
-    
-%                   if K > 1
-%                       if scalar_sig
-%                           adj_sig  = norm(rp,inf)>theta*norm(rpK,inf);
-%                       else
-%                           adj_sig  = (abs(rp)>theta*abs(rpK))&active_cnstrs;
-%                       end
-%                       sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
-%                       sig_updated = true;
-%                   end
-                  if K>1
-                      stats.iter_in(K) = k-(sum(stats.iter_in));
-                  else
-                      stats.iter_in(K) = k;
-                  end
-                  active_cnstrs_old = active_cnstrs;
-                  if proximal
-                      x0=x;
-                      gammaMax = gammaMax*10; %Allow gamma to go higher if NL is accepted
-                      if gamma ~= gammaMax
-                          Q=Q-1/gamma*speye(n);
-                          gamma=min(gamma*gammaUpd, gammaMax);
-                          Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
-                          Qx = Q*x; 
-                      end
-                  end
-                  
-                  K = K+1;
-                  rpK = Ax_next-z_next;
-                  continue; %Skip the linesearch
-              end 
           end
           
       elseif strcmp(solver, 'lbfgs')
@@ -568,10 +481,6 @@ function is_pinf = is_primal_infeasible(dy, Atdy, bmin, bmax, D_scale, E_scale, 
             end
         end
     end
-%     is_pinf = eps_pinf_norm_Edy > 0 ... %dy must be nonzero
-%         && norm((Atdy)./D_scale,inf) <= eps_pinf_norm_Edy ...
-%         && (bmax'*max(dy,0) + bmin'*min(dy,0)) <= -eps_pinf_norm_Edy;
-
 end
 
 %% ========================================================================
@@ -586,7 +495,6 @@ Adx = Adx./E_scale;
 if  any(bmax < inf & Adx >= eps_dinf_norm_Ddx) | (bmin > -inf & Adx <= -eps_dinf_norm_Ddx)
     is_dinf = false;return
 end
-% for k = 1:length(bmax),if (bmax(k) < 1e20 && Adx(k) >= eps_dinf_norm_Ddx) || (bmin(k) > -1e20 && Adx(k) <= -eps_dinf_norm_Ddx),is_dinf = false; return;end,end
 
 is_dinf = norm(Qdx./D_scale,inf) <= c_scale*eps_dinf_norm_Ddx ...
     && q'*dx <= -c_scale*eps_dinf_norm_Ddx;
@@ -709,9 +617,9 @@ function [x,y,Q,q,A,bmin,bmax,D,E,c] = simple_equilibration(x,y,Q,q,A,bmin,bmax,
     x = x./D; y = (y./E);
 
     c = 1;
-%     if (scaling_iter)
+    if (scaling_iter)
         c = 1/max(1, norm(Q*x+q,inf)); %Add cost scaling 10.2.2 Birgin/Martinez
-%     end
+    end
     Q = c*Q; q=c*q;
    
     y = c*y;
