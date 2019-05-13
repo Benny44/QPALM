@@ -38,6 +38,8 @@ Iter_osqp = [];
 Iter_qpoases = [];
 Iter_gurobi = [];
 
+Stats_qpalm_matlab = {};
+
 
 
 for i = 1:ll
@@ -62,7 +64,7 @@ for i = 1:ll
     qpoases_time = 0;
     gurobi_time = 0;
       
-    [X, timings, iter, status, options] = compare_QP_solvers(prob, options);
+    [X, timings, iter, status, options, stats] = compare_QP_solvers(prob, options);
     if options.qpalm_matlab , qpalm_matlab_time = qpalm_matlab_time + timings.qpalm_matlab; end
     if options.qpalm_c , qpalm_c_time = qpalm_c_time + timings.qpalm_c; end
     if options.osqp, osqp_time = osqp_time + timings.osqp; end
@@ -92,6 +94,8 @@ for i = 1:ll
     if options.osqp, X_osqp{i} = X.osqp; end
     if options.qpoases, X_qpoases{i} = X.qpoases; end
     if options.gurobi, X_gurobi{i} = X.gurobi; end
+    
+    if options.qpalm_matlab, Stats_qpalm_matlab{i} = stats.qpalm_matlab; end
 end
 
 n_values = 1:ll;

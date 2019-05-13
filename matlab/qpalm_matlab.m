@@ -210,6 +210,7 @@ reset_newton = true;
 
 %Initialization for Qdx and Adx used in is_dual_infeasible;
 tau = 0; Qd = zeros(n,1); Ad = zeros(m,1); d = zeros(n,1);
+Qdx = 0; Adx = 0;
 
 %Precompute for ldlupdate
 Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
