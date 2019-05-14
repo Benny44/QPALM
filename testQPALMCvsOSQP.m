@@ -17,7 +17,7 @@ Q = sprandsym(n, 9e-1, 1e-8, 1);
 % Q=sparse(n,n);
 q = 100*randn(n,1);
 
-% load('dual-bug.mat')
+% load('path_prb2.mat')
 
 fprintf('nnz A: %d, nnz Q: %d\n', nnz(A), nnz(Q));
 
@@ -110,8 +110,8 @@ display(stats_qpalm.status)
 % QPALMobj2 = 1/2*x_qpalm2'*Q*x_qpalm2 + q'*x_qpalm2;
 % 
 QPALMCfeas = norm([min(A*res_qpalm.x-lb,0);min(ub-A*res_qpalm.x,0)],inf);
-QPALMfeas = norm([min(A*res_qpalm.x-lb,0);min(ub-A*res_qpalm.x,0)],inf);
-OSQPfeas = norm([min(A*x_qpalm-lb,0);min(ub-A*x_qpalm,0)],inf);
+QPALMfeas = norm([min(A*x_qpalm-lb,0);min(ub-A*x_qpalm,0)],inf);
+OSQPfeas = norm([min(A*res_osqp.x-lb,0);min(ub-A*res_osqp.x,0)],inf);
 QPALMCobj = 1/2*res_qpalm.x'*Q*res_qpalm.x + q'*res_qpalm.x;
 QPALMobj = 1/2*x_qpalm'*Q*x_qpalm + q'*x_qpalm;
 OSQPobj = 1/2*res_osqp.x'*Q*res_osqp.x + q'*res_osqp.x;
@@ -136,7 +136,7 @@ fprintf('Solve time |   %3.2e   |    %3.2e     |    %3.2e   \n',...
 fprintf('Violation  |   %3.2e   |    %3.2e     |    %3.2e   \n', ...
     QPALMCfeas, ...
     OSQPfeas,...
-    0)
+    QPALMfeas)
 fprintf('Objective  | %3.2e    |    %3.2e    |  %3.2e \n', ...
     QPALMCobj, ...
     OSQPobj,...

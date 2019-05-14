@@ -1,5 +1,5 @@
-function [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,b,active_cnstrs,active_cnstrs_old)
-if ~isempty(active_cnstrs_old)
+function [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,b,active_cnstrs,active_cnstrs_old, reset_newton)
+if ~reset_newton
     enter = active_cnstrs & (~active_cnstrs_old);
     leave = active_cnstrs_old & (~active_cnstrs);
     ne = sum(enter);

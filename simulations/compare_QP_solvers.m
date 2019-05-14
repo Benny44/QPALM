@@ -1,9 +1,16 @@
-function [ x, timings, iter, status, options ] = compare_QP_solvers( prob, options )
+function [ x, timings, iter, status, options, stats ] = compare_QP_solvers( prob, options )
 %Run QPALM (Matlab), QPALM (C), OSQP, qpoases, and GUROBI on the given problem 
 %n times and return the solution and timings
 
 n = 1; %to get an average timing
 t = zeros(n,1);
+
+x = {};
+stats = {};
+timings = {};
+iter = {};
+status = {};
+
 
 VERBOSE = false;
 SCALING_ITER = 10;
@@ -55,16 +62,21 @@ if options.qpalm_matlab
     for k = 1:n
         opts.solver = 'newton';
         opts.scalar_sig = false;
-        opts.maxiter = 500;
+        opts.maxiter = 5000;
         opts.eps_abs = EPS_ABS;
         opts.eps_rel = EPS_REL;
+        opts.eps_abs_in = min(EPS_ABS*1e6, 1);
+        opts.eps_rel_in = min(EPS_REL*1e6, 1);
+        opts.eps_pinf = EPS_ABS;
+        opts.eps_dinf = EPS_ABS;
         opts.proximal = true;
-        opts.gamma    = 1e4;
+        opts.gamma    = 1e1;
         opts.gammaUpd = 10;
         opts.gammaMax = 1e6;
+%         opts.sig = 5;
         opts.Delta   = 10;
         opts.scaling = 'simple';
-        opts.scaling_iter = SCALING_ITER; opts.scaling_iter = 2;
+        opts.scaling_iter = 10;
         tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,A,lbA,ubA,x_warm_start,y_warm_start,opts);
         qpalm_time = toc;
         t(k) = qpalm_time;
@@ -75,11 +87,12 @@ if options.qpalm_matlab
     iter.qpalm_matlab = stats_qpalm.iter;
     timings.qpalm_matlab = sum(t)/n;
     x.qpalm_matlab = x_qpalm;
+    stats.qpalm_matlab = stats_qpalm;
     
     
-    if timings.qpalm_matlab > MAX_TIME
-        options.qpalm_matlab = false;
-    end
+%     if timings.qpalm_matlab > MAX_TIME
+%         options.qpalm_matlab = false;
+%     end
     
 end
 

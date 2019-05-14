@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['proximal',['PROXIMAL',['../constants_8h.html#a6ab5081fb2e4bb477cb72a470b2d6e16',1,'constants.h']]]
+  ['nonconvex',['NONCONVEX',['../constants_8h.html#a14fe7deb622594271f61212f88b3dd8c',1,'constants.h']]]
 ];

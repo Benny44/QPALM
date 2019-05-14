@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/Benny44/QPALM.svg?branch=master)](https://travis-ci.com/Benny44/QPALM)
 [![Coverage Status](https://coveralls.io/repos/github/Benny44/QPALM/badge.svg?branch=master)](https://coveralls.io/github/Benny44/QPALM?branch=master)
 
-A proximal augmented Lagrangian method for QPs using semismooth Newton direction and exact line search.
+A proximal augmented Lagrangian method for (possibly **nonconvex**) QPs using semismooth Newton direction and exact line search.
 
 ## Installation
 
@@ -17,7 +17,7 @@ make BLAS="-lmwblas -lmwlapack" BLAS_PATH=$(HOME)/.Matlab/R2015/bin/glnxa64
 ## Code Example
 
 Basic demos are available for the different ways to call the solver.
-* For the mex interface of QPALM, check out examples/qpalm_mex_demo.m.
+* For the mex interface of QPALM, check out examples/qpalm_mex_demo.m and examples/qpalm_mex_nonconvex_demo.m.
 * For the C-version of QPALM, check out examples/qpalm_demo.c.
 * For the matlab version of QPALM, check out examples/qpalm_matlab_demo.m.
 
@@ -41,6 +41,7 @@ make test BLAS=... BLAS_PATH=...
 * **Ben Hermans** - *Main developer*
 * **Panagiotis Patrinos** - *Codeveloper*
 * **Andreas Themelis** - *Theoretical contributions*
+
 ## License
 
 TBA

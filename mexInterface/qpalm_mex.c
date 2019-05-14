@@ -13,6 +13,8 @@
 #define MODE_RETRIEVE_CONSTANT "constant"
 #define MODE_SETUP "setup"
 #define MODE_WARM_START "warm_start"
+#define MODE_UPDATE_BOUNDS "update_bounds"
+#define MODE_UPDATE_LINEAR "update_q"
 #define MODE_SOLVE "solve"
 #define MODE_DELETE "delete"
 
@@ -44,10 +46,11 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",      //c_int
                                       "delta",          //c_float
                                       "tau_init",       //c_float
                                       "proximal",       //c_int
-                                      "gamma",          //c_int
-                                      "gamma_upd",      //c_int
-                                      "gamma_max",      //c_int
+                                      "gamma_init",     //c_float
+                                      "gamma_upd",      //c_float
+                                      "gamma_max",      //c_float
                                       "scaling",        //c_int
+                                      "nonconvex",      //c_int
                                       "warm_start",     //c_int
                                       "verbose"};       //c_int
 
@@ -58,10 +61,6 @@ void      setToNaN(double* arr_out, size_t len);
 void      copyMxStructToSettings(const mxArray*, QPALMSettings*);
 mxArray*  copySettingsToMxStruct(QPALMSettings* settings);
 mxArray*  copyInfoToMxStruct(QPALMInfo* info);
-c_int*    copyToCintVector(mwIndex * vecData, size_t numel);
-c_float*  copyToCfloatVector(double * vecData, size_t numel);
-cholmod_sparse *mx_get_sparse (const mxArray *Amatlab, cholmod_sparse *A, double *dummy, int stype);
-
 
 /**
  * Function that mex calls when it closes unexpectedly
@@ -71,6 +70,7 @@ cholmod_sparse *mx_get_sparse (const mxArray *Amatlab, cholmod_sparse *A, double
 void exitFcn() {
   if (qpalm_work != NULL) {
       qpalm_cleanup(qpalm_work);
+      qpalm_work = NULL;
   }  
 }
 
@@ -127,12 +127,11 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
             mexWarnMsgTxt("Delete: Unexpected arguments ignored.");
         return;
 
-    }
-    else if (strcmp(cmd, MODE_SETUP) == 0) {
+    } else if (strcmp(cmd, MODE_SETUP) == 0) {
 
         //throw an error if this is called more than once
         if(qpalm_work != NULL){
-          mexErrMsgTxt("Solver is already initialized with problem data.");
+            mexErrMsgTxt("Solver is already initialized with problem data.");
         }   
 
         //Create data and settings containers
@@ -155,9 +154,9 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         // Create Data Structure
         data->n = (size_t) mxGetScalar(prhs[1]);
         data->m = (size_t) mxGetScalar(prhs[2]);
-        data->q = copyToCfloatVector(mxGetPr(q), data->n);
-        data->bmin = copyToCfloatVector(mxGetPr(bmin), data->m);
-        data->bmax = copyToCfloatVector(mxGetPr(bmax), data->m);
+        data->q = mxGetPr(q);
+        data->bmin = mxGetPr(bmin);
+        data->bmax = mxGetPr(bmax);
 
         // Convert matrices from matlab to cholmod_sparse
         double dummy = 0; 
@@ -169,30 +168,25 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         // Create Settings
         const mxArray* mxSettings = prhs[8];
         if(mxIsEmpty(mxSettings)){
-          // use defaults
-          qpalm_set_default_settings(settings);
+            // use defaults
+            qpalm_set_default_settings(settings);
         } else {
-          //populate settings structure from mxArray input
-          copyMxStructToSettings(mxSettings, settings);
+            //populate settings structure from mxArray input
+            copyMxStructToSettings(mxSettings, settings);
         }
         
-        cholmod_common c;
         // Setup workspace
+        cholmod_common c;
         qpalm_work = qpalm_setup(data, settings, &c);
 
         if(qpalm_work == NULL){
-           mexErrMsgTxt("Invalid problem setup");
-         }
+            mexErrMsgTxt("Invalid problem setup");
+        }
 
          //cleanup temporary structures
-         // Data
-         if (data->q) mxFree(data->q);
-         if (data->bmin) mxFree(data->bmin);
-         if (data->bmax) mxFree(data->bmax);
-        //Don't free data->A and data->Q because they are only a shallow copy
+         // Don't free data->q, data->bmin, data->bmin because they are pointers to the mxArrays
+         // Don't free data->A and data->Q because they are only a shallow copy
          mxFree(data);
-         
-         // Settings
          mxFree(settings);
 
         return;
@@ -200,7 +194,7 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
 
     } else if (strcmp(cmd, MODE_WARM_START) == 0) {
         if (nlhs != 0 || nrhs != 3 ){
-          mexErrMsgTxt("Solve : wrong number of inputs / outputs");
+            mexErrMsgTxt("Solve : wrong number of inputs / outputs");
         }
         if(!qpalm_work){
             mexErrMsgTxt("Work is not setup.");
@@ -214,23 +208,67 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         if (mxIsEmpty(xmatlab)) {
             x = NULL;
         } else {
-            x = mxGetData(xmatlab);
+            x = mxGetPr(xmatlab);
         }
             
         if (mxIsEmpty(ymatlab)) {
             y = NULL;
         } else {
-            y = mxGetData(ymatlab);
+            y = mxGetPr(ymatlab);
         }
 
         qpalm_warm_start(qpalm_work, x, y);
 
         return;
 
+    } else if (strcmp(cmd, MODE_UPDATE_BOUNDS) == 0) {
+        
+        if (nlhs != 0 || nrhs != 3){
+            mexErrMsgTxt("Update bounds : wrong number of inputs / outputs");
+        }
+        if(!qpalm_work){
+            mexErrMsgTxt("Work is not setup.");
+        }
+        
+        c_float *bmin, *bmax;
+
+        const mxArray* bmin_matlab  = prhs[1];
+        const mxArray* bmax_matlab  = prhs[2];
+
+        if (mxIsEmpty(bmin_matlab)) {
+            bmin = NULL;
+        } else {
+            bmin = mxGetPr(bmin_matlab);
+        }
+            
+        if (mxIsEmpty(bmax_matlab)) {
+            bmax = NULL;
+        } else {
+            bmax = mxGetPr(bmax_matlab);
+        }
+
+        qpalm_update_bounds(qpalm_work, bmin, bmax);
+
+    } else if (strcmp(cmd, MODE_UPDATE_LINEAR) == 0) {
+        
+        if (nlhs != 0 || nrhs != 2){
+            mexErrMsgTxt("Update q : wrong number of inputs / outputs");
+        }
+        if(!qpalm_work){
+            mexErrMsgTxt("Work is not setup.");
+        }
+        
+        if (!mxIsEmpty(prhs[1])) {
+            c_float *q = mxGetPr(prhs[1]);
+            qpalm_update_q(qpalm_work, q);
+        } else {
+            mexWarnMsgTxt("Update q: Empty q has no effect.");
+        }
+
     } else if (strcmp(cmd, MODE_SOLVE) == 0) { // SOLVE
 
         if (nlhs != 5 || nrhs != 1){
-          mexErrMsgTxt("Solve : wrong number of inputs / outputs");
+            mexErrMsgTxt("Solve : wrong number of inputs / outputs");
         }
         if(!qpalm_work){
             mexErrMsgTxt("Work is not setup.");
@@ -356,30 +394,6 @@ void setToNaN(double* arr_out, size_t len){
     }
 }
 
-c_float*  copyToCfloatVector(double* vecData, size_t numel){
-  // This memory needs to be freed!
-  c_float* out = (c_float*)c_malloc(numel * sizeof(c_float));
-
-  //copy data
-  for(size_t i=0; i < numel; i++){
-      out[i] = (c_float)vecData[i];
-  }
-  return out;
-
-}
-
-c_int* copyToCintVector(mwIndex* vecData, size_t numel){
-  // This memory needs to be freed!
-  c_int* out = (c_int*)c_malloc(numel * sizeof(c_int));
-
-  //copy data
-  for(size_t i=0; i < numel; i++){ 
-      out[i] = (c_int)vecData[i];
-  }
-  return out;
-
-}
-
 mxArray* copyInfoToMxStruct(QPALMInfo* info){
 
   //create mxArray with the right number of fields
@@ -426,10 +440,11 @@ mxArray* copySettingsToMxStruct(QPALMSettings* settings){
   mxSetField(mxPtr, 0, "delta",           mxCreateDoubleScalar(settings->delta));
   mxSetField(mxPtr, 0, "tau_init",        mxCreateDoubleScalar(settings->tau_init));
   mxSetField(mxPtr, 0, "proximal",        mxCreateDoubleScalar(settings->proximal));
-  mxSetField(mxPtr, 0, "gamma",           mxCreateDoubleScalar(settings->gamma));
+  mxSetField(mxPtr, 0, "gamma_init",      mxCreateDoubleScalar(settings->gamma_init));
   mxSetField(mxPtr, 0, "gamma_upd",       mxCreateDoubleScalar(settings->gamma_upd));
   mxSetField(mxPtr, 0, "gamma_max",       mxCreateDoubleScalar(settings->gamma_max));
   mxSetField(mxPtr, 0, "scaling",         mxCreateDoubleScalar(settings->scaling));
+  mxSetField(mxPtr, 0, "nonconvex",       mxCreateDoubleScalar(settings->nonconvex));
   mxSetField(mxPtr, 0, "warm_start",      mxCreateDoubleScalar(settings->warm_start));
   mxSetField(mxPtr, 0, "verbose",         mxCreateDoubleScalar(settings->verbose));
 
@@ -457,10 +472,11 @@ void copyMxStructToSettings(const mxArray* mxPtr, QPALMSettings* settings){
   settings->delta                     = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "delta"));
   settings->tau_init                  = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "tau_init"));
   settings->proximal                  = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "proximal"));
-  settings->gamma                     = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "gamma"));  
+  settings->gamma_init                = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "gamma_init"));  
   settings->gamma_upd                 = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "gamma_upd"));
   settings->gamma_max                 = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "gamma_max"));
   settings->scaling                   = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "scaling"));
+  settings->nonconvex                 = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "nonconvex"));
   settings->warm_start                = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "warm_start"));
   settings->verbose                   = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "verbose"));
 

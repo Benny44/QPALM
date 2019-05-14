@@ -64,10 +64,10 @@ ifdef LAPACK_PATH
 	LDLIBS+=$(LAPACK_INCLUDE)
 endif
 
-_DEPS = qpalm.h scaling.h util.h lin_alg.h validate.h linesearch.h types.h constants.h global_opts.h termination.h cholmod_interface.h newton.h
+_DEPS = qpalm.h scaling.h util.h lin_alg.h validate.h linesearch.h types.h constants.h nonconvex.h global_opts.h termination.h cholmod_interface.h newton.h
 DEPS = $(patsubst %, $(IDIR)/%, $(_DEPS))
 
-__OBJ = qpalm.o scaling.o util.o lin_alg.o validate.o linesearch.o termination.o cholmod_interface.o newton.o
+__OBJ = qpalm.o scaling.o util.o lin_alg.o validate.o linesearch.o termination.o nonconvex.o cholmod_interface.o newton.o
 _OBJ = $(patsubst %,$(ODIR)/%, $(__OBJ))
 OBJ = $(EDIR)/qpalm_demo.o $(_OBJ)
 

@@ -15,7 +15,7 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'scaling_iter')
-    scaling_iter = 10; %'ruiz'
+    scaling_iter = 2; %'ruiz'
 else
     scaling_iter = opts.scaling_iter;
 end
@@ -39,7 +39,8 @@ if nargin<8 || ~isfield(opts,'sig')
     f = 0.5*(x'*Qx)+q'*x;
     dist = Ax-min(max(Ax,bmin),bmax);
     dist2 = dist'*dist;
-    sig = max(1e-8,min(2e1*max(1,abs(f))/max(1,0.5*dist2),1e8))*ones(m,1);
+    sig = max(1e-4,min(20*max(1,abs(f))/max(1,0.5*dist2),1e4))*ones(m,1);
+%     sig = 5*ones(m,1);
 else
     sig = opts.sig.*ones(m,1);
 end
@@ -146,7 +147,7 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'gamma')
-    gamma = 1e6;
+    gamma = 1e1;
 else
     gamma = opts.gamma;
 end
@@ -158,7 +159,7 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'gammaMax')
-    gammaMax = 1e8;
+    gammaMax = 1e6;
 else
     gammaMax = opts.gammaMax;
 end
@@ -175,6 +176,22 @@ else
 end
     
 
+if nargin<8 || ~isfield(opts,'nonconvex')
+    nonconvex = false;
+else
+    nonconvex = opts.nonconvex;
+end
+
+if nonconvex
+    lambda = minimum_eig(Q);
+    lambda_adj = lambda - 1e-3; %adjust for tolerance
+    if lambda_adj < 0
+        proximal = true;
+        gamma = 1/abs(lambda_adj);
+        gammaMax = gamma;
+    end
+end
+
 if proximal
     Q = Q+1/gamma*speye(n);
     Qx = Q*x;
@@ -189,16 +206,28 @@ end
 
 K = 1; 
 sig_updated = true; %Reset lbfgs initially and perform gradient descent step
-
+reset_newton = true;
 
 %Initialization for Qdx and Adx used in is_dual_infeasible;
 tau = 0; Qd = zeros(n,1); Ad = zeros(m,1); d = zeros(n,1);
+Qdx = 0; Adx = 0;
 
 %Precompute for ldlupdate
 Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
 Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
+y_next = zeros(m,1);
+
+
+
 for k = 1:maxiter
+    
+    if mod(k,1000)==0
+        fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e\n', k, nrm_rp, nrm_rd);
+    end
+    stats.gamma(k) = gamma;
+    stats.sigma(:,k) = sig;
+    
    Axys = Ax+y./sig;
    z    = min(max(Axys,bmin),bmax);                         % z-update 
    rp   = Ax-z;                                             % primal residual
@@ -224,13 +253,13 @@ for k = 1:maxiter
    eps_dual_in  = eps_abs_in + eps_rel_in*rel_d;  % inner dual eps
    
    dy = yh-y; Atdy = Atyh - Aty;
-   dx = x-x_prev; Qdx = Qd*tau; Adx = Ad*tau;
+   dx = x-x_prev; 
    if proximal 
        Qdx2 = Qdx - tau/gamma*d;
    else
        Qdx2 = Qdx;
    end
-   
+          
    if nrm_rd <= eps_dual && nrm_rp <= eps_primal
        stats.status = 'solved';
        break
@@ -243,7 +272,11 @@ for k = 1:maxiter
        stats.dinf_certificate = D_scale.*dx;
        break
    elseif nrm_rd2 <= eps_dual_in
+%        y(active_cnstrs) = yh(active_cnstrs);
+%        y(~active_cnstrs) = 0;
+%        Aty = A'*y;
        y = yh; Aty = Atyh;
+%        Aty = Atyh;
        eps_abs_in = max(rho*eps_abs_in,eps_abs);
        eps_rel_in = max(rho*eps_rel_in,eps_rel);
        if K > 1 && nrm_rp > eps_primal
@@ -258,11 +291,6 @@ for k = 1:maxiter
            
            Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
            Asig      = (sparse(1:m,1:m,sig,m,m)*A);
-           
-%            if strcmp(scaling,'outer_iter') %perform this here when sig is known
-%                [x,Q,q,A,D_scale] = outer_iter_scaling(x,Q,q,A,sig,D_scale);
-%                Qx = Q*x; 
-%            end
   
        end
        rpK = rp;
@@ -272,7 +300,7 @@ for k = 1:maxiter
            stats.iter_in(K) = k;
        end
        K   = K+1;
-       active_cnstrs_old = [];
+       reset_newton = true;
        if proximal
            x0=x;
            if gamma ~= gammaMax
@@ -286,9 +314,17 @@ for k = 1:maxiter
    else
       if strcmp(solver, 'newton') 
           % Newton direction
-          active_cnstrs = (Axys<bmin | Axys>bmax);
+          active_cnstrs = (Axys<=bmin | Axys>=bmax);
           na = nnz(active_cnstrs);
           stats.nact(k) = na;
+          if (isempty(active_cnstrs_old))
+              stats.nact_changed(k) = na;
+          else
+              stats.nact_changed(k) = sum(abs(active_cnstrs-active_cnstrs_old));
+              if reset_newton
+                  stats.nact_changed(k) = -1*stats.nact_changed(k);
+              end
+          end
           if na
               switch linsys
                   case 0 % sparse backslash
@@ -300,7 +336,8 @@ for k = 1:maxiter
                           d = -(Q+A(active_cnstrs,:)'*diag(sig(active_cnstrs))*A(active_cnstrs,:))\dphi;
                       end
                   case 2% ldlchol 2
-                      [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old);
+                      [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton);
+                      reset_newton = false;
     %                   LD = ldlchol(Q+A(active_cnstrs,:)'*spdiags(sig(active_cnstrs),0,na,na)*A(active_cnstrs,:));
     %                   d  = -ldlsolve (LD,dphi);
                   case 3% lchol  3
@@ -327,6 +364,11 @@ for k = 1:maxiter
               LD = ldlchol(Q);
               d = -ldlsolve (LD,dphi);
           end
+%           if mod(k,10)==0
+%               d = -dphi;
+%               Ax = A*x;
+%               Qx = Q*x;
+%           end
           
       elseif strcmp(solver, 'lbfgs')
           % lbfgs direction
@@ -405,8 +447,8 @@ for k = 1:maxiter
       delta = -sig_sqr.*Ad;
       delta = [delta;-delta];
       alpha = [(y+sig.*(Ax-bmin))./sig_sqr;(sig.*(bmax-Ax)-y)./sig_sqr];
-      tau = PWALineSearch(eta,beta,delta,alpha);
-%       tau = PWAlinesearch_mex(eta,beta,delta,alpha,int64(2*m));
+%       tau = PWALineSearch(eta,beta,delta,alpha);
+      tau = PWAlinesearch_mex(eta,beta,delta,alpha,int64(2*m));
 %       tau = NewtonLS(eta,beta,delta,alpha);
 %       tau = BPLS(eta,beta,delta,alpha);
       stats.tau(k) = tau;
@@ -416,8 +458,10 @@ for k = 1:maxiter
       dphi_prev = dphi;
       % Update
       x     = x  + tau*d;
-      Ax    = Ax + tau*Ad;
-      Qx    = Qx + tau*Qd;
+      Adx   = tau*Ad;
+      Ax    = Ax + Adx;
+      Qdx   = tau*Qd;
+      Qx    = Qx + Qdx;
    end
 end
 if k == maxiter
@@ -428,6 +472,7 @@ stats.iter_out = K;
 stats.sig = sig;
 stats.LD = LD;
 stats.active_cnstrs = active_cnstrs;
+stats.sum_nact_changed = sum(abs(stats.nact_changed));
 if K>1
     stats.iter_in(K) = k-(sum(stats.iter_in));
 else
@@ -452,10 +497,6 @@ function is_pinf = is_primal_infeasible(dy, Atdy, bmin, bmax, D_scale, E_scale, 
             end
         end
     end
-%     is_pinf = eps_pinf_norm_Edy > 0 ... %dy must be nonzero
-%         && norm((Atdy)./D_scale,inf) <= eps_pinf_norm_Edy ...
-%         && (bmax'*max(dy,0) + bmin'*min(dy,0)) <= -eps_pinf_norm_Edy;
-
 end
 
 %% ========================================================================
@@ -470,7 +511,6 @@ Adx = Adx./E_scale;
 if  any(bmax < inf & Adx >= eps_dinf_norm_Ddx) | (bmin > -inf & Adx <= -eps_dinf_norm_Ddx)
     is_dinf = false;return
 end
-% for k = 1:length(bmax),if (bmax(k) < 1e20 && Adx(k) >= eps_dinf_norm_Ddx) || (bmin(k) > -1e20 && Adx(k) <= -eps_dinf_norm_Ddx),is_dinf = false; return;end,end
 
 is_dinf = norm(Qdx./D_scale,inf) <= c_scale*eps_dinf_norm_Ddx ...
     && q'*dx <= -c_scale*eps_dinf_norm_Ddx;
@@ -589,18 +629,18 @@ function [x,y,Q,q,A,bmin,bmax,D,E,c] = simple_equilibration(x,y,Q,q,A,bmin,bmax,
     Q = Dm*(Q*Dm);
     q = D.*q;
     bmin = E.*bmin; bmax = E.*bmax;
-% Make A have unit row norms
-% D = speye(n);
-% E = sparse(1:m,1:m,1./vecnorm(A,2,2),m,m);
-% A = E*A; bmin = E*bmin; bmax = E*bmax;
+
+    x = x./D; y = (y./E);
+
     c = 1;
     if (scaling_iter)
         c = 1/max(1, norm(Q*x+q,inf)); %Add cost scaling 10.2.2 Birgin/Martinez
     end
     Q = c*Q; q=c*q;
    
+    y = c*y;
 
-    x = x./D; y = c*(y./E);
+    
 end
 
 %% ========================================================================

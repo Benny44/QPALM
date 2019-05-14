@@ -84,3 +84,10 @@
 \form#83:\begin{align*} \mbox{\Large\( \textrm{minimize } \)} & \mbox{\Large\( \frac{1}{2}x^T Q x + q^T x \)} \\ \mbox{\Large\( \textrm{subject to } \)} & \mbox{\Large\( b_\textrm{min} \leq Ax \leq b_\textrm{max} \)} \end{align*}
 \form#84:\begin{align*} \mbox{\Large\( \textrm{minimize \hspace{2cm}} \)} & \mbox{\Large\( \frac{1}{2}x^T Q x + q^T x \)} \\ \mbox{\Large\( \textrm{subject to } \)} & \mbox{\Large\( b_\textrm{min} \leq Ax \leq b_\textrm{max} \)} \end{align*}
 \form#85:\begin{align*} \mbox{\Large\( \textrm{minimize \hspace{1cm}} \)} & \mbox{\Large\( \frac{1}{2}x^T Q x + q^T x \)} \\ \mbox{\Large\( \textrm{subject to \hspace{1cm}} \)} & \mbox{\Large\( b_\textrm{min} \leq Ax \leq b_\textrm{max} \)} \end{align*}
+\form#86:$>=\gamma_\textrm{init}$
+\form#87:$\lambda =$
+\form#88:$Q - \lambda*I$
+\form#89:$\lambda$
+\form#90:$ Q + \gamma*I $
+\form#91:$ \frac{1}{|\lambda_\textrm{min}|} $
+\form#92:$ Q + \frac{1}{\gamma}I $

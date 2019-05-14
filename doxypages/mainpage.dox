@@ -1,8 +1,8 @@
-/*! \mainpage QPALM: Proximal Augmented Lagrangian Solver for Quadratic Programs
+/*! \mainpage QPALM: Proximal Augmented Lagrangian Solver for (Nonconvex) Quadratic Programs
  *
  * \section intro_sec Introduction
  *
- * This is a C implementation of QPALM, a proximal augmented Lagrangian based solver for quadratic programs.
+ * This is a C implementation of QPALM, a proximal augmented Lagrangian based solver for (possibly nonconvex) quadratic programs.
  * QPALM solves problems of the form:
  * @f{align*}{ 
  * \mbox{\Large\( 
