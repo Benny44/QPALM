@@ -5,40 +5,10 @@
 #include <stdio.h>
 #include <math.h>
 
-// csc* random_matrix(c_int m, c_int n, c_float density) {
-//   c_float* X_temp = c_calloc(m*n, sizeof(c_float));
-//   //c_int* i = c_calloc(n*m, sizeof(c_int));
-//   c_int* rows = c_calloc(n*m, sizeof(c_int));
-//   c_int* p = c_calloc(n+1, sizeof(c_int));
-//   int k = 0;
-//   int col = 0;
-//   c_int x_rand;
-//   for (int j = 0; j < n*m; j++) {
-//     if (j%m == 0) {
-//       p[col] = k;
-//       col++;
-//     }   
-//     x_rand = rand();
-//     if ((x_rand % 1000) < density * 1000) {
-//       X_temp[k] = (c_float) x_rand/RAND_MAX;
-//       rows[k] = j%m;
-//       k++;
-//     }
-//   }
-//   p[col] = k;
-//   c_int nnz = k;
-//   c_float* X = c_calloc(nnz, sizeof(c_float));
-//   c_int* i = c_calloc(nnz, sizeof(c_int));
-//   for (k = 0; k < nnz; k++) {
-//     X[k] = X_temp[k];
-//     i[k] = rows[k];
-//   }
-//   c_free(rows);
-//   c_free(X_temp);
-//   csc* M = csc_matrix(m, n, nnz, X, i, p);
-
-//   return M;
-// }
+#define N 2
+#define M 3
+#define ANZMAX 4
+#define QNZMAX 2
 
 c_float* random_vector(c_int n) {
   c_float* X = c_calloc(n, sizeof(c_float));
@@ -59,8 +29,8 @@ int main() {
 
 // Load problem data
 
-  c_int n = 20;
-  c_int m = 50;
+  c_int n = N;
+  c_int m = M;
 
   // Problem settings
   QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
@@ -73,21 +43,33 @@ int main() {
   data    = (QPALMData *)c_malloc(sizeof(QPALMData));
   data->n = n;
   data->m = m;
-
-  cholmod_dense *Q_dense, *A_dense;
+  data->q = random_vector(data->n);
+  data->bmin = constant_vector(-2, data->m);
+  data->bmax = constant_vector(2, data->m);
 
   cholmod_common c;
   CHOLMOD(start)(&c);
+  cholmod_sparse *A = CHOLMOD(allocate_sparse)(m, n, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, &c);
+  c_float *Ax;
+  c_int *Ai, *Ap;
+  Ax = A->x;
+  Ap = A->p;
+  Ai = A->i;
+  Ax[0] = 1.0; Ax[1] = 1.0; Ax[2] = 1.0; Ax[3] = 1.0;
+  Ap[0] = 0; Ap[1] = 2; Ap[2] = 4;
+  Ai[0] = 0; Ai[1] = 2; Ai[2] = 1; Ai[3] = 2;
+  cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
+  c_float *Qx;
+  c_int *Qi, *Qp;
+  Qx = Q->x;
+  Qp = Q->p;
+  Qi = Q->i;
+  Qx[0] = 1.0; Qx[1] = 1.5; 
+  Qp[0] = 0; Qp[1] = 1; Qp[2] = 2;
+  Qi[0] = 0; Qi[1] = 1; 
 
-
-  Q_dense = CHOLMOD(ones)(n, n, CHOLMOD_REAL, &c);
-  data->Q = CHOLMOD(dense_to_sparse)(Q_dense, 1, &c);
-  data->q = random_vector(data->n);
-
-  A_dense = CHOLMOD(ones)(m, n, CHOLMOD_REAL, &c);
-  data->A = CHOLMOD(dense_to_sparse)(A_dense, 1, &c);
-  data->bmin = constant_vector(-2, data->m);
-  data->bmax = constant_vector(2, data->m);
+  data->A = A;
+  data->Q = Q;
 
   CHOLMOD(finish)(&c);
 
@@ -116,8 +98,8 @@ int main() {
 
   // Clean workspace
   CHOLMOD(start)(&work->chol->c);
-  CHOLMOD(free_dense)(&Q_dense, &c);
-  CHOLMOD(free_dense)(&A_dense, &c);
+  CHOLMOD(free_sparse)(&data->Q, &c);
+  CHOLMOD(free_sparse)(&data->A, &c);
   CHOLMOD(free_sparse)(&data->Q, &c);
   CHOLMOD(free_sparse)(&data->A, &c);
   CHOLMOD(finish)(&work->chol->c);
