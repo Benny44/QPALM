@@ -328,6 +328,7 @@ void qpalm_solve(QPALMWorkspace *work) {
     vec_add_scaled(work->y, work->temp_m, work->yh, 1, m);
     //df = Qx + q
     vec_add_scaled(work->Qx, work->data->q, work->df, 1, n);
+    
     if (work->settings->proximal) {
       //df = Qx + q +1/gamma*(x-x0)
       // NB work->Qx contains Qx+1/gamma*x
@@ -359,15 +360,27 @@ void qpalm_solve(QPALMWorkspace *work) {
                                         work->settings->rho*work->settings->eps_rel_in);
       if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
         c_float *At_scalex = work->chol->At_scale->x;
+        c_float pri_res_unscaled_norm = vec_norm_inf(work->pri_res, m);
+        c_float sigma_temp, mult_factor;
         for (k = 0; k < m; k++) {
           if (c_absval(work->pri_res[k]) > work->settings->theta*c_absval(work->pri_res_in[k])) {
-            work->sigma[k] *= work->settings->delta;
-            work->sqrt_sigma[k] *= work->sqrt_delta;
-            At_scalex[k] = work->sqrt_delta;
+            mult_factor = c_max(1.0, work->settings->delta * c_absval(work->pri_res[k]) / (pri_res_unscaled_norm + 1e-6));
+            sigma_temp = mult_factor * work->sigma[k];
+            if (sigma_temp <= 1e8) { //TODO make sigma_max a setting
+              work->sigma[k] = sigma_temp;
+              mult_factor = c_sqrt(mult_factor);
+              work->sqrt_sigma[k] = mult_factor * work->sqrt_sigma[k];
+              At_scalex[k] = mult_factor;
+            } else {
+              work->sigma[k] = 1e8;
+              At_scalex[k] = 1e4 / work->sqrt_sigma[k];
+              work->sqrt_sigma[k] = 1e4;
+            }
           } else {
             At_scalex[k] = 1.0;
           }
         }
+
         CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
       }
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
@@ -384,7 +397,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       iter_out++;
     } else {
-      // d=newton()
+      
       newton_set_direction(work);
       
       work->tau = exact_linesearch(work);

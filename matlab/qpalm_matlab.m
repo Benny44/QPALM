@@ -39,7 +39,7 @@ if nargin<8 || ~isfield(opts,'sig')
     f = 0.5*(x'*Qx)+q'*x;
     dist = Ax-min(max(Ax,bmin),bmax);
     dist2 = dist'*dist;
-    sig = max(1e-4,min(20*max(1,abs(f))/max(1,0.5*dist2),1e4))*ones(m,1);
+    sig = max(1e-4,min(2e1*max(1,abs(f))/max(1,0.5*dist2),1e4))*ones(m,1);
 %     sig = 5*ones(m,1);
 else
     sig = opts.sig.*ones(m,1);
@@ -166,8 +166,8 @@ end
 
 %Factorization caching
 if nargin<8 || ~isfield(opts,'active_cnstrs') 
-    active_cnstrs_old = [];
-    active_cnstrs = [];
+    active_cnstrs_old = false(m,1);
+    active_cnstrs = false(m,1);
     LD = [];
 else
     active_cnstrs_old = opts.active_cnstrs;
@@ -218,15 +218,13 @@ Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
 y_next = zeros(m,1);
 
-
-
 for k = 1:maxiter
-    
-    if mod(k,1000)==0
+        
+    if k > 1 && mod(k,1000)==0
         fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e\n', k, nrm_rp, nrm_rd);
     end
     stats.gamma(k) = gamma;
-    stats.sigma(:,k) = sig;
+%     stats.sigma(:,k) = sig;
     
    Axys = Ax+y./sig;
    z    = min(max(Axys,bmin),bmax);                         % z-update 
@@ -244,6 +242,7 @@ for k = 1:maxiter
        nrm_rd2 = nrm_rd;
    end
    nrm_rp = norm(rp./E_scale,inf);
+   nrm_rp_unscaled = norm(rp,inf);
    stats.nrm_rd(k) = nrm_rd;
    stats.nrm_rp(k) = nrm_rp;
 
@@ -272,11 +271,7 @@ for k = 1:maxiter
        stats.dinf_certificate = D_scale.*dx;
        break
    elseif nrm_rd2 <= eps_dual_in
-%        y(active_cnstrs) = yh(active_cnstrs);
-%        y(~active_cnstrs) = 0;
-%        Aty = A'*y;
        y = yh; Aty = Atyh;
-%        Aty = Atyh;
        eps_abs_in = max(rho*eps_abs_in,eps_abs);
        eps_rel_in = max(rho*eps_rel_in,eps_rel);
        if K > 1 && nrm_rp > eps_primal
@@ -286,7 +281,8 @@ for k = 1:maxiter
            else
                adj_sig  = abs(rp)>theta*abs(rpK);
            end
-           sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
+%            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
+            sig = min(1e8, max(1, 100*abs(rp).*adj_sig/(nrm_rp_unscaled+1e-6)).*sig);
            sig_updated = true;
            
            Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
@@ -325,7 +321,7 @@ for k = 1:maxiter
                   stats.nact_changed(k) = -1*stats.nact_changed(k);
               end
           end
-          if na
+          if na 
               switch linsys
                   case 0 % sparse backslash
                       d = -(Q+A(active_cnstrs,:)'*sparse(1:na,1:na,sig(active_cnstrs),na,na)*A(active_cnstrs,:))\dphi;
@@ -364,11 +360,6 @@ for k = 1:maxiter
               LD = ldlchol(Q);
               d = -ldlsolve (LD,dphi);
           end
-%           if mod(k,10)==0
-%               d = -dphi;
-%               Ax = A*x;
-%               Qx = Q*x;
-%           end
           
       elseif strcmp(solver, 'lbfgs')
           % lbfgs direction
@@ -472,7 +463,9 @@ stats.iter_out = K;
 stats.sig = sig;
 stats.LD = LD;
 stats.active_cnstrs = active_cnstrs;
-stats.sum_nact_changed = sum(abs(stats.nact_changed));
+if isfield(stats, 'nact_changed')
+    stats.sum_nact_changed = sum(abs(stats.nact_changed));
+end
 if K>1
     stats.iter_in(K) = k-(sum(stats.iter_in));
 else
@@ -520,10 +513,11 @@ end
 
 function tf = PWALineSearch(eta,beta,delta,gamma)
 
-inz    = abs(delta)>1e-12 & ~isinf(gamma); 
+% inz    = abs(delta)>1e-12 & ~isinf(gamma); 
 % if sum(inz) ~= size(delta,1)
 %     fprintf('inz \n');
 % end
+inz = 1:length(gamma);
 gamma  = gamma(inz);
 delta  = delta(inz);
 s      = gamma./delta;

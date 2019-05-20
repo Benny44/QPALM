@@ -15,11 +15,12 @@
 void newton_set_direction(QPALMWorkspace *work) {
 
     set_active_constraints(work);
-    if (work->chol->reset_newton && work->chol->nb_active_constraints) {
+    set_entering_leaving_constraints(work);
+    if ((work->chol->reset_newton && work->chol->nb_active_constraints) || 
+        (work->chol->nb_enter + work->chol->nb_leave) > 40) {
         work->chol->reset_newton = FALSE;
         ldlcholQAtsigmaA(work);   
     } else if (work->chol->nb_active_constraints) {
-        set_entering_leaving_constraints(work);
         if(work->chol->nb_enter) {
             ldlupdate_entering_constraints(work);
         }
@@ -29,6 +30,7 @@ void newton_set_direction(QPALMWorkspace *work) {
     } else {
         ldlcholQ(work);
     }
+
     ldlsolveLD_neg_dphi(work);
 
     //Store old active set
@@ -38,11 +40,11 @@ void newton_set_direction(QPALMWorkspace *work) {
 void set_active_constraints(QPALMWorkspace *work) {
     work->chol->nb_active_constraints = 0;
     for (size_t i = 0; i < work->data->m; i++) {
-        if ((work->Axys[i] < work->data->bmin[i]) || ((work->Axys[i] > work->data->bmax[i]))){
-            work->chol->active_constraints[i] = 1;
+        if ((work->Axys[i] <= work->data->bmin[i]) || ((work->Axys[i] >= work->data->bmax[i]))){
+            work->chol->active_constraints[i] = TRUE;
             work->chol->nb_active_constraints++;
         } else {
-            work->chol->active_constraints[i] = 0;
+            work->chol->active_constraints[i] = FALSE;
         }         
     }
 }

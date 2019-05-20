@@ -56,13 +56,13 @@ extern "C" {
 # define EPS_PRIM_INF (1e-4)    /**< default primal infeasibility tolerance */
 # define EPS_DUAL_INF (1e-4)    /**< default dual infeasibility tolerance */
 # define THETA (0.25)           /**< default penalty update criterion parameter */
-# define DELTA (10)             /**< default penalty update factor */
+# define DELTA (100)             /**< default penalty update factor */
 # define TAU_INIT (1)           /**< default initial stepsize in backtracking */
 
 # define PROXIMAL (TRUE)        /**< default use of proximal method of multipliers */
-# define GAMMA_INIT (1E6)       /**< default initial proximal penalty parameter */
+# define GAMMA_INIT (1E1)       /**< default initial proximal penalty parameter */
 # define GAMMA_UPD (10)         /**< default proximal penalty update factor */
-# define GAMMA_MAX (1E8)        /**< default proximal penalty cap */
+# define GAMMA_MAX (1E6)        /**< default proximal penalty cap */
 
 # define SCALING (10)            /**< default number of scaling iterations */
 # define MIN_SCALING (1e-08)    /**< minimum scaling value *////< Minimum scaling value

@@ -552,10 +552,11 @@ settings = solver.default_settings();
 % settings.verbose = true;
 settings.proximal = false;
 settings.scaling = 2;
-settings.max_iter = 100;
+settings.max_iter = 300;
 settings.eps_abs = 1e-10;
 settings.eps_rel = 1e-10;
 settings.tau_init = 1.5;
+settings.delta = 100;
 
 % tic
 solver.setup(Q, q, A, lb, ub, settings); 

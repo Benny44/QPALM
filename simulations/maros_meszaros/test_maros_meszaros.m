@@ -22,7 +22,7 @@ new                  = {};
 
 options.qpalm_matlab = true;
 options.qpalm_c = false;
-options.osqp = true;
+options.osqp = false;
 options.qpoases = false;
 options.gurobi = false;
 

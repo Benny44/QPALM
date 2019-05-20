@@ -57,12 +57,12 @@ elseif ~isfield(prob, 'l') && isfield(prob, 'u')
     ubA = [prob.ub; prob.u];
 end
 
-if options.qpalm_matlab   
-        
+if options.qpalm_matlab       
+    
     for k = 1:n
         opts.solver = 'newton';
         opts.scalar_sig = false;
-        opts.maxiter = 5000;
+        opts.maxiter = 50000;
         opts.eps_abs = EPS_ABS;
         opts.eps_rel = EPS_REL;
         opts.eps_abs_in = min(EPS_ABS*1e6, 1);
@@ -105,15 +105,15 @@ if options.qpalm_c
         settings = solver.default_settings();
         
         settings.verbose = VERBOSE;
-%         settings.scaling = 2;
-        settings.max_iter = MAXITER;
+        settings.scaling = 10;
+        settings.max_iter = 30000;
         settings.eps_abs_in = min(EPS_ABS*1e6, 1);
         settings.eps_rel_in = min(EPS_REL*1e6, 1);
         settings.eps_abs = EPS_ABS;
         settings.eps_rel = EPS_REL;
         settings.eps_prim_inf = EPS_ABS;
         settings.eps_dual_inf = EPS_ABS;
-%         settings.delta   = 10;
+        settings.delta   = 100;
 %         settings.memory  = 20;
         
         solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);

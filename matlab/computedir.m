@@ -1,11 +1,10 @@
 function [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,b,active_cnstrs,active_cnstrs_old, reset_newton)
-if ~reset_newton
-    enter = active_cnstrs & (~active_cnstrs_old);
-    leave = active_cnstrs_old & (~active_cnstrs);
-    ne = sum(enter);
-    nl = sum(leave);
+enter = active_cnstrs & (~active_cnstrs_old);
+leave = active_cnstrs_old & (~active_cnstrs);
+ne = sum(enter);
+nl = sum(leave);
+if ~reset_newton && (ne+nl)<=40
     if ne>0
-%         Ap = (sparse(1:ne,1:ne,sqrt(sig(enter)),ne,ne)*A(enter,:));
         Ae = Asqrtsigt(:,enter);
         LD = ldlupdate(LD,Ae,'+');
     end
