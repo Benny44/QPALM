@@ -22,3 +22,4 @@ tests/run_all_tests
 *.gcda
 *.info
 *.log
+*.mtx

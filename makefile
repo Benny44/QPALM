@@ -5,7 +5,7 @@ EDIR=examples
 BDIR=lib
 TESTDIR=tests
 
-all: directories lib demo
+all: directories lib demo mtxformat
 
 travis: directories suitesparselib test
 
@@ -77,16 +77,24 @@ $(ODIR)/%.o: $(SRCDIR)/%.c $(DEPS)
 $(EDIR)/%.o: $(EDIR)/%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS) $(LIBS) $(LDLIBS)
 
+mtx/qpalm_mtx.o: mtx/qpalm_mtx.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS) $(LIBS) $(LDLIBS)
+
 $(BDIR)/libqpalm.a: $(_OBJ)
 	ar rcs $@ $^ 
 
 demo: $(OBJ) 
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS) $(LDLIBS)
 
+mtxformat: lib mtxexec
+
+mtxexec: mtx/qpalm_mtx.o
+	$(CC) -o mtx/qpalm_mtx $^ $(CFLAGS) -lqpalm -Llib $(LIBS) $(LDLIBS) 
+
 .PHONY: clean directories
 
 clean:
-	rm -f $(ODIR)/*.o $(BDIR)/*.a $(EDIR)/*.o demo
+	rm -f $(ODIR)/*.o $(BDIR)/*.a $(EDIR)/*.o demo mtx/qpalm_mtx
 	(cd $(TESTDIR) && $(MAKE) clean)
 
 directories:

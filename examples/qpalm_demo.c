@@ -100,8 +100,6 @@ int main() {
   CHOLMOD(start)(&work->chol->c);
   CHOLMOD(free_sparse)(&data->Q, &c);
   CHOLMOD(free_sparse)(&data->A, &c);
-  CHOLMOD(free_sparse)(&data->Q, &c);
-  CHOLMOD(free_sparse)(&data->A, &c);
   CHOLMOD(finish)(&work->chol->c);
 
   qpalm_cleanup(work);
