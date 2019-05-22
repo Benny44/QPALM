@@ -271,7 +271,12 @@ for k = 1:maxiter
        stats.dinf_certificate = D_scale.*dx;
        break
    elseif nrm_rd2 <= eps_dual_in
-       y = yh; Aty = Atyh;
+       if K == 1
+           y = yh; Aty = Atyh;
+       else %nesterov acceleration
+           y = yh + (K-2)/(K+1)*(yh-y);
+           Aty = Atyh + (K-2)/(K+1)*(Atyh-Aty);
+       end
        eps_abs_in = max(rho*eps_abs_in,eps_abs);
        eps_rel_in = max(rho*eps_rel_in,eps_rel);
        if K > 1 && nrm_rp > eps_primal
