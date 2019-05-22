@@ -62,7 +62,7 @@ if options.qpalm_matlab
     for k = 1:n
         opts.solver = 'newton';
         opts.scalar_sig = false;
-        opts.maxiter = 50000;
+        opts.maxiter = 10000;
         opts.eps_abs = EPS_ABS;
         opts.eps_rel = EPS_REL;
         opts.eps_abs_in = min(EPS_ABS*1e6, 1);

@@ -12,13 +12,14 @@
 #include "termination.h"
 #include "lin_alg.h"
 #include "constants.h"
+#include "global_opts.h"
 #include "util.h"
 
 #include <stdio.h>
 
 c_int check_termination(QPALMWorkspace *work) {
     calculate_residuals_and_tolerances(work);
-
+    
     if (is_solved(work)) {
         update_status(work->info, QPALM_SOLVED);
         store_solution(work);

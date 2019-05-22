@@ -35,15 +35,12 @@ cholmod_sparse* mtx_load_A(FILE *fp, size_t *n, size_t *m){
 
         Ai[elem] = --row;
         
-        if (col == prev_col) {
-            Ap[col]++;
-        } else {
+        if(col > prev_col) {
             for (; prev_col < col; prev_col++) {
                 Ap[prev_col+1] = Ap[prev_col];
             }
-            prev_col = col;
-            Ap[prev_col]++;
         }
+        Ap[col]++;
 
         if (temp > QPALM_INFTY) {
             temp = QPALM_INFTY;
@@ -92,15 +89,12 @@ cholmod_sparse* mtx_load_Q(FILE *fp, size_t n_check){
 
         Qi[elem] = --row;
         
-        if (col == prev_col) {
-            Qp[col]++;
-        } else {
+        if (col > prev_col) {
             for (; prev_col < col; prev_col++) {
                 Qp[prev_col+1] = Qp[prev_col];
-            }
-            prev_col = col;
+            }          
         }
-
+        Qp[col]++;
         if (temp > QPALM_INFTY) {
             temp = QPALM_INFTY;
         } else if (temp < -QPALM_INFTY) {
@@ -223,6 +217,13 @@ int main(int argc, char*argv[]){
     qpalm_solve(work);
 
     printf("Solver status: %s\n", work->info->status);
+    printf("Iter: %d\n", work->info->iter);
+    printf("Iter_out: %d\n", work->info->iter_out);
+
+    for (int i = 0; i < work->data->n; i++) {
+        printf("%f ", work->solution->x[i]);
+    }
+    printf("\n");
 
     #ifdef PROFILING
     printf("Setup time: %f\n", work->info->setup_time);
