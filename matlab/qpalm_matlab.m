@@ -218,8 +218,6 @@ Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
 y_next = zeros(m,1);
 
-gamma_changed = false;
-
 for k = 1:maxiter
         
     if k > 1 && mod(k,1000)==0
@@ -283,17 +281,7 @@ for k = 1:maxiter
        eps_rel_in = max(rho*eps_rel_in,eps_rel);
        if K > 1 && nrm_rp > eps_primal
 
-           if proximal
-               x0=x;
-               if gamma ~= gammaMax
-                   gamma_changed = true;
-                   Q=Q-1/gamma*speye(n);
-                   Qx = Qx-1/gamma*x; 
-                   gamma=min(gamma*gammaUpd, gammaMax);
-                   Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
-                   Qx = Qx+1/gamma*x; 
-               end
-           end
+           gamma_changed = proximal && gamma ~= gammaMax;
            
            if scalar_sig
                adj_sig  = norm(rp,inf)>theta*norm(rpK,inf);
@@ -316,9 +304,7 @@ for k = 1:maxiter
                     *A(sig_changed,:))','+');
             else
                 reset_newton = true;
-            end
-            gamma_changed = false;
-            
+            end            
            
            Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
            Asig      = (sparse(1:m,1:m,sig,m,m)*A);
@@ -331,6 +317,16 @@ for k = 1:maxiter
            stats.iter_in(K) = k;
        end
        K   = K+1;
+       if proximal
+           x0=x;
+           if gamma ~= gammaMax
+               Q=Q-1/gamma*speye(n);
+               Qx = Qx-1/gamma*x; 
+               gamma=min(gamma*gammaUpd, gammaMax);
+               Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
+               Qx = Qx+1/gamma*x; 
+           end
+       end
 %        reset_newton = true;
        
    else
