@@ -218,6 +218,8 @@ Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
 y_next = zeros(m,1);
 
+gamma_changed = false;
+
 for k = 1:maxiter
         
     if k > 1 && mod(k,1000)==0
@@ -271,24 +273,52 @@ for k = 1:maxiter
        stats.dinf_certificate = D_scale.*dx;
        break
    elseif nrm_rd2 <= eps_dual_in
-       if K == 1
+%        if K == 1 || eps_abs_in ~= eps_abs
            y = yh; Aty = Atyh;
-       else %nesterov acceleration
-           y = yh + (K-2)/(K+1)*(yh-y);
-           Aty = Atyh + (K-2)/(K+1)*(Atyh-Aty);
-       end
+%        else %nesterov acceleration
+%            y = yh + (K-2)/(K+1)*(yh-y);
+%            Aty = Atyh + (K-2)/(K+1)*(Atyh-Aty);
+%        end
        eps_abs_in = max(rho*eps_abs_in,eps_abs);
        eps_rel_in = max(rho*eps_rel_in,eps_rel);
        if K > 1 && nrm_rp > eps_primal
 
+           if proximal
+               x0=x;
+               if gamma ~= gammaMax
+                   gamma_changed = true;
+                   Q=Q-1/gamma*speye(n);
+                   Qx = Qx-1/gamma*x; 
+                   gamma=min(gamma*gammaUpd, gammaMax);
+                   Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
+                   Qx = Qx+1/gamma*x; 
+               end
+           end
+           
            if scalar_sig
                adj_sig  = norm(rp,inf)>theta*norm(rpK,inf);
            else
                adj_sig  = abs(rp)>theta*abs(rpK);
            end
 %            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
-            sig = min(1e8, max(1, 100*abs(rp).*adj_sig/(nrm_rp_unscaled+1e-6)).*sig);
-           sig_updated = true;
+            prev_sig = sig;
+            sig = min(1e8, max(1, Delta*abs(rp).*adj_sig/(nrm_rp_unscaled+1e-6)).*sig);
+            sig_changed = sig ~= prev_sig;
+            nb_sig_changed = sum(sig_changed);
+            
+            if gamma_changed
+                reset_newton = true;
+            elseif nb_sig_changed == 0
+                %do nothing
+            elseif nb_sig_changed <= 40
+                LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
+                    sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
+                    *A(sig_changed,:))','+');
+            else
+                reset_newton = true;
+            end
+            gamma_changed = false;
+            
            
            Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
            Asig      = (sparse(1:m,1:m,sig,m,m)*A);
@@ -301,17 +331,8 @@ for k = 1:maxiter
            stats.iter_in(K) = k;
        end
        K   = K+1;
-       reset_newton = true;
-       if proximal
-           x0=x;
-           if gamma ~= gammaMax
-               Q=Q-1/gamma*speye(n);
-               Qx = Qx-1/gamma*x; 
-               gamma=min(gamma*gammaUpd, gammaMax);
-               Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
-               Qx = Qx+1/gamma*x; 
-           end
-       end
+%        reset_newton = true;
+       
    else
       if strcmp(solver, 'newton') 
           % Newton direction

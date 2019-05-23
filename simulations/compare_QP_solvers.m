@@ -62,7 +62,7 @@ if options.qpalm_matlab
     for k = 1:n
         opts.solver = 'newton';
         opts.scalar_sig = false;
-        opts.maxiter = 10000;
+        opts.maxiter = 20000;
         opts.eps_abs = EPS_ABS;
         opts.eps_rel = EPS_REL;
         opts.eps_abs_in = min(EPS_ABS*1e6, 1);
@@ -74,7 +74,7 @@ if options.qpalm_matlab
         opts.gammaUpd = 10;
         opts.gammaMax = 1e6;
 %         opts.sig = 5;
-        opts.Delta   = 10;
+        opts.Delta   = 100;
         opts.scaling = 'simple';
         opts.scaling_iter = 10;
         tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,A,lbA,ubA,x_warm_start,y_warm_start,opts);

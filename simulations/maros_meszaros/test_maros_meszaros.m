@@ -80,6 +80,7 @@ for i = 1:ll
     if options.gurobi, Tgurobi(i) = gurobi_time; end
 
     if options.qpalm_matlab, Iter_qpalm_matlab(i) = iter.qpalm_matlab; end
+    if options.qpalm_matlab, Iter_out_qpalm_matlab(i) = stats.qpalm_matlab.iter_out; end
     if options.qpalm_c, Iter_qpalm_c(i) = iter.qpalm_c; end
     if options.osqp, Iter_osqp(i) = iter.osqp; end
     if options.qpoases, Iter_qpoases(i) = iter.qpoases; end
