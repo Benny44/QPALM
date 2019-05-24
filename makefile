@@ -5,7 +5,7 @@ EDIR=examples
 BDIR=lib
 TESTDIR=tests
 
-all: directories lib demo mtxformat
+all: lib demo mtxformat
 
 travis: directories suitesparselib test
 
@@ -23,7 +23,7 @@ suitesparselib:
 	( cd suitesparse/CHOLMOD && $(MAKE) library )
 	( cd suitesparse/LDL && $(MAKE) library )
 
-lib: $(BDIR)/libqpalm.a
+lib: directories $(BDIR)/libqpalm.a
 
 ifndef CC
 	CC=gcc

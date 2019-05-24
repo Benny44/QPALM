@@ -10,7 +10,7 @@ A proximal augmented Lagrangian method for (possibly **nonconvex**) QPs using se
 * To install the mex interface of QPALM, add QPALM and its subfolders to the matlab path. Then run qpalm_make.m
 * To install a C-callable library, compile suitesparse, see [here](https://github.com/jluttine/suitesparse). Then run compile the QPALM directory. For this you need to link to the BLAS and LAPACK libraries on your computer. You can use BLAS= and BLAS_PATH= options in the make command. For example:
 ```
-make BLAS="-lmwblas -lmwlapack" BLAS_PATH=$(HOME)/.Matlab/R2015/bin/glnxa64
+make BLAS="-lblas -llapack" BLAS_PATH=path/to/blas
 ```
 * To use the Matlab version of QPALM, compile the CHOLMOD mex functions (suitesparse/CHOLMOD/MATLAB/cholmod_make.m), and run QPALM/matlab/mex/PWAlinesearch_setup.m.
 
