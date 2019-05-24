@@ -1,14 +1,15 @@
 #include "qpalm.h"
-#include "constants.h"
-#include "global_opts.h"
+#include "types.h"
 #include "cholmod.h"
 #include <stdio.h>
-#include <math.h>
 
 #define N 2
 #define M 3
 #define ANZMAX 4
 #define QNZMAX 2
+
+#define TRUE 1
+#define FALSE 0
 
 c_float* random_vector(c_int n) {
   c_float* X = c_calloc(n, sizeof(c_float));
