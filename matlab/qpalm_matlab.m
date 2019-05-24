@@ -35,11 +35,19 @@ Ax = A*x;
 Qx = Q*x;
 Aty = A'*y;
 
+if nargin<8 || ~isfield(opts,'Delta')
+    Delta = 10;
+else
+    Delta = opts.Delta;
+end
+
 if nargin<8 || ~isfield(opts,'sig')
     f = 0.5*(x'*Qx)+q'*x;
     dist = Ax-min(max(Ax,bmin),bmax);
+%     nrm_rp_unscaled = norm(dist,inf);
     dist2 = dist'*dist;
     sig = max(1e-4,min(2e1*max(1,abs(f))/max(1,0.5*dist2),1e4))*ones(m,1);
+%     sig = max(1, Delta*abs(dist)/(nrm_rp_unscaled+1e-6)).*sig;
 %     sig = 5*ones(m,1);
 else
     sig = opts.sig.*ones(m,1);
@@ -90,12 +98,6 @@ if nargin<8 || ~isfield(opts,'theta')
     theta = 0.25;
 else
     theta = opts.theta;
-end
-
-if nargin<8 || ~isfield(opts,'Delta')
-    Delta = 10;
-else
-    Delta = opts.Delta;
 end
 
 if nargin<8 || ~isfield(opts,'eps_abs_in')
@@ -217,10 +219,12 @@ Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
 Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
 y_next = zeros(m,1);
+k_prev = 0;
+maxiter_inner = max(100, maxiter/1000);
 
 for k = 1:maxiter
         
-    if k > 1 && mod(k,1000)==0
+    if k > 1 && mod(k,10000)==0
         fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e\n', k, nrm_rp, nrm_rd);
     end
     stats.gamma(k) = gamma;
@@ -270,7 +274,57 @@ for k = 1:maxiter
        stats.status = 'dual_infeasible';
        stats.dinf_certificate = D_scale.*dx;
        break
+   elseif k == k_prev + maxiter_inner %inner problem maxiter termination
+       %do outer update except dual and tolerance updates
+       k_prev = k;
+       gamma_changed = proximal && gamma ~= gammaMax;
+           
+       if scalar_sig
+           adj_sig  = norm(rp,inf)>theta*norm(rpK,inf);
+       else
+           adj_sig  = abs(rp)>theta*abs(rpK);
+       end
+%            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
+        prev_sig = sig;
+        sig = min(1e8, max(1, Delta*abs(rp).*adj_sig/(nrm_rp_unscaled+1e-6)).*sig);
+        sig_changed = sig ~= prev_sig;
+        nb_sig_changed = sum(sig_changed);
+
+        if gamma_changed
+            reset_newton = true;
+        elseif nb_sig_changed == 0
+            %do nothing
+        elseif nb_sig_changed <= 40
+            LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
+                sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
+                *A(sig_changed,:))','+');
+        else
+            reset_newton = true;
+        end            
+
+       Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
+       Asig      = (sparse(1:m,1:m,sig,m,m)*A);
+       
+       rpK = rp;
+       if K>1
+           stats.iter_in(K) = k-(sum(stats.iter_in));
+       else
+           stats.iter_in(K) = k;
+       end
+       K   = K+1;
+       if proximal
+           x0=x;
+           if gamma ~= gammaMax
+               Q=Q-1/gamma*speye(n);
+               Qx = Qx-1/gamma*x; 
+               gamma=min(gamma*gammaUpd, gammaMax);
+               Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
+               Qx = Qx+1/gamma*x; 
+           end
+       end
+       
    elseif nrm_rd2 <= eps_dual_in
+       k_prev = k;
 %        if K == 1 || eps_abs_in ~= eps_abs
            y = yh; Aty = Atyh;
 %        else %nesterov acceleration
