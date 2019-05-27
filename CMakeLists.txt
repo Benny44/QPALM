@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(QPALM VERSION 0.1.0)
 
-include(CTest)
-enable_testing()
-
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
@@ -15,7 +12,10 @@ find_library(SUITESPARSE_LIB
     names cholmod
     HINTS ${CMAKE_CURRENT_LIST_DIR}/suitesparse/lib)
 
-add_library(qpalm SHARED src/newton.c
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build/lib)
+
+add_library(qpalm SHARED 
+                src/newton.c
                 src/util.c
                 src/qpalm.c
                 src/scaling.c
@@ -46,6 +46,10 @@ target_include_directories(qpalm
                 ${SUITESPARSE_INCLUDE_DIR})
         
 target_link_libraries(qpalm blas lapack ${SUITESPARSE_LIB})
+
+IF(CMAKE_BUILD_TYPE MATCHES "debug")
+    add_subdirectory(tests)
+ENDIF(CMAKE_BUILD_TYPE MATCHES "debug")
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
