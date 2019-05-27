@@ -4,7 +4,8 @@ project(QPALM VERSION 0.1.0)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build/lib)
+set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/build/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
 
 #Rest of suitesparse
 add_subdirectory(cmakeSuitesparse)
