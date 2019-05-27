@@ -16,12 +16,10 @@ suitesparselib:
 	( cd suitesparse && $(MAKE) metis)
 	( cd suitesparse/SuiteSparse_config && $(MAKE) )
 	( cd suitesparse/AMD && $(MAKE) library )
-	( cd suitesparse/BTF && $(MAKE) library )
 	( cd suitesparse/CAMD && $(MAKE) library )
 	( cd suitesparse/CCOLAMD && $(MAKE) library )
 	( cd suitesparse/COLAMD && $(MAKE) library )
 	( cd suitesparse/CHOLMOD && $(MAKE) library )
-	( cd suitesparse/LDL && $(MAKE) library )
 
 lib: directories $(BDIR)/libqpalm.a
 

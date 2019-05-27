@@ -4,6 +4,9 @@ project(QPALM VERSION 0.1.0)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
+#Rest of suitesparse
+add_subdirectory(cmakeSuitesparse)
+
 find_path(SUITESPARSE_INCLUDE_DIR
     cholmod.h
 HINTS ${CMAKE_CURRENT_LIST_DIR}/suitesparse/include)

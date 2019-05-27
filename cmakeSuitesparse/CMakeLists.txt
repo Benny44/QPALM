@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.0.0)
+project(SUITESPARSE VERSION 0.1.0)
+
+#cmake for AMD, CAMD, COLAMD, CCOLAMD, CHOLMOD, SUITESPARSECONFIG
+
+
+find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
