@@ -1,0 +1,2 @@
+/usr/bin/ar qc libQPALM.a  CMakeFiles/QPALM.dir/src/newton.c.o CMakeFiles/QPALM.dir/src/util.c.o CMakeFiles/QPALM.dir/src/qpalm.c.o CMakeFiles/QPALM.dir/src/scaling.c.o CMakeFiles/QPALM.dir/src/linesearch.c.o CMakeFiles/QPALM.dir/src/lin_alg.c.o CMakeFiles/QPALM.dir/src/termination.c.o CMakeFiles/QPALM.dir/src/cholmod_interface.c.o CMakeFiles/QPALM.dir/src/nonconvex.c.o CMakeFiles/QPALM.dir/src/validate.c.o
+/usr/bin/ranlib libQPALM.a

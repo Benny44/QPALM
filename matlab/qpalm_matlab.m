@@ -344,7 +344,7 @@ for k = 1:maxiter
            end
 %            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
             prev_sig = sig;
-            sig = min(1e8, max(1, Delta*abs(rp).*adj_sig/(nrm_rp_unscaled+1e-6)).*sig);
+            sig = min(1e9, max(1, Delta*abs(rp).*adj_sig/(nrm_rp_unscaled+1e-6)).*sig);
             sig_changed = sig ~= prev_sig;
             nb_sig_changed = sum(sig_changed);
             
