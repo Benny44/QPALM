@@ -7,6 +7,7 @@ branches:
   only:
   - master
   - development
+  - cmake
 addons:
   apt:
     sources:
@@ -19,15 +20,13 @@ addons:
       - valgrind
       - libblas-dev
       - liblapack-dev
-before_install:
-  - make clean
 install:
   - gem install coveralls-lcov 
 before_script:
   - LD_LIBRARY_PATH="$LD_LIBRARY_PATH":suitesparse/lib:lib
   - export LD_LIBRARY_PATH  
 script:
-  - make travis COV=yes
+  - ./buildTest.sh
 cache:
   apt: true
   bundler: true
@@ -37,4 +36,4 @@ after_success:
   - lcov --list coverage.info
   - coveralls-lcov coverage.info
   - cd ..
-  - valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose tests/run_all_tests
+  - valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose build/test/run_all_tests
