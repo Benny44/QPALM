@@ -23,3 +23,4 @@ tests/run_all_tests
 *.info
 *.log
 *.mtx
+build
