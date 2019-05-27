@@ -4,6 +4,8 @@ project(QPALM VERSION 0.1.0)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build/lib)
+
 #Rest of suitesparse
 add_subdirectory(cmakeSuitesparse)
 
@@ -14,8 +16,6 @@ HINTS ${CMAKE_CURRENT_LIST_DIR}/suitesparse/include)
 find_library(SUITESPARSE_LIB
     names cholmod
     HINTS ${CMAKE_CURRENT_LIST_DIR}/suitesparse/lib)
-
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/build/lib)
 
 add_library(qpalm SHARED 
                 src/newton.c
