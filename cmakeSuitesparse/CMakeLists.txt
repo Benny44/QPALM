@@ -128,7 +128,7 @@ target_include_directories(ccolamd
                 ${CCOLAMD_PATH}/Include
                 ${SUITESPARSE_CONFIG_PATH})
 
-target_link_libraries(colamd suitesparseconfig)
+target_link_libraries(ccolamd suitesparseconfig)
 
 #CHOLMOD
 add_library(cholmod SHARED
