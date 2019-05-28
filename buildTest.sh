@@ -25,8 +25,7 @@ cd $metisdir
 
 cmake $curdir/suitesparse/metis-5.1.0 -DGKLIB_PATH=$curdir/suitesparse/metis-5.1.0/GKlib -DSHARED=1 && make
 cd $curdir
-ls -R
-cp build/metis/libmetis/libmetis.so build/lib/
+cp build/metis/libmetis/libmetis.* build/lib/
 
 #Build QPALM and tests
 cd $curdir

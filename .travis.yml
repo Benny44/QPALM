@@ -29,9 +29,6 @@ matrix:
           packages:
             - cunit
             - lcov
-            - valgrind
-            - libblas-dev
-            - liblapack-dev
 install:
   - gem install coveralls-lcov 
 script:
