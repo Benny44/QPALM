@@ -9,6 +9,7 @@ branches:
 matrix:
   include:
     - os: linux
+      env: BADGE=linux
       dist: xenial
       compiler: gcc
       addons:
@@ -24,6 +25,7 @@ matrix:
             - libblas-dev
             - liblapack-dev
     - os: osx
+      env: BADGE=osx
       addons:
         homebrew:
           packages:
@@ -40,6 +42,6 @@ after_success:
   - cd build/debug/CMakeFiles/qpalm.dir/src
   - lcov --directory . --capture --o coverage.info
   - lcov --list coverage.info
-  - coveralls-lcov coverage.info
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then coveralls-lcov coverage.info; fi
   - cd ../../../../..
-  - valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose build/test/run_all_tests
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose build/test/run_all_tests; fi
