@@ -23,7 +23,15 @@ matrix:
             - valgrind
             - libblas-dev
             - liblapack-dev
-
+    - os: osx
+      addons:
+        homebrew:
+          packages:
+            - cunit
+            - lcov
+            - valgrind
+            - libblas-dev
+            - liblapack-dev
 install:
   - gem install coveralls-lcov 
 script:
