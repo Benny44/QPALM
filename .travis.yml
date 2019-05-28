@@ -12,17 +12,18 @@ matrix:
       dist: xenial
       compiler: gcc
       addons:
-	apt:
-	  sources:
-	    - ubuntu-toolchain-r-test
-	  packages:
-	    - libcunit1 
-	    - libcunit1-doc 
-	    - libcunit1-dev
-	    - lcov
-	    - valgrind
-	    - libblas-dev
-	    - liblapack-dev
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - libcunit1 
+            - libcunit1-doc 
+            - libcunit1-dev
+            - lcov
+            - valgrind
+            - libblas-dev
+            - liblapack-dev
+
 install:
   - gem install coveralls-lcov 
 script:
