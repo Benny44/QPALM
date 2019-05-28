@@ -1,6 +1,11 @@
 # QPALM
 
-[![Build Status](https://travis-ci.com/Benny44/QPALM.svg?branch=master)](https://travis-ci.com/Benny44/QPALM)
+Platform | CI Status
+---------|:---------
+Linux    | [![Linux Build Status](https://travis-ci.org/Benny44/QPALM.svg?env=BADGE=linux&branch=cmake)](https://travis-ci.com/Benny44/QPALM)
+OSX      | [![OSX Build Status](https://travis-ci.org/Benny44/QPALM.svg?env=BADGE=osx&branch=cmake)](https://travis-ci.com/Benny44/QPALM)
+Windows  | 
+
 [![Coverage Status](https://coveralls.io/repos/github/Benny44/QPALM/badge.svg?branch=master)](https://coveralls.io/github/Benny44/QPALM?branch=master)
 
 A proximal augmented Lagrangian method for (possibly **nonconvex**) QPs using semismooth Newton direction and exact line search.
