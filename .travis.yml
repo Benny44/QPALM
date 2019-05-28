@@ -1,39 +1,39 @@
 
 language: c
 sudo: required
-dist: xenial
-compiler: gcc
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+      compiler: gcc
+      addons:
+	apt:
+	  sources:
+	    - ubuntu-toolchain-r-test
+	  packages:
+	    - libcunit1 
+	    - libcunit1-doc 
+	    - libcunit1-dev
+	    - lcov
+	    - valgrind
+	    - libblas-dev
+	    - liblapack-dev
 branches:
   only:
   - master
   - development
   - cmake
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - libcunit1 
-      - libcunit1-doc 
-      - libcunit1-dev
-      - lcov
-      - valgrind
-      - libblas-dev
-      - liblapack-dev
 install:
   - gem install coveralls-lcov 
-before_script:
-  - LD_LIBRARY_PATH="$LD_LIBRARY_PATH":suitesparse/lib:lib
-  - export LD_LIBRARY_PATH  
 script:
   - ./buildTest.sh
 cache:
   apt: true
   bundler: true
 after_success:
-  - cd obj
+  - cd build/debug/CMakeFiles/qpalm.dir/src
   - lcov --directory . --capture --o coverage.info
   - lcov --list coverage.info
   - coveralls-lcov coverage.info
-  - cd ..
+  - cd ../../..
   - valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose build/test/run_all_tests

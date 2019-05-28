@@ -1,8 +1,22 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
+
+# Add code coverage
+option (COVERAGE "Perform code coverage" OFF)
+if (COVERAGE)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
+endif()
+
+# Add unit tests (if coverage is on, unit tests should also be on)
+include(CMakeDependentOption)
+CMAKE_DEPENDENT_OPTION(UNITTESTS "Perform unit testing" OFF
+                       "NOT COVERAGE" ON)
+
+message(STATUS "Unit testing is ${UNITTESTS}")
+message(STATUS "Code coverage is ${COVERAGE}")
 
 set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/build/lib)
 set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/build/include)
@@ -47,9 +61,11 @@ target_include_directories(qpalm
         
 target_link_libraries(qpalm blas lapack cholmod)
 
-IF(CMAKE_BUILD_TYPE MATCHES "debug")
+
+# Add unittests
+if (UNITTESTS)
     add_subdirectory(tests)
-ENDIF(CMAKE_BUILD_TYPE MATCHES "debug")
+endif()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

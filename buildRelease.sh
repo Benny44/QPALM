@@ -7,8 +7,8 @@ if [ ! -d "build" ]; then
   mkdir build
 fi
 
-if [ ! -d "build/debug" ]; then
-  mkdir build/debug
+if [ ! -d "build/release" ]; then
+  mkdir build/release
 fi
 
 if [ ! -d "build/lib" ]; then
@@ -23,23 +23,21 @@ fi
 metisdir=$curdir/build/metis
 cd $metisdir
 
-cmake $curdir/suitesparse/metis-5.1.0 -DGKLIB_PATH=$curdir/suitesparse/metis-5.1.0/GKlib -DSHARED=1 && make
+cmake $curdir/suitesparse/metis-5.1.0 -DGKLIB_PATH=$curdir/suitesparse/metis-5.1.0/GKlib -DSHARED=1 -DCMAKE_BUILD_TYPE=Release && make
 cd $curdir
 cp build/metis/libmetis/libmetis.so build/lib/
 
-#Build QPALM and tests
+#Build QPALM
 cd $curdir
 
-builddir=$curdir/build/debug
+builddir=$curdir/build/release
 
 cd $builddir
 
-cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON
+cmake ../.. -DCMAKE_BUILD_TYPE=Release
 make
 
-#Run the tests
-cd $builddir
-../test/run_all_tests
+
 
 
 

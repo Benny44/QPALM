@@ -209,13 +209,21 @@ target_include_directories(cholmod
                 ${SUITESPARSE_CONFIG_PATH}
                 ${METIS_PATH}/include)
 
+
 find_library(METIS_LIB
     names metis
     HINTS ${LIB_DIR})
 
-target_link_libraries(cholmod blas lapack ${METIS_LIB}
-            suitesparseconfig
-            amd
-            camd
-            colamd
-            ccolamd)
+target_link_libraries(cholmod 
+                        blas lapack 
+                        ${METIS_LIB}
+                        suitesparseconfig
+                        amd
+                        camd
+                        colamd
+                        ccolamd)
+
+find_package(OpenMP)
+if (OPENMP_FOUND)
+        target_link_libraries(cholmod ${OpenMP_C_LIBRARIES})
+endif()
