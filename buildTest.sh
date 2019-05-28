@@ -2,11 +2,24 @@
 
 curdir=`pwd`
 
-#Metis
+#Build direcetories
+if [ ! -d "build" ]; then
+  mkdir build
+fi
+
+if [ ! -d "build/debug" ]; then
+  mkdir build/debug
+fi
+
+if [ ! -d "build/lib" ]; then
+  mkdir build/lib
+fi
+
 if [ ! -d "build/metis" ]; then
   mkdir build/metis
 fi
 
+#Metis
 metisdir=$curdir/build/metis
 cd $metisdir
 
@@ -16,10 +29,6 @@ cp build/metis/libmetis/libmetis.so build/lib/
 
 #Build QPALM and tests
 cd $curdir
-
-if [ ! -d "build/debug" ]; then
-  mkdir build/debug
-fi
 
 builddir=$curdir/build/debug
 

@@ -11,6 +11,35 @@ set(CAMD_PATH ${CMAKE_SOURCE_DIR}/suitesparse/CAMD)
 set(COLAMD_PATH ${CMAKE_SOURCE_DIR}/suitesparse/COLAMD) 
 set(CCOLAMD_PATH ${CMAKE_SOURCE_DIR}/suitesparse/CCOLAMD) 
 set(CHOLMOD_PATH ${CMAKE_SOURCE_DIR}/suitesparse/CHOLMOD) 
+set(METIS_PATH ${CMAKE_SOURCE_DIR}/suitesparse/metis-5.1.0)
+
+#copy header files
+#make_directory(${INCLUDE_DIR})
+#execute_process(COMMAND bash -c "cp ${AMD_PATH}/Include/amd.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CAMD_PATH}/Include/camd.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${COLAMD_PATH}/Include/colamd.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CCOLAMD_PATH}/Include/ccolamd.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${METIS_PATH}/include/metis.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${SUITESPARSE_CONFIG_PATH}/SuiteSparse_config.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_blas.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_camd.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_check.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_cholesky.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_complexity.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_matrixops.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_config.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_modify.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_core.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_partition.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_function.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_supernodal.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_template.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_gpu.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_gpu_kernels.h ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/cholmod_io64.h ${INCLUDE_DIR}")  
+
+add_compile_options("-DDLONG")
 
 #SUITESPARSECONFIG
 add_library(suitesparseconfig SHARED
@@ -173,7 +202,12 @@ add_library(cholmod SHARED
 target_include_directories(cholmod
         PUBLIC
                 ${CHOLMOD_PATH}/Include
-                ${SUITESPARSE_CONFIG_PATH})
+                ${AMD_PATH}/Include
+                ${CAMD_PATH}/Include
+                ${COLAMD_PATH}/Include
+                ${CCOLAMD_PATH}/Include
+                ${SUITESPARSE_CONFIG_PATH}
+                ${METIS_PATH}/include)
 
 find_library(METIS_LIB
     names metis

@@ -5,18 +5,13 @@ find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
 set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/build/lib)
+set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/build/include)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
+
+add_compile_options("-DDLONG")
 
 #Rest of suitesparse
 add_subdirectory(cmakeSuitesparse)
-
-find_path(SUITESPARSE_INCLUDE_DIR
-    cholmod.h
-HINTS ${CMAKE_CURRENT_LIST_DIR}/suitesparse/include)
-
-find_library(SUITESPARSE_LIB
-    names cholmod
-    HINTS ${CMAKE_CURRENT_LIST_DIR}/suitesparse/lib)
 
 add_library(qpalm SHARED 
                 src/newton.c
@@ -44,12 +39,13 @@ add_library(qpalm SHARED
                 include/newton.h
                 )
 
+#message(${CMAKE_CURRENT_LIST_DIR}/suitesparse/CHOLMOD/Include)
+
 target_include_directories(qpalm
         PUBLIC
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-                ${SUITESPARSE_INCLUDE_DIR})
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
         
-target_link_libraries(qpalm blas lapack ${SUITESPARSE_LIB})
+target_link_libraries(qpalm blas lapack cholmod)
 
 IF(CMAKE_BUILD_TYPE MATCHES "debug")
     add_subdirectory(tests)
