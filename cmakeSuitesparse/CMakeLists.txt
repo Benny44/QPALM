@@ -75,6 +75,8 @@ target_include_directories(amd
                 ${AMD_PATH}/Include
                 ${SUITESPARSE_CONFIG_PATH})
 
+target_link_libraries(amd suitesparseconfig)
+
 #CAMD
 add_library(camd SHARED
                 ${CAMD_PATH}/Source/camd_dump.c
