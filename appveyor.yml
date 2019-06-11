@@ -9,11 +9,14 @@ environment:
   CMAKE_PROJECT: MinGW Makefiles
 
 init:
+
   # Uncomment for remote desktop debug
 # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #  - ECHO %PYTHON_VERSION% %MINICONDA%
 
 install:
+  - cmd: IF NOT EXIST C:\cache\OpenBLAS appveyor DownloadFile https://sjeng.org/ftp/OpenBLAS-0.3.3-win-oldthread.zip
+  - cmd: IF NOT EXIST C:\cache\OpenBLAS 7z x OpenBLAS-0.3.3-win-oldthread.zip -oC:\cache\OpenBLAS
   - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\install.cmd"
 
 test_script:
