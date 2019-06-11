@@ -17,5 +17,6 @@ IF "%PLATFORM%"=="x86" (
 )
 set PATH=%MINGW_PATH%;%PATH%
 
+set LIB=C:\cache\OpenBLAS\dist64\bin;%LIB%
 
 @echo off

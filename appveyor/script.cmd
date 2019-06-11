@@ -8,8 +8,8 @@ mkdir build\lib
 mkdir build\metis
 
 cd build/metis
-cmake ..\..\suitesparse\metis-5.1.0 -DGKLIB_PATH=..\..\suitesparse\metis-5.1.0\GKlib -DSHARED=1
-cmake --build .
+cmake ..\..\suitesparse\metis-5.1.0 -DGKLIB_PATH=..\..\suitesparse\metis-5.1.0\GKlib -DSHARED=0
+cmake --build . 
 
 cd ..\..
 copy build\metis\libmetis\libmetis.* build\lib\
