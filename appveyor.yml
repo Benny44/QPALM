@@ -1,0 +1,25 @@
+# Not a .NET project. We build it in the install script
+build: false
+
+platform:
+  - x64
+  - x86
+
+environment:
+  CMAKE_PROJECT: MinGW Makefiles
+
+init:
+  # Uncomment for remote desktop debug
+# - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#  - ECHO %PYTHON_VERSION% %MINICONDA%
+
+install:
+  - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\install.cmd"
+
+test_script:
+  - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\script.cmd"
+
+#deploy_script:
+#  - "%APPVEYOR_BUILD_FOLDER%\\ci\\appveyor\\deploy.cmd"
+
+
