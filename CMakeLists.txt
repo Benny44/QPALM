@@ -7,6 +7,8 @@ find_library(SUITESPARSE_LIB names cholmod
 find_path(SUITESPARSE_INCLUDE names cholmod.h
     HINTS ${CMAKE_INCLUDE_PATH} $ENV{SUITESPARSE_ROOT_INCLUDE})
 
+message(STATUS "Root lib is set to: $ENV{SUITESPARSE_ROOT_LIB}")
+message(STATUS "Root include is set to: $ENV{SUITESPARSE_ROOT_INCLUDE}")
 message(STATUS ${SUITESPARSE_INCLUDE})
 message(STATUS $ENV{SUITESPARSE_ROOT_INCLUDE})
 

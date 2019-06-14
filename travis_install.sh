@@ -21,3 +21,6 @@ conda install -c conda-forge suitesparse
 export SUITESPARSE_ROOT_LIB=${DEPS_DIR}/miniconda/lib
 export SUITESPARSE_ROOT_INCLUDE=${DEPS_DIR}/miniconda/include
 
+
+ls ${SUITESPARSE_ROOT_LIB}
+ls ${SUITESPARSE_ROOT_INCLUDE}
