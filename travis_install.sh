@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Create deps dir
+mkdir ${DEPS_DIR}
+cd ${DEPS_DIR}
+
+#Get and install miniconda
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
     wget http://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
 else
