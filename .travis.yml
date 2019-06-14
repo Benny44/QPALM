@@ -6,6 +6,7 @@ branches:
   - master
   - development
   - cmake
+  - conda
 matrix:
   include:
     - os: linux
