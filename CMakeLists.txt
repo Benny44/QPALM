@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
-find_library(SUITESPARSE_LIB names cholmod suitesparseconfig
+find_library(CHOLMOD_LIB names cholmod 
+    HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
+
+find_library(SUITESPARSE_LIB names suitesparseconfig
     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
 
 find_path(SUITESPARSE_INCLUDE names cholmod.h 
@@ -67,7 +70,7 @@ target_include_directories(qpalm
                 ${SUITESPARSE_INCLUDE})
         
 
-target_link_libraries(qpalm ${SUITESPARSE_LIB})
+target_link_libraries(qpalm ${CHOLMOD_LIB} ${SUITESPARSE_LIB})
 
 
 # Add unittests
