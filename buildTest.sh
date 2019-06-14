@@ -15,18 +15,6 @@ if [ ! -d "build/lib" ]; then
   mkdir build/lib
 fi
 
-if [ ! -d "build/metis" ]; then
-  mkdir build/metis
-fi
-
-#Metis
-metisdir=$curdir/build/metis
-cd $metisdir
-
-cmake $curdir/suitesparse/metis-5.1.0 -DGKLIB_PATH=$curdir/suitesparse/metis-5.1.0/GKlib -DSHARED=1 && make
-cd $curdir
-cp build/metis/libmetis/libmetis.* build/lib/
-
 #Build QPALM and tests
 cd $curdir
 
@@ -34,7 +22,7 @@ builddir=$curdir/build/debug
 
 cd $builddir
 
-cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON
+cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DCMAKE_INCLUDE_PATH=/usr/include/suitesparse -DCMAKE_LIBRARY_PATH=/usr/lib 
 make
 
 #Run the tests

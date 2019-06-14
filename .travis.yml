@@ -22,8 +22,7 @@ matrix:
             - libcunit1-dev
             - lcov
             - valgrind
-            - libblas-dev
-            - liblapack-dev
+
     - os: osx
       env: BADGE=osx
       addons:
@@ -33,6 +32,7 @@ matrix:
             - lcov
 install:
   - gem install coveralls-lcov 
+  - ./travis_install.sh
 script:
   - ./buildTest.sh
 cache:

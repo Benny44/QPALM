@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
-find_package(BLAS REQUIRED)
-find_package(LAPACK REQUIRED)
+find_library(SUITESPARSE_LIB names cholmod
+    HINTS ${CMAKE_LIBRARY_PATH})
+
+message(STATUS "Include path ${CMAKE_INCLUDE_PATH}")
 
 # Add code coverage
 option (COVERAGE "Perform code coverage" OFF)
@@ -25,7 +27,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
 add_compile_options("-DDLONG")
 
 #Rest of suitesparse
-add_subdirectory(cmakeSuitesparse)
+#add_subdirectory(cmakeSuitesparse)
 
 add_library(qpalm SHARED 
                 src/newton.c
@@ -53,13 +55,13 @@ add_library(qpalm SHARED
                 include/newton.h
                 )
 
-#message(${CMAKE_CURRENT_LIST_DIR}/suitesparse/CHOLMOD/Include)
-
 target_include_directories(qpalm
         PUBLIC
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+                ${CMAKE_INCLUDE_PATH})
         
-target_link_libraries(qpalm blas lapack cholmod)
+
+target_link_libraries(qpalm ${SUITESPARSE_LIB})
 
 
 # Add unittests
