@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
-find_library(SUITESPARSE_LIB names cholmod
+find_library(SUITESPARSE_LIB names cholmod suitesparseconfig
     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
 
-find_path(SUITESPARSE_INCLUDE names cholmod.h
+find_path(SUITESPARSE_INCLUDE names cholmod.h 
     HINTS ${CMAKE_INCLUDE_PATH} $ENV{SUITESPARSE_ROOT_INCLUDE})
 
 message(STATUS "Root lib is set to: $ENV{SUITESPARSE_ROOT_LIB}")
