@@ -13,9 +13,10 @@ A proximal augmented Lagrangian method for (possibly **nonconvex**) QPs using se
 ## Installation
 
 * To install the mex interface of QPALM, add QPALM and its subfolders to the matlab path. Then run qpalm_make.m
-* To install a C-callable library, compile suitesparse, see [here](https://github.com/jluttine/suitesparse). Then run compile the QPALM directory. For this you need to link to the BLAS and LAPACK libraries on your computer. You can use BLAS= and BLAS_PATH= options in the make command. For example:
+* To install a C-callable library, on Linux/MacOS run buildRelease.sh. Windows support coming soon. For example:
 ```
-make BLAS="-lblas -llapack" BLAS_PATH=path/to/blas
+chmod 755 buildRelease.sh
+./buildRelease.sh
 ```
 * To use the Matlab version of QPALM, compile the CHOLMOD mex functions (suitesparse/CHOLMOD/MATLAB/cholmod_make.m), and run QPALM/matlab/mex/PWAlinesearch_setup.m.
 
@@ -32,9 +33,10 @@ You can now find the the documentation [online](https://benny44.github.io/QPALM/
 
 ## Tests
 
-To run the automated tests, do
+To build the debug version and run the automated tests, do
 ```
-make test BLAS=... BLAS_PATH=...
+chmod 755 buildTest.sh
+./buildTest.sh
 ```
 
 ## Benchmarks (random QPs)
@@ -49,4 +51,4 @@ make test BLAS=... BLAS_PATH=...
 
 ## License
 
-TBA
+QPALM is licensed under GPL v3.0
