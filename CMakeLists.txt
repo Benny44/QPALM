@@ -10,7 +10,7 @@ find_path(SUITESPARSE_INCLUDE names cholmod.h
 message(STATUS "Root lib is set to: $ENV{SUITESPARSE_ROOT_LIB}")
 message(STATUS "Root include is set to: $ENV{SUITESPARSE_ROOT_INCLUDE}")
 message(STATUS ${SUITESPARSE_INCLUDE})
-message(STATUS $ENV{SUITESPARSE_ROOT_INCLUDE})
+message(STATUS ${SUITESPARSE_LIB})
 
 # Add code coverage
 option (COVERAGE "Perform code coverage" OFF)
