@@ -6,6 +6,8 @@ export SUITESPARSE_ROOT_INCLUDE=${DEPS_DIR}/miniconda/include
 ls ${SUITESPARSE_ROOT_LIB}
 ls ${SUITESPARSE_ROOT_INCLUDE}
 
+if [ "$TRAVIS_OS_NAME" = "osx" ]; then ldd ${SUITESPARSE_ROOT_LIB}libcholmod.dylib; fi
+
 curdir=`pwd`
 
 #Build direcetories
