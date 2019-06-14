@@ -22,7 +22,7 @@ builddir=$curdir/build/debug
 
 cd $builddir
 
-cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DCMAKE_INCLUDE_PATH=/usr/include/suitesparse -DCMAKE_LIBRARY_PATH=/usr/lib 
+cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON
 make
 
 #Run the tests

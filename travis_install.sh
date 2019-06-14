@@ -17,3 +17,7 @@ conda config --set always_yes yes --set changeps1 no
 conda update --yes -q conda
 
 conda install -c conda-forge suitesparse
+
+export SUITESPARSE_ROOT_LIB=${DEPS_DIR}/miniconda/lib
+export SUITESPARSE_ROOT_INCLUDE=${DEPS_DIR}/miniconda/include
+
