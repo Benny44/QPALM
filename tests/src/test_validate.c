@@ -178,19 +178,19 @@ void test_scaling_out_of_bounds(void){
 void test_booleans(void){
     settings->proximal = FALSE;
     CU_ASSERT_TRUE(validate_settings(settings));
-    settings->proximal = 3.2;
+    settings->proximal = 3;
     CU_ASSERT_FALSE(validate_settings(settings));
     settings->proximal = TRUE;
 
     settings->warm_start = FALSE;
     CU_ASSERT_TRUE(validate_settings(settings));
-    settings->warm_start = 3.2;
+    settings->warm_start = 3;
     CU_ASSERT_FALSE(validate_settings(settings));
     settings->warm_start = TRUE;
 
     settings->verbose = FALSE;
     CU_ASSERT_TRUE(validate_settings(settings));
-    settings->verbose = 3.2;
+    settings->verbose = 3;
     CU_ASSERT_FALSE(validate_settings(settings));
     settings->verbose = TRUE;
 }
