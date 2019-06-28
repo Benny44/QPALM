@@ -53,8 +53,6 @@ after_success:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then valgrind --leak-check=full --show-leak-kinds=all
   --track-origins=yes --verbose build/test/run_all_tests; fi
 deploy:
-  key:
-    secure: p0W6gwzWb/DDxdhZaWZ+0O83gDiFy1KuPHXeXdfD/3vZdAPMy2dtfTsE0FcIaVyf3Vgyz37wVFJE/AWCEvJ1aOlgg8QPqRTjIRPQvunA1DTdlD3aKg+459lA4KcdQrnxr6WhVHI88pnum/7IWXTIWPAbZuhnM42034flcM4CElrLIIGgCRyELR/BqJXcZ0vvt1/kT8Bk3JrjZl1HRavdZ3MFPc7wZbgaiRdsU19IEzBJFaAf6qPEzbvUcvjIkaJBl721X8rstWfZEvPlxVxqjH1oygQCGP86ZgZjc7FLQAjMyOb2JK/pQ10BKKWmKcAGBi2L5U5fP1pi5PutQMvfG4jLM36b+SJ7TZM3bYVm0YDvFA77gAP/kVuZjEONyEBbd0NETxffxNtohR1nKZnpZ5T3qdBUTaESU4rWHIRzAoj57Qa6iowpS0LIC9GUkvjcJJqR1AvmX3f38BgUKUsW5Ygk3SH7pFLoNa5RQ7VrscjWB4hYysFDuXlqTafrJCdYTHNoHcepBdHaK851kmjYXmGvWpSHKUbzK8DTxFlcYjZ+O0TjTUgKXygfGeL0sOYgSVJJdC3DQmTdXuk31TNRI4MoXzGuhK68MMgYmEnKR6Sp8owc5vzkeffMOX7m45NW5A4wdFA7Z3EmWRzm6qs25x94QnsZxaOjnqNJ/tKuabs=
   provider: script
   script: "bash deploy.sh"
   on: development

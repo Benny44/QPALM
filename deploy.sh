@@ -67,10 +67,9 @@ cp ../../include/*.h  $QPALM_DEPLOY_DIR/include
 # Copy static library
 #cp libqpalm.a $QPALM_DEPLOY_DIR/lib
 # Copy shared library
-cp libqpalm.$OS_SHARED_LIB_EXT $QPALM_DEPLOY_DIR/lib
+cp ../lib/libqpalm.$OS_SHARED_LIB_EXT $QPALM_DEPLOY_DIR/lib
 # Compress package
 tar -czvf $QPALM_DEPLOY_DIR.tar.gz  $QPALM_DEPLOY_DIR
-
 
 # Deploy package
 curl -T $QPALM_DEPLOY_DIR.tar.gz -ubenny44:$BINTRAY_API_KEY -H "X-Bintray-Package:QPALM" -H "X-Bintray-Version:${QPALM_VERSION}" -H "X-Bintray-Override: 1" https://api.bintray.com/content/benny44/generic/QPALM/${QPALM_VERSION}/
