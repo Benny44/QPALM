@@ -17,20 +17,16 @@
  * git submodule update --init 
  * \endcode
  * \subsection c Compiling the C library
- * The C library can be compiled by running make. The library requires BLAS and LAPACK. Therefore, the user may need to
- * specify where to find these libraries. The user can do this by using 
- * \code{.sh}
- * make BLAS="-lblas_library -llapack_library" BLAS_PATH=path/to/blas LAPACK_PATH=path/to/lapack
- * \endcode
- * This results in a C callable library libqpalm.a in the lib directory. The user's application would need to \c #include \c "qpalm.h".
- * Furthermore, it needs to be linked to the qpalm and cholmod (and blas/lapack) libraries. This requires compiling suitesparse and linking with the following flags:
- * \code{.sh}
- * -lqpalm -LQPALM/lib -IQPALM/include -Lsuitesparse/lib -Isuitesparse/include -Isuitesparse/metis-5.1.0/include -lcholmod -lamd -lcolamd -lsuitesparseconfig -lcamd -lccolamd -lmetis -lm 
- * \endcode
+ * Binaries for Linux and MacOS can be obtained from <a href="https://bintray.com/benny44/generic/QPALM/1.0">bintray</a>. 
+ * These were compiled against suitesparse from https://anaconda.org/conda-forge/suitesparse. Windows support coming soon.
  * 
  * \subsection mex Compiling the Mex interface
  * Add QPALM/mexInterface to your Matlab path and run \c qpalm_make.m. With this command, you compile the cholmod and qpalm source files, and finally the qpalm Mex 
  * interface. This might take a little bit of time (less than one minute).
+ * 
+ * \subsection julia Julia interface
+ * 
+ * See https://github.com/kul-forbes/QPALM.jl
  * 
  * \section example Using QPALM
  * 
@@ -72,5 +68,5 @@
  * 
  * \section license License
  * 
- * TBD
+ * GPL 3.0
  */
