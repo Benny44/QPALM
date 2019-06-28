@@ -55,5 +55,5 @@ after_success:
 deploy:
   provider: script
   script: "bash deploy.sh"
-  on: development
+  on: 
   skip_cleanup: true
