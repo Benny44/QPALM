@@ -26,6 +26,7 @@ matrix:
     env: BADGE=osx
     addons:
       homebrew:
+        update: true
         packages:
         - cunit
         - lcov
@@ -36,6 +37,7 @@ install:
 - gem install coveralls-lcov
 - chmod 755 travis_install.sh
 - chmod 755 buildTest.sh
+- chmod 755 deploy.sh
 - "./travis_install.sh"
 script:
 - "./buildTest.sh"
