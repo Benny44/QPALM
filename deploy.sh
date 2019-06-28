@@ -75,6 +75,6 @@ tar -czvf $QPALM_DEPLOY_DIR.tar.gz  $QPALM_DEPLOY_DIR
 curl -T $QPALM_DEPLOY_DIR.tar.gz -ubenny44:$BINTRAY_API_KEY -H "X-Bintray-Package:QPALM" -H "X-Bintray-Version:${QPALM_VERSION}" -H "X-Bintray-Override: 1" https://api.bintray.com/content/benny44/generic/QPALM/${QPALM_VERSION}/
 
 # Publish deployed files
-curl -X POST -ubenny44:$BINTRAY_API_KEY https://api.bintray.com/content/benny44/generic/${QPALM_VERSION}/${QPALM_VERSION}/publish
+curl -X POST -ubenny44:$BINTRAY_API_KEY https://api.bintray.com/content/benny44/generic/QPALM/${QPALM_VERSION}/publish
 
 
