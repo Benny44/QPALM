@@ -1,7 +1,7 @@
+#include "minunit.h"
 #include "qpalm.h"
 #include "global_opts.h"
 #include "constants.h"
-#include <CUnit/CUnit.h>
 
 #define N 2
 #define M 3
@@ -15,7 +15,7 @@ QPALMData *data;
 cholmod_common *c;
 cholmod_common common;
 
-int dua_inf_qp_suite_setup(void) {
+void dua_inf_qp_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
@@ -64,10 +64,9 @@ int dua_inf_qp_suite_setup(void) {
     data->Q = Q;
     CHOLMOD(finish)(c);
 
-    return 0;
 }
 
-int dua_inf_qp_suite_teardown(void) {
+void dua_inf_qp_suite_teardown(void) {
     c_free(settings);
     // Clean setup
     CHOLMOD(start)(c);
@@ -79,7 +78,6 @@ int dua_inf_qp_suite_teardown(void) {
     c_free(data->bmax);
     c_free(data);
 
-    return 0;
 }
 
 
@@ -87,7 +85,7 @@ void dua_inf_qp_test_teardown(void) {
     qpalm_cleanup(work);
 }
 
-void test_dua_inf_qp(void) {
+MU_TEST(test_dua_inf_qp) {
     settings->proximal = TRUE;
     settings->scaling = 2;
     // Setup workspace
@@ -95,9 +93,9 @@ void test_dua_inf_qp(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_DUAL_INFEASIBLE);
+    mu_assert_int_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
 }
-void test_dua_inf_qp_unscaled(void) {
+MU_TEST(test_dua_inf_qp_unscaled) {
     settings->proximal = TRUE;
     settings->scaling = 0;
     // Setup workspace
@@ -105,9 +103,9 @@ void test_dua_inf_qp_unscaled(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_DUAL_INFEASIBLE);
+    mu_assert_int_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
 }
-void test_dua_inf_qp_noprox(void) {
+MU_TEST(test_dua_inf_qp_noprox) {
     //This will crash actually, hence the large gamma value
     // settings->proximal = FALSE;
     settings->proximal = TRUE;
@@ -119,9 +117,9 @@ void test_dua_inf_qp_noprox(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_DUAL_INFEASIBLE);
+    mu_assert_int_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
 }
-void test_dua_inf_qp_noprox_unscaled(void) {
+MU_TEST(test_dua_inf_qp_noprox_unscaled) {
     //This will crash actually, hence the large gamma value
     // settings->proximal = FALSE;
     settings->proximal = TRUE;
@@ -133,7 +131,15 @@ void test_dua_inf_qp_noprox_unscaled(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_DUAL_INFEASIBLE);
+    mu_assert_int_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
 }
 
+MU_TEST_SUITE(suite_dua_inf_qp) {
+    MU_SUITE_CONFIGURE(dua_inf_qp_suite_setup, dua_inf_qp_suite_teardown, NULL, dua_inf_qp_test_teardown);
 
+    MU_RUN_TEST(test_dua_inf_qp);
+    MU_RUN_TEST(test_dua_inf_qp_unscaled);
+    MU_RUN_TEST(test_dua_inf_qp_noprox);
+    MU_RUN_TEST(test_dua_inf_qp_noprox_unscaled);
+    
+}

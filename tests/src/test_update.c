@@ -1,7 +1,7 @@
+#include "minunit.h"
 #include "qpalm.h"
 #include "global_opts.h"
 #include "constants.h"
-#include <CUnit/CUnit.h>
 
 #define N 2
 #define M 3
@@ -15,7 +15,7 @@ cholmod_common *c;
 cholmod_common common;
 
 
-int update_suite_setup(void) {
+void update_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
@@ -59,10 +59,9 @@ int update_suite_setup(void) {
 
     // Setup workspace
     work = qpalm_setup(data, settings, c);
-    return 0;
 }
 
-int update_suite_teardown(void) {
+void update_suite_teardown(void) {
     c_free(settings);
     // Clean setup
     CHOLMOD(start)(c);
@@ -75,16 +74,15 @@ int update_suite_teardown(void) {
     c_free(data);
 
     qpalm_cleanup(work);
-    return 0;
 }
 
-void test_update_settings(void) {
+MU_TEST(test_update_settings) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 
     settings->gamma_init *= 10;
     settings->theta = 0.9;
@@ -93,12 +91,12 @@ void test_update_settings(void) {
     qpalm_update_settings(work, settings);
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
 
-void test_update_bounds(void) {
+MU_TEST(test_update_bounds) {
     
     data->bmin[0] = 0.0;
     data->bmax[1] = 0.15;
@@ -106,11 +104,11 @@ void test_update_bounds(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], 0.0, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.15, 1e-5);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], 0.0, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.15, 1e-5);
 }
-void test_update_q(void) {
+MU_TEST(test_update_q) {
     
     data->q[0] = -10;
     qpalm_update_q(work, data->q);
@@ -118,7 +116,16 @@ void test_update_q(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], 0.1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.1, 1e-5);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], 0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.1, 1e-5);
+}
+
+MU_TEST_SUITE(suite_update){
+    MU_SUITE_CONFIGURE(update_suite_setup, update_suite_teardown, NULL, NULL);
+
+    MU_RUN_TEST(test_update_settings);
+    MU_RUN_TEST(test_update_bounds);
+    MU_RUN_TEST(test_update_q);
+    
 }

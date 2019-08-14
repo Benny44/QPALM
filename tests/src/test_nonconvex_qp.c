@@ -1,7 +1,7 @@
+#include "minunit.h"
 #include "qpalm.h"
 #include "global_opts.h"
 #include "constants.h"
-#include <CUnit/CUnit.h>
 
 #define N 2
 #define M 2
@@ -10,7 +10,7 @@
 
 QPALMWorkspace *work; // Workspace
 
-int nonconvex_qp_suite_setup(void) {
+void nonconvex_qp_suite_setup(void) {
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
@@ -66,19 +66,23 @@ int nonconvex_qp_suite_setup(void) {
     c_free(data->bmin);
     c_free(data->bmax);
     c_free(data);
-    return 0;
 }
 
-int nonconvex_qp_suite_teardown(void) {
+void nonconvex_qp_suite_teardown(void) {
     qpalm_cleanup(work);
-    return 0;
 }
 
 void test_nonconvex_qp(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.5, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], -2.0, 1e-5);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], -0.5, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], -2.0, 1e-5);
+}
+
+MU_TEST_SUITE(suite_nonconvex) {
+    MU_SUITE_CONFIGURE(nonconvex_qp_suite_setup, nonconvex_qp_suite_teardown, NULL, NULL);
+
+    MU_RUN_TEST(test_nonconvex_qp);
 }

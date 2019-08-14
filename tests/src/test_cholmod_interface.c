@@ -1,8 +1,8 @@
+#include "minunit.h"
 #include "cholmod_interface.h"
 #include "global_opts.h"
 #include "qpalm.h"
 #include "constants.h"
-#include <CUnit/CUnit.h>
 
 #define N 2
 #define M 3
@@ -16,7 +16,7 @@ cholmod_sparse *Q; //NxN symmetric matrix
 cholmod_common common, *c;
 
 
-int cholmod_suite_setup(void) {
+void cholmod_suite_setup(void) {
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
@@ -62,11 +62,9 @@ int cholmod_suite_setup(void) {
 
     c_free(data);
     c_free(settings);
-
-    return 0;
 }
 
-int cholmod_suite_teardown(void) {
+void cholmod_suite_teardown(void) {
     qpalm_cleanup(work);
 
     CHOLMOD(start)(c);
@@ -74,7 +72,6 @@ int cholmod_suite_teardown(void) {
     CHOLMOD(free_sparse)(&A, c);
     CHOLMOD(finish)(c);
 
-    return 0;
 }
 
 void cholmod_test_setup(void) {
@@ -87,55 +84,66 @@ void cholmod_test_teardown(void) {
     CHOLMOD(finish)(&work->chol->c);
 }
 
-void test_mat_vec(void){
+MU_TEST(test_mat_vec){
     mat_vec(A, work->chol->Qd, work->chol->Ad, &work->chol->c);
-    CU_ASSERT_DOUBLE_EQUAL(work->Ad[0], 0.1, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->Ad[1], 1.3, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->Ad[2], 5.5, TOL);
+    mu_assert_double_eq(work->Ad[0], 0.1, TOL);
+    mu_assert_double_eq(work->Ad[1], 1.3, TOL);
+    mu_assert_double_eq(work->Ad[2], 5.5, TOL);
 
     mat_vec(Q, work->chol->Qd, work->chol->Qd, &work->chol->c);
-    CU_ASSERT_DOUBLE_EQUAL(work->Qd[0], 1.6, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->Qd[1], -2.1, TOL);
+    mu_assert_double_eq(work->Qd[0], 1.6, TOL);
+    mu_assert_double_eq(work->Qd[1], -2.1, TOL);
     work->Qd[0] = 1.1; work->Qd[1] = -0.5;
 
     mat_tpose_vec(Q, work->chol->Qd, work->chol->Qd, &work->chol->c);
-    CU_ASSERT_DOUBLE_EQUAL(work->Qd[0], 1.6, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->Qd[1], -2.1, TOL);
+    mu_assert_double_eq(work->Qd[0], 1.6, TOL);
+    mu_assert_double_eq(work->Qd[1], -2.1, TOL);
 
 }
 
-void test_mat_tpose_vec(void){
+MU_TEST(test_mat_tpose_vec){
     mat_tpose_vec(A, work->chol->Ad, work->chol->Qd, &work->chol->c);
-    CU_ASSERT_DOUBLE_EQUAL(work->Qd[0], 99.6, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->Qd[1], 0.2, TOL);
+    mu_assert_double_eq(work->Qd[0], 99.6, TOL);
+    mu_assert_double_eq(work->Qd[1], 0.2, TOL);
 }
 
-void test_mat_inf_norm_cols(void){
+MU_TEST(test_mat_inf_norm_cols){
     mat_inf_norm_cols(A, work->D_temp);
-    CU_ASSERT_DOUBLE_EQUAL(work->D_temp[0], 5.0, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->D_temp[1], 4.0, TOL);
+    mu_assert_double_eq(work->D_temp[0], 5.0, TOL);
+    mu_assert_double_eq(work->D_temp[1], 4.0, TOL);
 }
 
-void test_mat_inf_norm_rows(void){
+MU_TEST(test_mat_inf_norm_rows){
     mat_inf_norm_rows(A, work->E_temp);
-    CU_ASSERT_DOUBLE_EQUAL(work->E_temp[0], 2.0, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->E_temp[1], 4.0, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->E_temp[2], 5.0, TOL);
+    mu_assert_double_eq(work->E_temp[0], 2.0, TOL);
+    mu_assert_double_eq(work->E_temp[1], 4.0, TOL);
+    mu_assert_double_eq(work->E_temp[2], 5.0, TOL);
 }
-void test_ldlchol(void){
+MU_TEST(test_ldlchol){
     // without proximal
     work->settings->proximal = FALSE;
     work->dphi[0] = -1.0; work->dphi[1] = -2.0; //this is -rhs
     ldlchol(Q, work);
     ldlsolveLD_neg_dphi(work);
-    CU_ASSERT_DOUBLE_EQUAL(work->d[0], 4.0, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->d[1], 3.0, TOL);
+    mu_assert_double_eq(work->d[0], 4.0, TOL);
+    mu_assert_double_eq(work->d[1], 3.0, TOL);
 
     // with proximal
     work->settings->proximal = TRUE;
     work->gamma = 1e3;
     ldlchol(Q, work);
     ldlsolveLD_neg_dphi(work);
-    CU_ASSERT_DOUBLE_EQUAL(work->d[0], 3.989028924198480, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->d[1], 2.993017953122679, TOL);
+    mu_assert_double_eq(work->d[0], 3.989028924198480, TOL);
+    mu_assert_double_eq(work->d[1], 2.993017953122679, TOL);
+}
+
+MU_TEST_SUITE(suite_cholmod) {
+    MU_SUITE_CONFIGURE(cholmod_suite_setup, cholmod_suite_teardown, cholmod_test_setup, cholmod_test_teardown);
+
+    MU_RUN_TEST(test_mat_vec);
+    MU_RUN_TEST(test_mat_tpose_vec);
+    MU_RUN_TEST(test_mat_inf_norm_cols);
+    MU_RUN_TEST(test_mat_inf_norm_rows);
+    MU_RUN_TEST(test_ldlchol);
+    
 }

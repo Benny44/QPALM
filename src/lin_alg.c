@@ -8,7 +8,6 @@
 
 #include "lin_alg.h"
 
-
 c_float* vec_copy(const c_float *a, size_t n) {
   c_float *b;
   size_t    i;

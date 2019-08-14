@@ -1,7 +1,7 @@
+#include "minunit.h"
 #include "qpalm.h"
 #include "global_opts.h"
 #include "constants.h"
-#include <CUnit/CUnit.h>
 
 #define N 3
 #define M 4
@@ -16,7 +16,7 @@ cholmod_common *c;
 cholmod_common common;
 
 
-int degen_hess_suite_setup(void) {
+void degen_hess_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
@@ -57,10 +57,9 @@ int degen_hess_suite_setup(void) {
     data->A = A;
     data->Q = Q;
     CHOLMOD(finish)(c); 
-    return 0;
 }
 
-int degen_hess_suite_teardown(void) {
+void degen_hess_suite_teardown(void) {
     c_free(settings);
     // Clean setup
     CHOLMOD(start)(c);
@@ -71,7 +70,6 @@ int degen_hess_suite_teardown(void) {
     c_free(data->bmin);
     c_free(data->bmax);
     c_free(data);
-    return 0;
 }
 
 void degen_hess_test_teardown(void) {
@@ -79,14 +77,20 @@ void degen_hess_test_teardown(void) {
 }
 
 
-void test_degen_hess(void) {
+MU_TEST(test_degen_hess) {
     // Setup workspace
     work = qpalm_setup(data, settings, c);
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], 5.5, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 5, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[2], -10, TOL);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], 5.5, TOL);
+    mu_assert_double_eq(work->solution->x[1], 5, TOL);
+    mu_assert_double_eq(work->solution->x[2], -10, TOL);
 }
+
+MU_TEST_SUITE(suite_degen_hess) {
+    MU_SUITE_CONFIGURE(degen_hess_suite_setup, degen_hess_suite_teardown, NULL, degen_hess_test_teardown);
+
+    MU_RUN_TEST(test_degen_hess);
+}       

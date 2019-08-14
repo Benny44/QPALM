@@ -1,7 +1,7 @@
+#include "minunit.h"
 #include "qpalm.h"
 #include "global_opts.h"
 #include "constants.h"
-#include <CUnit/CUnit.h>
 
 #define N 2
 #define M 3
@@ -14,8 +14,7 @@ QPALMData *data;
 cholmod_common *c;
 cholmod_common common;
 
-
-int basic_qp_suite_setup(void) {
+void basic_qp_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
@@ -56,10 +55,9 @@ int basic_qp_suite_setup(void) {
     data->A = A;
     data->Q = Q;
     CHOLMOD(finish)(c); 
-    return 0;
 }
 
-int basic_qp_suite_teardown(void) {
+void basic_qp_suite_teardown(void) {
     c_free(settings);
     // Clean setup
     CHOLMOD(start)(c);
@@ -70,7 +68,6 @@ int basic_qp_suite_teardown(void) {
     c_free(data->bmin);
     c_free(data->bmax);
     c_free(data);
-    return 0;
 }
 
 void basic_qp_test_teardown(void) {
@@ -79,29 +76,29 @@ void basic_qp_test_teardown(void) {
 
 
 
-void test_basic_qp(void) {
+MU_TEST(test_basic_qp) {
     // Setup workspace
     work = qpalm_setup(data, settings, c);
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
 
-void test_basic_qp_unscaled(void) {
+MU_TEST(test_basic_qp_unscaled) {
     // Setup workspace
     settings->scaling = 0;
     work = qpalm_setup(data, settings, c);
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
-void test_basic_qp_noprox(void) {
+MU_TEST(test_basic_qp_noprox) {
     // Setup workspace
     settings->proximal = FALSE;
     settings->scaling = 2;
@@ -109,11 +106,11 @@ void test_basic_qp_noprox(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
-void test_basic_qp_noprox_unscaled(void) {
+MU_TEST(test_basic_qp_noprox_unscaled) {
     // Setup workspace
     settings->proximal = FALSE;
     settings->scaling = 0;
@@ -121,12 +118,12 @@ void test_basic_qp_noprox_unscaled(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
 
-void test_basic_qp_warm_start(void) {
+MU_TEST(test_basic_qp_warm_start) {
     // Setup workspace
     settings->scaling = 2;
     settings->proximal = TRUE;
@@ -138,13 +135,13 @@ void test_basic_qp_warm_start(void) {
 
     // Solve Problem
     qpalm_solve(work);
-    CU_ASSERT_TRUE(work->info->iter < 2);
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+    mu_assert_true(work->info->iter < 2);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
 
-void test_basic_qp_warm_start_unscaled(void) {
+MU_TEST(test_basic_qp_warm_start_unscaled) {
     // Setup workspace
     settings->scaling = 0;
     settings->proximal = TRUE;
@@ -156,13 +153,13 @@ void test_basic_qp_warm_start_unscaled(void) {
 
     // Solve Problem
     qpalm_solve(work);
-    CU_ASSERT_TRUE(work->info->iter < 2);
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+    mu_assert_true(work->info->iter < 2);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
 
-void test_basic_qp_warm_start_noprox(void) {
+MU_TEST(test_basic_qp_warm_start_noprox) {
     // Setup workspace
     settings->scaling = 2;
     settings->proximal = FALSE;
@@ -174,13 +171,13 @@ void test_basic_qp_warm_start_noprox(void) {
 
     // Solve Problem
     qpalm_solve(work);
-    CU_ASSERT_TRUE(work->info->iter < 2);
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+    mu_assert_true(work->info->iter < 2);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
 
-void test_basic_qp_warm_start_noprox_unscaled(void) {
+MU_TEST(test_basic_qp_warm_start_noprox_unscaled) {
     // Setup workspace
     settings->scaling = 0;
     settings->proximal = FALSE;
@@ -192,8 +189,22 @@ void test_basic_qp_warm_start_noprox_unscaled(void) {
 
     // Solve Problem
     qpalm_solve(work);
-    CU_ASSERT_TRUE(work->info->iter < 2);
-    CU_ASSERT_EQUAL(work->info->status_val, QPALM_SOLVED);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[0], -0.1, 1e-5);
-    CU_ASSERT_DOUBLE_EQUAL(work->solution->x[1], 0.3, 1e-5);
+    mu_assert_true(work->info->iter < 2);
+    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
+}
+
+MU_TEST_SUITE(suite_basic_qp) {
+    MU_SUITE_CONFIGURE(basic_qp_suite_setup, basic_qp_suite_teardown, NULL, basic_qp_test_teardown);
+
+    MU_RUN_TEST(test_basic_qp);
+    MU_RUN_TEST(test_basic_qp_unscaled);
+    MU_RUN_TEST(test_basic_qp_noprox);
+    MU_RUN_TEST(test_basic_qp_noprox_unscaled);
+    MU_RUN_TEST(test_basic_qp_warm_start);
+    MU_RUN_TEST(test_basic_qp_warm_start_unscaled);
+    MU_RUN_TEST(test_basic_qp_warm_start_noprox);
+    MU_RUN_TEST(test_basic_qp_warm_start_noprox_unscaled);
+
 }
