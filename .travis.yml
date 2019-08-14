@@ -1,4 +1,3 @@
-
 language: c
 sudo: required
 branches:
@@ -9,45 +8,52 @@ branches:
   - conda
 matrix:
   include:
-    - os: linux
-      env: BADGE=linux
-      dist: xenial
-      compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - libcunit1 
-            - libcunit1-doc 
-            - libcunit1-dev
-            - lcov
-            - valgrind
-
-    - os: osx
-      env: BADGE=osx
-      addons:
-        homebrew:
-          packages:
-            - cunit
-            - lcov
+  - os: linux
+    env: BADGE=linux
+    dist: xenial
+    compiler: gcc
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - libcunit1
+        - libcunit1-doc
+        - libcunit1-dev
+        - lcov
+        - valgrind
+  - os: osx
+    env: BADGE=osx
+    addons:
+      homebrew:
+        update: true
+        packages:
+        - cunit
+        - lcov
 env:
   global:
-    - DEPS_DIR="${HOME}/deps"
+  - DEPS_DIR="${HOME}/deps"
 install:
-  - gem install coveralls-lcov 
-  - chmod 755 travis_install.sh
-  - chmod 755 buildTest.sh
-  - ./travis_install.sh
+- gem install coveralls-lcov
+- chmod 755 travis_install.sh
+- chmod 755 buildTestTravis.sh
+- chmod 755 deploy.sh
+- "./travis_install.sh"
 script:
-  - ./buildTest.sh
+- "./buildTestTravis.sh"
 cache:
   apt: true
   bundler: true
 after_success:
-  - cd build/debug/CMakeFiles/qpalm.dir/src
-  - lcov --directory . --capture --o coverage.info
-  - lcov --list coverage.info
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then coveralls-lcov coverage.info; fi
-  - cd ../../../../..
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose build/test/run_all_tests; fi
+- cd build/debug/CMakeFiles/qpalm.dir/src
+- lcov --directory . --capture --o coverage.info
+- lcov --list coverage.info
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then coveralls-lcov coverage.info; fi
+- cd ../../../../..
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then valgrind --leak-check=full --show-leak-kinds=all
+  --track-origins=yes --verbose build/test/run_all_tests; fi
+deploy:
+  provider: script
+  script: "bash deploy.sh"
+  on: 
+  skip_cleanup: true

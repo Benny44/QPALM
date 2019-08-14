@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['qpalm_3a_20proximal_20augmented_20lagrangian_20solver_20for_20quadratic_20programs',['QPALM: Proximal Augmented Lagrangian Solver for Quadratic Programs',['../index.html',1,'']]],
+  ['qpalm_3a_20proximal_20augmented_20lagrangian_20solver_20for_20_28nonconvex_29_20quadratic_20programs',['QPALM: Proximal Augmented Lagrangian Solver for (Nonconvex) Quadratic Programs',['../index.html',1,'']]],
   ['q',['Q',['../structQPALMData.html#a9b440bae03198195823e1e3f5154a611',1,'QPALMData::Q()'],['../structQPALMData.html#aa6775bd0b50250223ddd66115da68a12',1,'QPALMData::q()']]],
   ['qd',['Qd',['../structQPALMCholmod.html#abaedb802a939e9ee04577c87bb9f25cc',1,'QPALMCholmod::Qd()'],['../structQPALMWorkspace.html#af3614a39bf75c0331f89447caa3d1217',1,'QPALMWorkspace::Qd()']]],
   ['qdelta_5fx',['Qdelta_x',['../structQPALMWorkspace.html#a7a10abcbd6a5e3cb44b7dca2cf679c7a',1,'QPALMWorkspace']]],

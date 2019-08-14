@@ -1,6 +1,6 @@
 #include "lin_alg.h"
 #include "global_opts.h"
-#include <CUnit/CUnit.h>
+#include "minunit.h"
 
 #define DIM 3
 #define TOL 1e-8
@@ -15,97 +15,116 @@ void reset_abc(void) {
     c[0] = 0.0; c[1] = 0.0; c[2] = 0.0;
 }
 
-void test_vec_set_scalar(void) {
+MU_TEST(test_vec_set_scalar) {
     c_float scalar = 5.5;
     vec_set_scalar(a, scalar, DIM);
     for (size_t i = 0; i < DIM; i++) {
-        CU_ASSERT_DOUBLE_EQUAL(a[i], scalar, TOL);
+        mu_assert_double_eq(a[i], scalar, TOL);
     }
 }
 
-void test_vec_set_scalar_int(void){
+MU_TEST(test_vec_set_scalar_int){
     c_int scalar = 3;
     vec_set_scalar(a, scalar, DIM);
     for (size_t i = 0; i < DIM; i++) {
-        CU_ASSERT_EQUAL(a[i], scalar);
+        mu_assert_int_eq(a[i], scalar);
     }
 }
 
-void test_vec_mult_scalar(void){
+MU_TEST(test_vec_mult_scalar){
     c_int scalar = 3;
     vec_mult_scalar(a, scalar, DIM);
-    CU_ASSERT_DOUBLE_EQUAL(a[0],0.3, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(a[1],7.5, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(a[2],-11.7, TOL);
+    mu_assert_double_eq(a[0], 0.3, TOL);
+    mu_assert_double_eq(a[1], 7.5, TOL);
+    mu_assert_double_eq(a[2], -11.7, TOL);
 }
 
-void test_vec_prod(void){
+MU_TEST(test_vec_prod){
     c_float expected[DIM+1] = {0.0,0.0,25,9.4};
 
     for (int i = 0; i == DIM; i++) {
-        CU_ASSERT_DOUBLE_EQUAL(vec_prod(a, b, i), expected[i], TOL);
+        mu_assert_double_eq(vec_prod(a, b, i), expected[i], TOL);
     }
 
 }
 
-void test_vec_add_scaled(void){
+MU_TEST(test_vec_add_scaled){
     int scalar = 4;
     vec_add_scaled(a, b, c, scalar, DIM);
-    CU_ASSERT_DOUBLE_EQUAL(c[0], 0.1, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[1], 42.5, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[2], 12.1, TOL);
+    mu_assert_double_eq(c[0], 0.1, TOL);
+    mu_assert_double_eq(c[1], 42.5, TOL);
+    mu_assert_double_eq(c[2], 12.1, TOL);
 }
 
-void test_vec_norm_inf(void){
-    CU_ASSERT_DOUBLE_EQUAL(vec_norm_inf(a, DIM), 3.9, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(vec_norm_inf(b, DIM), 10, TOL);
+MU_TEST(test_vec_norm_inf){
+    mu_assert_double_eq(vec_norm_inf(a, DIM), 3.9, TOL);
+    mu_assert_double_eq(vec_norm_inf(b, DIM), 10, TOL);
 }
 
-void test_vec_ew_recipr(void){
+MU_TEST(test_vec_ew_recipr){
     vec_ew_recipr(a, c, DIM);
-    CU_ASSERT_DOUBLE_EQUAL(c[0], 10, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[1], 0.4, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[2], -0.256410256410256, TOL);
+    mu_assert_double_eq(c[0], 10, TOL);
+    mu_assert_double_eq(c[1], 0.4, TOL);
+    mu_assert_double_eq(c[2], -0.256410256410256, TOL);
 }
 
-void test_vec_ew_max_vec(void){
+MU_TEST(test_vec_ew_max_vec){
     vec_ew_max_vec(a, b, c, DIM);
-    CU_ASSERT_DOUBLE_EQUAL(c[0], 0.1, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[1], 10, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[2], 4, TOL);
+    mu_assert_double_eq(c[0], 0.1, TOL);
+    mu_assert_double_eq(c[1], 10, TOL);
+    mu_assert_double_eq(c[2], 4, TOL);
 }
 
-void test_vec_ew_min_vec(void){
+MU_TEST(test_vec_ew_min_vec){
     vec_ew_min_vec(a, b, c, DIM);
-    CU_ASSERT_DOUBLE_EQUAL(c[0], 0, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[1], 2.5, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[2], -3.9, TOL);
+    mu_assert_double_eq(c[0], 0, TOL);
+    mu_assert_double_eq(c[1], 2.5, TOL);
+    mu_assert_double_eq(c[2], -3.9, TOL);
 }
 
-void test_vec_ew_mid_vec(void){
+MU_TEST(test_vec_ew_mid_vec){
     vec_ew_mid_vec(a, c, b, c, DIM);
-    CU_ASSERT_DOUBLE_EQUAL(c[0], 0.0, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[1], 2.5, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[2], 0.0, TOL);
+    mu_assert_double_eq(c[0], 0.0, TOL);
+    mu_assert_double_eq(c[1], 2.5, TOL);
+    mu_assert_double_eq(c[2], 0.0, TOL);
 }
 
-void test_vec_ew_prod(void){
+MU_TEST(test_vec_ew_prod){
     vec_ew_prod(a, b, c, DIM);
-    CU_ASSERT_DOUBLE_EQUAL(c[0], 0.0, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[1], 25, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[2], -15.6, TOL);
+    mu_assert_double_eq(c[0], 0.0, TOL);
+    mu_assert_double_eq(c[1], 25, TOL);
+    mu_assert_double_eq(c[2], -15.6, TOL);
 }
 
-void test_vec_ew_div(void){
+MU_TEST(test_vec_ew_div){
     vec_ew_div(b, a, c, DIM);
-    CU_ASSERT_DOUBLE_EQUAL(c[0], 0.0, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[1], 4, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[2], -1.025641025641026, TOL);
+    mu_assert_double_eq(c[0], 0.0, TOL);
+    mu_assert_double_eq(c[1], 4, TOL);
+    mu_assert_double_eq(c[2], -1.025641025641026, TOL);
 }
 
-void test_vec_ew_sqrt(void){
+MU_TEST(test_vec_ew_sqrt){
     vec_ew_sqrt(b, c, DIM);
-    CU_ASSERT_DOUBLE_EQUAL(c[0], 0.0, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[1], 3.162277660168380, TOL);
-    CU_ASSERT_DOUBLE_EQUAL(c[2], 2.0, TOL);
+    mu_assert_double_eq(c[0], 0.0, TOL);
+    mu_assert_double_eq(c[1], 3.162277660168380, TOL);
+    mu_assert_double_eq(c[2], 2.0, TOL);
+}
+
+MU_TEST_SUITE(suite_lin_alg) {
+    MU_SUITE_CONFIGURE(NULL, NULL, reset_abc, NULL);
+
+    MU_RUN_TEST(test_vec_set_scalar);
+    MU_RUN_TEST(test_vec_set_scalar_int);
+    MU_RUN_TEST(test_vec_mult_scalar);
+    MU_RUN_TEST(test_vec_prod);
+    MU_RUN_TEST(test_vec_add_scaled);
+    MU_RUN_TEST(test_vec_norm_inf);
+    MU_RUN_TEST(test_vec_ew_recipr);
+    MU_RUN_TEST(test_vec_ew_max_vec);
+    MU_RUN_TEST(test_vec_ew_min_vec);
+    MU_RUN_TEST(test_vec_ew_mid_vec);
+    MU_RUN_TEST(test_vec_ew_prod);
+    MU_RUN_TEST(test_vec_ew_div);
+    MU_RUN_TEST(test_vec_ew_sqrt);
+    
 }
