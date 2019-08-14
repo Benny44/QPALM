@@ -6,6 +6,9 @@
  * The user can load the default settings, setup the workspace with data and settings,
  * run the solver, and cleanup the workspace afterwards.
  */
+# ifdef __cplusplus
+extern "C" {
+# endif // ifdef __cplusplus
 
 #include "qpalm.h"
 #include "global_opts.h"
@@ -705,3 +708,8 @@ void qpalm_cleanup(QPALMWorkspace *work) {
   }
 
 }
+
+
+# ifdef __cplusplus
+}
+# endif // ifdef __cplusplus

@@ -7,6 +7,13 @@
  * large changes in the active set and to guard against ill-conditioning in the objective function. 
  * @note The function in this file makes use of the cholmod scale routines. 
  */
+
+
+# ifdef __cplusplus
+extern "C" {
+# endif // ifdef __cplusplus
+
+
 #include "scaling.h"
 #include "cholmod.h"
 #include <stdio.h>
@@ -84,3 +91,8 @@ void scale_data(QPALMWorkspace *work) {
     vec_ew_prod(work->scaling->E, work->data->bmax, work->data->bmax, m);
 
 }
+
+
+# ifdef __cplusplus
+}
+# endif // ifdef __cplusplus

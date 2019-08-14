@@ -6,6 +6,9 @@
  * Factorizing, updating the factorization and solving the linear system are performed by functions in 
  * cholmod_interface.c. 
  */
+# ifdef __cplusplus
+extern "C" {
+# endif // ifdef __cplusplus
 
 #include "newton.h"
 #include "lin_alg.h"
@@ -65,3 +68,9 @@ void set_entering_leaving_constraints(QPALMWorkspace *work) {
     work->chol->nb_enter = nb_enter;
     work->chol->nb_leave = nb_leave;
 }
+
+
+
+# ifdef __cplusplus
+}
+# endif // ifdef __cplusplus

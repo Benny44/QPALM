@@ -1,19 +1,25 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_EXE_LINKER_FLAGS "/VERBOSE")
+set(CMAKE_SHARED_LINKER_FLAGS "/VERBOSE")
 find_library(CHOLMOD_LIB names cholmod 
-    HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
+    HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB} "C:\\Users\\u0104126\\AppData\\Local\\Continuum\\miniconda3\\Library\\lib")
 
 find_library(SUITESPARSE_LIB names suitesparseconfig
-    HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
+    HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB} "C:\\Users\\u0104126\\AppData\\Local\\Continuum\\miniconda3\\Library\\lib")
 
 find_path(SUITESPARSE_INCLUDE names cholmod.h 
     HINTS ${CMAKE_INCLUDE_PATH} $ENV{SUITESPARSE_ROOT_INCLUDE})
 
 message(STATUS "Root lib is set to: $ENV{SUITESPARSE_ROOT_LIB}")
 message(STATUS "Root include is set to: $ENV{SUITESPARSE_ROOT_INCLUDE}")
+message(STATUS ${CHOLMOD_LIB})
 message(STATUS ${SUITESPARSE_INCLUDE})
 message(STATUS ${SUITESPARSE_LIB})
+
+
 
 # Add code coverage
 option (COVERAGE "Perform code coverage" OFF)
@@ -38,7 +44,7 @@ add_compile_options("-DDLONG")
 #Rest of suitesparse
 #add_subdirectory(cmakeSuitesparse)
 
-add_library(qpalm SHARED 
+add_library(qpalm SHARED
                 src/newton.c
                 src/util.c
                 src/qpalm.c
