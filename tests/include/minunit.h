@@ -83,7 +83,7 @@ static void (*minunit_setup)(void) = NULL;
 static void (*minunit_teardown)(void) = NULL;
 /*  Suite setup and teardown function pointers */
 static void (*minunit_suite_setup)(void) = NULL;
-static void (*minunit_suite_teardown)(void) = NULL;
+void (*minunit_suite_teardown)(void);
 
 
 /*  Definitions */
@@ -101,6 +101,7 @@ minunit_fail = 0;\
 minunit_status = 0;\
 minunit_real_timer = 0.0;\
 minunit_proc_timer = 0.0;\
+minunit_suite_teardown = NULL;\
 )
 
 /*  Run test suite and unset setup and teardown functions */

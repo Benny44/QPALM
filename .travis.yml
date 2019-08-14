@@ -40,7 +40,7 @@ install:
 - chmod 755 deploy.sh
 - "./travis_install.sh"
 script:
-- "./buildTest.sh"
+- "./buildTestTravis.sh"
 cache:
   apt: true
   bundler: true
