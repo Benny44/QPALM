@@ -1,11 +1,17 @@
 # Not a .NET project. We build it in the install script
 build: false
 
+branches:
+  only:
+    - master
+    - appveyor_conda
+
 platform:
   - x64
   - x86
 
 environment:
+  MINICONDA: C:\Miniconda
   CMAKE_PROJECT: MinGW Makefiles
 
 init:
@@ -15,8 +21,8 @@ init:
 #  - ECHO %PYTHON_VERSION% %MINICONDA%
 
 install:
-  - cmd: IF NOT EXIST C:\cache\OpenBLAS appveyor DownloadFile https://sjeng.org/ftp/OpenBLAS-0.3.3-win-oldthread.zip
-  - cmd: IF NOT EXIST C:\cache\OpenBLAS 7z x OpenBLAS-0.3.3-win-oldthread.zip -oC:\cache\OpenBLAS
+  #- cmd: IF NOT EXIST C:\cache\OpenBLAS appveyor DownloadFile https://sjeng.org/ftp/OpenBLAS-0.3.3-win-oldthread.zip
+  #- cmd: IF NOT EXIST C:\cache\OpenBLAS 7z x OpenBLAS-0.3.3-win-oldthread.zip -oC:\cache\OpenBLAS
   - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\install.cmd"
 
 test_script:

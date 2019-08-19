@@ -1,11 +1,15 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_EXE_LINKER_FLAGS "/VERBOSE")
 set(CMAKE_SHARED_LINKER_FLAGS "/VERBOSE")
 find_library(CHOLMOD_LIB names cholmod 
     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB} "C:\\Users\\u0104126\\AppData\\Local\\Continuum\\miniconda3\\Library\\lib")
+#set(CHOLMOD_LIB "C:\\Users\\u0104126\\AppData\\Local\\Continuum\\miniconda3\\Library\\bin\\cholmod.dll")
 
 find_library(SUITESPARSE_LIB names suitesparseconfig
     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB} "C:\\Users\\u0104126\\AppData\\Local\\Continuum\\miniconda3\\Library\\lib")

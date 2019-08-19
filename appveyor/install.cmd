@@ -19,4 +19,27 @@ set PATH=%MINGW_PATH%;%PATH%
 
 set LIB=C:\cache\OpenBLAS\dist64\bin;%LIB%
 
+conda config --set always_yes yes --set changeps1 no
+REM This, together with next line, disables conda auto update (fixes problem with tqdm)
+conda config --set auto_update_conda false
+REM conda update -q conda
+conda info -a
+:: conda create -q -n test-environment python=%PYTHON_VERSION% numpy scipy future
+:: if errorlevel 1 exit /b 1
+:: NB: Need to run with call otherwise the script hangs
+:: call activate test-environment
+conda install -c conda-forge suitesparse
+
+set SUITESPARSE_ROOT_LIB=%MINICONDA%/Library/lib
+set SUITESPARSE_ROOT_INCLUDE=%MINICONDA%/include
+
+IF "%PLATFORM%"=="x64" (
+call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
+) ELSE (
+REM Set environment for 32bit
+call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+)
+
+
 @echo off
+

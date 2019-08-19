@@ -1,16 +1,25 @@
 set SUITESPARSE_ROOT_LIB=C:\Users\u0104126\AppData\Local\Continuum\miniconda3\Library\bin
 set SUITESPARSE_ROOT_INCLUDE=C:\Users\u0104126\AppData\Local\Continuum\miniconda3\Library\include\suitesparse
 
+set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
+
+if exist build (cd build && DEL /F/Q/S *.* > NUL && cd .. )
+
 mkdir build
 mkdir build\debug
 mkdir build\lib
 
 cd build\debug
 
-cmake ..\.. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DCOVERAGE=ON
-cmake --build . -v -- /p:ForceImportBeforeCppTargets=C:\Users\u0104126\Documents\QPALM\QPALM\build\debug\my.props
+::cmake ..\.. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DCOVERAGE=ON
+cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=x64 -DCMAKE_BUILD_TYPE=Release -DCOVERAGE=ON
+cmake --build . -v 
 
 :: Run the tests
-..\test\run_all_tests.exe
+::\tests\run_all_tests.exe
+.\bin\Debug\run_all_tests.exe
+
+
+cd ..\..
 
 if errorlevel 1 exit /b 1
