@@ -28,4 +28,4 @@ target_include_directories(run_all_tests
         PRIVATE 
                 include)
 
-target_link_libraries(run_all_tests qpalm cunit)
+target_link_libraries(run_all_tests qpalm)
