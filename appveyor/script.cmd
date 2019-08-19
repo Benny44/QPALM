@@ -1,5 +1,5 @@
 @echo on
-:: Make sure all the submodules are updated correctly
+:: Set suitesparse library and include paths
 set SUITESPARSE_ROOT_LIB=%MINICONDA%\Library\lib
 set SUITESPARSE_ROOT_INCLUDE=%MINICONDA%\Library\include\suitesparse
 
@@ -12,6 +12,8 @@ mkdir build\lib
 :: Build QPALM and tests
 
 cd build\debug
+
+powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
 
 cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% -DCMAKE_BUILD_TYPE=debug -DUNITTESTS=ON
 cmake --build .

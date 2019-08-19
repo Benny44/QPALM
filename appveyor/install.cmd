@@ -20,8 +20,6 @@ conda info -a
 :: Install the suitesparse binaries
 conda install -c conda-forge suitesparse
 
-set SUITESPARSE_ROOT_LIB=%MINICONDA%/Library/lib
-set SUITESPARSE_ROOT_INCLUDE=%MINICONDA%/include
 
 IF "%PLATFORM%"=="x64" (
 call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
