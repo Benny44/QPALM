@@ -6,7 +6,7 @@ Platform | CI Status
 ---------|:---------
 Linux    | [![Linux Build Status](https://travis-ci.org/Benny44/QPALM.svg?env=BADGE=linux&branch=master)](https://travis-ci.com/Benny44/QPALM)
 OSX      | [![OSX Build Status](https://travis-ci.org/Benny44/QPALM.svg?env=BADGE=osx&branch=master)](https://travis-ci.com/Benny44/QPALM)
-Windows  | 
+Windows  | [![Build status](https://ci.appveyor.com/api/projects/status/4ep1s4q4arr0l6nb/branch/master?svg=true)](https://ci.appveyor.com/project/Benny44/qpalm/branch/master)
 
 A proximal augmented Lagrangian method for (possibly **nonconvex**) QPs using semismooth Newton direction and exact line search.
 

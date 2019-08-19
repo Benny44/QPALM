@@ -51,7 +51,7 @@ after_success:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then coveralls-lcov coverage.info; fi
 - cd ../../../../..
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then valgrind --leak-check=full --show-leak-kinds=all
-  --track-origins=yes --verbose build/test/run_all_tests; fi
+  --track-origins=yes --verbose build/debug/bin/run_all_tests; fi
 deploy:
   provider: script
   script: "bash deploy.sh"
