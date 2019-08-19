@@ -11,8 +11,8 @@ platform:
   - x86
 
 environment:
-  MINICONDA: C:\Miniconda
-  CMAKE_PROJECT: MinGW Makefiles
+  MINICONDA: C:\Miniconda3
+  #CMAKE_PROJECT: MinGW Makefiles
 
 init:
 
