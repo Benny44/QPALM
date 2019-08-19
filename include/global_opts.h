@@ -26,8 +26,8 @@ extern "C" {
 #define Int SuiteSparse_long
 #define Int_max SuiteSparse_long_max
 #define CHOLMOD(name) cholmod_l_ ## name
-#define LONG
-#define DOUBLE
+//#define LONG
+//#define DOUBLE
 #define ITYPE CHOLMOD_LONG
 #define DTYPE CHOLMOD_DOUBLE
 #define ID SuiteSparse_long_id
@@ -37,8 +37,8 @@ extern "C" {
 #ifndef DINT
 #define DINT
 #endif
-#define INT
-#define DOUBLE
+//#define INT
+//#define DOUBLE
 
 #define Real double
 #define Int int
