@@ -18,6 +18,7 @@ cmake --build .
 
 :: Run the tests
 :: ..\test\run_all_tests.exe
+powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
 .\bin\Debug\run_all_tests.exe
 
 if errorlevel 1 exit /b 1
