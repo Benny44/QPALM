@@ -45,7 +45,7 @@ set SUITESPARSE_ROOT_LIB=%MINICONDA%/Library/lib
 set SUITESPARSE_ROOT_INCLUDE=%MINICONDA%/include
 
 IF "%PLATFORM%"=="x64" (
-call "C:\Program Files\Microsoft SDKs\Windows\v7.1A\Bin\SetEnv.cmd" /x64
+call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
 ) ELSE (
 REM Set environment for 32bit
 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
