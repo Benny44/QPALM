@@ -1,7 +1,7 @@
 @echo on
 :: Set suitesparse library and include paths
-set SUITESPARSE_ROOT_LIB=%MINICONDA%\Library\lib
-set SUITESPARSE_ROOT_INCLUDE=%MINICONDA%\Library\include\suitesparse
+set SUITESPARSE_ROOT_LIB=%MINICONDA_PATH%\Library\lib
+set SUITESPARSE_ROOT_INCLUDE=%MINICONDA_PATH%\Library\include\suitesparse
 
 cd %APPVEYOR_BUILD_FOLDER%
 
@@ -13,7 +13,7 @@ mkdir build\lib
 
 cd build\debug
 
-powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
+:: powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
 
 cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% -DCMAKE_BUILD_TYPE=debug -DUNITTESTS=ON
 cmake --build .
