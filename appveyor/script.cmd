@@ -18,7 +18,7 @@ cmake --build .
 
 :: Run the tests
 :: ..\test\run_all_tests.exe
-:: powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
+powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
 set PATH=%PATH%;%MINICONDA%\Library\bin
 .\bin\Debug\run_all_tests.exe
 
