@@ -13,7 +13,7 @@ mkdir build\lib
 
 cd build\debug
 
-cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON
+cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% -DCMAKE_BUILD_TYPE=debug -DCMAKE_SYSTEM_VERSION=7.1 -DCOVERAGE=ON
 cmake --build .
 
 :: Run the tests

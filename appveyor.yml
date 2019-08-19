@@ -1,6 +1,9 @@
 # Not a .NET project. We build it in the install script
 build: false
 
+image:
+  - Visual Studio 2015
+
 branches:
   only:
     - master
