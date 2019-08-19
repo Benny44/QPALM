@@ -10,7 +10,7 @@ branches:
     - appveyor_conda
 
 platform:
-  - x64
+  #- x64
   - x86
 
 environment:
