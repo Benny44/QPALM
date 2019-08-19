@@ -21,6 +21,7 @@ init:
 #  - ECHO %PYTHON_VERSION% %MINICONDA%
 
 install:
+  - call %MINICONDA%\Scripts\activate.bat
   #- cmd: IF NOT EXIST C:\cache\OpenBLAS appveyor DownloadFile https://sjeng.org/ftp/OpenBLAS-0.3.3-win-oldthread.zip
   #- cmd: IF NOT EXIST C:\cache\OpenBLAS 7z x OpenBLAS-0.3.3-win-oldthread.zip -oC:\cache\OpenBLAS
   - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\install.cmd"

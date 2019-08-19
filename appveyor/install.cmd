@@ -20,12 +20,12 @@ set PATH=%MINGW_PATH%;%PATH%
 set LIB=C:\cache\OpenBLAS\dist64\bin;%LIB%
 
 :: Activate test environment anaconda
-IF "%PLATFORM%"=="x86" (
-	set MINICONDA_PATH=%MINICONDA%
-) ELSE (
-	set MINICONDA_PATH=%MINICONDA%-%PLATFORM%
-)
-set PATH=%MINICONDA_PATH%;%MINICONDA_PATH%\\Scripts;%PATH%
+::IF "%PLATFORM%"=="x86" (
+::	set MINICONDA_PATH=%MINICONDA%
+::) ELSE (
+::	set MINICONDA_PATH=%MINICONDA%-%PLATFORM%
+::)
+::set PATH=%MINICONDA_PATH%;%MINICONDA_PATH%\\Scripts;%PATH%
 
 echo %PATH%
 powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
