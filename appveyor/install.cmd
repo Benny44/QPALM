@@ -28,7 +28,7 @@ set LIB=C:\cache\OpenBLAS\dist64\bin;%LIB%
 ::set PATH=%MINICONDA_PATH%;%MINICONDA_PATH%\\Scripts;%PATH%
 
 echo %PATH%
-powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
+:: powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
 
 conda config --set always_yes yes --set changeps1 no
 REM This, together with next line, disables conda auto update (fixes problem with tqdm)
