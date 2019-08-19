@@ -28,7 +28,7 @@ IF "%PLATFORM%"=="x86" (
 set PATH=%MINICONDA_PATH%;%MINICONDA_PATH%\\Scripts;%PATH%
 
 echo %PATH%
-:: powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
+
 
 conda config --set always_yes yes --set changeps1 no
 REM This, together with next line, disables conda auto update (fixes problem with tqdm)
@@ -50,6 +50,7 @@ call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64
 REM Set environment for 32bit
 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
 )
+powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
 
 
 @echo off
