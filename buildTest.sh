@@ -38,11 +38,13 @@ make
 #cd $builddir
 #../test/run_all_tests
 
+cd $curdir
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet build/debug/bin/run_all_tests
+
 cd $builddir/CMakeFiles/qpalm.dir/src
 lcov --directory . --capture --o coverage.info -q
 lcov --list coverage.info
-cd $curdir
-valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet build/test/run_all_tests
+
 
 
 

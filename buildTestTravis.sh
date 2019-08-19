@@ -33,7 +33,7 @@ make
 
 #Run the tests
 cd $builddir
-../test/run_all_tests
+./bin/run_all_tests
 
 
 
