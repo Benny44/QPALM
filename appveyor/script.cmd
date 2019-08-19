@@ -1,7 +1,7 @@
 @echo on
 :: Make sure all the submodules are updated correctly
-set SUITESPARSE_ROOT_LIB=%MINICONDA_PATH%\Library\lib
-set SUITESPARSE_ROOT_INCLUDE=%MINICONDA_PATH%\include
+set SUITESPARSE_ROOT_LIB=%MINICONDA%\Library\lib
+set SUITESPARSE_ROOT_INCLUDE=%MINICONDA%\include
 
 cd %APPVEYOR_BUILD_FOLDER%
 
