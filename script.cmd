@@ -12,7 +12,7 @@ mkdir build\lib
 cd build\debug
 
 ::cmake ..\.. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DCOVERAGE=ON
-cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=x64 -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_VERSION=7.1 -DCOVERAGE=ON
+cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=x64 -DCMAKE_BUILD_TYPE=Release -DCOVERAGE=ON
 cmake --build . -v 
 
 :: Run the tests
