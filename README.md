@@ -13,11 +13,7 @@ A proximal augmented Lagrangian method for (possibly **nonconvex**) QPs using se
 ## Installation
 
 * To install the mex interface of QPALM, add QPALM and its subfolders to the matlab path. Then run qpalm_make.m
-* To install a C-callable library, on Linux/MacOS run buildRelease.sh. Windows support coming soon. For example:
-```
-chmod 755 buildRelease.sh
-./buildRelease.sh
-```
+* To install a C-callable library, check [Bintray](https://bintray.com/benny44/generic/QPALM) for the binaries.
 * To use the Matlab version of QPALM, compile the CHOLMOD mex functions (suitesparse/CHOLMOD/MATLAB/cholmod_make.m), and run QPALM/matlab/mex/PWAlinesearch_setup.m.
 
 ## Code Example
@@ -33,7 +29,12 @@ You can now find the the documentation [online](https://benny44.github.io/QPALM/
 
 ## Tests
 
-To build the debug version and run the automated tests, do
+The QPALM library is tested and has very high coverage. To build the debug version and run the automated tests yourself, in <span>buildTest.sh</span> change 
+```
+export SUITESPARSE_ROOT_LIB=path/to/suitesparse_libs
+export SUITESPARSE_ROOT_INCLUDE=path/to/suitespare_include
+```
+and then do
 ```
 chmod 755 buildTest.sh
 ./buildTest.sh
@@ -48,6 +49,24 @@ chmod 755 buildTest.sh
 * **Ben Hermans** - *Main developer*
 * **Panagiotis Patrinos** - *Codeveloper*
 * **Andreas Themelis** - *Theoretical contributions*
+
+## Citing
+
+If you use QPALM in your research, please cite the following paper
+```
+@inproceedings{hermans2019qpalm,
+	author		= {Hermans, B. and Pipeleers, G. and Patrinos, P.},
+	booktitle	= {58th IEEE Conference on Decision and Control},
+	title		= {{QPALM}: {A} {N}ewton-type {P}roximal {A}ugmented {L}agrangian {M}ethod for {Q}uadratic {P}rograms},
+	year		= {2019},
+	volume		= {},
+	number		= {},
+	pages		= {},
+	doi			= {},
+	issn		= {},
+	month		= {Dec.},
+}
+```
 
 ## License
 
