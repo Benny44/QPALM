@@ -13,12 +13,12 @@ mkdir build\lib
 
 cd build\debug
 
-cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON
+cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% -DCMAKE_BUILD_TYPE=debug -DUNITTESTS=ON
 cmake --build .
 
 :: Run the tests
 :: ..\test\run_all_tests.exe
-powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
+:: powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
 set PATH=%PATH%;%MINICONDA%\Library\bin
 .\bin\Debug\run_all_tests.exe
 
