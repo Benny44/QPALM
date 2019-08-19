@@ -17,9 +17,6 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
         packages:
-        - libcunit1
-        - libcunit1-doc
-        - libcunit1-dev
         - lcov
         - valgrind
   - os: osx
@@ -28,19 +25,18 @@ matrix:
       homebrew:
         update: true
         packages:
-        - cunit
         - lcov
 env:
   global:
   - DEPS_DIR="${HOME}/deps"
 install:
 - gem install coveralls-lcov
-- chmod 755 travis_install.sh
-- chmod 755 buildTestTravis.sh
-- chmod 755 deploy.sh
-- "./travis_install.sh"
+- chmod 755 travis/install.sh
+- chmod 755 travis/buildTest.sh
+- chmod 755 travis/deploy.sh
+- "travis/install.sh"
 script:
-- "./buildTestTravis.sh"
+- "travis/buildTest.sh"
 cache:
   apt: true
   bundler: true
@@ -54,6 +50,6 @@ after_success:
   --track-origins=yes --verbose build/debug/bin/run_all_tests; fi
 deploy:
   provider: script
-  script: "bash deploy.sh"
+  script: "bash travis/deploy.sh"
   on: 
   skip_cleanup: true

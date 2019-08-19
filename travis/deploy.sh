@@ -7,6 +7,11 @@ QPALM_VERSION="1.0"
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
     export PATH=${DEPS_DIR}/cmake/bin:${PATH}
 fi
+# Anaconda
+#export PATH=${DEPS_DIR}/miniconda/bin:$PATH
+#hash -r
+#source activate testenv
+
 
 echo "Creating Bintray package..."
 
@@ -41,7 +46,7 @@ builddir=$curdir/build/release
 
 cd $builddir
 
-cmake ../.. -DCMAKE_BUILD_TYPE=release -DCOVERAGE=OFF 
+cmake ../.. -DCMAKE_BUILD_TYPE=release -DCOVERAGE=OFF
 make
 
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
