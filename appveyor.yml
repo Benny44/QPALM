@@ -11,7 +11,7 @@ branches:
 
 platform:
   - x64
-  #- x86
+  - x86
 
 environment:
   MINICONDA: C:\Miniconda3
