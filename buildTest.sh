@@ -1,8 +1,5 @@
 #!/bin/bash
 
-#export SUITESPARSE_ROOT_LIB=${DEPS_DIR}/miniconda/lib
-#export SUITESPARSE_ROOT_INCLUDE=${DEPS_DIR}/miniconda/include
-
 export SUITESPARSE_ROOT_LIB=${HOME}/miniconda3/lib
 export SUITESPARSE_ROOT_INCLUDE=${HOME}/miniconda3/include
 
