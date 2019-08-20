@@ -9,6 +9,7 @@ ls ${SUITESPARSE_ROOT_INCLUDE}
 curdir=`pwd`
 
 #Build direcetories
+rm -r build
 if [ ! -d "build" ]; then
   mkdir build
 fi

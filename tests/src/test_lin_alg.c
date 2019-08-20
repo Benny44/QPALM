@@ -6,6 +6,7 @@
 #define TOL 1e-8
 
 c_float a[DIM];
+c_int a_int[DIM];
 c_float b[DIM];
 c_float c[DIM];
 
@@ -25,14 +26,14 @@ MU_TEST(test_vec_set_scalar) {
 
 MU_TEST(test_vec_set_scalar_int){
     c_int scalar = 3;
-    vec_set_scalar(a, scalar, DIM);
+    vec_set_scalar_int(a_int, scalar, DIM);
     for (size_t i = 0; i < DIM; i++) {
-        mu_assert_int_eq(a[i], scalar);
+        mu_assert_cint_eq(a_int[i], scalar);
     }
 }
 
 MU_TEST(test_vec_mult_scalar){
-    c_int scalar = 3;
+    c_float scalar = 3.0;
     vec_mult_scalar(a, scalar, DIM);
     mu_assert_double_eq(a[0], 0.3, TOL);
     mu_assert_double_eq(a[1], 7.5, TOL);
@@ -42,7 +43,7 @@ MU_TEST(test_vec_mult_scalar){
 MU_TEST(test_vec_prod){
     c_float expected[DIM+1] = {0.0,0.0,25,9.4};
 
-    for (int i = 0; i == DIM; i++) {
+    for (size_t i = 0; i == DIM; i++) {
         mu_assert_double_eq(vec_prod(a, b, i), expected[i], TOL);
     }
 

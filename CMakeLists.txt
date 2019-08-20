@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
+
+set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-#set(CMAKE_VERBOSE_MAKEFILE ON)
-#set(CMAKE_EXE_LINKER_FLAGS "/VERBOSE")
-#set(CMAKE_SHARED_LINKER_FLAGS "/VERBOSE")
 find_library(CHOLMOD_LIB names cholmod 
     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
 
@@ -23,12 +22,15 @@ message(STATUS ${SUITESPARSE_INCLUDE})
 message(STATUS ${SUITESPARSE_LIB})
 
 
-
 # Add code coverage
 option (COVERAGE "Perform code coverage" OFF)
 if (COVERAGE)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
 endif()
+
+if (UNIX)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wconversion")
+endif (UNIX)
 
 # Add unit tests (if coverage is on, unit tests should also be on)
 include(CMakeDependentOption)

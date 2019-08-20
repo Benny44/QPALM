@@ -80,7 +80,7 @@ MU_TEST(test_update_settings) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 
@@ -91,7 +91,7 @@ MU_TEST(test_update_settings) {
     qpalm_update_settings(work, settings);
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
@@ -104,7 +104,7 @@ MU_TEST(test_update_bounds) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], 0.0, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.15, 1e-5);
 }
@@ -116,7 +116,7 @@ MU_TEST(test_update_q) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], 0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.1, 1e-5);
 }

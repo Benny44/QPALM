@@ -94,7 +94,7 @@ MU_TEST(test_prim_inf_qp) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_PRIMAL_INFEASIBLE);
+    mu_assert_cint_eq(work->info->status_val, QPALM_PRIMAL_INFEASIBLE);
 }
 MU_TEST(test_prim_inf_qp_unscaled) {
     settings->proximal = TRUE;
@@ -104,7 +104,7 @@ MU_TEST(test_prim_inf_qp_unscaled) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_PRIMAL_INFEASIBLE);
+    mu_assert_cint_eq(work->info->status_val, QPALM_PRIMAL_INFEASIBLE);
 }
 MU_TEST(test_prim_inf_qp_noprox) {
     settings->proximal = FALSE;
@@ -114,7 +114,7 @@ MU_TEST(test_prim_inf_qp_noprox) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_PRIMAL_INFEASIBLE);
+    mu_assert_cint_eq(work->info->status_val, QPALM_PRIMAL_INFEASIBLE);
 }
 MU_TEST(test_prim_inf_qp_noprox_unscaled) {
     settings->proximal = FALSE;
@@ -124,7 +124,7 @@ MU_TEST(test_prim_inf_qp_noprox_unscaled) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_PRIMAL_INFEASIBLE);
+    mu_assert_cint_eq(work->info->status_val, QPALM_PRIMAL_INFEASIBLE);
 }
 
 MU_TEST_SUITE(suite_prim_inf_qp) {

@@ -93,7 +93,7 @@ MU_TEST(test_dua_inf_qp) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
+    mu_assert_cint_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
 }
 MU_TEST(test_dua_inf_qp_unscaled) {
     settings->proximal = TRUE;
@@ -103,7 +103,7 @@ MU_TEST(test_dua_inf_qp_unscaled) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
+    mu_assert_cint_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
 }
 MU_TEST(test_dua_inf_qp_noprox) {
     //This will crash actually, hence the large gamma value
@@ -117,7 +117,7 @@ MU_TEST(test_dua_inf_qp_noprox) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
+    mu_assert_cint_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
 }
 MU_TEST(test_dua_inf_qp_noprox_unscaled) {
     //This will crash actually, hence the large gamma value
@@ -131,7 +131,7 @@ MU_TEST(test_dua_inf_qp_noprox_unscaled) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_int_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
+    mu_assert_cint_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
 }
 
 MU_TEST_SUITE(suite_dua_inf_qp) {
