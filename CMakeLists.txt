@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
@@ -87,6 +87,10 @@ target_link_libraries(qpalm ${CHOLMOD_LIB} ${SUITESPARSE_LIB})
 # Add unittests
 if (UNITTESTS)
     add_subdirectory(tests)
+    # Add testing
+    include(CTest)
+    enable_testing()
+    add_test(NAME qpalm_tester COMMAND $<TARGET_FILE:run_all_tests>)
 endif()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

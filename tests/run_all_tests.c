@@ -23,5 +23,10 @@ int main(){
     MU_RUN_SUITE(suite_update);
     MU_RUN_SUITE(suite_validation);
     MU_REPORT();
-	return 0;
+    //if (minunit_fail) {
+    //    return 1;
+    //} else {
+    return minunit_fail;
+    //}
+	    
 }

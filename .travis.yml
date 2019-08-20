@@ -6,6 +6,7 @@ branches:
   - development
   - cmake
   - conda
+  - windows-deploy
 matrix:
   include:
   - os: linux

@@ -8,6 +8,7 @@ branches:
   only:
     - master
     - appveyor_conda
+    - windows-deploy
 
 platform:
   - x64
