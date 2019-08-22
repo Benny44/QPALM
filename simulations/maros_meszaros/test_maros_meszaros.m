@@ -20,8 +20,8 @@ out_maha             = cell(1, ll);
 out_osqp             = cell(1, ll);
 new                  = {};
 
-options.qpalm_matlab = true;
-options.qpalm_c = false;
+options.qpalm_matlab = false;
+options.qpalm_c = true;
 options.osqp = false;
 options.qpoases = false;
 options.gurobi = false;
