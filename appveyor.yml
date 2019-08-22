@@ -25,6 +25,6 @@ test_script:
 
 
 deploy_script:
-  - "%APPVEYOR_BUILD_FOLDER%\\ci\\appveyor\\deploy.cmd"
+  - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\deploy.cmd"
 
 
