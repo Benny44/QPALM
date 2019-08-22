@@ -144,6 +144,27 @@ void ldldowndate_leaving_constraints(QPALMWorkspace *work) {
   CHOLMOD(free_sparse)(&Al, &work->chol->c);
 }
 
+void ldlupdate_sigma_changed(QPALMWorkspace *work) {
+  cholmod_sparse *Ae;
+  c_float *At_scalex = work->chol->At_scale->x;
+  c_int *sigma_changed = work->chol->enter;
+
+  size_t k;
+  for (k=0; k < work->data->m; k++) {
+    if(sigma_changed[k]) At_scalex[k]= (At_scalex[k]-1)/At_scalex[k]; 
+  }
+
+  cholmod_l_scale(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+  Ae = CHOLMOD(submatrix)(work->chol->At_sqrt_sigma, NULL, -1, 
+                      sigma_changed, work->nb_sigma_changed, TRUE, TRUE, &work->chol->c);
+  for (k=0; k < work->data->m; k++) {
+    At_scalex[k]=1.0/At_scalex[k]; 
+  }
+  cholmod_l_scale(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+  //LD = ldlupdate(LD,Ae,'+');
+  CHOLMOD(updown)(TRUE, Ae, work->chol->LD, &work->chol->c);
+  CHOLMOD(free_sparse)(&Ae, &work->chol->c);
+}
 
 void ldlsolveLD_neg_dphi(QPALMWorkspace *work) {
   //set -dphi

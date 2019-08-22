@@ -171,23 +171,24 @@ typedef struct {
    * @name Workspace variables
    * @{ 
    */
-  c_float *temp_m;     ///< placeholder for vector of size m
-  c_float *temp_n;     ///< placeholder for vector of size n
-  c_float *sigma;      ///< penalty vector
-  c_float gamma;       ///< proximal penalty factor
-  c_float *Axys;       ///< Ax + y./sigma
-  c_float *z;          ///< projection of Axys onto the constraint set [bmin, bmax]
-  c_float *pri_res;    ///< primal residual
-  c_float *pri_res_in; ///< intermediate primal residual
-  c_float *yh;         ///< candidate dual update
-  c_float *Atyh;       ///< A' * yh
-  c_float *df;         ///< gradient of the primal objective (+proximal term)
-  c_float *x0;         ///< record of the primal iterate during the last dual update
-  c_float *xx0;        ///< x - x0
-  c_float *dphi;       ///< gradient of the Lagrangian
-  c_float *neg_dphi;   ///< -dphi, required as the rhs in Cholmod 
-  c_float *dphi_prev;  ///< previous gradient of the Lagrangian
-  c_float *d;          ///< primal update step
+  c_float *temp_m;        ///< placeholder for vector of size m
+  c_float *temp_n;        ///< placeholder for vector of size n
+  c_float *sigma;         ///< penalty vector
+  c_int nb_sigma_changed; ///< number of sigma-components that changed in an outer iteration (relevant for factorization update)
+  c_float gamma;          ///< proximal penalty factor
+  c_float *Axys;          ///< Ax + y./sigma
+  c_float *z;             ///< projection of Axys onto the constraint set [bmin, bmax]
+  c_float *pri_res;       ///< primal residual
+  c_float *pri_res_in;    ///< intermediate primal residual
+  c_float *yh;            ///< candidate dual update
+  c_float *Atyh;          ///< A' * yh
+  c_float *df;            ///< gradient of the primal objective (+proximal term)
+  c_float *x0;            ///< record of the primal iterate during the last dual update
+  c_float *xx0;           ///< x - x0
+  c_float *dphi;          ///< gradient of the Lagrangian
+  c_float *neg_dphi;      ///< -dphi, required as the rhs in Cholmod 
+  c_float *dphi_prev;     ///< previous gradient of the Lagrangian
+  c_float *d;             ///< primal update step
 
   /** @} */
 

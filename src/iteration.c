@@ -32,30 +32,57 @@ void compute_residuals(QPALMWorkspace *work) {
 }
 
 void update_sigma(QPALMWorkspace* work) {
+    work->nb_sigma_changed = 0;
     c_float *At_scalex = work->chol->At_scale->x;
     c_float pri_res_unscaled_norm = vec_norm_inf(work->pri_res, work->data->m);
     c_float sigma_temp, mult_factor;
+    c_int *sigma_changed = work->chol->enter;
     size_t k;
     for (k = 0; k < work->data->m; k++) {
         if (c_absval(work->pri_res[k]) > work->settings->theta*c_absval(work->pri_res_in[k])) {
             mult_factor = c_max(1.0, work->settings->delta * c_absval(work->pri_res[k]) / (pri_res_unscaled_norm + 1e-6));
             sigma_temp = mult_factor * work->sigma[k];
             if (sigma_temp <= 1e8) { //TODO make sigma_max a setting
+                if (work->sigma[k] != sigma_temp) {
+                    work->nb_sigma_changed++;
+                    sigma_changed[k] = 1;
+                } else {
+                    sigma_changed[k] = 0;
+                }               
                 work->sigma[k] = sigma_temp;
                 mult_factor = c_sqrt(mult_factor);
                 work->sqrt_sigma[k] = mult_factor * work->sqrt_sigma[k];
                 At_scalex[k] = mult_factor;
             } else {
+                if (work->sigma[k] != 1e8) {
+                    work->nb_sigma_changed++;
+                    sigma_changed[k] = 1;
+                } else {
+                    sigma_changed[k] = 0;
+                }
                 work->sigma[k] = 1e8;
                 At_scalex[k] = 1e4 / work->sqrt_sigma[k];
                 work->sqrt_sigma[k] = 1e4;
             }
         } else {
             At_scalex[k] = 1.0;
+            sigma_changed[k] = 0;
         }
     }
 
     CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+
+
+    if ((work->settings->proximal && work->gamma != work->settings->gamma_max) || (work->nb_sigma_changed > 40)) {
+        work->chol->reset_newton = TRUE;
+      } else if (work->nb_sigma_changed == 0){
+        /* do nothing */
+      } else {      
+          ldlupdate_sigma_changed(work);
+        // LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
+        //             sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
+        //             *A(sig_changed,:))','+');
+    }
 }
 
 void update_gamma(QPALMWorkspace *work) {

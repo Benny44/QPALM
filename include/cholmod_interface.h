@@ -122,6 +122,16 @@ void ldlupdate_entering_constraints(QPALMWorkspace *work);
 void ldldowndate_leaving_constraints(QPALMWorkspace *work);
 
 /**
+ * Update the @f$LDL^T@f$ factorization given a set of indexes where @f$sigma@f$ has been updated.
+ * 
+ * The index set of changed @f$sigma@f$ is assumed to be set in work->chol->enter.
+ * 
+ * @param work Workspace
+ */
+void ldlupdate_sigma_changed(QPALMWorkspace *work);
+
+
+/**
  * Solve the linear system @f$LDL^T*d = -\nabla \varphi@f$.
  * 
  * @param work Workspace

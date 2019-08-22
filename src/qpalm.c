@@ -129,6 +129,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->temp_m   = c_calloc(m, sizeof(c_float));
   work->temp_n   = c_calloc(n, sizeof(c_float));
   work->sigma = c_calloc(m, sizeof(c_float));
+  work->nb_sigma_changed = 0;
 
   work->z  = c_calloc(m, sizeof(c_float));
   work->Axys = c_calloc(m, sizeof(c_float));
@@ -315,7 +316,6 @@ void qpalm_solve(QPALMWorkspace *work) {
 
   c_int iter;
   c_int iter_out = 0;
-  size_t k;
 
   for (iter = 0; iter < work->settings->max_iter; iter++) {
 
@@ -344,11 +344,8 @@ void qpalm_solve(QPALMWorkspace *work) {
       
       if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
         update_sigma(work);
-      }
+      } 
 
-      
-      work->chol->reset_newton = TRUE;
-      
       if(work->settings->proximal) {
         update_gamma(work);
       }
