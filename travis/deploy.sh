@@ -1,7 +1,5 @@
 #!/bin/bash
 
-QPALM_VERSION="1.0"
-
 # Update variables from install
 # CMake
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
