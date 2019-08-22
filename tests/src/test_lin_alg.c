@@ -28,7 +28,7 @@ MU_TEST(test_vec_set_scalar_int){
     c_int scalar = 3;
     vec_set_scalar_int(a_int, scalar, DIM);
     for (size_t i = 0; i < DIM; i++) {
-        mu_assert_cint_eq(a_int[i], scalar);
+        mu_assert_long_eq(a_int[i], scalar);
     }
 }
 

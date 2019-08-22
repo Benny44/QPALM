@@ -207,14 +207,14 @@ minunit_suite_teardown = NULL;\
 	}\
 )
 
-#define mu_assert_cint_eq(expected, result) MU__SAFE_BLOCK(\
-	c_int minunit_tmp_e;\
-	c_int minunit_tmp_r;\
+#define mu_assert_long_eq(expected, result) MU__SAFE_BLOCK(\
+	long minunit_tmp_e;\
+	long minunit_tmp_r;\
 	minunit_assert++;\
 	minunit_tmp_e = (expected);\
 	minunit_tmp_r = (result);\
 	if (minunit_tmp_e != minunit_tmp_r) {\
-		snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "%s failed:\n\t%s:%d: %d expected but was %d", __func__, __FILE__, __LINE__, (int) minunit_tmp_e, (int) minunit_tmp_r);\
+		snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "%s failed:\n\t%s:%d: %ld expected but was %ld", __func__, __FILE__, __LINE__, minunit_tmp_e, minunit_tmp_r);\
 		minunit_status = 1;\
 		return;\
 	} else {\

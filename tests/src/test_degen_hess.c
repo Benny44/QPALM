@@ -83,7 +83,7 @@ MU_TEST(test_degen_hess) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], 5.5, TOL);
     mu_assert_double_eq(work->solution->x[1], 5, TOL);
     mu_assert_double_eq(work->solution->x[2], -10, TOL);
