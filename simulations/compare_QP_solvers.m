@@ -18,7 +18,7 @@ MAXITER = 5000;
 MAX_TIME = 10000;
 
 if ~isfield(options, 'EPS_ABS')
-    EPS_ABS = 1e-8;
+    EPS_ABS = 1e-6;
     EPS_REL = EPS_ABS;
 else
     EPS_ABS = options.EPS_ABS;

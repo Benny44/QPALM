@@ -8,22 +8,23 @@ branches:
   only:
     - master
     - appveyor_conda
+    - windows-deploy
 
 platform:
   - x64
-  #- x86
 
 environment:
   MINICONDA: C:\Miniconda3
+  QPALM_VERSION: "1.0"
 
 install:
-  #- call %MINICONDA%\Scripts\activate.bat
   - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\install.cmd"
 
 test_script:
   - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\script.cmd"
 
-#deploy_script:
-#  - "%APPVEYOR_BUILD_FOLDER%\\ci\\appveyor\\deploy.cmd"
+
+deploy_script:
+  - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\deploy.cmd"
 
 

@@ -32,9 +32,9 @@ cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON
 make
 
 #Run the tests
-cd $builddir
-./bin/run_all_tests
-
+#cd $builddir
+#./bin/run_all_tests
+ctest
 
 
 

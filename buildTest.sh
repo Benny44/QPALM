@@ -31,6 +31,7 @@ cd $builddir
 
 cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON
 make
+ctest
 
 #Run the tests
 #cd $builddir

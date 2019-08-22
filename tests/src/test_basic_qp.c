@@ -82,7 +82,7 @@ MU_TEST(test_basic_qp) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
@@ -94,7 +94,7 @@ MU_TEST(test_basic_qp_unscaled) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
@@ -106,7 +106,7 @@ MU_TEST(test_basic_qp_noprox) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
@@ -118,7 +118,7 @@ MU_TEST(test_basic_qp_noprox_unscaled) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
@@ -136,7 +136,7 @@ MU_TEST(test_basic_qp_warm_start) {
     // Solve Problem
     qpalm_solve(work);
     mu_assert_true(work->info->iter < 2);
-    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
@@ -154,7 +154,7 @@ MU_TEST(test_basic_qp_warm_start_unscaled) {
     // Solve Problem
     qpalm_solve(work);
     mu_assert_true(work->info->iter < 2);
-    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
@@ -172,7 +172,7 @@ MU_TEST(test_basic_qp_warm_start_noprox) {
     // Solve Problem
     qpalm_solve(work);
     mu_assert_true(work->info->iter < 2);
-    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
@@ -190,7 +190,7 @@ MU_TEST(test_basic_qp_warm_start_noprox_unscaled) {
     // Solve Problem
     qpalm_solve(work);
     mu_assert_true(work->info->iter < 2);
-    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }

@@ -76,7 +76,7 @@ void test_nonconvex_qp(void) {
     // Solve Problem
     qpalm_solve(work);
 
-    mu_assert_cint_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], -0.5, 1e-5);
     mu_assert_double_eq(work->solution->x[1], -2.0, 1e-5);
 }

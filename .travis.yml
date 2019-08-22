@@ -4,8 +4,7 @@ branches:
   only:
   - master
   - development
-  - cmake
-  - conda
+  - windows-deploy
 matrix:
   include:
   - os: linux
@@ -29,6 +28,7 @@ matrix:
 env:
   global:
   - DEPS_DIR="${HOME}/deps"
+  - QPALM_VERSION="1.0"
 install:
 - gem install coveralls-lcov
 - chmod 755 travis/install.sh

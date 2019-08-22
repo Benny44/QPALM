@@ -220,11 +220,11 @@ Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
 y_next = zeros(m,1);
 k_prev = 0;
-maxiter_inner = max(100, maxiter/1000);
+maxiter_inner = max(100, maxiter/1000)*10^0;
 
 for k = 1:maxiter
         
-    if k > 1 && mod(k,10000)==0
+    if k > 1 && mod(k,2000)==0
         fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e\n', k, nrm_rp, nrm_rd);
     end
     stats.gamma(k) = gamma;
@@ -551,6 +551,9 @@ end
 %unscale
 x = D_scale.*x;
 y = (E_scale.*yh)/c_scale;
+
+%objective
+stats.obj = 0.5*x'*(Q-1/gamma*eye(n))*x + q'*x;
 
 end
 
