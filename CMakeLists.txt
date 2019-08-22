@@ -60,6 +60,7 @@ add_library(qpalm SHARED
                 src/cholmod_interface.c
                 src/nonconvex.c
                 src/validate.c
+                src/iteration.c
                 include/cholmod_interface.h
                 include/global_opts.h
                 include/constants.h
@@ -73,6 +74,7 @@ add_library(qpalm SHARED
                 include/types.h
                 include/termination.h
                 include/newton.h
+                include/iteration.h
                 )
 
 target_include_directories(qpalm

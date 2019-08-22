@@ -24,6 +24,7 @@ extern "C" {
 #include "cholmod_interface.h"
 #include "newton.h"
 #include "nonconvex.h"
+#include "iteration.h"
 
 /**********************
 * Main API Functions *
@@ -291,7 +292,6 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
 
 }
 
-
 void qpalm_solve(QPALMWorkspace *work) {
 
   #ifdef PROFILING
@@ -319,28 +319,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
   for (iter = 0; iter < work->settings->max_iter; iter++) {
 
-    //Axys = Ax + y./sigma
-    vec_ew_div(work->y, work->sigma, work->temp_m, m);
-    vec_add_scaled(work->Ax, work->temp_m, work->Axys, 1, m);
-    //z = min(max(Axys,bmin),bmax)
-    vec_ew_mid_vec(work->Axys, work->data->bmin, work->data->bmax, work->z, m);
-    //pri_res = Ax-z
-    vec_add_scaled(work->Ax, work->z, work->pri_res, -1, m);
-    //yh = y + pri_res.*sigma
-    vec_ew_prod(work->pri_res, work->sigma, work->temp_m, m);
-    vec_add_scaled(work->y, work->temp_m, work->yh, 1, m);
-    //df = Qx + q
-    vec_add_scaled(work->Qx, work->data->q, work->df, 1, n);
-    
-    if (work->settings->proximal) {
-      //df = Qx + q +1/gamma*(x-x0)
-      // NB work->Qx contains Qx+1/gamma*x
-      vec_add_scaled(work->df, work->x0, work->df, -1/work->gamma, n);
-    }
-    // Atyh = A'*yh
-    mat_tpose_vec(work->data->A, work->chol->yh, work->chol->Atyh, &work->chol->c);
-    //dphi = df+Atyh
-    vec_add_scaled(work->df, work->Atyh, work->dphi, 1, n);
+    compute_residuals(work);
   
     if (check_termination(work)) {
       work->info->iter = iter;
@@ -361,60 +340,25 @@ void qpalm_solve(QPALMWorkspace *work) {
                                         work->settings->rho*work->settings->eps_abs_in);
       work->settings->eps_rel_in = c_max(work->settings->eps_rel,
                                         work->settings->rho*work->settings->eps_rel_in);
+      
+      
       if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
-        c_float *At_scalex = work->chol->At_scale->x;
-        c_float pri_res_unscaled_norm = vec_norm_inf(work->pri_res, m);
-        c_float sigma_temp, mult_factor;
-        for (k = 0; k < m; k++) {
-          if (c_absval(work->pri_res[k]) > work->settings->theta*c_absval(work->pri_res_in[k])) {
-            mult_factor = c_max(1.0, work->settings->delta * c_absval(work->pri_res[k]) / (pri_res_unscaled_norm + 1e-6));
-            sigma_temp = mult_factor * work->sigma[k];
-            if (sigma_temp <= 1e8) { //TODO make sigma_max a setting
-              work->sigma[k] = sigma_temp;
-              mult_factor = c_sqrt(mult_factor);
-              work->sqrt_sigma[k] = mult_factor * work->sqrt_sigma[k];
-              At_scalex[k] = mult_factor;
-            } else {
-              work->sigma[k] = 1e8;
-              At_scalex[k] = 1e4 / work->sqrt_sigma[k];
-              work->sqrt_sigma[k] = 1e4;
-            }
-          } else {
-            At_scalex[k] = 1.0;
-          }
-        }
-
-        CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+        update_sigma(work);
       }
-      prea_vec_copy(work->pri_res, work->pri_res_in, m);
+
       
       work->chol->reset_newton = TRUE;
-      vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
-
+      
       if(work->settings->proximal) {
-        c_float prev_gamma = work->gamma;
-        work->gamma = c_min(work->gamma*work->settings->gamma_upd, work->settings->gamma_max);
-        prea_vec_copy(work->x, work->x0, n);
-        vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->gamma - 1/prev_gamma, n);
+        update_gamma(work);
       }
+
+      prea_vec_copy(work->pri_res, work->pri_res_in, m);
+      vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
 
       iter_out++;
     } else {
-      
-      newton_set_direction(work);
-      
-      work->tau = exact_linesearch(work);
-
-      //x_prev = x
-      prea_vec_copy(work->x, work->x_prev, n);
-      //dphi_prev = dphi 
-      prea_vec_copy(work->dphi, work->dphi_prev, n);
-      //x = x+tau*d
-      vec_add_scaled(work->x, work->d, work->x, work->tau, n);
-      vec_mult_scalar(work->Qd, work->tau, n); //Qdx used in dua_infeas check
-      vec_mult_scalar(work->Ad, work->tau, m); //Adx used in dua_infeas check
-      vec_add_scaled(work->Qx, work->Qd, work->Qx, 1, n);
-      vec_add_scaled(work->Ax, work->Ad, work->Ax, 1, m);
+      update_primal_iterate(work);
     }
   }
 
