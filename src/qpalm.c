@@ -316,6 +316,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
   c_int iter;
   c_int iter_out = 0;
+  c_int prev_iter = 0; /* iteration number at which the previous subproblem finished*/
 
   for (iter = 0; iter < work->settings->max_iter; iter++) {
 
@@ -352,8 +353,24 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
       vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
-
       iter_out++;
+      prev_iter = iter;
+    
+    } else if (iter == prev_iter + 100){ //TODO make inner_maxiter a setting
+      
+      if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
+        update_sigma(work);
+      } 
+
+      if(work->settings->proximal) {
+        update_gamma(work);
+      }
+
+      prea_vec_copy(work->pri_res, work->pri_res_in, m);
+      vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
+      iter_out++;
+      prev_iter = iter;
+
     } else {
       update_primal_iterate(work);
     }
