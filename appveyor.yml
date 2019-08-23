@@ -9,6 +9,7 @@ branches:
     - master
     - appveyor_conda
     - windows-deploy
+    - development
 
 platform:
   - x64
