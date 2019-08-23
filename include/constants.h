@@ -72,6 +72,8 @@ extern "C" {
 # define WARM_START (FALSE)     /**< default warm start setting */
 # define VERBOSE (TRUE)         /**< default write out progress setting */
 
+# define MAX_RANK_UPDATE 160 /**< maximum rank for the sparse factorization update */
+
 # ifndef QPALM_NULL
 #  define QPALM_NULL 0 /**< NULL, if something goes wrong during setup, the workspace pointer is set to this */
 # endif /* ifndef QPALM_NULL */

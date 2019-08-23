@@ -20,7 +20,7 @@ void newton_set_direction(QPALMWorkspace *work) {
     set_active_constraints(work);
     set_entering_leaving_constraints(work);
     if ((work->chol->reset_newton && work->chol->nb_active_constraints) || 
-        (work->chol->nb_enter + work->chol->nb_leave) > 40) {
+        (work->chol->nb_enter + work->chol->nb_leave) > MAX_RANK_UPDATE) {
         work->chol->reset_newton = FALSE;
         ldlcholQAtsigmaA(work);   
     } else if (work->chol->nb_active_constraints) {

@@ -191,6 +191,8 @@ end
 
 if options.gurobi
     if isfield(options, 'lp') && options.lp
+       %do not define model.Q 
+    else
         model.Q = 0.5*prob.Q;
     end
     model.obj = prob.q;
