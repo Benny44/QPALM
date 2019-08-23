@@ -55,7 +55,7 @@ chmod 755 buildTest.sh
 If you use QPALM in your research, please cite the following paper
 ```
 @inproceedings{hermans2019qpalm,
-	author		= {Hermans, B. and Pipeleers, G. and Patrinos, P.},
+	author		= {Hermans, B. and Themelis, A. and Patrinos, P.},
 	booktitle	= {58th IEEE Conference on Decision and Control},
 	title		= {{QPALM}: {A} {N}ewton-type {P}roximal {A}ugmented {L}agrangian {M}ethod for {Q}uadratic {P}rograms},
 	year		= {2019},

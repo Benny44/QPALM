@@ -11,7 +11,6 @@ var searchData=
   ['df',['df',['../structQPALMWorkspace.html#aca74b2322e2dc5427a440a39a16e2c3b',1,'QPALMWorkspace']]],
   ['dint',['DINT',['../global__opts_8h.html#a058e7dbf59195ee615d22066fbdd844b',1,'global_opts.h']]],
   ['dinv',['Dinv',['../structQPALMScaling.html#a1811ba868f52b35ae61afe4850c7068a',1,'QPALMScaling']]],
-  ['double',['DOUBLE',['../global__opts_8h.html#a8747af38b86aa2bbcda2f1b1aa0888c2',1,'global_opts.h']]],
   ['dphi',['dphi',['../structQPALMWorkspace.html#abc9bf36aa5174f0e7839630d9bef826b',1,'QPALMWorkspace']]],
   ['dphi_5fprev',['dphi_prev',['../structQPALMWorkspace.html#a93d1329aebe7dba2d38645412de43f92',1,'QPALMWorkspace']]],
   ['dtype',['DTYPE',['../global__opts_8h.html#a3834ad0136a8b95a6589500e4009fe9a',1,'global_opts.h']]],
