@@ -50,10 +50,10 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     size_t i;
     for (i = 0; i<m*2; i++){
         if (work->temp_2m[i] > 0) {
-            work->index_L[i] = 1;
+            work->index_L[i] = TRUE;
             nL++;
         } else {
-            work->index_L[i] = 0;
+            work->index_L[i] = FALSE;
         }     
     };
 
@@ -63,17 +63,17 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     // index_P = delta > 0
     for (i = 0; i<m*2; i++){
         if (work->delta[i] > 0) {
-            work->index_P[i] = 1;
+            work->index_P[i] = TRUE;
         } else {
-            work->index_P[i] = 0;
+            work->index_P[i] = FALSE;
         }     
     };
     // index_J = (P&~L)|(~P&L);
     for (i = 0; i<m*2; i++){
         if ((work->index_P[i] + work->index_L[i]) == 1) {
-            work->index_J[i] = 1;
+            work->index_J[i] = TRUE;
         } else {
-            work->index_J[i] = 0;
+            work->index_J[i] = FALSE;
         }     
     };
 

@@ -192,7 +192,7 @@ minunit_suite_teardown = NULL;\
 	mu_assert(!(test), "Expected false but got true.");\
 )
 
-#define mu_assert_int_eq(expected, result) MU__SAFE_BLOCK(\
+#define mu_assert_int_eq(result, expected) MU__SAFE_BLOCK(\
 	int minunit_tmp_e;\
 	int minunit_tmp_r;\
 	minunit_assert++;\
@@ -207,7 +207,7 @@ minunit_suite_teardown = NULL;\
 	}\
 )
 
-#define mu_assert_long_eq(expected, result) MU__SAFE_BLOCK(\
+#define mu_assert_long_eq(result, expected) MU__SAFE_BLOCK(\
 	long minunit_tmp_e;\
 	long minunit_tmp_r;\
 	minunit_assert++;\
@@ -222,7 +222,7 @@ minunit_suite_teardown = NULL;\
 	}\
 )
 
-#define mu_assert_double_eq(expected, result, tol) MU__SAFE_BLOCK(\
+#define mu_assert_double_eq(result, expected, tol) MU__SAFE_BLOCK(\
 	double minunit_tmp_e;\
 	double minunit_tmp_r;\
 	minunit_assert++;\
@@ -238,7 +238,7 @@ minunit_suite_teardown = NULL;\
 	}\
 )
 
-#define mu_assert_string_eq(expected, result) MU__SAFE_BLOCK(\
+#define mu_assert_string_eq(result, expected) MU__SAFE_BLOCK(\
 	const char* minunit_tmp_e = expected;\
 	const char* minunit_tmp_r = result;\
 	minunit_assert++;\

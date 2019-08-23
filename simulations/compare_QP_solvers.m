@@ -105,7 +105,7 @@ if options.qpalm_c
         settings = solver.default_settings();
         
         settings.verbose = VERBOSE;
-        settings.scaling = 10;
+        settings.scaling = 2;
         settings.max_iter = 30000;
         settings.eps_abs_in = min(EPS_ABS*1e6, 1);
         settings.eps_rel_in = min(EPS_REL*1e6, 1);

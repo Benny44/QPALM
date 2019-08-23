@@ -44,10 +44,8 @@ void update_sigma(QPALMWorkspace* work) {
             sigma_temp = mult_factor * work->sigma[k];
             if (sigma_temp <= 1e8) { //TODO make sigma_max a setting
                 if (work->sigma[k] != sigma_temp) {
+                    sigma_changed[work->nb_sigma_changed] = k;
                     work->nb_sigma_changed++;
-                    sigma_changed[k] = 1;
-                } else {
-                    sigma_changed[k] = 0;
                 }               
                 work->sigma[k] = sigma_temp;
                 mult_factor = c_sqrt(mult_factor);
@@ -55,18 +53,15 @@ void update_sigma(QPALMWorkspace* work) {
                 At_scalex[k] = mult_factor;
             } else {
                 if (work->sigma[k] != 1e8) {
+                    sigma_changed[work->nb_sigma_changed] = k;
                     work->nb_sigma_changed++;
-                    sigma_changed[k] = 1;
-                } else {
-                    sigma_changed[k] = 0;
-                }
+                } 
                 work->sigma[k] = 1e8;
                 At_scalex[k] = 1e4 / work->sqrt_sigma[k];
                 work->sqrt_sigma[k] = 1e4;
             }
         } else {
             At_scalex[k] = 1.0;
-            sigma_changed[k] = 0;
         }
     }
 
@@ -77,11 +72,8 @@ void update_sigma(QPALMWorkspace* work) {
         work->chol->reset_newton = TRUE;
       } else if (work->nb_sigma_changed == 0){
         /* do nothing */
-      } else {      
+      } else {  
           ldlupdate_sigma_changed(work);
-        // LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
-        //             sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
-        //             *A(sig_changed,:))','+');
     }
 }
 

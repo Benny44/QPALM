@@ -150,17 +150,17 @@ void ldlupdate_sigma_changed(QPALMWorkspace *work) {
   c_int *sigma_changed = work->chol->enter;
 
   size_t k;
-  for (k=0; k < work->data->m; k++) {
-    if(sigma_changed[k]) At_scalex[k]= (At_scalex[k]-1)/At_scalex[k]; 
+  for (k=0; k < work->nb_sigma_changed; k++) {
+    At_scalex[sigma_changed[k]]= (At_scalex[sigma_changed[k]]-1)/At_scalex[sigma_changed[k]]; 
   }
 
-  cholmod_l_scale(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+  CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
   Ae = CHOLMOD(submatrix)(work->chol->At_sqrt_sigma, NULL, -1, 
                       sigma_changed, work->nb_sigma_changed, TRUE, TRUE, &work->chol->c);
   for (k=0; k < work->data->m; k++) {
     At_scalex[k]=1.0/At_scalex[k]; 
   }
-  cholmod_l_scale(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+  CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
   //LD = ldlupdate(LD,Ae,'+');
   CHOLMOD(updown)(TRUE, Ae, work->chol->LD, &work->chol->c);
   CHOLMOD(free_sparse)(&Ae, &work->chol->c);
@@ -196,5 +196,5 @@ void cholmod_set_settings(cholmod_common *c) {
   c->nmethods = 1 ;
 	c->method [0].ordering = CHOLMOD_NATURAL ;
 	c->postorder = FALSE ;
-  c->useGPU = 0 ;
+  c->useGPU = FALSE ;
 }

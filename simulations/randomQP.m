@@ -7,8 +7,8 @@ cd(current);
 options.qpalm_matlab = false;
 options.qpalm_c = true;
 options.osqp = true;
-options.qpoases = true;
-options.gurobi = true;
+options.qpoases = false;
+options.gurobi = false;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
@@ -17,17 +17,17 @@ Tqpoases = [];
 Tgurobi = [];
 
 % n_values = 3:4;
-n_values = 20:20:500;
+n_values = 20:20:600;
 nb_n = length(n_values);
 
 for i = 1:nb_n
     n = n_values(i);
     m = 10*n;
     
-    M = sprandn(n, n, 5e-1);
+    M = sprandn(n, n, 1e-1);
     Q = M*M';
     
-    A = sprandn(m,n,5e-1);
+    A = sprandn(m,n,1e-1);
     q = randn(n,1);
     lb = -rand(m,1);
     ub = rand(m,1);
