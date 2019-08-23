@@ -24,7 +24,7 @@ xcopy ..\..\LICENSE %QPALM_DEPLOY_DIR%
 REM Copy includes
 xcopy ..\..\include\*.h %QPALM_DEPLOY_DIR%\include
 REM Copy shared library
-powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
+::powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
 xcopy bin\Release\qpalm.dll %QPALM_DEPLOY_DIR%\bin
 xcopy Release\qpalm.lib %QPALM_DEPLOY_DIR%\lib
 
