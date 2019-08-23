@@ -24,7 +24,6 @@ install:
 test_script:
   - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\script.cmd"
 
-
 deploy_script:
   - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\deploy.cmd"
 

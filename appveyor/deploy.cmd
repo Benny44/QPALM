@@ -1,6 +1,6 @@
 @echo on
-
-IF "%APPVEYOR_REPO_BRANCH%" == "master" (
+echo %APPVEYOR_REPO_BRANCH%
+IF "%APPVEYOR_REPO_BRANCH%"=="master" (
 	:: Compile the release version
 	cd build
 	DEL /F/Q/S *.* > NUL
