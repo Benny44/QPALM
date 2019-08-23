@@ -28,5 +28,6 @@ ctest -C Debug
 
 if errorlevel 1 exit /b 1
 
+cd %APPVEYOR_BUILD_FOLDER%
 
 @echo off

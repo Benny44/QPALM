@@ -16,6 +16,8 @@ mkdir %QPALM_DEPLOY_DIR%
 mkdir %QPALM_DEPLOY_DIR%\lib
 mkdir %QPALM_DEPLOY_DIR%\include
 
+powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
+
 REM Copy License
 xcopy ..\..\LICENSE %QPALM_DEPLOY_DIR%
 REM Copy includes
