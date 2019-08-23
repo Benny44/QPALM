@@ -50,6 +50,7 @@ after_success:
   --track-origins=yes --verbose build/debug/bin/run_all_tests; fi
 deploy:
   provider: script
-  script: "bash travis/deploy.sh"
-  on: 
+  script: "bash travis/deploy.sh" 
+  on:
+    branch: master
   skip_cleanup: true
