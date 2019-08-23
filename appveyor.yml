@@ -25,6 +25,6 @@ test_script:
   - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\script.cmd"
 
 deploy_script:
-  - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\deploy.cmd"
+  - IF "%APPVEYOR_REPO_BRANCH%"=="master" ("%APPVEYOR_BUILD_FOLDER%\\appveyor\\deploy.cmd")
 
 
