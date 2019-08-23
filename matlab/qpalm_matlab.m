@@ -294,7 +294,7 @@ for k = 1:maxiter
             reset_newton = true;
         elseif nb_sig_changed == 0
             %do nothing
-        elseif nb_sig_changed <= 40
+        elseif nb_sig_changed <= 160
             LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
                 sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
                 *A(sig_changed,:))','+');
@@ -352,7 +352,7 @@ for k = 1:maxiter
                 reset_newton = true;
             elseif nb_sig_changed == 0
                 %do nothing
-            elseif nb_sig_changed <= 40
+            elseif nb_sig_changed <= 160
                 LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
                     sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
                     *A(sig_changed,:))','+');

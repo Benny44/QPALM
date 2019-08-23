@@ -3,7 +3,7 @@ enter = active_cnstrs & (~active_cnstrs_old);
 leave = active_cnstrs_old & (~active_cnstrs);
 ne = sum(enter);
 nl = sum(leave);
-if ~reset_newton && (ne+nl)<=40
+if ~reset_newton && (ne+nl)<=160
     if ne>0
         Ae = Asqrtsigt(:,enter);
         LD = ldlupdate(LD,Ae,'+');
