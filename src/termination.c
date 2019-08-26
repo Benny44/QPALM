@@ -126,7 +126,7 @@ void calculate_dual_tolerances(QPALMWorkspace *work) {
     if (work->settings->scaling) max_norm *= work->scaling->cinv;
 
     work->eps_dua = work->settings->eps_abs + work->settings->eps_rel*max_norm;
-    work->eps_dua_in = work->settings->eps_abs_in + work->settings->eps_rel_in*max_norm;
+    work->eps_dua_in = work->eps_abs_in + work->eps_rel_in*max_norm;
 }
 
 c_int is_solved(QPALMWorkspace *work) {

@@ -143,7 +143,7 @@ void vec_ew_min_vec(const c_float *a, const c_float *b, c_float *c, size_t n) {
 
 void vec_ew_mid_vec(const c_float *a, const c_float *bmin, const c_float *bmax, c_float *c, size_t n) {
   size_t i;
-
+  
   for (i = 0; i < n; i++) {
     c[i] = c_max(bmin[i], c_min(a[i], bmax[i]));
   }

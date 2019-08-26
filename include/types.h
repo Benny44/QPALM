@@ -222,6 +222,8 @@ typedef struct {
   c_float eps_pri;    ///< primal tolerance
   c_float eps_dua;    ///< dual tolerance
   c_float eps_dua_in; ///< intermediate dual tolerance
+  c_float eps_abs_in; ///< intermediate absolute tolerance
+  c_float eps_rel_in; ///< intermediate relative tolerance
   /** @} */
 
   /**

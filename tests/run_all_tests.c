@@ -23,10 +23,7 @@ int main(){
     MU_RUN_SUITE(suite_update);
     MU_RUN_SUITE(suite_validation);
     MU_REPORT();
-    //if (minunit_fail) {
-    //    return 1;
-    //} else {
-    return minunit_fail;
-    //}
+    
+    return minunit_fail; /* =0 if all tests passed, >0 otherwise */
 	    
 }

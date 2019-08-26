@@ -1,5 +1,6 @@
 #include "minunit.h"
 #include "qpalm.h"
+#include "lin_alg.h"
 #include "global_opts.h"
 #include "constants.h"
 
@@ -141,6 +142,8 @@ MU_TEST(test_basic_qp_warm_start) {
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
 
+
+
 MU_TEST(test_basic_qp_warm_start_unscaled) {
     // Setup workspace
     settings->scaling = 0;
@@ -195,6 +198,38 @@ MU_TEST(test_basic_qp_warm_start_noprox_unscaled) {
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 }
 
+MU_TEST(test_basic_qp_warm_start_resolve) {
+    // Setup workspace
+    work = qpalm_setup(data, settings, c);
+    //Store initial guesses    
+    c_float x[N]; 
+    c_float y[M];
+    prea_vec_copy(work->x, x, N);
+    prea_vec_copy(work->y, y, M);
+    
+    // Solve Problem
+    qpalm_solve(work);
+    // mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
+
+    // Store solution
+    c_float x_sol[N], y_sol[M];
+    prea_vec_copy(work->solution->x, x_sol, N);
+    prea_vec_copy(work->solution->y, y_sol, M);
+    c_int iter = work->info->iter;
+    
+    // Warm start and resolve problem
+    qpalm_warm_start(work, x, y);
+    qpalm_solve(work);
+    // mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->iter, iter);
+    mu_assert_double_eq(work->solution->x[0], x_sol[0], 1e-15);
+    mu_assert_double_eq(work->solution->x[1], x_sol[1], 1e-15);
+    mu_assert_double_eq(work->solution->y[0], y_sol[0], 1e-15);
+    mu_assert_double_eq(work->solution->y[1], y_sol[1], 1e-15);
+    mu_assert_double_eq(work->solution->y[2], y_sol[2], 1e-15);
+
+}
+
 MU_TEST_SUITE(suite_basic_qp) {
     MU_SUITE_CONFIGURE(basic_qp_suite_setup, basic_qp_suite_teardown, NULL, basic_qp_test_teardown);
 
@@ -206,5 +241,5 @@ MU_TEST_SUITE(suite_basic_qp) {
     MU_RUN_TEST(test_basic_qp_warm_start_unscaled);
     MU_RUN_TEST(test_basic_qp_warm_start_noprox);
     MU_RUN_TEST(test_basic_qp_warm_start_noprox_unscaled);
-
+    MU_RUN_TEST(test_basic_qp_warm_start_resolve);
 }

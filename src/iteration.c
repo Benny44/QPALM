@@ -28,7 +28,6 @@ void compute_residuals(QPALMWorkspace *work) {
     mat_tpose_vec(work->data->A, work->chol->yh, work->chol->Atyh, &work->chol->c);
     //dphi = df+Atyh
     vec_add_scaled(work->df, work->Atyh, work->dphi, 1, work->data->n);
-
 }
 
 void update_sigma(QPALMWorkspace* work) {
@@ -86,7 +85,7 @@ void update_gamma(QPALMWorkspace *work) {
 
 void update_primal_iterate(QPALMWorkspace *work) {
     newton_set_direction(work);
-      
+
     work->tau = exact_linesearch(work);
 
     //x_prev = x

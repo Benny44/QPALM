@@ -204,11 +204,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->chol->leave = c_calloc(m, sizeof(c_int));
   work->chol->At_scale = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, &work->chol->c);
 
-  // If warm-start will not be used, cold start variables x, x0, x_prev, y, Qx, Ax and init sigma
-  if (!work->settings->warm_start) {
-    qpalm_warm_start(work, NULL, NULL);
-  }
-
   // Set parameters in case the QP is nonconvex
   if (work->settings->nonconvex) {
     set_settings_nonconvex(work);
@@ -218,6 +213,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->solution    = c_calloc(1, sizeof(QPALMSolution));
   work->solution->x = c_calloc(1, n * sizeof(c_float));
   work->solution->y = c_calloc(1, m * sizeof(c_float));
+  
   // Allocate and initialize information
   work->info                = c_calloc(1, sizeof(QPALMInfo));
   update_status(work->info, QPALM_UNSOLVED);
@@ -236,6 +232,13 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
 
 
 void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_warm_start) {
+    
+    // If we have previously solved the problem, then just count the warm start as the setup time
+    #ifdef PROFILING
+    if (work->info->status_val != QPALM_UNSOLVED) work->info->setup_time = 0; 
+    qpalm_tic(work->timer); // Start timer
+    #endif /* ifdef PROFILING */
+
     size_t n = work->data->n;
     size_t m = work->data->m;
     CHOLMOD(start)(&work->chol->c);
@@ -288,16 +291,22 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
     work->chol->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, &work->chol->c);
     CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
 
+
+    work->eps_abs_in = work->settings->eps_abs_in;
+    work->eps_rel_in = work->settings->eps_rel_in;
+    work->chol->reset_newton = TRUE;
+    work->gamma = work->settings->gamma_init;
+
     work->initialized = TRUE;
     CHOLMOD(finish)(&work->chol->c);
+
+    #ifdef PROFILING
+    work->info->setup_time += qpalm_toc(work->timer); // Start timer
+    #endif /* ifdef PROFILING */
 
 }
 
 void qpalm_solve(QPALMWorkspace *work) {
-
-  #ifdef PROFILING
-  qpalm_tic(work->timer); // Start timer
-  #endif /* ifdef PROFILING */
   
   //Check if the internal variables were correctly initialized. A path that leads to
   //incorrect initialization (and subsequent program crash) is that the user forgets
@@ -306,6 +315,10 @@ void qpalm_solve(QPALMWorkspace *work) {
   if (!work->initialized) {
     qpalm_warm_start(work, NULL, NULL);
   }
+
+  #ifdef PROFILING
+  qpalm_tic(work->timer); // Start timer
+  #endif /* ifdef PROFILING */
 
   //Initialize CHOLMOD and its settings
   CHOLMOD(start)(&work->chol->c);
@@ -337,10 +350,8 @@ void qpalm_solve(QPALMWorkspace *work) {
     } else if (check_subproblem_termination(work)) {
       prea_vec_copy(work->yh, work->y, m);
       prea_vec_copy(work->Atyh, work->Aty, n);
-      work->settings->eps_abs_in = c_max(work->settings->eps_abs,
-                                        work->settings->rho*work->settings->eps_abs_in);
-      work->settings->eps_rel_in = c_max(work->settings->eps_rel,
-                                        work->settings->rho*work->settings->eps_rel_in);
+      work->eps_abs_in = c_max(work->settings->eps_abs, work->settings->rho*work->eps_abs_in);
+      work->eps_rel_in = c_max(work->settings->eps_rel, work->settings->rho*work->eps_rel_in);
       
       
       if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
@@ -386,7 +397,6 @@ void qpalm_solve(QPALMWorkspace *work) {
     work->info->run_time = work->info->setup_time +
                            work->info->solve_time;
   #endif /* ifdef PROFILING */
-
   CHOLMOD(finish)(&work->chol->c);
 }
 
