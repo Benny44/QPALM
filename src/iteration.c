@@ -41,7 +41,7 @@ void update_sigma(QPALMWorkspace* work) {
         if ((c_absval(work->pri_res[k]) > work->settings->theta*c_absval(work->pri_res_in[k])) && work->chol->active_constraints[k]) {
             mult_factor = c_max(1.0, work->settings->delta * c_absval(work->pri_res[k]) / (pri_res_unscaled_norm + 1e-6));
             sigma_temp = mult_factor * work->sigma[k];
-            if (sigma_temp <= 1e8) { //TODO make sigma_max a setting
+            if (sigma_temp <= 1e9) { //TODO make sigma_max a setting
                 if (work->sigma[k] != sigma_temp) {
                     sigma_changed[work->nb_sigma_changed] = k;
                     work->nb_sigma_changed++;
@@ -51,13 +51,13 @@ void update_sigma(QPALMWorkspace* work) {
                 work->sqrt_sigma[k] = mult_factor * work->sqrt_sigma[k];
                 At_scalex[k] = mult_factor;
             } else {
-                if (work->sigma[k] != 1e8) {
+                if (work->sigma[k] != 1e9) {
                     sigma_changed[work->nb_sigma_changed] = k;
                     work->nb_sigma_changed++;
                 } 
-                work->sigma[k] = 1e8;
-                At_scalex[k] = 1e4 / work->sqrt_sigma[k];
-                work->sqrt_sigma[k] = 1e4;
+                work->sigma[k] = 1e9;
+                At_scalex[k] = c_sqrt(1e9) / work->sqrt_sigma[k];
+                work->sqrt_sigma[k] = c_sqrt(1e9);
             }
         } else {
             At_scalex[k] = 1.0;
@@ -67,7 +67,7 @@ void update_sigma(QPALMWorkspace* work) {
     CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
 
 
-    if ((work->settings->proximal && work->gamma != work->settings->gamma_max) || (work->nb_sigma_changed > MAX_RANK_UPDATE)) {
+    if ((work->settings->proximal && work->gamma != work->settings->gamma_max) || (work->nb_sigma_changed > 0*MAX_RANK_UPDATE)) {
         work->chol->reset_newton = TRUE;
       } else if (work->nb_sigma_changed == 0){
         /* do nothing */
