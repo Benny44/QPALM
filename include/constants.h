@@ -33,6 +33,7 @@ extern "C" {
 # define QPALM_PRIMAL_INFEASIBLE (-3) /**< status to indicate the problem is primal infeasible  */
 # define QPALM_DUAL_INFEASIBLE (-4)   /**< status to indicate the problem is dual infeasible  */
 # define QPALM_UNSOLVED (-10)         /**< status to indicate the problem is unsolved. Only setup function has been called */
+# define QPALM_ERROR (0)              /**< status to indicate an error has occured (this error should automatically be printed) */
 
 /**
  * @}
@@ -62,9 +63,9 @@ extern "C" {
 # define PROXIMAL (TRUE)        /**< default use of proximal method of multipliers */
 # define GAMMA_INIT (1E1)       /**< default initial proximal penalty parameter */
 # define GAMMA_UPD (10)         /**< default proximal penalty update factor */
-# define GAMMA_MAX (1E6)        /**< default proximal penalty cap */
+# define GAMMA_MAX (1E7)        /**< default proximal penalty cap */
 
-# define SCALING (10)            /**< default number of scaling iterations */
+# define SCALING (2)            /**< default number of scaling iterations */
 # define MIN_SCALING (1e-08)    /**< minimum scaling value *////< Minimum scaling value
 # define MAX_SCALING (1e+04)    /**< maximum scaling value *////< Maximum scaling value
 
