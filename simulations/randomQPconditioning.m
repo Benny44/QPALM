@@ -4,8 +4,8 @@ clear; close all;
 current = fileparts(mfilename('fullpath'));
 cd(current);
 
-options.qpalm_matlab = true;
-options.qpalm_c = false;
+options.qpalm_matlab = false;
+options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = true;
 options.gurobi = true;
@@ -27,6 +27,10 @@ rc = logspace(0, 5, 20);
 % nb_n = length(n_values);
 
 nbProb = 5; %Number of problems per condition number 
+
+options.EPS_ABS = 1e-6;
+options.SCALING_ITER = 2;
+options.MAXITER = 10000;
 
 for i = 1:length(rc)
 %     n = n_values(i);

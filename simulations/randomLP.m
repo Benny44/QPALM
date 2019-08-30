@@ -4,8 +4,8 @@ clear; close all;
 current = fileparts(mfilename('fullpath'));
 cd(current);
 
-options.qpalm_matlab = true;
-options.qpalm_c = false;
+options.qpalm_matlab = false;
+options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = false;
 options.gurobi = true;
@@ -17,8 +17,12 @@ Tqpoases = [];
 Tgurobi = [];
 
 % n_values = 3:4;
-n_values = 100:20:600;
+n_values = 20:20:600;
 nb_n = length(n_values);
+
+options.EPS_ABS = 1e-6;
+options.SCALING_ITER = 2;
+options.MAXITER = 10000;
 
 options.lp = true;
 
@@ -83,7 +87,8 @@ save('output/randomLP');
 close all
 figure
 
-semilogy(n_values(1:length(Tqpalm_matlab)), Tqpalm_matlab, 'b',...
+semilogy(n_values(1:length(Tqpalm_c)), Tqpalm_c, 'b',...
+    n_values(1:length(Tqpalm_matlab)), Tqpalm_matlab, 'm',...
     n_values(1:length(Tosqp)), Tosqp, 'r',...
     n_values(1:length(Tgurobi)), Tgurobi, 'k');
 %      n_values(1:length(Tqpalm_c)), Tqpalm_c, 'm',...

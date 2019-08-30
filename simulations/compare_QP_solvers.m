@@ -2,6 +2,10 @@ function [ x, timings, iter, status, options, stats ] = compare_QP_solvers( prob
 %Run QPALM (Matlab), QPALM (C), OSQP, qpoases, and GUROBI on the given problem 
 %n times and return the solution and timings
 
+% if isfield(options, 'qrqp') && options.qrqp
+%     import casadi.*
+% end
+
 n = 1; %to get an average timing
 t = zeros(n,1);
 
@@ -13,8 +17,17 @@ status = {};
 
 
 VERBOSE = false;
-SCALING_ITER = 10;
-MAXITER = 5000;
+if ~isfield(options, 'SCALING_ITER')
+    SCALING_ITER = 10;
+else
+    SCALING_ITER = options.SCALING_ITER;
+end
+if ~isfield(options, 'MAXITER')
+    MAXITER = 5000;
+else
+    MAXITER = options.MAXITER;
+end
+
 MAX_TIME = 10000;
 
 if ~isfield(options, 'EPS_ABS')
@@ -72,11 +85,11 @@ if options.qpalm_matlab
         opts.proximal = true;
         opts.gamma    = 1e1;
         opts.gammaUpd = 10;
-        opts.gammaMax = 1e6;
+        opts.gammaMax = 1e7;
 %         opts.sig = 5;
         opts.Delta   = 100;
         opts.scaling = 'simple';
-        opts.scaling_iter = 10;
+        opts.scaling_iter = SCALING_ITER;
         tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,A,lbA,ubA,x_warm_start,y_warm_start,opts);
         qpalm_time = toc;
         t(k) = qpalm_time;
@@ -105,8 +118,8 @@ if options.qpalm_c
         settings = solver.default_settings();
         
         settings.verbose = VERBOSE;
-        settings.scaling = 2;
-        settings.max_iter = 30000;
+        settings.scaling = SCALING_ITER;
+        settings.max_iter = 50000;
         settings.eps_abs_in = min(EPS_ABS*1e6, 1);
         settings.eps_rel_in = min(EPS_REL*1e6, 1);
         settings.eps_abs = EPS_ABS;
@@ -114,6 +127,8 @@ if options.qpalm_c
         settings.eps_prim_inf = EPS_ABS;
         settings.eps_dual_inf = EPS_ABS;
         settings.delta   = 100;
+        settings.gamma_init = 1e1;
+        settings.gamma_max = 1e7;
 %         settings.memory  = 20;
         
         solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
@@ -189,6 +204,40 @@ if options.qpoases
 
 end
 
+if isfield(options, 'qrqp') && options.qrqp
+    qrqp_options = struct;
+    qrqp_options.print_iter = false;
+    qrqp_options.record_time = true;
+    qrqp_options.print_header = false;
+%     qrqp_options.max_iter = 1000;
+    qp_struct = struct;
+    qp_struct.h = sparsity(casadi.DM(prob.Q));
+    qp_struct.a = sparsity(casadi.DM(prob.A));
+    solver_qrqp = casadi.conic('solver','qrqp',qp_struct,qrqp_options);
+    prob_qrqp.g = prob.q;
+    prob_qrqp.lbx = -inf*ones(size(prob.q));
+    prob_qrqp.ubx = inf*ones(size(prob.q));
+    prob_qrqp.lba = prob.lb;
+    prob_qrqp.uba = prob.ub;
+    prob_qrqp.h = prob.Q;
+    prob_qrqp.a = prob.A;
+    
+    
+    for k = 1:n
+        try
+            res_qrqp = solver_qrqp.call(prob_qrqp);
+        catch
+            fprintf('QRQP failed: %s\n', solver_qrqp.stats.return_status);
+            res_qrqp.x = 0;
+        end
+        t(k) = solver_qrqp.stats.t_wall_total;
+    end
+    x.qrqp = full(res_qrqp.x);
+    status.qrqp = solver_qrqp.stats.return_status;
+    iter.qrqp = solver_qrqp.stats.n_call_total; %not available
+    timings.qrqp = sum(t)/n;
+end
+    
 if options.gurobi
     if isfield(options, 'lp') && options.lp
        %do not define model.Q 
