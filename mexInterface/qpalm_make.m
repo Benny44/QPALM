@@ -15,6 +15,9 @@ current_path = pwd;
 this_path = fileparts(mfilename('fullpath'));
 cd(this_path);
 
+!git status
+!git submodule update --init
+
 details = 0 ;	    % 1 if details of each command are to be printed
 
 v = version ;
