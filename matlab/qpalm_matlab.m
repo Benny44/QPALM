@@ -219,12 +219,12 @@ Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
 Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
 y_next = zeros(m,1);
-k_prev = 0;
+k_prev = 0; k_prev_reset_newton = 0;
 maxiter_inner = max(100, maxiter/1000)*10^0;
 
 for k = 1:maxiter
         
-    if k > 1 && mod(k,2000)==0
+    if k > 1 && mod(k,10000)==0
         fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e\n', k, nrm_rp, nrm_rd);
     end
     stats.gamma(k) = gamma;
@@ -280,26 +280,26 @@ for k = 1:maxiter
        gamma_changed = proximal && gamma ~= gammaMax;
            
        if scalar_sig
-           adj_sig  = norm(rp,inf)>theta*norm(rpK,inf);
+           adj_sig  = norm(rp,inf)>theta*norm(rpK,inf) &active_cnstrs;
        else
-           adj_sig  = abs(rp)>theta*abs(rpK);
+           adj_sig  = abs(rp)>theta*abs(rpK) &active_cnstrs;
        end
 %            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
         prev_sig = sig;
-        sig = min(1e8, max(1, Delta*abs(rp).*adj_sig/(nrm_rp_unscaled+1e-6)).*sig);
+        sig = min(1e9, max(1, Delta*abs(rp).*adj_sig/(nrm_rp_unscaled+1e-6)).*sig);
         sig_changed = sig ~= prev_sig;
         nb_sig_changed = sum(sig_changed);
 
-        if gamma_changed
-            reset_newton = true;
+        if gamma_changed || (k > k_prev_reset_newton + 100)
+            reset_newton = true; k_prev_reset_newton = k;
         elseif nb_sig_changed == 0
             %do nothing
-        elseif nb_sig_changed <= 160
+        elseif nb_sig_changed <= 40 
             LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
                 sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
                 *A(sig_changed,:))','+');
         else
-            reset_newton = true;
+            reset_newton = true; k_prev_reset_newton = k;
         end            
 
        Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
@@ -338,26 +338,27 @@ for k = 1:maxiter
            gamma_changed = proximal && gamma ~= gammaMax;
            
            if scalar_sig
-               adj_sig  = norm(rp,inf)>theta*norm(rpK,inf);
+               adj_sig  = norm(rp,inf)>theta*norm(rpK,inf)&active_cnstrs;
            else
-               adj_sig  = abs(rp)>theta*abs(rpK);
+               adj_sig  = abs(rp)>theta*abs(rpK)&active_cnstrs;
            end
+           prev_sig = sig;
 %            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
-            prev_sig = sig;
+            
             sig = min(1e9, max(1, Delta*abs(rp).*adj_sig/(nrm_rp_unscaled+1e-6)).*sig);
             sig_changed = sig ~= prev_sig;
             nb_sig_changed = sum(sig_changed);
             
-            if gamma_changed
-                reset_newton = true;
+           if gamma_changed || (k > k_prev_reset_newton + 100)
+            reset_newton = true; k_prev_reset_newton = k;
             elseif nb_sig_changed == 0
                 %do nothing
-            elseif nb_sig_changed <= 160
+            elseif nb_sig_changed <= 40
                 LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
                     sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
                     *A(sig_changed,:))','+');
             else
-                reset_newton = true;
+                reset_newton = true; k_prev_reset_newton = k;
             end            
            
            Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
@@ -515,7 +516,11 @@ for k = 1:maxiter
       delta = [delta;-delta];
       alpha = [(y+sig.*(Ax-bmin))./sig_sqr;(sig.*(bmax-Ax)-y)./sig_sqr];
 %       tau = PWALineSearch(eta,beta,delta,alpha);
-      tau = PWAlinesearch_mex(eta,beta,delta,alpha,int64(2*m));
+%       if (stats.nact_changed(k) > 40)
+          tau = PWAlinesearch_mex(eta,beta,delta,alpha,int64(2*m));
+%       else
+%           tau = LineSearchArmijo(eta,beta,Ad,yh,Axys,z,sig,bmax,bmin);
+%       end
 %       tau = NewtonLS(eta,beta,delta,alpha);
 %       tau = BPLS(eta,beta,delta,alpha);
       stats.tau(k) = tau;
@@ -553,7 +558,7 @@ x = D_scale.*x;
 y = (E_scale.*yh)/c_scale;
 
 %objective
-stats.obj = 0.5*x'*(Q-1/gamma*eye(n))*x + q'*x;
+stats.obj = 0.5*x'*(Q-1/gamma*speye(n))*x + q'*x;
 
 end
 
@@ -639,6 +644,24 @@ end
 tf=-b/a;
 
 end
+%% ========================================================================
+function tau = LineSearchArmijo(eta,beta,Ad,yh,Axys,z,sig,bmax,bmin)
+    rhs = 1e-4*(beta+Ad'*yh); %c1 = 1e-4
+    dist2 = 0.5*sig'*(Axys-z).^2;
+    tau = 1; %tau_init = 1
+    while true
+        lhs = 0.5*tau^2*eta + tau*beta - dist2;
+        temp = Axys+tau*Ad-bmax;
+        lhs = lhs+0.5*temp(temp>0)'*temp(temp>0);
+        temp = temp+bmax-bmin;
+        lhs = lhs+0.5*temp(temp<0)'*temp(temp<0);
+        if (lhs <= tau*rhs) 
+            break; 
+        end
+        tau = 0.5*tau;
+    end  
+end
+
 %% ========================================================================
 function [x, y, Q, q, A, bmin, bmax, D, E, c] = modified_ruiz_equilibration(x, y, Q,q,A,bmin,bmax,scaling_iter)
     Anzr = max(abs(A),[],2)>0;
