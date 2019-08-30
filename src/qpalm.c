@@ -257,7 +257,7 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
 
       mat_vec(work->data->Q, work->chol->neg_dphi, work->chol->Qd, &work->chol->c);
       if (work->settings->proximal) {
-        vec_add_scaled(work->Qd, work->x, work->Qx, 1/work->gamma, n);
+        vec_add_scaled(work->Qd, work->x, work->Qx, 1/work->settings->gamma_init, n);
       } else {
         prea_vec_copy(work->Qd, work->Qx, n);
       }
@@ -292,11 +292,6 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
     CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
 
 
-    work->eps_abs_in = work->settings->eps_abs_in;
-    work->eps_rel_in = work->settings->eps_rel_in;
-    work->chol->reset_newton = TRUE;
-    work->gamma = work->settings->gamma_init;
-
     work->initialized = TRUE;
     CHOLMOD(finish)(&work->chol->c);
 
@@ -308,6 +303,13 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
 
 void qpalm_solve(QPALMWorkspace *work) {
   
+  //Set initial workspace variables
+  work->eps_abs_in = work->settings->eps_abs_in;
+  work->eps_rel_in = work->settings->eps_rel_in;
+  work->chol->reset_newton = TRUE;
+  work->gamma = work->settings->gamma_init;
+  vec_set_scalar_int(work->chol->active_constraints_old, FALSE, work->data->m);
+
   //Check if the internal variables were correctly initialized. A path that leads to
   //incorrect initialization (and subsequent program crash) is that the user forgets
   //to call qpalm_warm_start while having set settings->warm_start=TRUE, which causes 
@@ -345,6 +347,7 @@ void qpalm_solve(QPALMWorkspace *work) {
                            work->info->solve_time;
       #endif /* ifdef PROFILING */
       CHOLMOD(finish)(&work->chol->c);
+      work->initialized = FALSE;
 
       return; 
     } else if (check_subproblem_termination(work)) {
@@ -399,6 +402,7 @@ void qpalm_solve(QPALMWorkspace *work) {
                            work->info->solve_time;
   #endif /* ifdef PROFILING */
   CHOLMOD(finish)(&work->chol->c);
+  work->initialized = FALSE;
 }
 
 
@@ -408,31 +412,33 @@ void qpalm_update_settings(QPALMWorkspace* work, const QPALMSettings *settings) 
     # ifdef PRINTING
       c_eprint("Settings validation returned failure");
     # endif /* ifdef PRINTING */
-    work = QPALM_NULL;
+    update_status(work->info, QPALM_ERROR);
     return;
   }
-
   if (work->settings->scaling > settings->scaling) {
     # ifdef PRINTING
       c_eprint("Decreasing the number of scaling iterations is not allowed");
     # endif /* ifdef PRINTING */
-    work = QPALM_NULL;
+    update_status(work->info, QPALM_ERROR);
     return;
   } else if (work->settings->scaling < settings->scaling) {
     // Save current scaling vectors
     prea_vec_copy(work->scaling->D, work->temp_n, work->data->n);
     prea_vec_copy(work->scaling->E, work->temp_m, work->data->m);
+    c_float c_temp = work->scaling->c;
 
     // Perform the remaining scaling iterations
-    work->settings->scaling -= settings->scaling;
+    work->settings->scaling = settings->scaling - work->settings->scaling;
     scale_data(work);
 
     // Compute the total scaling vectors
     vec_ew_prod(work->scaling->D, work->temp_n, work->scaling->D, work->data->n);
     vec_ew_prod(work->scaling->E, work->temp_m, work->scaling->E, work->data->m);
+    work->scaling->c *= c_temp;
     // Save the inverses
     vec_ew_recipr(work->scaling->D, work->scaling->Dinv, work->data->n);
     vec_ew_recipr(work->scaling->E, work->scaling->Einv, work->data->m);
+    work->scaling->cinv = 1/work->scaling->c;
   }
  
   // Copy settings
@@ -452,7 +458,7 @@ void qpalm_update_bounds(QPALMWorkspace *work, const c_float *bmin, const c_floa
           c_eprint("Lower bound at index %d is greater than upper bound: %.4e > %.4e",
                   (int)j, work->data->bmin[j], work->data->bmax[j]);
         # endif /* ifdef PRINTING */
-        work = QPALM_NULL;
+        update_status(work->info, QPALM_ERROR);
         return;
       }
     }
@@ -477,7 +483,7 @@ void qpalm_update_bounds(QPALMWorkspace *work, const c_float *bmin, const c_floa
 
 void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
   size_t n = work->data->n;
-  prea_vec_copy(q, work->data->q, n);      
+  prea_vec_copy(q, work->data->q, n);    
   if (work->settings->scaling) {
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, n);    
     // Update cost scaling scalar
@@ -503,13 +509,6 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
       vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->gamma, work->data->n);    
     }
   }
-
-  vec_set_scalar_int(work->chol->active_constraints_old, FALSE, work->data->m);
-  work->chol->reset_newton = TRUE;
-  update_status(work->info, QPALM_UNSOLVED);
-  work->initialized = FALSE;
-  work->gamma = work->settings->gamma_init;
-
 }
 
 

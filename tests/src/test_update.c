@@ -20,6 +20,8 @@ void update_suite_setup(void) {
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
     settings->eps_rel = 1e-6;
+    settings->scaling = 2;
+    settings->proximal = TRUE;
 
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
@@ -27,9 +29,9 @@ void update_suite_setup(void) {
     data->q = c_calloc(N,sizeof(c_float));
     data->q[0] = 1; data->q[1] = -2; 
     data->bmin = c_calloc(M,sizeof(c_float));
-    data->bmin[0] = -0.1; data->bmin[1] = -0.3; data->bmin[2] = -0.2; 
+    data->bmin[0] = -1; data->bmin[1] = -3; data->bmin[2] = -0.2; 
     data->bmax = c_calloc(M,sizeof(c_float));
-    data->bmax[0] = 0.1; data->bmax[1] = 0.3; data->bmax[2] = 0.2; 
+    data->bmax[0] = 1; data->bmax[1] = 3; data->bmax[2] = 0.2; 
 
     // cholmod_common common;
     c = &common;
@@ -40,7 +42,7 @@ void update_suite_setup(void) {
     Ax = A->x;
     Ap = A->p;
     Ai = A->i;
-    Ax[0] = 1.0; Ax[1] = 1.0; Ax[2] = 1.0; Ax[3] = 1.0;
+    Ax[0] = 10.0; Ax[1] = 1.0; Ax[2] = 10.0; Ax[3] = 1.0;
     Ap[0] = 0; Ap[1] = 2; Ap[2] = 4;
     Ai[0] = 0; Ai[1] = 2; Ai[2] = 1; Ai[3] = 2;
     cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
@@ -86,9 +88,12 @@ MU_TEST(test_update_settings) {
 
     settings->gamma_init *= 10;
     settings->theta = 0.9;
-    settings->proximal = FALSE;
+    settings->proximal = TRUE;
+    settings->scaling = 10;
 
     qpalm_update_settings(work, settings);
+    mu_assert_false(work->info->status_val == QPALM_ERROR);
+
     qpalm_solve(work);
 
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
@@ -97,9 +102,8 @@ MU_TEST(test_update_settings) {
 }
 
 MU_TEST(test_update_bounds) {
-    
     data->bmin[0] = 0.0;
-    data->bmax[1] = 0.15;
+    data->bmax[1] = 1.5;
     qpalm_update_bounds(work, data->bmin, data->bmax);
     // Solve Problem
     qpalm_solve(work);
@@ -107,18 +111,23 @@ MU_TEST(test_update_bounds) {
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_double_eq(work->solution->x[0], 0.0, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.15, 1e-5);
+
+    //reset bounds
+    data->bmin[0] = -1;
+    data->bmax[1] = 3;
+    qpalm_update_bounds(work, data->bmin, data->bmax);
 }
 MU_TEST(test_update_q) {
     
-    data->q[0] = -10;
+    data->q[0] = -0.5; data->q[1] = -0.75;
     qpalm_update_q(work, data->q);
 
     // Solve Problem
     qpalm_solve(work);
 
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
-    mu_assert_double_eq(work->solution->x[0], 0.1, 1e-5);
-    mu_assert_double_eq(work->solution->x[1], 0.1, 1e-5);
+    mu_assert_double_eq(work->solution->x[0], 0.02, 1e-5);
+    mu_assert_double_eq(work->solution->x[1], 0.18, 1e-5);
 }
 
 MU_TEST_SUITE(suite_update){

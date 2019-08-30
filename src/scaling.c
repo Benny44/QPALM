@@ -72,8 +72,8 @@ void scale_data(QPALMWorkspace *work) {
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, n);
 
     // Cost scaling
-    vec_add_scaled(work->Qx, work->data->q, work->temp_n, 1, n);
-    work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->temp_n, n));
+    vec_add_scaled(work->Qx, work->data->q, work->dphi, 1, n);
+    work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->dphi, n));
     vec_mult_scalar(work->data->q, work->scaling->c, n);
     cholmod_dense *c = CHOLMOD(ones)(1,1,CHOLMOD_REAL, &work->chol->c);
     c_float *cx = c->x;
