@@ -409,6 +409,9 @@ for k = 1:maxiter
                           d = -(Q+A(active_cnstrs,:)'*diag(sig(active_cnstrs))*A(active_cnstrs,:))\dphi;
                       end
                   case 2% ldlchol 2
+                      if mod(k,20)==0
+                          reset_newton = true;
+                      end
                       [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton);
                       reset_newton = false;
     %                   LD = ldlchol(Q+A(active_cnstrs,:)'*spdiags(sig(active_cnstrs),0,na,na)*A(active_cnstrs,:));

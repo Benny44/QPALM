@@ -383,10 +383,11 @@ void qpalm_solve(QPALMWorkspace *work) {
       prev_iter = iter;
 
     } else {
+      if (mod(iter, 20) == 0) 
+        work->chol->reset_newton = TRUE; //TODO make reset_newton_iter a setting
       update_primal_iterate(work);
     }
   }
-
   // maxiter reached
   update_status(work->info, QPALM_MAX_ITER_REACHED);
   work->info->iter = iter;
