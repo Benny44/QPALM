@@ -218,12 +218,16 @@ classdef qpalm < handle
             % updated.
             %
             %   update_bounds(bmin, bmax)
+            
             if (~isempty(bmin))
                 bmin = full(bmin(:));
             end
             if (~isempty(bmax))
                 bmax = full(bmax(:));
             end
+            bmax = min(bmax, qpalm.constant('QPALM_INFTY'));
+            bmin = max(bmin, -qpalm.constant('QPALM_INFTY'));
+            
             qpalm_mex('update_bounds', bmin, bmax);
         end
             
