@@ -5,8 +5,13 @@ function qpalm_make (metis_path)
 %   qpalm_make
 %
 % QPALM relies on CHOLMOD and AMD and COLAMD, and optionally CCOLAMD, CAMD, and METIS.
+warning('off','MATLAB:mex:GccVersion_link')
 
 close all
+
+!git submodule update --init
+
+PWAlinesearch_setup;
 
 % store the path from which this function is called
 current_path = pwd;
@@ -15,7 +20,15 @@ current_path = pwd;
 this_path = fileparts(mfilename('fullpath'));
 cd(this_path);
 
-!git submodule update --init
+cholmod_path = fullfile(this_path, '../suitesparse/CHOLMOD/MATLAB');
+addpath(cholmod_path);
+% cholmod_path = fileparts(which('cholmod_make.m'));
+cd(cholmod_path);
+cholmod_make;
+
+cd(this_path);
+
+fprintf ('Compiling QPALM mex function\n')
 
 details = 0 ;	    % 1 if details of each command are to be printed
 

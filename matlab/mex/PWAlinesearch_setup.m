@@ -1,5 +1,7 @@
 current_path = fileparts(mfilename('fullpath'));
 
+fprintf('Compiling PWAlinesearch\n');
+
 error_msg = 'The C compiler could not succesfully compile ';
 if mex('-outdir', current_path, fullfile(current_path,'PWAlinesearch_mex.c'),...
          '-lm', '-largeArrayDims',...
