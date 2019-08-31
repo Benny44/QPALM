@@ -9,16 +9,17 @@ warning('off','MATLAB:mex:GccVersion_link')
 
 close all
 
-!git submodule update --init
-
-PWAlinesearch_setup;
-
 % store the path from which this function is called
 current_path = pwd;
 
 % Change to directory containing this function
 this_path = fileparts(mfilename('fullpath'));
 cd(this_path);
+
+!git submodule update --init
+
+PWAlinesearch_setup;
+
 
 cholmod_path = fullfile(this_path, '../suitesparse/CHOLMOD/MATLAB');
 addpath(cholmod_path);
