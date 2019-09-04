@@ -383,8 +383,10 @@ if (exist ('qpalm_util.c', 'file'))
     delete ('qpalm_util.c') ;
 end
 
-%change back to calling path
-cd(current_path);
+%change to qpalm main path
+% cd(current_path);
+qpalm_path = fullfile(this_path, '..');
+cd(qpalm_path);
  %------------------------------------------------------------------------------
 function kk = do_cmd (s, kk, details)
  %DO_CMD: evaluate a command, and either print it or print a "."
