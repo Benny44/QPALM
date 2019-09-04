@@ -66,7 +66,7 @@ extern "C" {
 # define GAMMA_MAX (1E7)        /**< default proximal penalty cap */
 
 # define SCALING (2)            /**< default number of scaling iterations */
-# define MIN_SCALING (1e-08)    /**< minimum scaling value *////< Minimum scaling value
+# define MIN_SCALING (1e-12)    /**< minimum scaling value *////< Minimum scaling value
 # define MAX_SCALING (1e+04)    /**< maximum scaling value *////< Maximum scaling value
 
 # define NONCONVEX (FALSE)       /**< default use of nonconvex adjustments */

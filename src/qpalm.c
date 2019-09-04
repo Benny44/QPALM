@@ -381,13 +381,12 @@ void qpalm_solve(QPALMWorkspace *work) {
       }
 
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
-      vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
+      // vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
       iter_out++;
       prev_iter = iter;
 
     } else {
-      if (mod(iter, 20) == 0) 
-        work->chol->reset_newton = TRUE; //TODO make reset_newton_iter a setting
+      if (mod(iter, 20) == 0) work->chol->reset_newton = TRUE; //TODO make reset_newton_iter a setting
       update_primal_iterate(work);
     }
   }

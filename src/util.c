@@ -70,6 +70,7 @@ void update_status(QPALMInfo *info, c_int status_val) {
       break;
     case QPALM_ERROR:
       c_strcpy(info->status, "error");
+      break;
     default:
       #ifdef PRINTING
         c_eprint("Unrecognised status value %d", status_val);

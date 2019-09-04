@@ -24,7 +24,7 @@ void limit_scaling(c_float *D, size_t n) {
 
   for (i = 0; i < n; i++) {
     D[i] = D[i] < MIN_SCALING ? 1.0 : D[i];
-    D[i] = D[i] > MAX_SCALING ? MAX_SCALING : D[i];
+    // D[i] = D[i] > MAX_SCALING ? MAX_SCALING : D[i];
   }
 }
 
@@ -84,12 +84,15 @@ void scale_data(QPALMWorkspace *work) {
     // Store cinv, Dinv, Einv
     vec_ew_recipr(work->scaling->D, work->scaling->Dinv, n);
     vec_ew_recipr(work->scaling->E, work->scaling->Einv, m);
-    work->scaling->cinv = 1/work->scaling->c;
+    work->scaling->cinv = (c_float) 1.0/work->scaling->c;
 
     // Scale problem vectors l, u
     vec_ew_prod(work->scaling->E, work->data->bmin, work->data->bmin, m);
     vec_ew_prod(work->scaling->E, work->data->bmax, work->data->bmax, m);
 
+    // c_print("c: %6.16f\n ", work->scaling->c);
+    // c_print("E: %6.16f\n ", work->scaling->E[0]);
+    // c_print("D: %6.16f\n ", work->scaling->D[0]);
 }
 
 

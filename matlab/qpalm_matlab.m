@@ -320,6 +320,7 @@ for k = 1:maxiter
                gamma=min(gamma*gammaUpd, gammaMax);
                Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
                Qx = Qx+1/gamma*x; 
+               reset_newton = true; k_prev_reset_newton = k;
            end
        end
        
@@ -379,7 +380,8 @@ for k = 1:maxiter
                Qx = Qx-1/gamma*x; 
                gamma=min(gamma*gammaUpd, gammaMax);
                Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
-               Qx = Qx+1/gamma*x; 
+               Qx = Qx+1/gamma*x;
+               reset_newton = true; k_prev_reset_newton = k;
            end
        end
 %        reset_newton = true;

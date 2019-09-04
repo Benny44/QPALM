@@ -65,6 +65,7 @@ void update_sigma(QPALMWorkspace* work) {
     }
 
     CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+    
 
 
     if ((work->settings->proximal && work->gamma != work->settings->gamma_max) || (work->nb_sigma_changed > 0*MAX_RANK_UPDATE)) {
@@ -79,6 +80,7 @@ void update_sigma(QPALMWorkspace* work) {
 void update_gamma(QPALMWorkspace *work) {
     c_float prev_gamma = work->gamma;
     work->gamma = c_min(work->gamma*work->settings->gamma_upd, work->settings->gamma_max);
+    if (work->gamma != prev_gamma) work->chol->reset_newton = TRUE;
     prea_vec_copy(work->x, work->x0, work->data->n);
     vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->gamma - 1/prev_gamma, work->data->n);
 }
