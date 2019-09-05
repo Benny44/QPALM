@@ -161,7 +161,7 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'gammaMax')
-    gammaMax = 1e6;
+    gammaMax = 1e7;
 else
     gammaMax = opts.gammaMax;
 end
