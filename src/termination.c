@@ -194,8 +194,8 @@ c_int is_dual_infeasible(QPALMWorkspace *work) {
     if (work->settings->scaling) {
         vec_ew_prod(work->scaling->Einv, work->Ad, work->Adelta_x, m);
         for (k = 0; k < m; k++) {
-            if ((work->data->bmax[k] < QPALM_INFTY && work->Adelta_x[k] >= eps_dinf_norm_Ddx)
-                || (work->data->bmin[k] > -QPALM_INFTY && work->Adelta_x[k] <= -eps_dinf_norm_Ddx)) {
+            if ((work->data->bmax[k] < work->scaling->E[k]*QPALM_INFTY && work->Adelta_x[k] >= eps_dinf_norm_Ddx)
+                || (work->data->bmin[k] > -work->scaling->E[k]*QPALM_INFTY && work->Adelta_x[k] <= -eps_dinf_norm_Ddx)) {
                 return 0;
             }
         }      
