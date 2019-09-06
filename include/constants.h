@@ -59,6 +59,7 @@ extern "C" {
 # define EPS_DUAL_INF (1e-5)    /**< default dual infeasibility tolerance */
 # define THETA (0.25)           /**< default penalty update criterion parameter */
 # define DELTA (100)             /**< default penalty update factor */
+# define SIGMA_MAX (1e9)        /**< defautl penalty cap */
 # define TAU_INIT (1)           /**< default initial stepsize in backtracking */
 
 # define PROXIMAL (TRUE)        /**< default use of proximal method of multipliers */

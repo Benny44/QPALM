@@ -110,6 +110,7 @@ typedef struct {
   c_float eps_dual_inf;  ///< dual infeasibility tolerance @details @note Assumption: @f$>=0@f$
   c_float theta;         ///< penalty update criterion parameter @details @note Assumption: @f$<=1@f$
   c_float delta;         ///< penalty update factor @details @note Assumption: @f$>1@f$
+  c_float sigma_max;     ///< penalty factor cap @details @note Assumption: @f$>0@f$ 
   c_float tau_init;      ///< initial stepsize in backtracking @details @note Assumption: @f$>0@f$
   c_int   proximal;      ///< boolean, use proximal method of multipliers or not @details @note Assumption: @f$\in \{0,1\}@f$ 
   c_float gamma_init;    ///< initial proximal penalty parameter @details @note Assumption: @f$>0@f$
@@ -118,9 +119,9 @@ typedef struct {
   c_int   scaling;       ///< scaling iterations, if 0 then scaling is disabled @details @note Assumption: @f$>=0@f$
   c_int   nonconvex;     ///< boolean, indicates whether the QP is nonconvex @details @note Assumption: @f$\in \{0,1\}@f$ 
   c_int   verbose;       ///< boolean, write out progress @details @note Assumption:@f$\in \{0,1\}@f$
-  c_int   print_iter;    ///< frequency of printing @note Assumption: @f$>0@f$
+  c_int   print_iter;    ///< frequency of printing @details @note Assumption: @f$>0@f$
   c_int   warm_start;    ///< boolean, warm start @details @note Assumption: @f$\in \{0,1\}@f$
-  c_int   reset_newton_iter; ///< frequency of performing a complete Cholesky factorization @note Assumption: @f$>0@f$
+  c_int   reset_newton_iter; ///< frequency of performing a complete Cholesky factorization @details @note Assumption: @f$>0@f$
 } QPALMSettings;
 
 /**
@@ -179,6 +180,7 @@ typedef struct {
   c_float *temp_m;        ///< placeholder for vector of size m
   c_float *temp_n;        ///< placeholder for vector of size n
   c_float *sigma;         ///< penalty vector
+  c_float sqrt_sigma_max;  ///< sqrt(sigma_max)
   c_int nb_sigma_changed; ///< number of sigma-components that changed in an outer iteration (relevant for factorization update)
   c_float gamma;          ///< proximal penalty factor
   c_float *Axys;          ///< Ax + y./sigma

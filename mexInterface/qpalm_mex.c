@@ -29,6 +29,7 @@ const char* QPALM_INFO_FIELDS[] = {"iter",          //c_int
                                   "pri_res_norm",   //c_float
                                   "dua_res_norm",   //c_float
                                   "dua2_res_norm",  //c_float
+                                  "objective",      //c_float
                                   "setup_time",     //c_float, only used if PROFILING
                                   "solve_time",     //c_float, only used if PROFILING
                                   "run_time"};      //c_float, only used if PROFILING
@@ -45,6 +46,7 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",      //c_int
                                       "eps_dual_inf",   //c_float
                                       "theta",          //c_float
                                       "delta",          //c_float
+                                      "sigma_max",      //c_float
                                       "tau_init",       //c_float
                                       "proximal",       //c_int
                                       "gamma_init",     //c_float
@@ -412,6 +414,7 @@ mxArray* copyInfoToMxStruct(QPALMInfo* info){
   mxSetField(mxPtr, 0, "pri_res_norm",       mxCreateDoubleScalar(info->pri_res_norm));
   mxSetField(mxPtr, 0, "dua_res_norm",       mxCreateDoubleScalar(info->dua_res_norm));
   mxSetField(mxPtr, 0, "dua2_res_norm",       mxCreateDoubleScalar(info->dua2_res_norm));
+  mxSetField(mxPtr, 0, "objective",       mxCreateDoubleScalar(info->objective));
 
   #ifdef PROFILING
   //if not profiling, these fields will be empty
@@ -442,6 +445,7 @@ mxArray* copySettingsToMxStruct(QPALMSettings* settings){
   mxSetField(mxPtr, 0, "eps_dual_inf",    mxCreateDoubleScalar(settings->eps_dual_inf));
   mxSetField(mxPtr, 0, "theta",           mxCreateDoubleScalar(settings->theta));
   mxSetField(mxPtr, 0, "delta",           mxCreateDoubleScalar(settings->delta));
+  mxSetField(mxPtr, 0, "sigma_max",       mxCreateDoubleScalar(settings->sigma_max));
   mxSetField(mxPtr, 0, "tau_init",        mxCreateDoubleScalar(settings->tau_init));
   mxSetField(mxPtr, 0, "proximal",        mxCreateDoubleScalar(settings->proximal));
   mxSetField(mxPtr, 0, "gamma_init",      mxCreateDoubleScalar(settings->gamma_init));
@@ -477,6 +481,7 @@ void copyMxStructToSettings(const mxArray* mxPtr, QPALMSettings* settings){
   settings->eps_dual_inf              = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "eps_dual_inf"));
   settings->theta                     = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "theta"));
   settings->delta                     = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "delta"));
+  settings->sigma_max                 = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "sigma_max"));
   settings->tau_init                  = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "tau_init"));
   settings->proximal                  = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "proximal"));
   settings->gamma_init                = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "gamma_init"));  

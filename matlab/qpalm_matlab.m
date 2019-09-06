@@ -53,6 +53,12 @@ else
     sig = opts.sig.*ones(m,1);
 end
 
+if nargin<8 || ~isfield(opts,'sigma_max')
+    sigma_max = 1e9;
+else
+    sigma_max = opts.sigma_max;
+end
+
 if nargin<8 || ~isfield(opts,'linsys')
     linsys = 2;
 else
@@ -232,12 +238,14 @@ Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
 Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
 y_next = zeros(m,1);
-k_prev = 0; k_prev_reset_newton = 0;
+k_prev = 0; 
+
+
 
 for k = 1:maxiter
         
     if k > 1 && mod(k,10000)==0
-        fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e\n', k, nrm_rp, nrm_rd);
+        fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e\n', k-2, nrm_rp, nrm_rd);
     end
     stats.gamma(k) = gamma;
 %     stats.sigma(:,k) = sig;
@@ -298,12 +306,12 @@ for k = 1:maxiter
        end
 %            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
         prev_sig = sig;
-        sig = min(1e9, max(1, Delta*abs(rp).*adj_sig/(nrm_rp_unscaled+1e-6)).*sig);
+        sig(adj_sig) = min(sigma_max, max(1, Delta*abs(rp(adj_sig))/(nrm_rp_unscaled+1e-6)).*sig(adj_sig));
         sig_changed = sig ~= prev_sig;
         nb_sig_changed = sum(sig_changed);
 
-        if gamma_changed || (k > k_prev_reset_newton + 100)
-            reset_newton = true; k_prev_reset_newton = k;
+        if gamma_changed 
+            reset_newton = true; 
         elseif nb_sig_changed == 0
             %do nothing
         elseif nb_sig_changed <= 40 
@@ -311,7 +319,7 @@ for k = 1:maxiter
                 sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
                 *A(sig_changed,:))','+');
         else
-            reset_newton = true; k_prev_reset_newton = k;
+            reset_newton = true; 
         end            
 
        Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
@@ -332,7 +340,7 @@ for k = 1:maxiter
                gamma=min(gamma*gammaUpd, gammaMax);
                Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
                Qx = Qx+1/gamma*x; 
-               reset_newton = true; k_prev_reset_newton = k;
+               reset_newton = true; 
            end
        end
        
@@ -357,21 +365,20 @@ for k = 1:maxiter
            end
            prev_sig = sig;
 %            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
-            
-            sig = min(1e9, max(1, Delta*abs(rp).*adj_sig/(nrm_rp_unscaled+1e-6)).*sig);
+            sig(adj_sig) = min(sigma_max, max(1, Delta*abs(rp(adj_sig))/(nrm_rp_unscaled+1e-6)).*sig(adj_sig));
             sig_changed = sig ~= prev_sig;
             nb_sig_changed = sum(sig_changed);
             
-           if gamma_changed || (k > k_prev_reset_newton + 100)
-            reset_newton = true; k_prev_reset_newton = k;
-            elseif nb_sig_changed == 0
-                %do nothing
-            elseif nb_sig_changed <= 40
-                LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
-                    sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
-                    *A(sig_changed,:))','+');
+           if gamma_changed 
+            reset_newton = true; 
+%             elseif nb_sig_changed == 0
+%                 %do nothing
+%             elseif nb_sig_changed <= 40
+%                 LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
+%                     sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
+%                     *A(sig_changed,:))','+');
             else
-                reset_newton = true; k_prev_reset_newton = k;
+                reset_newton = true; 
             end            
            
            Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
@@ -393,7 +400,7 @@ for k = 1:maxiter
                gamma=min(gamma*gammaUpd, gammaMax);
                Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
                Qx = Qx+1/gamma*x;
-               reset_newton = true; k_prev_reset_newton = k;
+               reset_newton = true; 
            end
        end
 %        reset_newton = true;

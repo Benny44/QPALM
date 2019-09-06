@@ -34,6 +34,7 @@ QPALMSettings* copy_settings(const QPALMSettings *settings) {
     new->eps_dual_inf = settings->eps_dual_inf; 
     new->theta        = settings->theta;         
     new->delta        = settings->delta;
+    new->sigma_max    = settings->sigma_max;
     new->tau_init     = settings->tau_init;         
     new->proximal     = settings->proximal;       
     new->gamma_init   = settings->gamma_init;         
@@ -76,7 +77,7 @@ void update_status(QPALMInfo *info, c_int status_val) {
       break;
     default:
       #ifdef PRINTING
-        c_eprint("Unrecognised status value %d", status_val);
+        c_eprint("Unrecognised status value %ld", status_val);
       #endif
       break;
     }
@@ -124,13 +125,13 @@ void print_final_message(QPALMWorkspace *work) {
         c_print("| infeasiblity tolerance eps_dual_inf.                      |\n");
         break;
       case QPALM_MAX_ITER_REACHED:
-        c_print("| QPALM hit the maximum number of iterations.               |\n", work->settings->max_iter);
+        c_print("| QPALM hit the maximum number of iterations.               |\n");
         c_print("| primal residual: %.4e, primal tolerance: %.4e |\n", work->info->pri_res_norm, work->eps_pri);
         c_print("| dual residual  : %.4e, dual tolerance  : %.4e |\n", work->info->dua_res_norm, work->eps_dua);
         c_print("| objective value: %.4e                              |\n", work->info->objective);
         break;
       default:
-        c_eprint("Unrecognised final status value %d", work->info->status_val);
+        c_eprint("Unrecognised final status value %ld", work->info->status_val);
         break;
     }
     #ifdef PROFILING
