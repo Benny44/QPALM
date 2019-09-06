@@ -53,6 +53,7 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",      //c_int
                                       "scaling",        //c_int
                                       "nonconvex",      //c_int
                                       "warm_start",     //c_int
+                                      "print_iter",     //c_int
                                       "verbose"};       //c_int
 
 
@@ -449,6 +450,7 @@ mxArray* copySettingsToMxStruct(QPALMSettings* settings){
   mxSetField(mxPtr, 0, "nonconvex",       mxCreateDoubleScalar(settings->nonconvex));
   mxSetField(mxPtr, 0, "warm_start",      mxCreateDoubleScalar(settings->warm_start));
   mxSetField(mxPtr, 0, "verbose",         mxCreateDoubleScalar(settings->verbose));
+  mxSetField(mxPtr, 0, "print_iter",      mxCreateDoubleScalar(settings->print_iter));
 
   return mxPtr;
 }
@@ -482,5 +484,6 @@ void copyMxStructToSettings(const mxArray* mxPtr, QPALMSettings* settings){
   settings->nonconvex                 = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "nonconvex"));
   settings->warm_start                = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "warm_start"));
   settings->verbose                   = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "verbose"));
+  settings->print_iter                = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "print_iter"));
 
 }

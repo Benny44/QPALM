@@ -118,6 +118,7 @@ typedef struct {
   c_int   scaling;       ///< scaling iterations, if 0 then scaling is disabled @details @note Assumption: @f$>=0@f$
   c_int   nonconvex;     ///< boolean, indicates whether the QP is nonconvex @details @note Assumption: @f$\in \{0,1\}@f$ 
   c_int   verbose;       ///< boolean, write out progress @details @note Assumption:@f$\in \{0,1\}@f$
+  c_int   print_iter;    ///< frequency of printing @note Assumption: @f$>0@f$
   c_int   warm_start;    ///< boolean, warm start @details @note Assumption: @f$\in \{0,1\}@f$
 } QPALMSettings;
 

@@ -32,7 +32,7 @@ extern "C" {
 void qpalm_set_default_settings(QPALMSettings *settings) {
 
   settings->max_iter      = MAX_ITER;                /* maximum iterations */
-  settings->inner_max_iter = INNER_MAX_ITER;                /* maximum iterations per subproblem */
+  settings->inner_max_iter = INNER_MAX_ITER;         /* maximum iterations per subproblem */
   settings->eps_abs       = (c_float)EPS_ABS;        /* absolute convergence tolerance */
   settings->eps_rel       = (c_float)EPS_REL;        /* relative convergence tolerance */
   settings->eps_abs_in    = (c_float)EPS_ABS_IN;     /* intermediate absolute convergence tolerance */
@@ -51,6 +51,7 @@ void qpalm_set_default_settings(QPALMSettings *settings) {
   settings->nonconvex     = NONCONVEX;               /* boolean, nonconvex */
   settings->warm_start    = WARM_START;              /* boolean, warm start solver */
   settings->verbose       = VERBOSE;                 /* boolean, write out progress */
+  settings->print_iter    = PRINT_ITER;              /* frequency of printing */
 }
 
 
@@ -356,6 +357,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       #ifdef PRINTING
       if (work->settings->verbose) {
+        work->info->objective = compute_objective(work);
         print_iteration(iter, work); 
         print_final_message(work);
       }
@@ -383,7 +385,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       prev_iter = iter;
 
       #ifdef PRINTING
-      if (work->settings->verbose) {
+      if (work->settings->verbose && mod(iter, work->settings->print_iter) == 0) {
         c_print("%4ld | ---------------------------------------------------\n", iter);
       }
       #endif
@@ -409,7 +411,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       update_primal_iterate(work);
 
       #ifdef PRINTING
-      if (work->settings->verbose) {
+      if (work->settings->verbose && mod(iter, work->settings->print_iter) == 0) {
         work->info->objective = compute_objective(work);
         print_iteration(iter, work);
       }

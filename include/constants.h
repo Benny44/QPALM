@@ -73,6 +73,7 @@ extern "C" {
 # define NONCONVEX (FALSE)       /**< default use of nonconvex adjustments */
 # define WARM_START (FALSE)     /**< default warm start setting */
 # define VERBOSE (TRUE)         /**< default write out progress setting */
+# define PRINT_ITER (1)         /**< default frequency of printing */
 
 # define MAX_RANK_UPDATE 160 /**< maximum rank for the sparse factorization update */
 
