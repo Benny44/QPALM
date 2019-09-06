@@ -2,8 +2,8 @@
  * @file util.c
  * @author Ben Hermans
  * @brief Utility functions.
- * @details This file contains some utility functions, to copy the settings, initialize the penalty parameters,
- * initialize the iterates, update the solver status and time the algorithm.
+ * @details This file contains some utility functions, to copy the settings, 
+ * to update the solver status, to print information and to time the algorithm.
  */
 
 #include "util.h"
@@ -78,6 +78,70 @@ void update_status(QPALMInfo *info, c_int status_val) {
       break;
     }
 }
+
+/**********************
+* Print Functions  *
+**********************/
+
+#ifdef PRINTING
+void print_header(void) {
+    c_print("\n                 QPALM Version 1.0                \n\n");
+    c_print("Iter |   P. res   |   D. res   |  Stepsize  |  Objective \n");
+    c_print("==========================================================\n");
+}
+
+void print_iteration(c_int iter, QPALMWorkspace *work) {
+    c_print("%4ld | %.4e | %.4e | %.4e | %.4e \n", iter,
+                                                    work->info->pri_res_norm,
+                                                    work->info->dua_res_norm,
+                                                    work->tau,
+                                                    work->info->objective);
+}
+
+void print_final_message(QPALMWorkspace *work) {
+    c_print("\n\n=============================================================\n");
+    switch (work->info->status_val) {
+      case QPALM_SOLVED:
+        c_print("| QPALM finished successfully.                              |\n");
+        c_print("| primal residual: %.4e, primal tolerance: %.4e |\n", work->info->pri_res_norm, work->eps_pri);
+        c_print("| dual residual:   %.4e, dual tolerance:   %.4e |\n", work->info->dua_res_norm, work->eps_dua);
+        c_print("| objective value: %.4e                              |\n", work->info->objective);
+        break;
+      case QPALM_PRIMAL_INFEASIBLE:
+        c_print("| QPALM detected a primal infeasible problem. You can check |\n");
+        c_print("| the certificate of this infeasiblity. If you think the    |\n");
+        c_print("| problem might not be infeasible, try lowering the         |\n");
+        c_print("| infeasiblity tolerance eps_prim_inf.                      |\n");
+        break;
+      case QPALM_DUAL_INFEASIBLE:
+        c_print("| QPALM detected a dual infeasible problem. You can check   |\n");
+        c_print("| the certificate of this infeasiblity. If you think the    |\n");
+        c_print("| problem might not be dual infeasible, try lowering the    |\n");
+        c_print("| infeasiblity tolerance eps_dual_inf.                      |\n");
+        break;
+      case QPALM_MAX_ITER_REACHED:
+        c_print("| QPALM hit the maximum number of iterations.               |\n", work->settings->max_iter);
+        c_print("| primal residual: %.4e, primal tolerance: %.4e |\n", work->info->pri_res_norm, work->eps_pri);
+        c_print("| dual residual:   %.4e, dual tolerance:   %.4e |\n", work->info->dua_res_norm, work->eps_dua);
+        c_print("| objective value: %.4e                              |\n", work->info->objective);
+        break;
+      default:
+        #ifdef PRINTING
+          c_eprint("Unrecognised final status value %d", work->info->status_val);
+        #endif
+        break;
+    }
+    #ifdef PROFILING
+    if (work->info->run_time > 1.0)
+      c_print("| runtime:         %.2f seconds                             |\n", work->info->run_time);
+    else
+      c_print("| runtime:         %.2f milliseconds                        |\n", work->info->run_time*1000);
+    #endif
+    c_print("=============================================================\n");
+    c_print("\n\n");
+}
+
+#endif //Printing
 
 /*******************
 * Timer Functions *

@@ -303,9 +303,7 @@ void qpalm_solve(QPALMWorkspace *work) {
   // Print header
   #ifdef PRINTING
   if (work->settings->verbose) {
-    c_print("\n                 QPALM Version 1.0                \n\n");
-    c_print("Iter |   P. res   |   D. res   |  Stepsize  |  Objective \n");
-    c_print("==========================================================\n");
+    print_header();
   }
   #endif
 
@@ -357,28 +355,8 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       #ifdef PRINTING
       if (work->settings->verbose) {
-        c_print("%4ld | %.4e | %.4e | %.4e | %.4e \n", iter,
-                                                          work->info->pri_res_norm,
-                                                          work->info->dua_res_norm,
-                                                          work->tau,
-                                                          work->info->objective); 
-              
-        if (work->info->status_val == QPALM_SOLVED) {
-          c_print("\n\n=============================================================\n");
-          c_print("| QPALM finished successfully with:                         |\n");
-          c_print("| primal residual: %.4e, primal tolerance: %.4e |\n", work->info->pri_res_norm, work->eps_pri);
-          c_print("| dual residual:   %.4e, dual tolerance:   %.4e |\n", work->info->dua_res_norm, work->eps_dua);
-          c_print("| objective value: %.4e                              |\n", work->info->objective);
-          #ifdef PROFILING
-          if (work->info->run_time > 1.0)
-            c_print("| runtime:         %.2f seconds                         |\n", work->info->run_time);
-          else
-            c_print("| runtime:         %.2f milliseconds                    |\n", work->info->run_time*1000);
-          #endif
-          c_print("=============================================================\n");
-        }
-
-        c_print("\n\n");
+        print_iteration(iter, work); 
+        print_final_message(work);
       }
       #endif
 
@@ -432,11 +410,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       #ifdef PRINTING
       if (work->settings->verbose) {
         work->info->objective = compute_objective(work);
-        c_print("%4ld | %.4e | %.4e | %.4e | %.4e \n", iter,
-                                                          work->info->pri_res_norm,
-                                                          work->info->dua_res_norm,
-                                                          work->tau,
-                                                          work->info->objective); 
+        print_iteration(iter, work);
       }
       #endif
 
@@ -455,6 +429,10 @@ void qpalm_solve(QPALMWorkspace *work) {
   #endif /* ifdef PROFILING */
   CHOLMOD(finish)(&work->chol->c);
   work->initialized = FALSE;
+
+  #ifdef PRINTING
+    print_final_message(work);
+  #endif /* PRINTING */
 }
 
 

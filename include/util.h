@@ -3,7 +3,7 @@
  * @author Ben Hermans
  * @brief Utility functions.
  * @details This file contains some utility functions, to copy the settings, 
- * update the solver status and time the algorithm.
+ * to update the solver status, to print information and to time the algorithm.
  */
 #ifndef UTIL_H
 # define UTIL_H
@@ -45,6 +45,21 @@ void c_strcpy(char       dest[],
  */
 void update_status(QPALMInfo *info,
                    c_int     status_val);
+
+
+/**********************
+* Print Functions  *
+**********************/
+
+#ifdef PRINTING
+
+void print_header(void);
+
+void print_iteration(c_int iter, QPALMWorkspace *work);
+
+void print_final_message(QPALMWorkspace *work);
+
+#endif //PRINTING
 
 
 /*********************************
