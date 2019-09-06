@@ -23,30 +23,31 @@ QPALMSettings* copy_settings(const QPALMSettings *settings) {
     QPALMSettings *new = c_malloc(sizeof(QPALMSettings));
 
     // Copy settings
-    new->max_iter     = settings->max_iter; 
-    new->inner_max_iter = settings->inner_max_iter;    
-    new->eps_abs      = settings->eps_abs;       
-    new->eps_rel      = settings->eps_rel;       
-    new->eps_abs_in   = settings->eps_abs_in;    
-    new->eps_rel_in   = settings->eps_rel_in;    
-    new->rho          = settings->rho;           
-    new->eps_prim_inf = settings->eps_prim_inf;  
-    new->eps_dual_inf = settings->eps_dual_inf; 
-    new->theta        = settings->theta;         
-    new->delta        = settings->delta;
-    new->sigma_max    = settings->sigma_max;
-    new->tau_init     = settings->tau_init;         
-    new->proximal     = settings->proximal;       
-    new->gamma_init   = settings->gamma_init;         
-    new->gamma_upd    = settings->gamma_upd;     
-    new->gamma_max    = settings->gamma_max;     
-    new->scaling      = settings->scaling;    
-    new->nonconvex    = settings->nonconvex;  
-    new->verbose      = settings->verbose;
-    new->print_iter   = settings->print_iter; 
-    new->warm_start   = settings->warm_start;
-    new->reset_newton_iter = settings->reset_newton_iter;      
-
+    new->max_iter                 = settings->max_iter; 
+    new->inner_max_iter           = settings->inner_max_iter;    
+    new->eps_abs                  = settings->eps_abs;       
+    new->eps_rel                  = settings->eps_rel;       
+    new->eps_abs_in               = settings->eps_abs_in;    
+    new->eps_rel_in               = settings->eps_rel_in;    
+    new->rho                      = settings->rho;           
+    new->eps_prim_inf             = settings->eps_prim_inf;  
+    new->eps_dual_inf             = settings->eps_dual_inf; 
+    new->theta                    = settings->theta;         
+    new->delta                    = settings->delta;
+    new->sigma_max                = settings->sigma_max;
+    new->tau_init                 = settings->tau_init;         
+    new->proximal                 = settings->proximal;       
+    new->gamma_init               = settings->gamma_init;         
+    new->gamma_upd                = settings->gamma_upd;     
+    new->gamma_max                = settings->gamma_max;     
+    new->scaling                  = settings->scaling;    
+    new->nonconvex                = settings->nonconvex;  
+    new->verbose                  = settings->verbose;
+    new->print_iter               = settings->print_iter; 
+    new->warm_start               = settings->warm_start;
+    new->reset_newton_iter        = settings->reset_newton_iter;
+    new->enable_dual_termination  = settings->enable_dual_termination;
+    new->dual_objective_limit     = settings->dual_objective_limit;  
     return new;
 }
 

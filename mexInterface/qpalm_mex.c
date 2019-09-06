@@ -35,29 +35,31 @@ const char* QPALM_INFO_FIELDS[] = {"iter",          //c_int
                                   "run_time"};      //c_float, only used if PROFILING
 
 
-const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",      //c_int
-                                      "inner_max_iter", //c_int  
-                                      "eps_abs",        //c_float
-                                      "eps_rel",        //c_float
-                                      "eps_abs_in",     //c_float
-                                      "eps_rel_in",     //c_float
-                                      "rho",            //c_float
-                                      "eps_prim_inf",   //c_float
-                                      "eps_dual_inf",   //c_float
-                                      "theta",          //c_float
-                                      "delta",          //c_float
-                                      "sigma_max",      //c_float
-                                      "tau_init",       //c_float
-                                      "proximal",       //c_int
-                                      "gamma_init",     //c_float
-                                      "gamma_upd",      //c_float
-                                      "gamma_max",      //c_float
-                                      "scaling",        //c_int
-                                      "nonconvex",      //c_int
-                                      "warm_start",     //c_int
-                                      "print_iter",     //c_int
-                                      "reset_newton_iter",  //c_int
-                                      "verbose"};       //c_int
+const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",                  //c_int
+                                      "inner_max_iter",             //c_int  
+                                      "eps_abs",                    //c_float
+                                      "eps_rel",                    //c_float
+                                      "eps_abs_in",                 //c_float
+                                      "eps_rel_in",                 //c_float
+                                      "rho",                        //c_float
+                                      "eps_prim_inf",               //c_float
+                                      "eps_dual_inf",               //c_float
+                                      "theta",                      //c_float
+                                      "delta",                      //c_float
+                                      "sigma_max",                  //c_float
+                                      "tau_init",                   //c_float
+                                      "proximal",                   //c_int
+                                      "gamma_init",                 //c_float
+                                      "gamma_upd",                  //c_float
+                                      "gamma_max",                  //c_float
+                                      "scaling",                    //c_int
+                                      "nonconvex",                  //c_int
+                                      "warm_start",                 //c_int
+                                      "print_iter",                 //c_int
+                                      "reset_newton_iter",          //c_int
+                                      "enable_dual_termination",    //c_int
+                                      "dual_objective_limit",       //c_int
+                                      "verbose"};                   //c_int
 
 
 // internal utility functions
@@ -408,13 +410,13 @@ mxArray* copyInfoToMxStruct(QPALMInfo* info){
   //map the QPALM_INFO fields one at a time into mxArrays
   //matlab all numeric values as doubles
   mxSetField(mxPtr, 0, "iter",          mxCreateDoubleScalar(info->iter));
-  mxSetField(mxPtr, 0, "iter_out",          mxCreateDoubleScalar(info->iter_out));
+  mxSetField(mxPtr, 0, "iter_out",      mxCreateDoubleScalar(info->iter_out));
   mxSetField(mxPtr, 0, "status",        mxCreateString(info->status));
   mxSetField(mxPtr, 0, "status_val",    mxCreateDoubleScalar(info->status_val));
-  mxSetField(mxPtr, 0, "pri_res_norm",       mxCreateDoubleScalar(info->pri_res_norm));
-  mxSetField(mxPtr, 0, "dua_res_norm",       mxCreateDoubleScalar(info->dua_res_norm));
-  mxSetField(mxPtr, 0, "dua2_res_norm",       mxCreateDoubleScalar(info->dua2_res_norm));
-  mxSetField(mxPtr, 0, "objective",       mxCreateDoubleScalar(info->objective));
+  mxSetField(mxPtr, 0, "pri_res_norm",  mxCreateDoubleScalar(info->pri_res_norm));
+  mxSetField(mxPtr, 0, "dua_res_norm",  mxCreateDoubleScalar(info->dua_res_norm));
+  mxSetField(mxPtr, 0, "dua2_res_norm", mxCreateDoubleScalar(info->dua2_res_norm));
+  mxSetField(mxPtr, 0, "objective",     mxCreateDoubleScalar(info->objective));
 
   #ifdef PROFILING
   //if not profiling, these fields will be empty
@@ -434,29 +436,32 @@ mxArray* copySettingsToMxStruct(QPALMSettings* settings){
 
   //map the QPALM_SETTINGS fields one at a time into mxArrays
   //matlab handles everything as a double
-  mxSetField(mxPtr, 0, "max_iter",        mxCreateDoubleScalar(settings->max_iter));
-  mxSetField(mxPtr, 0, "inner_max_iter",  mxCreateDoubleScalar(settings->inner_max_iter));
-  mxSetField(mxPtr, 0, "eps_abs",         mxCreateDoubleScalar(settings->eps_abs));
-  mxSetField(mxPtr, 0, "eps_rel",         mxCreateDoubleScalar(settings->eps_rel));
-  mxSetField(mxPtr, 0, "eps_abs_in",      mxCreateDoubleScalar(settings->eps_abs_in));
-  mxSetField(mxPtr, 0, "eps_rel_in",      mxCreateDoubleScalar(settings->eps_rel_in));
-  mxSetField(mxPtr, 0, "rho",             mxCreateDoubleScalar(settings->rho));
-  mxSetField(mxPtr, 0, "eps_prim_inf",    mxCreateDoubleScalar(settings->eps_prim_inf));
-  mxSetField(mxPtr, 0, "eps_dual_inf",    mxCreateDoubleScalar(settings->eps_dual_inf));
-  mxSetField(mxPtr, 0, "theta",           mxCreateDoubleScalar(settings->theta));
-  mxSetField(mxPtr, 0, "delta",           mxCreateDoubleScalar(settings->delta));
-  mxSetField(mxPtr, 0, "sigma_max",       mxCreateDoubleScalar(settings->sigma_max));
-  mxSetField(mxPtr, 0, "tau_init",        mxCreateDoubleScalar(settings->tau_init));
-  mxSetField(mxPtr, 0, "proximal",        mxCreateDoubleScalar(settings->proximal));
-  mxSetField(mxPtr, 0, "gamma_init",      mxCreateDoubleScalar(settings->gamma_init));
-  mxSetField(mxPtr, 0, "gamma_upd",       mxCreateDoubleScalar(settings->gamma_upd));
-  mxSetField(mxPtr, 0, "gamma_max",       mxCreateDoubleScalar(settings->gamma_max));
-  mxSetField(mxPtr, 0, "scaling",         mxCreateDoubleScalar(settings->scaling));
-  mxSetField(mxPtr, 0, "nonconvex",       mxCreateDoubleScalar(settings->nonconvex));
-  mxSetField(mxPtr, 0, "warm_start",      mxCreateDoubleScalar(settings->warm_start));
-  mxSetField(mxPtr, 0, "verbose",         mxCreateDoubleScalar(settings->verbose));
-  mxSetField(mxPtr, 0, "print_iter",      mxCreateDoubleScalar(settings->print_iter));
-  mxSetField(mxPtr, 0, "reset_newton_iter", mxCreateDoubleScalar(settings->reset_newton_iter));
+  mxSetField(mxPtr, 0, "max_iter",                  mxCreateDoubleScalar(settings->max_iter));
+  mxSetField(mxPtr, 0, "inner_max_iter",            mxCreateDoubleScalar(settings->inner_max_iter));
+  mxSetField(mxPtr, 0, "eps_abs",                   mxCreateDoubleScalar(settings->eps_abs));
+  mxSetField(mxPtr, 0, "eps_rel",                   mxCreateDoubleScalar(settings->eps_rel));
+  mxSetField(mxPtr, 0, "eps_abs_in",                mxCreateDoubleScalar(settings->eps_abs_in));
+  mxSetField(mxPtr, 0, "eps_rel_in",                mxCreateDoubleScalar(settings->eps_rel_in));
+  mxSetField(mxPtr, 0, "rho",                       mxCreateDoubleScalar(settings->rho));
+  mxSetField(mxPtr, 0, "eps_prim_inf",              mxCreateDoubleScalar(settings->eps_prim_inf));
+  mxSetField(mxPtr, 0, "eps_dual_inf",              mxCreateDoubleScalar(settings->eps_dual_inf));
+  mxSetField(mxPtr, 0, "theta",                     mxCreateDoubleScalar(settings->theta));
+  mxSetField(mxPtr, 0, "delta",                     mxCreateDoubleScalar(settings->delta));
+  mxSetField(mxPtr, 0, "sigma_max",                 mxCreateDoubleScalar(settings->sigma_max));
+  mxSetField(mxPtr, 0, "tau_init",                  mxCreateDoubleScalar(settings->tau_init));
+  mxSetField(mxPtr, 0, "proximal",                  mxCreateDoubleScalar(settings->proximal));
+  mxSetField(mxPtr, 0, "gamma_init",                mxCreateDoubleScalar(settings->gamma_init));
+  mxSetField(mxPtr, 0, "gamma_upd",                 mxCreateDoubleScalar(settings->gamma_upd));
+  mxSetField(mxPtr, 0, "gamma_max",                 mxCreateDoubleScalar(settings->gamma_max));
+  mxSetField(mxPtr, 0, "scaling",                   mxCreateDoubleScalar(settings->scaling));
+  mxSetField(mxPtr, 0, "nonconvex",                 mxCreateDoubleScalar(settings->nonconvex));
+  mxSetField(mxPtr, 0, "warm_start",                mxCreateDoubleScalar(settings->warm_start));
+  mxSetField(mxPtr, 0, "verbose",                   mxCreateDoubleScalar(settings->verbose));
+  mxSetField(mxPtr, 0, "print_iter",                mxCreateDoubleScalar(settings->print_iter));
+  mxSetField(mxPtr, 0, "reset_newton_iter",         mxCreateDoubleScalar(settings->reset_newton_iter));
+  mxSetField(mxPtr, 0, "enable_dual_termination",   mxCreateDoubleScalar(settings->enable_dual_termination));
+  mxSetField(mxPtr, 0, "dual_objective_limit",      mxCreateDoubleScalar(settings->dual_objective_limit));
+
 
   return mxPtr;
 }
@@ -493,5 +498,7 @@ void copyMxStructToSettings(const mxArray* mxPtr, QPALMSettings* settings){
   settings->verbose                   = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "verbose"));
   settings->print_iter                = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "print_iter"));
   settings->reset_newton_iter         = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "reset_newton_iter"));
+  settings->enable_dual_termination   = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "enable_dual_termination"));
+  settings->dual_objective_limit      = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "dual_objective_limit"));
 
 }

@@ -88,8 +88,6 @@ void update_sigma(QPALMWorkspace* work) {
 
     CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
     
-
-
     if ((work->settings->proximal && work->gamma != work->settings->gamma_max) || (work->nb_sigma_changed > 0*MAX_RANK_UPDATE)) {
         work->chol->reset_newton = TRUE;
       } else if (work->nb_sigma_changed == 0){

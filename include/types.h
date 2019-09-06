@@ -99,29 +99,31 @@ typedef struct {
  * Settings struct
  */
 typedef struct {
-  c_int   max_iter;      ///< maximum number of iterations @details @note Assumption: @f$>0@f$
-  c_int   inner_max_iter;///< maximum number of iterations per subproblem @details @note Assumption: @f$>0@f$
-  c_float eps_abs;       ///< absolute convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs or eps_rel must be @f$>0@f$
-  c_float eps_rel;       ///< relative convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs or eps_rel must be @f$>0@f$
-  c_float eps_abs_in;    ///< intermediate absolute convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs_in or eps_rel_in must be @f$>0@f$
-  c_float eps_rel_in;    ///< intermediate relative convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs_in or eps_rel_in must be @f$>0@f$
-  c_float rho;           ///< tolerance scaling factor @details @note Assumption: @f$0<\rho<1@f$
-  c_float eps_prim_inf;  ///< primal infeasibility tolerance @details @note Assumption: @f$>=0@f$
-  c_float eps_dual_inf;  ///< dual infeasibility tolerance @details @note Assumption: @f$>=0@f$
-  c_float theta;         ///< penalty update criterion parameter @details @note Assumption: @f$<=1@f$
-  c_float delta;         ///< penalty update factor @details @note Assumption: @f$>1@f$
-  c_float sigma_max;     ///< penalty factor cap @details @note Assumption: @f$>0@f$ 
-  c_float tau_init;      ///< initial stepsize in backtracking @details @note Assumption: @f$>0@f$
-  c_int   proximal;      ///< boolean, use proximal method of multipliers or not @details @note Assumption: @f$\in \{0,1\}@f$ 
-  c_float gamma_init;    ///< initial proximal penalty parameter @details @note Assumption: @f$>0@f$
-  c_float gamma_upd;     ///< proximal penalty update factor @details @note Assumption: @f$>=1@f$
-  c_float gamma_max;     ///< proximal penalty parameter cap @details @note Assumption: @f$>=\gamma_\textrm{init}@f$
-  c_int   scaling;       ///< scaling iterations, if 0 then scaling is disabled @details @note Assumption: @f$>=0@f$
-  c_int   nonconvex;     ///< boolean, indicates whether the QP is nonconvex @details @note Assumption: @f$\in \{0,1\}@f$ 
-  c_int   verbose;       ///< boolean, write out progress @details @note Assumption:@f$\in \{0,1\}@f$
-  c_int   print_iter;    ///< frequency of printing @details @note Assumption: @f$>0@f$
-  c_int   warm_start;    ///< boolean, warm start @details @note Assumption: @f$\in \{0,1\}@f$
-  c_int   reset_newton_iter; ///< frequency of performing a complete Cholesky factorization @details @note Assumption: @f$>0@f$
+  c_int   max_iter;                 ///< maximum number of iterations @details @note Assumption: @f$>0@f$
+  c_int   inner_max_iter;           ///< maximum number of iterations per subproblem @details @note Assumption: @f$>0@f$
+  c_float eps_abs;                  ///< absolute convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs or eps_rel must be @f$>0@f$
+  c_float eps_rel;                  ///< relative convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs or eps_rel must be @f$>0@f$
+  c_float eps_abs_in;               ///< intermediate absolute convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs_in or eps_rel_in must be @f$>0@f$
+  c_float eps_rel_in;               ///< intermediate relative convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs_in or eps_rel_in must be @f$>0@f$
+  c_float rho;                      ///< tolerance scaling factor @details @note Assumption: @f$0<\rho<1@f$
+  c_float eps_prim_inf;             ///< primal infeasibility tolerance @details @note Assumption: @f$>=0@f$
+  c_float eps_dual_inf;             ///< dual infeasibility tolerance @details @note Assumption: @f$>=0@f$
+  c_float theta;                    ///< penalty update criterion parameter @details @note Assumption: @f$<=1@f$
+  c_float delta;                    ///< penalty update factor @details @note Assumption: @f$>1@f$
+  c_float sigma_max;                ///< penalty factor cap @details @note Assumption: @f$>0@f$ 
+  c_float tau_init;                 ///< initial stepsize in backtracking @details @note Assumption: @f$>0@f$
+  c_int   proximal;                 ///< boolean, use proximal method of multipliers or not @details @note Assumption: @f$\in \{0,1\}@f$ 
+  c_float gamma_init;               ///< initial proximal penalty parameter @details @note Assumption: @f$>0@f$
+  c_float gamma_upd;                ///< proximal penalty update factor @details @note Assumption: @f$>=1@f$
+  c_float gamma_max;                ///< proximal penalty parameter cap @details @note Assumption: @f$>=\gamma_\textrm{init}@f$
+  c_int   scaling;                  ///< scaling iterations, if 0 then scaling is disabled @details @note Assumption: @f$>=0@f$
+  c_int   nonconvex;                ///< boolean, indicates whether the QP is nonconvex @details @note Assumption: @f$\in \{0,1\}@f$ 
+  c_int   verbose;                  ///< boolean, write out progress @details @note Assumption:@f$\in \{0,1\}@f$
+  c_int   print_iter;               ///< frequency of printing @details @note Assumption: @f$>0@f$
+  c_int   warm_start;               ///< boolean, warm start @details @note Assumption: @f$\in \{0,1\}@f$
+  c_int   reset_newton_iter;        ///< frequency of performing a complete Cholesky factorization @details @note Assumption: @f$>0@f$
+  c_int   enable_dual_termination;  ///< boolean, enable termination based on dual objective (useful in branch and bound) @details @note Assumption: @f$\in \{0,1\}@f$
+  c_float dual_objective_limit;     ///< termination value for the dual objective (useful in branch and bound) @details @note Assumption: none
 } QPALMSettings;
 
 /**
@@ -203,22 +205,22 @@ typedef struct {
    * @name Linesearch variables
    * @{
    */
-  c_float tau;        ///< stepsize
-  c_float *Qd;        ///< Q * d
-  c_float *Ad;        ///< A * d
-  c_float *sqrt_sigma; ///< elementwise sqrt(sigma)
-  c_float sqrt_delta; ///< sqrt(penalty update factor)
-  c_float eta;        ///< linesearch parameter
-  c_float beta;       ///< linesearch parameter
-  c_float *delta;     ///< linesearch parameter
-  c_float *alpha;     ///< linesearch parameter
-  c_float *temp_2m;   ///< placeholder for vector of size 2m
-  c_float *delta2;    ///< delta .* delta
+  c_float tau;          ///< stepsize
+  c_float *Qd;          ///< Q * d
+  c_float *Ad;          ///< A * d
+  c_float *sqrt_sigma;  ///< elementwise sqrt(sigma)
+  c_float sqrt_delta;   ///< sqrt(penalty update factor)
+  c_float eta;          ///< linesearch parameter
+  c_float beta;         ///< linesearch parameter
+  c_float *delta;       ///< linesearch parameter
+  c_float *alpha;       ///< linesearch parameter
+  c_float *temp_2m;     ///< placeholder for vector of size 2m
+  c_float *delta2;      ///< delta .* delta
   c_float *delta_alpha; ///< delta .* alpha
-  array_element *s;   ///< alpha ./ delta
-  c_int   *index_L;   ///< index set L (where s>0)
-  c_int   *index_P;   ///< index set P (where delta>0)
-  c_int   *index_J;   ///< index set J (L xor P)
+  array_element *s;     ///< alpha ./ delta
+  c_int   *index_L;     ///< index set L (where s>0)
+  c_int   *index_P;     ///< index set P (where delta>0)
+  c_int   *index_J;     ///< index set J (L xor P)
 
   /** @} */
 

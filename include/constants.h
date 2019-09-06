@@ -78,6 +78,9 @@ extern "C" {
 
 # define RESET_NEWTON_ITER (100) /**< default frequency of performing a full Cholesky factorization */
 
+# define ENABLE_DUAL_TERMINATION (FALSE) /**< enable termination after dual objective > something (useful in branch and bound) */
+# define DUAL_OBJECTIVE_LIMIT (0) /**< termination value for the dual objective (useful in branch and bound) */
+
 
 # define MAX_RANK_UPDATE 160 /**< maximum rank for the sparse factorization update */
 
