@@ -75,6 +75,9 @@ extern "C" {
 # define VERBOSE (TRUE)         /**< default write out progress setting */
 # define PRINT_ITER (1)         /**< default frequency of printing */
 
+# define RESET_NEWTON_ITER (100) /**< default frequency of performing a full Cholesky factorization */
+
+
 # define MAX_RANK_UPDATE 160 /**< maximum rank for the sparse factorization update */
 
 # ifndef QPALM_NULL

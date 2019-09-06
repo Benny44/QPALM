@@ -120,6 +120,7 @@ typedef struct {
   c_int   verbose;       ///< boolean, write out progress @details @note Assumption:@f$\in \{0,1\}@f$
   c_int   print_iter;    ///< frequency of printing @note Assumption: @f$>0@f$
   c_int   warm_start;    ///< boolean, warm start @details @note Assumption: @f$\in \{0,1\}@f$
+  c_int   reset_newton_iter; ///< frequency of performing a complete Cholesky factorization @note Assumption: @f$>0@f$
 } QPALMSettings;
 
 /**

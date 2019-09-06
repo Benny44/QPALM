@@ -130,6 +130,13 @@ else
     inner_maxiter = opts.inner_maxiter;
 end
 
+if nargin<8 || ~isfield(opts,'reset_newton_iter')
+    reset_newton_iter = 100;
+else
+    reset_newton_iter = opts.reset_newton_iter;
+end
+
+
 if nargin<8 || ~isfield(opts,'solver')
     solver = 'newton';
 else
@@ -416,7 +423,7 @@ for k = 1:maxiter
                           d = -(Q+A(active_cnstrs,:)'*diag(sig(active_cnstrs))*A(active_cnstrs,:))\dphi;
                       end
                   case 2% ldlchol 2
-                      if mod(k,20)==0
+                      if mod(k,reset_newton_iter)==0
                           reset_newton = true;
                       end
                       [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton);

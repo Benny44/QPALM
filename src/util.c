@@ -43,7 +43,8 @@ QPALMSettings* copy_settings(const QPALMSettings *settings) {
     new->nonconvex    = settings->nonconvex;  
     new->verbose      = settings->verbose;
     new->print_iter   = settings->print_iter; 
-    new->warm_start   = settings->warm_start;      
+    new->warm_start   = settings->warm_start;
+    new->reset_newton_iter = settings->reset_newton_iter;      
 
     return new;
 }
@@ -107,7 +108,7 @@ void print_final_message(QPALMWorkspace *work) {
       case QPALM_SOLVED:
         c_print("| QPALM finished successfully.                              |\n");
         c_print("| primal residual: %.4e, primal tolerance: %.4e |\n", work->info->pri_res_norm, work->eps_pri);
-        c_print("| dual residual:   %.4e, dual tolerance:   %.4e |\n", work->info->dua_res_norm, work->eps_dua);
+        c_print("| dual residual  : %.4e, dual tolerance  : %.4e |\n", work->info->dua_res_norm, work->eps_dua);
         c_print("| objective value: %.4e                              |\n", work->info->objective);
         break;
       case QPALM_PRIMAL_INFEASIBLE:
@@ -125,7 +126,7 @@ void print_final_message(QPALMWorkspace *work) {
       case QPALM_MAX_ITER_REACHED:
         c_print("| QPALM hit the maximum number of iterations.               |\n", work->settings->max_iter);
         c_print("| primal residual: %.4e, primal tolerance: %.4e |\n", work->info->pri_res_norm, work->eps_pri);
-        c_print("| dual residual:   %.4e, dual tolerance:   %.4e |\n", work->info->dua_res_norm, work->eps_dua);
+        c_print("| dual residual  : %.4e, dual tolerance  : %.4e |\n", work->info->dua_res_norm, work->eps_dua);
         c_print("| objective value: %.4e                              |\n", work->info->objective);
         break;
       default:

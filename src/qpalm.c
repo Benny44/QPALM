@@ -52,6 +52,8 @@ void qpalm_set_default_settings(QPALMSettings *settings) {
   settings->warm_start    = WARM_START;              /* boolean, warm start solver */
   settings->verbose       = VERBOSE;                 /* boolean, write out progress */
   settings->print_iter    = PRINT_ITER;              /* frequency of printing */
+  settings->reset_newton_iter = RESET_NEWTON_ITER;   /* frequency of performing a full Cholesky factorization */
+
 }
 
 
@@ -391,7 +393,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       #endif
       
     
-    } else if (iter == prev_iter + work->settings->inner_max_iter){ //TODO make inner_maxiter a setting
+    } else if (iter == prev_iter + work->settings->inner_max_iter){ 
       
       if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
         update_sigma(work);
@@ -407,7 +409,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       prev_iter = iter;
 
     } else {
-      if (mod(iter, 20) == 0) work->chol->reset_newton = TRUE; //TODO make reset_newton_iter a setting
+      if (mod(iter, work->settings->reset_newton_iter) == 0) work->chol->reset_newton = TRUE; 
       update_primal_iterate(work);
 
       #ifdef PRINTING
