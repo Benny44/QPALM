@@ -77,13 +77,13 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'eps_pinf')
-    eps_pinf = 1e-4;
+    eps_pinf = 1e-5;
 else
     eps_pinf = opts.eps_pinf;
 end
 
 if nargin<8 || ~isfield(opts,'eps_dinf')
-    eps_dinf = 1e-4;
+    eps_dinf = 1e-5;
 else
     eps_dinf = opts.eps_dinf;
 end

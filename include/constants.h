@@ -54,8 +54,8 @@ extern "C" {
 # define EPS_ABS_IN (1)         /**< default intermediate absolute convergence tolerance */
 # define EPS_REL_IN (1)         /**< default intermediate relative convergence tolerance */
 # define RHO (0.1)              /**< default tolerance scaling factor */
-# define EPS_PRIM_INF (1e-4)    /**< default primal infeasibility tolerance */
-# define EPS_DUAL_INF (1e-4)    /**< default dual infeasibility tolerance */
+# define EPS_PRIM_INF (1e-5)    /**< default primal infeasibility tolerance */
+# define EPS_DUAL_INF (1e-5)    /**< default dual infeasibility tolerance */
 # define THETA (0.25)           /**< default penalty update criterion parameter */
 # define DELTA (100)             /**< default penalty update factor */
 # define TAU_INIT (1)           /**< default initial stepsize in backtracking */
