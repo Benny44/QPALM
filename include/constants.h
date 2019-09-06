@@ -49,6 +49,7 @@ extern "C" {
 **********************************/
 
 # define MAX_ITER (10000)       /**< default maximum number of iterations */
+# define INNER_MAX_ITER (100)   /**< default maximum number of iterations per subproblem */
 # define EPS_ABS (1e-4)         /**< default absolute convergence tolerance */
 # define EPS_REL (1e-4)         /**< default relative convergence tolerance */
 # define EPS_ABS_IN (1)         /**< default intermediate absolute convergence tolerance */

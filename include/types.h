@@ -100,6 +100,7 @@ typedef struct {
  */
 typedef struct {
   c_int   max_iter;      ///< maximum number of iterations @details @note Assumption: @f$>0@f$
+  c_int   inner_max_iter;///< maximum number of iterations per subproblem @details @note Assumption: @f$>0@f$
   c_float eps_abs;       ///< absolute convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs or eps_rel must be @f$>0@f$
   c_float eps_rel;       ///< relative convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs or eps_rel must be @f$>0@f$
   c_float eps_abs_in;    ///< intermediate absolute convergence tolerance @details @note Assumption: @f$>=0@f$, either eps_abs_in or eps_rel_in must be @f$>0@f$

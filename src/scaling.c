@@ -18,13 +18,12 @@ extern "C" {
 #include "cholmod.h"
 #include <stdio.h>
 
-// Set values lower than threshold MIN_SCALING to 1 and larger than MAX_SCALING to MAX_SCALING
+// Set values lower than threshold MIN_SCALING to 1
 void limit_scaling(c_float *D, size_t n) {
   size_t i;
 
   for (i = 0; i < n; i++) {
     D[i] = D[i] < MIN_SCALING ? 1.0 : D[i];
-    // D[i] = D[i] > MAX_SCALING ? MAX_SCALING : D[i];
   }
 }
 

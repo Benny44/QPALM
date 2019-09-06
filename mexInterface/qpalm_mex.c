@@ -35,6 +35,7 @@ const char* QPALM_INFO_FIELDS[] = {"iter",          //c_int
 
 
 const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",      //c_int
+                                      "inner_max_iter", //c_int  
                                       "eps_abs",        //c_float
                                       "eps_rel",        //c_float
                                       "eps_abs_in",     //c_float
@@ -429,6 +430,7 @@ mxArray* copySettingsToMxStruct(QPALMSettings* settings){
   //map the QPALM_SETTINGS fields one at a time into mxArrays
   //matlab handles everything as a double
   mxSetField(mxPtr, 0, "max_iter",        mxCreateDoubleScalar(settings->max_iter));
+  mxSetField(mxPtr, 0, "inner_max_iter",  mxCreateDoubleScalar(settings->inner_max_iter));
   mxSetField(mxPtr, 0, "eps_abs",         mxCreateDoubleScalar(settings->eps_abs));
   mxSetField(mxPtr, 0, "eps_rel",         mxCreateDoubleScalar(settings->eps_rel));
   mxSetField(mxPtr, 0, "eps_abs_in",      mxCreateDoubleScalar(settings->eps_abs_in));
@@ -461,6 +463,7 @@ void copyMxStructToSettings(const mxArray* mxPtr, QPALMSettings* settings){
   //map the QPALM_SETTINGS fields one at a time into mxArrays
   //matlab handles everything as a double
   settings->max_iter                  = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "max_iter"));
+  settings->inner_max_iter            = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "inner_max_iter"));
   settings->eps_abs                   = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "eps_abs"));
   settings->eps_rel                   = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "eps_rel"));
   settings->eps_abs_in                = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "eps_abs_in"));

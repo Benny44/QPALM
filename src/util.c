@@ -23,7 +23,8 @@ QPALMSettings* copy_settings(const QPALMSettings *settings) {
     QPALMSettings *new = c_malloc(sizeof(QPALMSettings));
 
     // Copy settings
-    new->max_iter     = settings->max_iter;     
+    new->max_iter     = settings->max_iter; 
+    new->inner_max_iter = settings->inner_max_iter;    
     new->eps_abs      = settings->eps_abs;       
     new->eps_rel      = settings->eps_rel;       
     new->eps_abs_in   = settings->eps_abs_in;    

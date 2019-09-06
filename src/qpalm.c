@@ -31,7 +31,8 @@ extern "C" {
 **********************/
 void qpalm_set_default_settings(QPALMSettings *settings) {
 
-  settings->max_iter      = MAX_ITER;                /* maximum iterations to take */
+  settings->max_iter      = MAX_ITER;                /* maximum iterations */
+  settings->inner_max_iter = INNER_MAX_ITER;                /* maximum iterations per subproblem */
   settings->eps_abs       = (c_float)EPS_ABS;        /* absolute convergence tolerance */
   settings->eps_rel       = (c_float)EPS_REL;        /* relative convergence tolerance */
   settings->eps_abs_in    = (c_float)EPS_ABS_IN;     /* intermediate absolute convergence tolerance */
@@ -388,7 +389,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       #endif
       
     
-    } else if (iter == prev_iter + 100){ //TODO make inner_maxiter a setting
+    } else if (iter == prev_iter + work->settings->inner_max_iter){ //TODO make inner_maxiter a setting
       
       if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
         update_sigma(work);

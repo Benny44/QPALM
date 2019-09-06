@@ -124,6 +124,12 @@ else
     maxiter = opts.maxiter;
 end
 
+if nargin<8 || ~isfield(opts,'inner_maxiter')
+    inner_maxiter = 100;
+else
+    inner_maxiter = opts.inner_maxiter;
+end
+
 if nargin<8 || ~isfield(opts,'solver')
     solver = 'newton';
 else
@@ -220,7 +226,6 @@ Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 
 y_next = zeros(m,1);
 k_prev = 0; k_prev_reset_newton = 0;
-maxiter_inner = max(100, maxiter/1000)*10^0;
 
 for k = 1:maxiter
         
@@ -274,7 +279,7 @@ for k = 1:maxiter
        stats.status = 'dual_infeasible';
        stats.dinf_certificate = D_scale.*dx;
        break
-   elseif k == k_prev + maxiter_inner %inner problem maxiter termination
+   elseif k == k_prev + inner_maxiter %inner problem maxiter termination
        %do outer update except dual and tolerance updates
        k_prev = k;
        gamma_changed = proximal && gamma ~= gammaMax;
