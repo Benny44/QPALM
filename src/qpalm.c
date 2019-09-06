@@ -303,6 +303,15 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
 
 void qpalm_solve(QPALMWorkspace *work) {
   
+  // Print header
+  #ifdef PRINTING
+  if (work->settings->verbose) {
+    c_print("\n                 QPALM Version 1.0                \n\n");
+    c_print("Iter |   P. res   |   D. res   |  Stepsize  |  Objective \n");
+    c_print("==========================================================\n");
+  }
+  #endif
+
   //Set initial workspace variables
   work->eps_abs_in = work->settings->eps_abs_in;
   work->eps_rel_in = work->settings->eps_rel_in;
@@ -349,6 +358,32 @@ void qpalm_solve(QPALMWorkspace *work) {
       CHOLMOD(finish)(&work->chol->c);
       work->initialized = FALSE;
 
+      #ifdef PRINTING
+      if (work->settings->verbose) {
+        c_print("%4ld | %.4e | %.4e | %.4e | %.4e \n", iter,
+                                                          work->info->pri_res_norm,
+                                                          work->info->dua_res_norm,
+                                                          work->tau,
+        vec_prod(work->x, work->Qx, work->data->n) + vec_prod(work->data->q, work->x, work->data->n)); //TODO: fix this for proximal and add objective into info
+        if (work->info->status_val == QPALM_SOLVED) {
+          c_print("\n\n=============================================================\n");
+          c_print("| QPALM finished successfully with:                         |\n");
+          c_print("| primal residual: %.4e, primal tolerance: %.4e |\n", work->info->pri_res_norm, work->eps_pri);
+          c_print("| dual residual:   %.4e, dual tolerance:   %.4e |\n", work->info->dua_res_norm, work->eps_dua);
+          c_print("| objective value: %.4e                              |\n", vec_prod(work->x, work->Qx, work->data->n) + vec_prod(work->data->q, work->x, work->data->n));
+          #ifdef PROFILING
+          if (work->info->run_time > 1.0)
+            c_print("| runtime:         %.2f seconds                         |\n", work->info->run_time);
+          else
+            c_print("| runtime:         %.2f milliseconds                    |\n", work->info->run_time*1000);
+          #endif
+          c_print("=============================================================\n");
+        }
+
+        c_print("\n\n");
+      }
+      #endif
+
       return; 
     } else if (check_subproblem_termination(work)) {
       prea_vec_copy(work->yh, work->y, m);
@@ -369,6 +404,13 @@ void qpalm_solve(QPALMWorkspace *work) {
       vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
       iter_out++;
       prev_iter = iter;
+
+      #ifdef PRINTING
+      if (work->settings->verbose) {
+        c_print("%4ld | ---------------------------------------------------\n", iter);
+      }
+      #endif
+      
     
     } else if (iter == prev_iter + 100){ //TODO make inner_maxiter a setting
       
@@ -388,6 +430,18 @@ void qpalm_solve(QPALMWorkspace *work) {
     } else {
       if (mod(iter, 20) == 0) work->chol->reset_newton = TRUE; //TODO make reset_newton_iter a setting
       update_primal_iterate(work);
+
+      #ifdef PRINTING
+      if (work->settings->verbose) {
+      c_print("%4ld | %.4e | %.4e | %.4e | %.4e \n", iter,
+                                                          work->info->pri_res_norm,
+                                                          work->info->dua_res_norm,
+                                                          work->tau,
+      vec_prod(work->x, work->Qx, work->data->n) + vec_prod(work->data->q, work->x, work->data->n)); //TODO: fix this for proximal and add objective into info
+      }
+      #endif
+
+    
     }
   }
   // maxiter reached
