@@ -558,12 +558,14 @@ else
     stats.iter_in(K) = k;
 end
 
-%unscale
+%objective
+stats.obj = (0.5*x'*(Q-1/gamma*speye(n))*x + q'*x)/c_scale;
+
+%unscale the solution
 x = D_scale.*x;
 y = (E_scale.*yh)/c_scale;
 
-%objective
-stats.obj = 0.5*x'*(Q-1/gamma*speye(n))*x + q'*x;
+
 
 end
 

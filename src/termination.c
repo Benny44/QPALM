@@ -14,6 +14,7 @@
 #include "constants.h"
 #include "global_opts.h"
 #include "util.h"
+#include "iteration.h"
 
 #include <stdio.h>
 
@@ -243,7 +244,7 @@ void store_solution(QPALMWorkspace *work) {
         prea_vec_copy(work->x, work->solution->x, work->data->n);
         prea_vec_copy(work->yh, work->solution->y, work->data->m);
     }
-    
+    work->info->objective = compute_objective(work);
 }
 
 c_int check_subproblem_termination(QPALMWorkspace *work) {

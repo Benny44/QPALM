@@ -233,6 +233,8 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
 
 void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_warm_start) {
     
+    work->gamma = work->settings->gamma_init;
+
     // If we have previously solved the problem, then just count the warm start as the setup time
     #ifdef PROFILING
     if (work->info->status_val != QPALM_UNSOLVED) work->info->setup_time = 0; 
@@ -264,12 +266,15 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
       mat_vec(work->data->A, work->chol->neg_dphi, work->chol->Ad, &work->chol->c);
       prea_vec_copy(work->Ad, work->Ax, m);
 
+      work->info->objective = compute_objective(work);
+
     } else {
       vec_set_scalar(work->x, 0., n);
       vec_set_scalar(work->x_prev, 0., n);
       vec_set_scalar(work->x0, 0., n);
       vec_set_scalar(work->Qx, 0., n);
       vec_set_scalar(work->Ax, 0., m);
+      work->info->objective = 0.0;
     }
 
     if (y_warm_start != NULL) {
@@ -283,14 +288,6 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
     }
     
     initialize_sigma(work);
-    vec_ew_sqrt(work->sigma, work->sqrt_sigma, m);
-    c_float *At_scalex = work->chol->At_scale->x;
-    prea_vec_copy(work->sqrt_sigma, At_scalex, m);
-    if (work->chol->At_sqrt_sigma) 
-      CHOLMOD(free_sparse)(&work->chol->At_sqrt_sigma, &work->chol->c);
-    work->chol->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, &work->chol->c);
-    CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
-
 
     work->initialized = TRUE;
     CHOLMOD(finish)(&work->chol->c);
@@ -364,13 +361,14 @@ void qpalm_solve(QPALMWorkspace *work) {
                                                           work->info->pri_res_norm,
                                                           work->info->dua_res_norm,
                                                           work->tau,
-        vec_prod(work->x, work->Qx, work->data->n) + vec_prod(work->data->q, work->x, work->data->n)); //TODO: fix this for proximal and add objective into info
+                                                          work->info->objective); 
+              
         if (work->info->status_val == QPALM_SOLVED) {
           c_print("\n\n=============================================================\n");
           c_print("| QPALM finished successfully with:                         |\n");
           c_print("| primal residual: %.4e, primal tolerance: %.4e |\n", work->info->pri_res_norm, work->eps_pri);
           c_print("| dual residual:   %.4e, dual tolerance:   %.4e |\n", work->info->dua_res_norm, work->eps_dua);
-          c_print("| objective value: %.4e                              |\n", vec_prod(work->x, work->Qx, work->data->n) + vec_prod(work->data->q, work->x, work->data->n));
+          c_print("| objective value: %.4e                              |\n", work->info->objective);
           #ifdef PROFILING
           if (work->info->run_time > 1.0)
             c_print("| runtime:         %.2f seconds                         |\n", work->info->run_time);
@@ -433,11 +431,12 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       #ifdef PRINTING
       if (work->settings->verbose) {
-      c_print("%4ld | %.4e | %.4e | %.4e | %.4e \n", iter,
+        work->info->objective = compute_objective(work);
+        c_print("%4ld | %.4e | %.4e | %.4e | %.4e \n", iter,
                                                           work->info->pri_res_norm,
                                                           work->info->dua_res_norm,
                                                           work->tau,
-      vec_prod(work->x, work->Qx, work->data->n) + vec_prod(work->data->q, work->x, work->data->n)); //TODO: fix this for proximal and add objective into info
+                                                          work->info->objective); 
       }
       #endif
 

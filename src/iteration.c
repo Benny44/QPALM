@@ -30,6 +30,26 @@ void compute_residuals(QPALMWorkspace *work) {
     vec_add_scaled(work->df, work->Atyh, work->dphi, 1, work->data->n);
 }
 
+void initialize_sigma(QPALMWorkspace *work) {
+    // Compute initial sigma
+    size_t n = work->data->n;
+    size_t m = work->data->m;
+    c_float f = 0.5*vec_prod(work->x, work->Qx, n) + vec_prod(work->data->q, work->x, n);
+    vec_ew_mid_vec(work->Ax, work->data->bmin, work->data->bmax, work->temp_m, m);
+    vec_add_scaled(work->Ax, work->temp_m, work->temp_m, -1, m);
+    c_float dist2 = vec_prod(work->temp_m, work->temp_m, m);
+    vec_set_scalar(work->sigma, c_max(1e-4, c_min(2e1*c_max(1,c_absval(f))/c_max(1,0.5*dist2),1e4)), m);
+
+    // Set fields related to sigma
+    vec_ew_sqrt(work->sigma, work->sqrt_sigma, m);
+    c_float *At_scalex = work->chol->At_scale->x;
+    prea_vec_copy(work->sqrt_sigma, At_scalex, m);
+    if (work->chol->At_sqrt_sigma) 
+      CHOLMOD(free_sparse)(&work->chol->At_sqrt_sigma, &work->chol->c);
+    work->chol->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, &work->chol->c);
+    CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+}
+
 void update_sigma(QPALMWorkspace* work) {
     work->nb_sigma_changed = 0;
     c_float *At_scalex = work->chol->At_scale->x;
@@ -100,4 +120,42 @@ void update_primal_iterate(QPALMWorkspace *work) {
     vec_mult_scalar(work->Ad, work->tau, work->data->m); //Adx used in dua_infeas check
     vec_add_scaled(work->Qx, work->Qd, work->Qx, 1, work->data->n);
     vec_add_scaled(work->Ax, work->Ad, work->Ax, 1, work->data->m);
+}
+
+c_float compute_objective(QPALMWorkspace *work) {
+    c_float objective = 0.0;
+    size_t n = work->data->n;
+    size_t i = 0; 
+
+    if (work->settings->proximal) {
+        if(n >= 4) {
+            for (; i <= n-4; i+=4) {
+                objective +=  (0.5*(work->Qx[i] - 1/work->gamma*work->x[i]) + work->data->q[i])*work->x[i] 
+                            + (0.5*(work->Qx[i+1] - 1/work->gamma*work->x[i+1]) + work->data->q[i+1])*work->x[i+1]
+                            + (0.5*(work->Qx[i+2] - 1/work->gamma*work->x[i+2]) + work->data->q[i+2])*work->x[i+2] 
+                            + (0.5*(work->Qx[i+3] - 1/work->gamma*work->x[i+3]) + work->data->q[i+3])*work->x[i+3];
+            }
+        }
+        for (; i < n; i++) {
+            objective += (0.5*(work->Qx[i] - 1/work->gamma*work->x[i])+ work->data->q[i])*work->x[i];
+        }
+    } else {
+        if(n >= 4) {
+            for (; i <= n-4; i+=4) {
+                objective += (0.5*work->Qx[i] + work->data->q[i])*work->x[i] 
+                            + (0.5*work->Qx[i+1] + work->data->q[i+1])*work->x[i+1]
+                            + (0.5*work->Qx[i+2] + work->data->q[i+2])*work->x[i+2] 
+                            + (0.5*work->Qx[i+3] + work->data->q[i+3])*work->x[i+3];
+            }
+        }
+        for (; i < n; i++) {
+            objective += (0.5*work->Qx[i] + work->data->q[i])*work->x[i];
+        }
+    }
+
+    if (work->settings->scaling) {
+        objective *= work->scaling->cinv;
+    }
+
+    return objective;
 }

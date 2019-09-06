@@ -67,6 +67,8 @@ typedef struct {
   c_float dua_res_norm;  ///< norm of dual residual
   c_float dua2_res_norm; ///< norm of intermediate dual residual (minus proximal term)
 
+  c_float objective;     ///< objective function value
+
   #ifdef PROFILING
   c_float setup_time;    ///< time taken for setup phase (seconds)
   c_float solve_time;    ///< time taken for solve phase (seconds)

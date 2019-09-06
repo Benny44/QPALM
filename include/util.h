@@ -2,8 +2,8 @@
  * @file util.h
  * @author Ben Hermans
  * @brief Utility functions.
- * @details This file contains some utility functions, to copy the settings, initialize the penalty parameters,
- * initialize the iterates, update the solver status and time the algorithm.
+ * @details This file contains some utility functions, to copy the settings, 
+ * update the solver status and time the algorithm.
  */
 #ifndef UTIL_H
 # define UTIL_H
@@ -45,15 +45,6 @@ void c_strcpy(char       dest[],
  */
 void update_status(QPALMInfo *info,
                    c_int     status_val);
-
-
-/**
- * Initialize penalty factors from initial x
- * 
- * The formula used here can be found in \cite birgin2014practical.  
- * @param work Workspace
- */
-void initialize_sigma(QPALMWorkspace *work);
 
 
 /*********************************

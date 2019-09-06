@@ -16,10 +16,20 @@
 
 void compute_residuals(QPALMWorkspace* work);
 
+/**
+ * Initialize penalty factors from initial x
+ * 
+ * The formula used here can be found in \cite birgin2014practical.  
+ * @param work Workspace
+ */
+void initialize_sigma(QPALMWorkspace *work);
+
 void update_sigma(QPALMWorkspace* work);
 
 void update_gamma(QPALMWorkspace* work);
 
 void update_primal_iterate(QPALMWorkspace *work);
+
+c_float compute_objective(QPALMWorkspace *work);
 
 #endif
