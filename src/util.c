@@ -84,6 +84,7 @@ void update_status(QPALMInfo *info, c_int status_val) {
 **********************/
 
 #ifdef PRINTING
+
 void print_header(void) {
     c_print("\n                 QPALM Version 1.0                \n\n");
     c_print("Iter |   P. res   |   D. res   |  Stepsize  |  Objective \n");
@@ -126,9 +127,7 @@ void print_final_message(QPALMWorkspace *work) {
         c_print("| objective value: %.4e                              |\n", work->info->objective);
         break;
       default:
-        #ifdef PRINTING
-          c_eprint("Unrecognised final status value %d", work->info->status_val);
-        #endif
+        c_eprint("Unrecognised final status value %d", work->info->status_val);
         break;
     }
     #ifdef PROFILING
