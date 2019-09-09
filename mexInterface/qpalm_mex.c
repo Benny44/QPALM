@@ -47,7 +47,6 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",                  //c_int
                                       "theta",                      //c_float
                                       "delta",                      //c_float
                                       "sigma_max",                  //c_float
-                                      "tau_init",                   //c_float
                                       "proximal",                   //c_int
                                       "gamma_init",                 //c_float
                                       "gamma_upd",                  //c_float
@@ -448,7 +447,6 @@ mxArray* copySettingsToMxStruct(QPALMSettings* settings){
   mxSetField(mxPtr, 0, "theta",                     mxCreateDoubleScalar(settings->theta));
   mxSetField(mxPtr, 0, "delta",                     mxCreateDoubleScalar(settings->delta));
   mxSetField(mxPtr, 0, "sigma_max",                 mxCreateDoubleScalar(settings->sigma_max));
-  mxSetField(mxPtr, 0, "tau_init",                  mxCreateDoubleScalar(settings->tau_init));
   mxSetField(mxPtr, 0, "proximal",                  mxCreateDoubleScalar(settings->proximal));
   mxSetField(mxPtr, 0, "gamma_init",                mxCreateDoubleScalar(settings->gamma_init));
   mxSetField(mxPtr, 0, "gamma_upd",                 mxCreateDoubleScalar(settings->gamma_upd));
@@ -487,7 +485,6 @@ void copyMxStructToSettings(const mxArray* mxPtr, QPALMSettings* settings){
   settings->theta                     = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "theta"));
   settings->delta                     = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "delta"));
   settings->sigma_max                 = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "sigma_max"));
-  settings->tau_init                  = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "tau_init"));
   settings->proximal                  = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "proximal"));
   settings->gamma_init                = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "gamma_init"));  
   settings->gamma_upd                 = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "gamma_upd"));

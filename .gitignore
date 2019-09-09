@@ -24,3 +24,4 @@ tests/run_all_tests
 *.log
 *.mtx
 build
+coverage

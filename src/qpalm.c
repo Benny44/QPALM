@@ -43,7 +43,6 @@ void qpalm_set_default_settings(QPALMSettings *settings) {
   settings->theta                   = (c_float)THETA;          /* penalty update criterion parameter */
   settings->delta                   = (c_float)DELTA;          /* penalty update factor */
   settings->sigma_max               = (c_float)SIGMA_MAX;      /* penalty parameter cap */
-  settings->tau_init                = (c_float)TAU_INIT;       /* initial stepsize for backtracking */
   settings->proximal                = PROXIMAL;                /* boolean, proximal method of multipliers*/
   settings->gamma_init              = (c_float)GAMMA_INIT;     /* proximal penalty parameter */
   settings->gamma_upd               = (c_float)GAMMA_UPD;      /* proximal penalty update factor*/

@@ -60,7 +60,6 @@ extern "C" {
 # define THETA (0.25)           /**< default penalty update criterion parameter */
 # define DELTA (100)             /**< default penalty update factor */
 # define SIGMA_MAX (1e9)        /**< defautl penalty cap */
-# define TAU_INIT (1)           /**< default initial stepsize in backtracking */
 
 # define PROXIMAL (TRUE)        /**< default use of proximal method of multipliers */
 # define GAMMA_INIT (1E1)       /**< default initial proximal penalty parameter */

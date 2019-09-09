@@ -111,7 +111,6 @@ typedef struct {
   c_float theta;                    ///< penalty update criterion parameter @details @note Assumption: @f$<=1@f$
   c_float delta;                    ///< penalty update factor @details @note Assumption: @f$>1@f$
   c_float sigma_max;                ///< penalty factor cap @details @note Assumption: @f$>0@f$ 
-  c_float tau_init;                 ///< initial stepsize in backtracking @details @note Assumption: @f$>0@f$
   c_int   proximal;                 ///< boolean, use proximal method of multipliers or not @details @note Assumption: @f$\in \{0,1\}@f$ 
   c_float gamma_init;               ///< initial proximal penalty parameter @details @note Assumption: @f$>0@f$
   c_float gamma_upd;                ///< proximal penalty update factor @details @note Assumption: @f$>=1@f$

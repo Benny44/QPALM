@@ -35,7 +35,6 @@ QPALMSettings* copy_settings(const QPALMSettings *settings) {
     new->theta                    = settings->theta;         
     new->delta                    = settings->delta;
     new->sigma_max                = settings->sigma_max;
-    new->tau_init                 = settings->tau_init;         
     new->proximal                 = settings->proximal;       
     new->gamma_init               = settings->gamma_init;         
     new->gamma_upd                = settings->gamma_upd;     
