@@ -49,8 +49,6 @@ void validate_test_setup(void) {
     data->bmax[0] = 1.0; data->bmax[1] = 1.0; data->bmax[2] = 1.0;
 }
 
-
-
 /* Data validation */
 MU_TEST(test_correct_data) {
     mu_assert_true(validate_data(data));
@@ -79,14 +77,37 @@ MU_TEST(test_missing_settings) {
     settings=NULL;
     mu_assert_false(validate_settings(settings));
 }
-MU_TEST(test_max_iter_out_of_bounds){
+
+MU_TEST(test_iter_out_of_bounds){
     settings->max_iter = -1;
     mu_assert_false(validate_settings(settings));
     settings->max_iter = 0;
     mu_assert_false(validate_settings(settings));
     settings->max_iter = 1;
     mu_assert_true(validate_settings(settings));
+
+    settings->inner_max_iter = -1;
+    mu_assert_false(validate_settings(settings));
+    settings->inner_max_iter = 0;
+    mu_assert_false(validate_settings(settings));
+    settings->inner_max_iter = 1;
+    mu_assert_true(validate_settings(settings));
+
+    settings->print_iter = -1;
+    mu_assert_false(validate_settings(settings));
+    settings->print_iter = 0;
+    mu_assert_false(validate_settings(settings));
+    settings->print_iter = 1;
+    mu_assert_true(validate_settings(settings));
+
+    settings->reset_newton_iter = -1;
+    mu_assert_false(validate_settings(settings));
+    settings->reset_newton_iter = 0;
+    mu_assert_false(validate_settings(settings));
+    settings->reset_newton_iter = 1;
+    mu_assert_true(validate_settings(settings));
 }
+
 MU_TEST(test_tol_out_of_bounds){
     settings->eps_abs = -1;
     mu_assert_false(validate_settings(settings));
@@ -142,6 +163,15 @@ MU_TEST(test_delta_out_of_bounds){
     mu_assert_true(validate_settings(settings));
 }
 
+MU_TEST(test_sigma_max_out_of_bounds){
+    settings->sigma_max = -0.5;
+    mu_assert_false(validate_settings(settings));
+    settings->sigma_max = 0.0;
+    mu_assert_false(validate_settings(settings));
+    settings->sigma_max = 0.5;
+    mu_assert_true(validate_settings(settings));
+}
+
 MU_TEST(test_gamma_out_of_bounds){
     settings->gamma_init = 0;
     mu_assert_false(validate_settings(settings));
@@ -183,6 +213,14 @@ MU_TEST(test_booleans){
     settings->verbose = 3;
     mu_assert_false(validate_settings(settings));
     settings->verbose = TRUE;
+
+    settings->enable_dual_termination = FALSE;
+    mu_assert_true(validate_settings(settings));
+    settings->enable_dual_termination = 3;
+    mu_assert_false(validate_settings(settings));
+    settings->enable_dual_termination = TRUE;
+
+
 }
 
 MU_TEST_SUITE(suite_validation) {
@@ -193,11 +231,12 @@ MU_TEST_SUITE(suite_validation) {
     MU_RUN_TEST(test_bounds_mismatch);
     MU_RUN_TEST(test_correct_settings);
     MU_RUN_TEST(test_missing_settings);
-    MU_RUN_TEST(test_max_iter_out_of_bounds);
+    MU_RUN_TEST(test_iter_out_of_bounds);
     MU_RUN_TEST(test_tol_out_of_bounds);
     MU_RUN_TEST(test_rho_out_of_bounds);
     MU_RUN_TEST(test_theta_out_of_bounds);
     MU_RUN_TEST(test_delta_out_of_bounds);
+    MU_RUN_TEST(test_sigma_max_out_of_bounds);
     MU_RUN_TEST(test_gamma_out_of_bounds);
     MU_RUN_TEST(test_scaling_out_of_bounds);
     MU_RUN_TEST(test_booleans);

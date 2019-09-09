@@ -56,6 +56,13 @@ c_int validate_settings(const QPALMSettings *settings) {
     return FALSE;
   }
 
+  if (settings->inner_max_iter <= 0) {
+# ifdef PRINTING
+    c_eprint("inner_max_iter must be positive");
+# endif /* ifdef PRINTING */
+    return FALSE;
+  }
+
   if (settings->eps_abs < 0) {
 # ifdef PRINTING
     c_eprint("eps_abs must be nonnegative");
@@ -133,6 +140,13 @@ c_int validate_settings(const QPALMSettings *settings) {
     return FALSE;
   }
 
+  if (settings->sigma_max <= 0) {
+# ifdef PRINTING
+    c_eprint("delta must be positive");
+# endif /* ifdef PRINTING */
+    return FALSE;
+  }
+
   if (settings->tau_init <= 0) {
 # ifdef PRINTING
     c_eprint("tau_init must be greater than 0");
@@ -182,7 +196,6 @@ c_int validate_settings(const QPALMSettings *settings) {
     return FALSE;
   }
 
-
   if ((settings->verbose != 0) && (settings->verbose != 1)) {
 # ifdef PRINTING
     c_eprint("verbose must be either 0 or 1");
@@ -190,6 +203,26 @@ c_int validate_settings(const QPALMSettings *settings) {
     return FALSE;
   }
 
+  if (settings->print_iter <= 0) {
+# ifdef PRINTING
+    c_eprint("print_iter must be positive");
+# endif /* ifdef PRINTING */
+    return FALSE;
+  }
+
+  if (settings->reset_newton_iter <= 0) {
+# ifdef PRINTING
+    c_eprint("reset_newton_iter must be positive");
+# endif /* ifdef PRINTING */
+    return FALSE;
+  }
+
+  if ((settings->enable_dual_termination != 0) && (settings->enable_dual_termination != 1)) {
+# ifdef PRINTING
+    c_eprint("enable_dual_termination must be either 0 or 1");
+# endif /* ifdef PRINTING */
+    return FALSE;
+  }
 
   return TRUE;
 }
