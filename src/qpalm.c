@@ -385,6 +385,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       prea_vec_copy(work->Atyh, work->Aty, n);
 
       if(work->settings->enable_dual_termination) {
+        
         work->info->dual_objective = compute_dual_objective(work, LD_Q);
         if (work->info->dual_objective > work->settings->dual_objective_limit) {
           
@@ -449,11 +450,11 @@ void qpalm_solve(QPALMWorkspace *work) {
       }
 
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
-      // vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
       iter_out++;
       prev_iter = iter;
 
     } else {
+
       if (mod(iter, work->settings->reset_newton_iter) == 0) work->chol->reset_newton = TRUE; 
       update_primal_iterate(work);
 
