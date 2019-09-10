@@ -79,6 +79,7 @@ void update_status(QPALMInfo *info, c_int status_val) {
       c_strcpy(info->status, "error");
       break;
     default:
+      c_strcpy(info->status, "unrecognised status value");
       #ifdef PRINTING
         c_eprint("Unrecognised status value %ld", status_val);
       #endif
@@ -141,6 +142,7 @@ void print_final_message(QPALMWorkspace *work) {
                           c_print("| objective value: %5.4e                              |\n", work->info->objective);
         break;
       default:
+        c_strcpy(work->info->status, "unrecognised status value");
         c_eprint("Unrecognised final status value %ld", work->info->status_val);
         break;
     }

@@ -342,11 +342,11 @@ void qpalm_solve(QPALMWorkspace *work) {
   //Provide LD factor of Q in case dual_termination is enabled
   //NB use neg_dphi = Aty+q and D_temp = Q^-1(Aty+q) to link with cholmod
   //NB assume Q is positive definite
-  cholmod_factor *LD_Q;
   if (work->settings->enable_dual_termination) {
-    LD_Q = CHOLMOD(analyze) (work->data->Q, &work->chol->c);
-    CHOLMOD(factorize) (work->data->Q, LD_Q, &work->chol->c);
-    work->info->dual_objective = compute_dual_objective(work, LD_Q);    
+    if (work->chol->LD_Q) CHOLMOD(free_factor)(&work->chol->LD_Q, &work->chol->c);
+    work->chol->LD_Q = CHOLMOD(analyze) (work->data->Q, &work->chol->c);
+    CHOLMOD(factorize) (work->data->Q, work->chol->LD_Q, &work->chol->c);
+    work->info->dual_objective = compute_dual_objective(work);    
   } else {
     work->info->dual_objective = QPALM_NAN;
   }
@@ -385,8 +385,8 @@ void qpalm_solve(QPALMWorkspace *work) {
       prea_vec_copy(work->Atyh, work->Aty, n);
 
       if(work->settings->enable_dual_termination) {
-        
-        work->info->dual_objective = compute_dual_objective(work, LD_Q);
+
+        work->info->dual_objective = compute_dual_objective(work);
         if (work->info->dual_objective > work->settings->dual_objective_limit) {
           
           update_status(work->info, QPALM_DUAL_TERMINATED);
@@ -401,7 +401,6 @@ void qpalm_solve(QPALMWorkspace *work) {
                               work->info->solve_time;
           #endif /* ifdef PROFILING */
 
-          CHOLMOD(free_factor)(&LD_Q, &work->chol->c);
           CHOLMOD(finish)(&work->chol->c);
           work->initialized = FALSE;
 
@@ -718,6 +717,8 @@ void qpalm_cleanup(QPALMWorkspace *work) {
       if (work->chol->Atyh) CHOLMOD(free_dense)(&work->chol->Atyh, &work->chol->c);
 
       if (work->chol->LD) CHOLMOD(free_factor)(&work->chol->LD, &work->chol->c);
+
+      if (work->chol->LD_Q) CHOLMOD(free_factor)(&work->chol->LD_Q, &work->chol->c);
 
       if (work->chol->active_constraints) c_free(work->chol->active_constraints);
 

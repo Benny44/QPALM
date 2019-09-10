@@ -8,6 +8,7 @@
 #include "test_nonconvex_qp.h"
 #include "test_update.h"
 #include "test_validate.h"
+#include "test_error_handling.h"
 
 
 
@@ -22,6 +23,7 @@ int main(){
     MU_RUN_SUITE(suite_nonconvex);
     MU_RUN_SUITE(suite_update);
     MU_RUN_SUITE(suite_validation);
+    MU_RUN_SUITE(suite_error_handling);
     MU_REPORT();
     
     return minunit_fail; /* =0 if all tests passed, >0 otherwise */

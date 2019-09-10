@@ -132,6 +132,7 @@ typedef struct {
 typedef struct {
   cholmod_common c;               ///< cholmod environment
   cholmod_factor *LD;             ///< LD factor (part of LDL' factorization)
+  cholmod_factor *LD_Q;           ///< LD factor of Q (useful in computing dual objective)
   cholmod_dense *E_temp;          ///< temporary constraints scaling vectors
   cholmod_dense *D_temp;          ///< temporary primal variable scaling vectors
   cholmod_dense *neg_dphi;        ///< -gradient of the Lagrangian

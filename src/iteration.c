@@ -161,7 +161,7 @@ c_float compute_objective(QPALMWorkspace *work) {
     return objective;
 }
 
-c_float compute_dual_objective(QPALMWorkspace *work, cholmod_factor *LD_Q) {
+c_float compute_dual_objective(QPALMWorkspace *work) {
     
     c_float dual_objective = 0.0;
 
@@ -169,7 +169,7 @@ c_float compute_dual_objective(QPALMWorkspace *work, cholmod_factor *LD_Q) {
     if (work->chol->D_temp) {
       CHOLMOD(free_dense)(&work->chol->D_temp, &work->chol->c);
     }
-    work->chol->D_temp = CHOLMOD(solve) (CHOLMOD_LDLt, LD_Q, work->chol->neg_dphi, &work->chol->c);
+    work->chol->D_temp = CHOLMOD(solve) (CHOLMOD_LDLt, work->chol->LD_Q, work->chol->neg_dphi, &work->chol->c);
     work->D_temp = work->chol->D_temp->x;
 
     dual_objective -= 0.5*vec_prod(work->neg_dphi, work->D_temp, work->data->n);

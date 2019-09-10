@@ -14,15 +14,7 @@ add_executable(run_all_tests
             src/test_cholmod_interface.c
             src/test_nonconvex_qp.c
             src/test_degen_hess.c
-            include/test_nonconvex_qp.h
-            include/test_validate.h
-            include/test_prim_inf_qp.h
-            include/test_update.h
-            include/test_basic_qp.h
-            include/test_lin_alg.h
-            include/test_dua_inf_qp.h
-            include/test_cholmod_interface.h
-            include/test_degen_hess.h)
+            src/test_error_handling.c)
 
 target_include_directories(run_all_tests 
         PRIVATE 
