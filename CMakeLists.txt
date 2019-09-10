@@ -45,7 +45,7 @@ set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/build/include)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
 
 add_compile_options("-DDLONG")
-option (PRINTING "Allow printing" OFF)
+option (PRINTING "Allow printing" ON)
 if (PRINTING)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPRINTING")
 endif()
