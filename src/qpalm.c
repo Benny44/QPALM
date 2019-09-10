@@ -325,8 +325,9 @@ void qpalm_solve(QPALMWorkspace *work) {
   //qpalm_setup to not initialize some variables.
   if (!work->initialized) {
     qpalm_warm_start(work, NULL, NULL);
-  }
+  }  
 
+  // Start the timer (after warm_start because this is already added to the setup time)
   #ifdef PROFILING
   qpalm_tic(work->timer); // Start timer
   #endif /* ifdef PROFILING */
@@ -337,6 +338,18 @@ void qpalm_solve(QPALMWorkspace *work) {
   
   size_t n = work->data->n;
   size_t m = work->data->m;
+
+  //Provide LD factor of Q in case dual_termination is enabled
+  //NB use neg_dphi = Aty+q and D_temp = Q^-1(Aty+q) to link with cholmod
+  //NB assume Q is positive definite
+  cholmod_factor *LD_Q;
+  if (work->settings->enable_dual_termination) {
+    LD_Q = CHOLMOD(analyze) (work->data->Q, &work->chol->c);
+    CHOLMOD(factorize) (work->data->Q, LD_Q, &work->chol->c);
+    work->info->dual_objective = compute_dual_objective(work, LD_Q);    
+  } else {
+    work->info->dual_objective = QPALM_NAN;
+  }
 
   c_int iter;
   c_int iter_out = 0;
@@ -370,10 +383,42 @@ void qpalm_solve(QPALMWorkspace *work) {
     } else if (check_subproblem_termination(work)) {
       prea_vec_copy(work->yh, work->y, m);
       prea_vec_copy(work->Atyh, work->Aty, n);
+
+      if(work->settings->enable_dual_termination) {
+        work->info->dual_objective = compute_dual_objective(work, LD_Q);
+        if (work->info->dual_objective > work->settings->dual_objective_limit) {
+          
+          update_status(work->info, QPALM_DUAL_TERMINATED);
+          store_solution(work);
+
+          work->info->iter = iter;
+          work->info->iter_out = iter_out;
+          /* Update solve time and run time */
+          #ifdef PROFILING
+            work->info->solve_time = qpalm_toc(work->timer);
+            work->info->run_time = work->info->setup_time +
+                              work->info->solve_time;
+          #endif /* ifdef PROFILING */
+
+          CHOLMOD(free_factor)(&LD_Q, &work->chol->c);
+          CHOLMOD(finish)(&work->chol->c);
+          work->initialized = FALSE;
+
+          #ifdef PRINTING
+          if (work->settings->verbose) {
+            work->info->objective = compute_objective(work);
+            print_iteration(iter, work); 
+            print_final_message(work);
+          }
+          #endif
+
+          return; 
+        }
+      }
+
       work->eps_abs_in = c_max(work->settings->eps_abs, work->settings->rho*work->eps_abs_in);
       work->eps_rel_in = c_max(work->settings->eps_rel, work->settings->rho*work->eps_rel_in);
-      
-      
+       
       if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
         update_sigma(work);
       } 

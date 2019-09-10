@@ -60,6 +60,9 @@ void update_status(QPALMInfo *info, c_int status_val) {
     case QPALM_SOLVED:
       c_strcpy(info->status, "solved");
       break;
+    case QPALM_DUAL_TERMINATED:
+      c_strcpy(info->status, "dual terminated");
+      break;
     case QPALM_PRIMAL_INFEASIBLE:
       c_strcpy(info->status, "primal infeasible");
       break;
@@ -112,6 +115,12 @@ void print_final_message(QPALMWorkspace *work) {
                           c_print("| primal residual: %5.4e, primal tolerance: %5.4e |\n", work->info->pri_res_norm, work->eps_pri);
                           c_print("| dual residual  : %5.4e, dual tolerance  : %5.4e |\n", work->info->dua_res_norm, work->eps_dua);
                           c_print("| objective value: %5.4e                              |\n", work->info->objective);
+        break;
+      case QPALM_DUAL_TERMINATED:
+        characters_box =  c_print("| QPALM has terminated because the dual objective at the    |\n");
+                          c_print("| current iterate is higher than the value specified in     |\n");
+                          c_print("| dual_objective_limit.                                     |\n");
+                          c_print("| dual objective : % 4.3e, specified limit : % 4.3e |\n", work->info->dual_objective, work->settings->dual_objective_limit);
         break;
       case QPALM_PRIMAL_INFEASIBLE:
         characters_box =  c_print("| QPALM detected a primal infeasible problem. You can check |\n");

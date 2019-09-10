@@ -58,16 +58,17 @@ typedef struct {
  * Solver return information
  */
 typedef struct {
-  c_int   iter;          ///< number of iterations taken
-  c_int   iter_out;      ///< number of outer iterations (i.e. dual updates)
-  char    status[32];    ///< status string, e.g. 'solved'
-  c_int   status_val;    ///< status as c_int, defined in constants.h
+  c_int   iter;           ///< number of iterations taken
+  c_int   iter_out;       ///< number of outer iterations (i.e. dual updates)
+  char    status[32];     ///< status string, e.g. 'solved'
+  c_int   status_val;     ///< status as c_int, defined in constants.h
 
-  c_float pri_res_norm;  ///< norm of primal residual
-  c_float dua_res_norm;  ///< norm of dual residual
-  c_float dua2_res_norm; ///< norm of intermediate dual residual (minus proximal term)
+  c_float pri_res_norm;   ///< norm of primal residual
+  c_float dua_res_norm;   ///< norm of dual residual
+  c_float dua2_res_norm;  ///< norm of intermediate dual residual (minus proximal term)
 
-  c_float objective;     ///< objective function value
+  c_float objective;      ///< objective function value
+  c_float dual_objective; ///< dual objective function value (= NaN if enable_dual_termination is false)
 
   #ifdef PROFILING
   c_float setup_time;    ///< time taken for setup phase (seconds)

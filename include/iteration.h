@@ -32,4 +32,7 @@ void update_primal_iterate(QPALMWorkspace *work);
 
 c_float compute_objective(QPALMWorkspace *work);
 
+c_float compute_dual_objective(QPALMWorkspace *work, cholmod_factor *LD_Q);
+
+
 #endif

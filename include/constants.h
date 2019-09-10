@@ -29,6 +29,7 @@ extern "C" {
  */
 
 # define QPALM_SOLVED (1)             /**< status to indicate the problem is solved to optimality given the specified tolerances */
+# define QPALM_DUAL_TERMINATED (2)    /**< status to indicate the problem has a dual objective that is higher than the specified bound */
 # define QPALM_MAX_ITER_REACHED (-2)  /**< status to indicate termination due to reaching the maximum number of iterations  */
 # define QPALM_PRIMAL_INFEASIBLE (-3) /**< status to indicate the problem is primal infeasible  */
 # define QPALM_DUAL_INFEASIBLE (-4)   /**< status to indicate the problem is dual infeasible  */
@@ -47,6 +48,19 @@ extern "C" {
 /**********************************
 * Solver Parameters and Settings *
 **********************************/
+
+# ifndef QPALM_NULL
+#  define QPALM_NULL 0 /**< NULL, if something goes wrong during setup, the workspace pointer is set to this */
+# endif /* ifndef QPALM_NULL */
+
+# ifndef QPALM_NAN
+#  define QPALM_NAN ((c_float)0x7fc00000UL)  /**< not a number, used for the solution if the problem is primal or dual infeasible */
+# endif /* ifndef QPALM_NAN */
+
+# ifndef QPALM_INFTY
+#  define QPALM_INFTY ((c_float)1e20)  /**< infinity, used to indicate one-sided constraints */
+# endif /* ifndef QPALM_INFTY */
+
 
 # define MAX_ITER (10000)       /**< default maximum number of iterations */
 # define INNER_MAX_ITER (100)   /**< default maximum number of iterations per subproblem */
@@ -78,22 +92,11 @@ extern "C" {
 # define RESET_NEWTON_ITER (100) /**< default frequency of performing a full Cholesky factorization */
 
 # define ENABLE_DUAL_TERMINATION (FALSE) /**< enable termination after dual objective > something (useful in branch and bound) */
-# define DUAL_OBJECTIVE_LIMIT (0) /**< termination value for the dual objective (useful in branch and bound) */
-
+# define DUAL_OBJECTIVE_LIMIT (QPALM_INFTY) /**< termination value for the dual objective (useful in branch and bound) */
 
 # define MAX_RANK_UPDATE 160 /**< maximum rank for the sparse factorization update */
 
-# ifndef QPALM_NULL
-#  define QPALM_NULL 0 /**< NULL, if something goes wrong during setup, the workspace pointer is set to this */
-# endif /* ifndef QPALM_NULL */
 
-# ifndef QPALM_NAN
-#  define QPALM_NAN ((c_float)0x7fc00000UL)  /**< not a number, used for the solution if the problem is primal or dual infeasible */
-# endif /* ifndef QPALM_NAN */
-
-# ifndef QPALM_INFTY
-#  define QPALM_INFTY ((c_float)1e20)  /**< infinity, used to indicate one-sided constraints */
-# endif /* ifndef QPALM_INFTY */
 
 /**
  * @}

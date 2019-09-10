@@ -1,5 +1,7 @@
 %A test to to compare the qpalm mex and matlab versions 
 warning ('off','all');
+% warning('off','MATLAB:mex:GccVersion_link')
+
 qpalm_make;
 
 for k=1:100
@@ -59,10 +61,12 @@ for k=1:100
 %     fprintf('\n Difference in x: %.16e\n', norm(res.x-x_qpalm,inf));
 
     solver.delete();
-    
-    assert(norm(res.x-x_qpalm,inf)/norm(res.x, inf)< 1e-10);
-        
+
+    if(norm(res.x-x_qpalm,inf)/norm(res.x, inf) > 1e-10)
+        fprintf('\n\n ERROR: Mex and Matlab versions might have diverged\n\n ');
+        error('');
+    end
+
 end
 
-fprintf('SUCCESS: Mex and Matlab versions are doing the same thing');
-
+fprintf('\n\n SUCCESS: Mex and Matlab do the same thing!\n\n');

@@ -159,3 +159,26 @@ c_float compute_objective(QPALMWorkspace *work) {
 
     return objective;
 }
+
+c_float compute_dual_objective(QPALMWorkspace *work, cholmod_factor *LD_Q) {
+    
+    c_float dual_objective = 0.0;
+
+    vec_add_scaled(work->Aty, work->data->q, work->neg_dphi, 1.0, work->data->n);
+    if (work->chol->D_temp) {
+      CHOLMOD(free_dense)(&work->chol->D_temp, &work->chol->c);
+    }
+    work->chol->D_temp = CHOLMOD(solve) (CHOLMOD_LDLt, LD_Q, work->chol->neg_dphi, &work->chol->c);
+    work->D_temp = work->chol->D_temp->x;
+
+    dual_objective -= 0.5*vec_prod(work->neg_dphi, work->D_temp, work->data->n);
+    for (size_t i = 0; i < work->data->m; i++) {
+      dual_objective -= work->y[i] > 0 ? work->y[i]*work->data->bmax[i] : work->y[i]*work->data->bmin[i];
+    }
+
+    if(work->settings->scaling) {
+      dual_objective *= work->scaling->cinv;
+    }
+
+    return dual_objective;
+}

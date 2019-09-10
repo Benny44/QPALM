@@ -30,6 +30,7 @@ const char* QPALM_INFO_FIELDS[] = {"iter",          //c_int
                                   "dua_res_norm",   //c_float
                                   "dua2_res_norm",  //c_float
                                   "objective",      //c_float
+                                  "dual_objective", //c_float
                                   "setup_time",     //c_float, only used if PROFILING
                                   "solve_time",     //c_float, only used if PROFILING
                                   "run_time"};      //c_float, only used if PROFILING
@@ -416,6 +417,7 @@ mxArray* copyInfoToMxStruct(QPALMInfo* info){
   mxSetField(mxPtr, 0, "dua_res_norm",  mxCreateDoubleScalar(info->dua_res_norm));
   mxSetField(mxPtr, 0, "dua2_res_norm", mxCreateDoubleScalar(info->dua2_res_norm));
   mxSetField(mxPtr, 0, "objective",     mxCreateDoubleScalar(info->objective));
+  mxSetField(mxPtr, 0, "dual_objective",     mxCreateDoubleScalar(info->dual_objective));
 
   #ifdef PROFILING
   //if not profiling, these fields will be empty
