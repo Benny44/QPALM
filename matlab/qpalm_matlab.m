@@ -371,15 +371,15 @@ for k = 1:maxiter
             
            if gamma_changed 
             reset_newton = true; 
-%             elseif nb_sig_changed == 0
-%                 %do nothing
-%             elseif nb_sig_changed <= 40
-%                 LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
-%                     sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
-%                     *A(sig_changed,:))','+');
-            else
+           elseif nb_sig_changed == 0
+                %do nothing
+           elseif nb_sig_changed <= 40
+               LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
+                    sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
+                    *A(sig_changed,:))','+');
+           else
                 reset_newton = true; 
-            end            
+           end            
            
            Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
            Asig      = (sparse(1:m,1:m,sig,m,m)*A);

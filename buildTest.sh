@@ -47,7 +47,7 @@ lcov --list coverage.info
 genhtml coverage.info -q
 #google-chrome index.html
 
-#matlab -nojvm -r 'try qpalm_mex_vs_matlab_test; catch; end; quit'
+matlab -nojvm -r 'try qpalm_mex_vs_matlab_test; catch; end; quit'
 
 
 

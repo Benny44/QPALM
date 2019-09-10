@@ -428,7 +428,6 @@ void qpalm_solve(QPALMWorkspace *work) {
       }
 
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
-      vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
       iter_out++;
       prev_iter = iter;
 

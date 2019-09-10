@@ -151,7 +151,7 @@ void ldlupdate_sigma_changed(QPALMWorkspace *work) {
 
   size_t k;
   for (k=0; k < work->nb_sigma_changed; k++) {
-    At_scalex[sigma_changed[k]]= (At_scalex[sigma_changed[k]]-1)/At_scalex[sigma_changed[k]]; 
+    At_scalex[sigma_changed[k]]= c_sqrt(1-1/(At_scalex[sigma_changed[k]]*At_scalex[sigma_changed[k]])); 
   }
 
   CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
