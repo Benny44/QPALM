@@ -4,7 +4,7 @@ branches:
   only:
   - master
   - development
-  - windows-deploy
+  - fix-tests
 matrix:
   include:
   - os: linux

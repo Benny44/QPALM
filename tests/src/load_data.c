@@ -6,7 +6,7 @@
 #include <math.h>
 #include <string.h>
 
-load_sparse_matrix(FILE *fp, cholmod_sparse *A, c_int m){
+void load_sparse_matrix(FILE *fp, cholmod_sparse *A, c_int m){
 
     c_float *Ax; c_int *Ai, *Ap;
     Ax = A->x; Ap = A->p; Ai = A->i;

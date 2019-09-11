@@ -7,9 +7,8 @@ build: false
 branches:
   only:
     - master
-    - appveyor_conda
-    - windows-deploy
     - development
+    - fix-tests
 
 platform:
   - x64
