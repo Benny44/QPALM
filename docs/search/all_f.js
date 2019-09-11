@@ -1,14 +1,22 @@
 var searchData=
 [
-  ['tau',['tau',['../structQPALMWorkspace.html#a55fd77cd87fa70b7c137378e430e875b',1,'QPALMWorkspace']]],
-  ['tau_5finit',['tau_init',['../structQPALMSettings.html#aea063df79b1f7d5fa38d0bf77c9e5d7a',1,'QPALMSettings::tau_init()'],['../constants_8h.html#acd9147c45c472511828564ceb667938e',1,'TAU_INIT():&#160;constants.h']]],
-  ['temp_5f2m',['temp_2m',['../structQPALMWorkspace.html#ae351edb296d6959659a578a265c3af8a',1,'QPALMWorkspace']]],
-  ['temp_5fm',['temp_m',['../structQPALMWorkspace.html#a43fba7da6d00e0f05d8ee75b5329f364',1,'QPALMWorkspace']]],
-  ['temp_5fn',['temp_n',['../structQPALMWorkspace.html#af54ff24e9b647dd2d8e8df2b89c11946',1,'QPALMWorkspace']]],
-  ['termination_2ec',['termination.c',['../termination_8c.html',1,'']]],
-  ['termination_2eh',['termination.h',['../termination_8h.html',1,'']]],
-  ['theta',['theta',['../structQPALMSettings.html#a5823b01f86bd67a2c5fac3f03749db2c',1,'QPALMSettings::theta()'],['../constants_8h.html#aaa169fd8b9a843d1bd57fe1eae032115',1,'THETA():&#160;constants.h']]],
-  ['tol',['TOL',['../nonconvex_8c.html#a156b862ebf6d213f5da19b9e3ccb779e',1,'nonconvex.c']]],
-  ['true',['TRUE',['../constants_8h.html#aa8cecfc5c5c054d2875c03e77b7be15d',1,'constants.h']]],
-  ['types_2eh',['types.h',['../types_8h.html',1,'']]]
+  ['s',['s',['../structQPALMWorkspace.html#a6428bf5b44e920828469514559b93de8',1,'QPALMWorkspace']]],
+  ['scale_5fdata',['scale_data',['../scaling_8c.html#a3735b6c9c3aeeddfb3bb0982ae5f70ba',1,'scale_data(QPALMWorkspace *work):&#160;scaling.c'],['../scaling_8h.html#a3735b6c9c3aeeddfb3bb0982ae5f70ba',1,'scale_data(QPALMWorkspace *work):&#160;scaling.c']]],
+  ['scaling',['scaling',['../structQPALMSettings.html#abe76ae92171f3a1e5e4dcc934d797ac7',1,'QPALMSettings::scaling()'],['../structQPALMWorkspace.html#a20daf0c6d38c77121e113af63ed726b6',1,'QPALMWorkspace::scaling()'],['../constants_8h.html#a10ff10afd2a3179ae42e67a12fd8d7fd',1,'SCALING():&#160;constants.h']]],
+  ['scaling_2ec',['scaling.c',['../scaling_8c.html',1,'']]],
+  ['scaling_2eh',['scaling.h',['../scaling_8h.html',1,'']]],
+  ['select_5fsubsequence',['select_subsequence',['../linesearch_8c.html#a33a2554aa831be51296f2dafedd076d4',1,'select_subsequence(const array_element *a, array_element *b, const c_int *L, size_t n):&#160;linesearch.c'],['../linesearch_8h.html#a33a2554aa831be51296f2dafedd076d4',1,'select_subsequence(const array_element *a, array_element *b, const c_int *L, size_t n):&#160;linesearch.c']]],
+  ['set_5factive_5fconstraints',['set_active_constraints',['../newton_8c.html#ae27a99e2b3249e8455b72c2e2a977dd8',1,'set_active_constraints(QPALMWorkspace *work):&#160;newton.c'],['../newton_8h.html#ae27a99e2b3249e8455b72c2e2a977dd8',1,'set_active_constraints(QPALMWorkspace *work):&#160;newton.c']]],
+  ['set_5fentering_5fleaving_5fconstraints',['set_entering_leaving_constraints',['../newton_8c.html#a43d518127e8561034e35ba18d0e15b31',1,'set_entering_leaving_constraints(QPALMWorkspace *work):&#160;newton.c'],['../newton_8h.html#a43d518127e8561034e35ba18d0e15b31',1,'set_entering_leaving_constraints(QPALMWorkspace *work):&#160;newton.c']]],
+  ['set_5fsettings_5fnonconvex',['set_settings_nonconvex',['../nonconvex_8c.html#a57137c07fad57ec45a2e4ff37ec69d72',1,'set_settings_nonconvex(QPALMWorkspace *work):&#160;nonconvex.c'],['../nonconvex_8h.html#a57137c07fad57ec45a2e4ff37ec69d72',1,'set_settings_nonconvex(QPALMWorkspace *work):&#160;nonconvex.c']]],
+  ['settings',['settings',['../structQPALMWorkspace.html#a9e29077d16b88e77e8aae6f06f69ec0c',1,'QPALMWorkspace']]],
+  ['sigma',['sigma',['../structQPALMWorkspace.html#a585c53dd55cbc9aaecd42d224bde483f',1,'QPALMWorkspace']]],
+  ['sigma_5fmax',['sigma_max',['../structQPALMSettings.html#a03cf631c375a9ddaa17545ffead9883d',1,'QPALMSettings::sigma_max()'],['../constants_8h.html#ac15c21e22beda7f850763449c2c4c81b',1,'SIGMA_MAX():&#160;constants.h']]],
+  ['solution',['solution',['../structQPALMWorkspace.html#a44a489b6424974f302d679893efae327',1,'QPALMWorkspace']]],
+  ['sqrt_5fdelta',['sqrt_delta',['../structQPALMWorkspace.html#adc663b895fd02bd845677d6e928f029e',1,'QPALMWorkspace']]],
+  ['sqrt_5fsigma',['sqrt_sigma',['../structQPALMWorkspace.html#a5628bcd9c8b6ab0ca4dd5015a0c39fb8',1,'QPALMWorkspace']]],
+  ['sqrt_5fsigma_5fmax',['sqrt_sigma_max',['../structQPALMWorkspace.html#a82507933e684075bab8883a851960cf1',1,'QPALMWorkspace']]],
+  ['status',['status',['../structQPALMInfo.html#a50d560141016d6b0a0198feb84c4a835',1,'QPALMInfo']]],
+  ['status_5fval',['status_val',['../structQPALMInfo.html#a8e754dd1c46f6b40ea54fb7422764522',1,'QPALMInfo']]],
+  ['store_5fsolution',['store_solution',['../termination_8c.html#a59f3d4d2ea459665833cc3d5e9265d5e',1,'store_solution(QPALMWorkspace *work):&#160;termination.c'],['../termination_8h.html#a59f3d4d2ea459665833cc3d5e9265d5e',1,'store_solution(QPALMWorkspace *work):&#160;termination.c']]]
 ];

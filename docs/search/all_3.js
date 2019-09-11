@@ -15,5 +15,7 @@ var searchData=
   ['dphi_5fprev',['dphi_prev',['../structQPALMWorkspace.html#a93d1329aebe7dba2d38645412de43f92',1,'QPALMWorkspace']]],
   ['dtype',['DTYPE',['../global__opts_8h.html#a3834ad0136a8b95a6589500e4009fe9a',1,'global_opts.h']]],
   ['dua2_5fres_5fnorm',['dua2_res_norm',['../structQPALMInfo.html#a646b39a446df4d60f9d7bd8a8d3adf4b',1,'QPALMInfo']]],
-  ['dua_5fres_5fnorm',['dua_res_norm',['../structQPALMInfo.html#ad9e5596b60be7e567f1d936a80046f10',1,'QPALMInfo']]]
+  ['dua_5fres_5fnorm',['dua_res_norm',['../structQPALMInfo.html#ad9e5596b60be7e567f1d936a80046f10',1,'QPALMInfo']]],
+  ['dual_5fobjective',['dual_objective',['../structQPALMInfo.html#a221869d5ca6d378f35118f3ec413eeba',1,'QPALMInfo']]],
+  ['dual_5fobjective_5flimit',['dual_objective_limit',['../structQPALMSettings.html#a36dba5aeee481b93856c285280a07c0c',1,'QPALMSettings::dual_objective_limit()'],['../constants_8h.html#afd51848290692034137a7585462bbf17',1,'DUAL_OBJECTIVE_LIMIT():&#160;constants.h']]]
 ];

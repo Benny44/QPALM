@@ -91,14 +91,11 @@ Functions</h2></td></tr>
 <tr class="memitem:a14fe651105f1f38b2a3a49614f4b8ae2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#a14fe651105f1f38b2a3a49614f4b8ae2">update_status</a> (<a class="el" href="structQPALMInfo.html">QPALMInfo</a> *info, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> status_val)</td></tr>
 <tr class="memdesc:a14fe651105f1f38b2a3a49614f4b8ae2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update solver status (value and string).  <a href="#a14fe651105f1f38b2a3a49614f4b8ae2">More...</a><br /></td></tr>
 <tr class="separator:a14fe651105f1f38b2a3a49614f4b8ae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84ebca05a9d2dfd2fca71d0e3ef95927"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#a84ebca05a9d2dfd2fca71d0e3ef95927">initialize_sigma</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:a84ebca05a9d2dfd2fca71d0e3ef95927"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize penalty factors from initial x.  <a href="#a84ebca05a9d2dfd2fca71d0e3ef95927">More...</a><br /></td></tr>
-<tr class="separator:a84ebca05a9d2dfd2fca71d0e3ef95927"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Utility functions. </p>
 <dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
-<p>This file contains some utility functions, to copy the settings, initialize the penalty parameters, initialize the iterates, update the solver status and time the algorithm. </p>
+<p>This file contains some utility functions, to copy the settings, to update the solver status, to print information and to time the algorithm. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a7645b56a91479fac2285909a25875b91"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7645b56a91479fac2285909a25875b91">&#9670;&nbsp;</a></span>c_strcpy()</h2>
@@ -162,33 +159,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>New settings structure </dd></dl>
-
-</div>
-</div>
-<a id="a84ebca05a9d2dfd2fca71d0e3ef95927"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84ebca05a9d2dfd2fca71d0e3ef95927">&#9670;&nbsp;</a></span>initialize_sigma()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void initialize_sigma </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Initialize penalty factors from initial x. </p>
-<p class="">The formula used here can be found in <a class="el" href="citelist.html#CITEREF_birgin2014practical">[2]</a>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">work</td><td>Workspace </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>

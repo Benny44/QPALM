@@ -98,6 +98,12 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a646b39a446df4d60f9d7bd8a8d3adf4b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structQPALMInfo.html#a646b39a446df4d60f9d7bd8a8d3adf4b">dua2_res_norm</a></td></tr>
 <tr class="memdesc:a646b39a446df4d60f9d7bd8a8d3adf4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">norm of intermediate dual residual (minus proximal term)  <a href="#a646b39a446df4d60f9d7bd8a8d3adf4b">More...</a><br /></td></tr>
 <tr class="separator:a646b39a446df4d60f9d7bd8a8d3adf4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87ac278efb3704b134e47802cac196a1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structQPALMInfo.html#a87ac278efb3704b134e47802cac196a1">objective</a></td></tr>
+<tr class="memdesc:a87ac278efb3704b134e47802cac196a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">objective function value  <a href="#a87ac278efb3704b134e47802cac196a1">More...</a><br /></td></tr>
+<tr class="separator:a87ac278efb3704b134e47802cac196a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a221869d5ca6d378f35118f3ec413eeba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structQPALMInfo.html#a221869d5ca6d378f35118f3ec413eeba">dual_objective</a></td></tr>
+<tr class="memdesc:a221869d5ca6d378f35118f3ec413eeba"><td class="mdescLeft">&#160;</td><td class="mdescRight">dual objective function value (= NaN if enable_dual_termination is false)  <a href="#a221869d5ca6d378f35118f3ec413eeba">More...</a><br /></td></tr>
+<tr class="separator:a221869d5ca6d378f35118f3ec413eeba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Solver return information. </p>
@@ -134,6 +140,22 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="a221869d5ca6d378f35118f3ec413eeba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a221869d5ca6d378f35118f3ec413eeba">&#9670;&nbsp;</a></span>dual_objective</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> QPALMInfo::dual_objective</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>dual objective function value (= NaN if enable_dual_termination is false) </p>
+
+</div>
+</div>
 <a id="a37deb2f191ee74eb42877aff5d31e44c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a37deb2f191ee74eb42877aff5d31e44c">&#9670;&nbsp;</a></span>iter</h2>
 
@@ -163,6 +185,22 @@ Data Fields</h2></td></tr>
 </div><div class="memdoc">
 
 <p>number of outer iterations (i.e. dual updates) </p>
+
+</div>
+</div>
+<a id="a87ac278efb3704b134e47802cac196a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87ac278efb3704b134e47802cac196a1">&#9670;&nbsp;</a></span>objective</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> QPALMInfo::objective</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>objective function value </p>
 
 </div>
 </div>

@@ -13,5 +13,7 @@ var searchData=
   ['dphi',['dphi',['../structQPALMWorkspace.html#abc9bf36aa5174f0e7839630d9bef826b',1,'QPALMWorkspace']]],
   ['dphi_5fprev',['dphi_prev',['../structQPALMWorkspace.html#a93d1329aebe7dba2d38645412de43f92',1,'QPALMWorkspace']]],
   ['dua2_5fres_5fnorm',['dua2_res_norm',['../structQPALMInfo.html#a646b39a446df4d60f9d7bd8a8d3adf4b',1,'QPALMInfo']]],
-  ['dua_5fres_5fnorm',['dua_res_norm',['../structQPALMInfo.html#ad9e5596b60be7e567f1d936a80046f10',1,'QPALMInfo']]]
+  ['dua_5fres_5fnorm',['dua_res_norm',['../structQPALMInfo.html#ad9e5596b60be7e567f1d936a80046f10',1,'QPALMInfo']]],
+  ['dual_5fobjective',['dual_objective',['../structQPALMInfo.html#a221869d5ca6d378f35118f3ec413eeba',1,'QPALMInfo']]],
+  ['dual_5fobjective_5flimit',['dual_objective_limit',['../structQPALMSettings.html#a36dba5aeee481b93856c285280a07c0c',1,'QPALMSettings']]]
 ];

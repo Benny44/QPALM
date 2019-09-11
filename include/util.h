@@ -53,10 +53,22 @@ void update_status(QPALMInfo *info,
 
 #ifdef PRINTING
 
+/** 
+ * Print the header with QPALM version number and fields.
+ */
 void print_header(void);
 
+/**
+ * Print information about the current iteration. (Residuals, stepsize and objective value)
+ * @param iter The current iteration number
+ * @param work Workspace
+ */
 void print_iteration(c_int iter, QPALMWorkspace *work);
 
+/**
+ * Print final message as a box with info. (Final residuals, objective function, runtime)
+ * @param work Workspace
+ */
 void print_final_message(QPALMWorkspace *work);
 
 #endif //PRINTING

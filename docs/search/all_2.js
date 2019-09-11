@@ -26,6 +26,9 @@ var searchData=
   ['cholmod_5fset_5fsettings',['cholmod_set_settings',['../cholmod__interface_8c.html#a554be628f3c65ca260876d465dfacf0e',1,'cholmod_set_settings(cholmod_common *c):&#160;cholmod_interface.c'],['../cholmod__interface_8h.html#a554be628f3c65ca260876d465dfacf0e',1,'cholmod_set_settings(cholmod_common *c):&#160;cholmod_interface.c']]],
   ['cinv',['cinv',['../structQPALMScaling.html#aaea7f6c4b7a75e588c98f37f3f20a0d7',1,'QPALMScaling']]],
   ['compare',['compare',['../linesearch_8c.html#ac70138609ef6aa6fabca57aca8681e83',1,'compare(const void *a, const void *b):&#160;linesearch.c'],['../linesearch_8h.html#ac70138609ef6aa6fabca57aca8681e83',1,'compare(const void *a, const void *b):&#160;linesearch.c']]],
+  ['compute_5fdual_5fobjective',['compute_dual_objective',['../iteration_8c.html#a34b3622f347ef66f861e51832266968a',1,'compute_dual_objective(QPALMWorkspace *work):&#160;iteration.c'],['../iteration_8h.html#a34b3622f347ef66f861e51832266968a',1,'compute_dual_objective(QPALMWorkspace *work):&#160;iteration.c']]],
+  ['compute_5fobjective',['compute_objective',['../iteration_8c.html#ad071efc96075a8506c9c45448b9d48e6',1,'compute_objective(QPALMWorkspace *work):&#160;iteration.c'],['../iteration_8h.html#ad071efc96075a8506c9c45448b9d48e6',1,'compute_objective(QPALMWorkspace *work):&#160;iteration.c']]],
+  ['compute_5fresiduals',['compute_residuals',['../iteration_8c.html#ae6161a9d4e4a8d45c05e24a9824ed5fa',1,'compute_residuals(QPALMWorkspace *work):&#160;iteration.c'],['../iteration_8h.html#ae6161a9d4e4a8d45c05e24a9824ed5fa',1,'compute_residuals(QPALMWorkspace *work):&#160;iteration.c']]],
   ['constants_2eh',['constants.h',['../constants_8h.html',1,'']]],
   ['copy_5fsettings',['copy_settings',['../util_8c.html#a59c8e0cefe0eb9a61da6d50ade8a15f3',1,'copy_settings(const QPALMSettings *settings):&#160;util.c'],['../util_8h.html#a59c8e0cefe0eb9a61da6d50ade8a15f3',1,'copy_settings(const QPALMSettings *settings):&#160;util.c']]]
 ];

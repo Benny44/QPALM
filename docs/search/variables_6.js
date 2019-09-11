@@ -6,6 +6,7 @@ var searchData=
   ['index_5fp',['index_P',['../structQPALMWorkspace.html#a45ccfcbf6d91b05ecac8df1b31dee2b9',1,'QPALMWorkspace']]],
   ['info',['info',['../structQPALMWorkspace.html#a37b5c22c01352658c55dadcde7481222',1,'QPALMWorkspace']]],
   ['initialized',['initialized',['../structQPALMWorkspace.html#a2b11e2d88538ac40ee4458f019dd9b5f',1,'QPALMWorkspace']]],
+  ['inner_5fmax_5fiter',['inner_max_iter',['../structQPALMSettings.html#a85d5b4da186c51e6e92b22cf746c4a75',1,'QPALMSettings']]],
   ['iter',['iter',['../structQPALMInfo.html#a37deb2f191ee74eb42877aff5d31e44c',1,'QPALMInfo']]],
   ['iter_5fout',['iter_out',['../structQPALMInfo.html#a10f2f0fd44923bdcc22951f9de27d391',1,'QPALMInfo']]]
 ];

@@ -112,6 +112,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ad2b40552827ed1501207124cb067331b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#ad2b40552827ed1501207124cb067331b">ldldowndate_leaving_constraints</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
 <tr class="memdesc:ad2b40552827ed1501207124cb067331b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downdate the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of leaving constraints.  <a href="#ad2b40552827ed1501207124cb067331b">More...</a><br /></td></tr>
 <tr class="separator:ad2b40552827ed1501207124cb067331b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff4997274201c446ae764fee64999953"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#aff4997274201c446ae764fee64999953">ldlupdate_sigma_changed</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:aff4997274201c446ae764fee64999953"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of indexes where <img class="formulaInl" alt="$sigma$" src="form_93.png"/> has been updated.  <a href="#aff4997274201c446ae764fee64999953">More...</a><br /></td></tr>
+<tr class="separator:aff4997274201c446ae764fee64999953"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a600375b897e61294eabebe282fa236e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#a600375b897e61294eabebe282fa236e3">ldlsolveLD_neg_dphi</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
 <tr class="memdesc:a600375b897e61294eabebe282fa236e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system <img class="formulaInl" alt="$LDL^T*d = -\nabla \varphi$" src="form_13.png"/>.  <a href="#a600375b897e61294eabebe282fa236e3">More...</a><br /></td></tr>
 <tr class="separator:a600375b897e61294eabebe282fa236e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -315,6 +318,33 @@ Functions</h2></td></tr>
 
 <p>Update the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of entering constraints. </p>
 <p class="">The index set of entering constraints is assumed to be set in work-&gt;chol-&gt;enter.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aff4997274201c446ae764fee64999953"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff4997274201c446ae764fee64999953">&#9670;&nbsp;</a></span>ldlupdate_sigma_changed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ldlupdate_sigma_changed </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
+          <td class="paramname"><em>work</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Update the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of indexes where <img class="formulaInl" alt="$sigma$" src="form_93.png"/> has been updated. </p>
+<p class="">The index set of changed <img class="formulaInl" alt="$sigma$" src="form_93.png"/> is assumed to be set in work-&gt;chol-&gt;enter.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>

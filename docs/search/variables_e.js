@@ -1,9 +1,14 @@
 var searchData=
 [
-  ['tau',['tau',['../structQPALMWorkspace.html#a55fd77cd87fa70b7c137378e430e875b',1,'QPALMWorkspace']]],
-  ['tau_5finit',['tau_init',['../structQPALMSettings.html#aea063df79b1f7d5fa38d0bf77c9e5d7a',1,'QPALMSettings']]],
-  ['temp_5f2m',['temp_2m',['../structQPALMWorkspace.html#ae351edb296d6959659a578a265c3af8a',1,'QPALMWorkspace']]],
-  ['temp_5fm',['temp_m',['../structQPALMWorkspace.html#a43fba7da6d00e0f05d8ee75b5329f364',1,'QPALMWorkspace']]],
-  ['temp_5fn',['temp_n',['../structQPALMWorkspace.html#af54ff24e9b647dd2d8e8df2b89c11946',1,'QPALMWorkspace']]],
-  ['theta',['theta',['../structQPALMSettings.html#a5823b01f86bd67a2c5fac3f03749db2c',1,'QPALMSettings']]]
+  ['s',['s',['../structQPALMWorkspace.html#a6428bf5b44e920828469514559b93de8',1,'QPALMWorkspace']]],
+  ['scaling',['scaling',['../structQPALMSettings.html#abe76ae92171f3a1e5e4dcc934d797ac7',1,'QPALMSettings::scaling()'],['../structQPALMWorkspace.html#a20daf0c6d38c77121e113af63ed726b6',1,'QPALMWorkspace::scaling()']]],
+  ['settings',['settings',['../structQPALMWorkspace.html#a9e29077d16b88e77e8aae6f06f69ec0c',1,'QPALMWorkspace']]],
+  ['sigma',['sigma',['../structQPALMWorkspace.html#a585c53dd55cbc9aaecd42d224bde483f',1,'QPALMWorkspace']]],
+  ['sigma_5fmax',['sigma_max',['../structQPALMSettings.html#a03cf631c375a9ddaa17545ffead9883d',1,'QPALMSettings']]],
+  ['solution',['solution',['../structQPALMWorkspace.html#a44a489b6424974f302d679893efae327',1,'QPALMWorkspace']]],
+  ['sqrt_5fdelta',['sqrt_delta',['../structQPALMWorkspace.html#adc663b895fd02bd845677d6e928f029e',1,'QPALMWorkspace']]],
+  ['sqrt_5fsigma',['sqrt_sigma',['../structQPALMWorkspace.html#a5628bcd9c8b6ab0ca4dd5015a0c39fb8',1,'QPALMWorkspace']]],
+  ['sqrt_5fsigma_5fmax',['sqrt_sigma_max',['../structQPALMWorkspace.html#a82507933e684075bab8883a851960cf1',1,'QPALMWorkspace']]],
+  ['status',['status',['../structQPALMInfo.html#a50d560141016d6b0a0198feb84c4a835',1,'QPALMInfo']]],
+  ['status_5fval',['status_val',['../structQPALMInfo.html#a8e754dd1c46f6b40ea54fb7422764522',1,'QPALMInfo']]]
 ];

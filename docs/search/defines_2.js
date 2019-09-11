@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['enable_5fdual_5ftermination',['ENABLE_DUAL_TERMINATION',['../constants_8h.html#a7be4c76f27b9ffb860fdfd4bca41010e',1,'constants.h']]],
   ['eps_5fabs',['EPS_ABS',['../constants_8h.html#a31527ac41638eec6e9b6dc36946b539a',1,'constants.h']]],
   ['eps_5fabs_5fin',['EPS_ABS_IN',['../constants_8h.html#ae97e70b085502d1d8030c1f51da6151b',1,'constants.h']]],
   ['eps_5fdual_5finf',['EPS_DUAL_INF',['../constants_8h.html#affd660a2cfd932d25c7aa55031e38c4f',1,'constants.h']]],
