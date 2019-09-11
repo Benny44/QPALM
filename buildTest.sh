@@ -29,23 +29,23 @@ builddir=$curdir/build/debug
 
 cd $builddir
 
-cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DPRINTING=ON
+cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON 
 make
-ctest
+ctest -VV
 
 #Run the tests
 #cd $builddir
 #../test/run_all_tests
 
-cd $curdir
-valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet build/debug/bin/run_all_tests
+cd $builddir
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet bin/run_all_tests
 #build/debug/bin/run_all_tests
 
 cd $builddir/CMakeFiles/qpalm.dir/src
 lcov --directory . --capture --o coverage.info -q
 lcov --list coverage.info
 genhtml coverage.info -q
-#google-chrome index.html
+google-chrome index.html
 
 #matlab -nojvm -r 'try qpalm_mex_vs_matlab_test; catch; end; quit'
 

@@ -230,8 +230,6 @@ c_int is_dual_infeasible(QPALMWorkspace *work) {
                 && (vec_prod(work->data->q, work->delta_x, n) <= -eps_dinf_norm_Ddx);
         }
     }
-
-    
     
 }
 

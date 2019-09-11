@@ -14,10 +14,13 @@ add_executable(run_all_tests
             src/test_cholmod_interface.c
             src/test_nonconvex_qp.c
             src/test_degen_hess.c
-            src/test_error_handling.c)
+            src/test_error_handling.c
+            src/test_ls_qp.c
+            src/test_big_qp.c
+            src/load_data.c)
 
 target_include_directories(run_all_tests 
         PRIVATE 
                 include)
 
-target_link_libraries(run_all_tests qpalm)
+target_link_libraries(run_all_tests qpalm m)

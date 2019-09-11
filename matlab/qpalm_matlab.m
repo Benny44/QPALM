@@ -299,31 +299,33 @@ for k = 1:maxiter
        k_prev = k;
        gamma_changed = proximal && gamma ~= gammaMax;
            
-       if scalar_sig
-           adj_sig  = norm(rp,inf)>theta*norm(rpK,inf) &active_cnstrs;
-       else
-           adj_sig  = abs(rp)>theta*abs(rpK) &active_cnstrs;
+       if K > 1 && nrm_rp > eps_primal
+           if scalar_sig
+               adj_sig  = norm(rp,inf)>theta*norm(rpK,inf) &active_cnstrs;
+           else
+               adj_sig  = abs(rp)>theta*abs(rpK) &active_cnstrs;
+           end
+    %            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
+            prev_sig = sig;
+            sig(adj_sig) = min(sigma_max, max(1, Delta*abs(rp(adj_sig))/(nrm_rp_unscaled+1e-6)).*sig(adj_sig));
+            sig_changed = sig ~= prev_sig;
+            nb_sig_changed = sum(sig_changed);
+
+            if gamma_changed 
+                reset_newton = true; 
+            elseif nb_sig_changed == 0
+                %do nothing
+            elseif nb_sig_changed <= 40 
+                LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
+                    sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
+                    *A(sig_changed,:))','+');
+            else
+                reset_newton = true; 
+            end            
+
+           Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
+           Asig      = (sparse(1:m,1:m,sig,m,m)*A);
        end
-%            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
-        prev_sig = sig;
-        sig(adj_sig) = min(sigma_max, max(1, Delta*abs(rp(adj_sig))/(nrm_rp_unscaled+1e-6)).*sig(adj_sig));
-        sig_changed = sig ~= prev_sig;
-        nb_sig_changed = sum(sig_changed);
-
-        if gamma_changed 
-            reset_newton = true; 
-        elseif nb_sig_changed == 0
-            %do nothing
-        elseif nb_sig_changed <= 40 
-            LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
-                sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
-                *A(sig_changed,:))','+');
-        else
-            reset_newton = true; 
-        end            
-
-       Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
-       Asig      = (sparse(1:m,1:m,sig,m,m)*A);
        
        rpK = rp;
        if K>1
@@ -611,7 +613,7 @@ if eps_dinf_norm_Ddx == 0
     is_dinf = false;return
 end
 Adx = Adx./E_scale;
-if  any(bmax < inf & Adx >= eps_dinf_norm_Ddx) | (bmin > -inf & Adx <= -eps_dinf_norm_Ddx)
+if  any((bmax < inf & Adx >= eps_dinf_norm_Ddx) | (bmin > -inf & Adx <= -eps_dinf_norm_Ddx))
     is_dinf = false;return
 end
 
