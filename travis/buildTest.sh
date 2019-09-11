@@ -34,7 +34,7 @@ make
 #Run the tests
 #cd $builddir
 #./bin/run_all_tests
-ctest
+ctest -VV
 
 
 
