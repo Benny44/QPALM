@@ -5,10 +5,6 @@
 #include "constants.h"
 #include "util.h"
 #include "cholmod.h"
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
-#include "load_data.h"
 
 #define N 2
 #define M 2
@@ -20,6 +16,8 @@ QPALMSettings *settings;
 QPALMData *data;
 cholmod_common *c;
 cholmod_common common;
+
+/* Problem to exercise the linesearch when all breakpoints are traversed. */
 
 void ls_qp_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
@@ -37,9 +35,35 @@ void ls_qp_suite_setup(void) {
     data->A = CHOLMOD(allocate_sparse)(data->m, data->n, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
     data->Q = CHOLMOD(allocate_sparse)(data->n, data->n, QNZMAX , TRUE, TRUE, -1, CHOLMOD_REAL, c);
     CHOLMOD(finish)(c);
-    
-    load_data("../../tests/data/ls_qp", data);
 
+    c_float *Ax = data->A->x;
+    c_int *Ai = data->A->i;
+    c_int *Ap = data->A->p;
+    Ax[0] = -1.0000000000000000;
+    Ai[0] = 1;
+    Ax[1] = 0.0001000000000000;
+    Ai[1] = 0;
+    Ap[0] = 0;
+    Ap[1] = 1;
+    Ap[2] = 2;
+
+    c_float *Qx = data->Q->x;
+    c_int *Qi = data->Q->i;
+    c_int *Qp = data->Q->p;
+    Qx[0] = 1.0000000000000000;
+    Qi[0] = 0;
+    Qx[1] = 0.0001000000000000;
+    Qi[1] = 1;
+    Qp[0] = 0;
+    Qp[1] = 1;
+    Qp[2] = 2;
+
+    data->q = c_calloc(N,sizeof(c_float));
+    data->bmin = c_calloc(M,sizeof(c_float));
+    data->bmax = c_calloc(M,sizeof(c_float));
+    data->bmin[0] = -2; data->bmin[1] = -2;
+    data->bmax[0] = 2; data->bmax[1] = 2;
+    data->q[0] = 2.5150105e+00; data->q[1] = 1.6259589e+01;
 }
 
 void ls_qp_suite_teardown(void) {
@@ -68,11 +92,10 @@ MU_TEST(test_ls_qp) {
 
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
 
-    FILE* fp = fopen("../../tests/data/ls_qp_solution", "r");
-    if(fp == NULL) {
-        fprintf(stderr, "Could not open file %s\n", "ls_qp_solution");
-    }
-    c_float *solution = load_dense(fp, N);
+    c_float *solution = c_calloc(N,sizeof(c_float));
+    solution[0] = -2.0000000e+00;
+    solution[1] = -2.0000000e+04;
+    
 
     for(c_int i = 0; i < N; i++) {
         mu_assert_double_eq(work->solution->x[i], solution[i], 1e-5);
@@ -80,7 +103,6 @@ MU_TEST(test_ls_qp) {
     mu_assert_long_eq(work->info->iter, 16);
 
     c_free(solution);
-    fclose(fp);
 }
 
 MU_TEST_SUITE(suite_ls_qp) {

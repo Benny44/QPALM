@@ -156,6 +156,7 @@ int main(int argc, char*argv[]){
         fprintf(stderr, "Could not open file %s\n", argv[fileno]);
     }
     cholmod_sparse* A = mtx_load_A(fp, &n, &m);
+    fclose(fp);
 
     // Load Q
     fileno++;
@@ -164,6 +165,7 @@ int main(int argc, char*argv[]){
         fprintf(stderr, "Could not open file %s\n", argv[fileno]);
     }
     cholmod_sparse* Q = mtx_load_Q(fp, n);
+    fclose(fp);
 
     // Load q
     fileno++;
@@ -172,6 +174,7 @@ int main(int argc, char*argv[]){
         fprintf(stderr, "Could not open file %s\n", argv[fileno]);
     }
     c_float* q = mtx_load_dense(fp, n);
+    fclose(fp);
 
     // Load lba
     fileno++;
@@ -180,6 +183,7 @@ int main(int argc, char*argv[]){
         fprintf(stderr, "Could not open file %s\n", argv[fileno]);
     }
     c_float* bmin = mtx_load_dense(fp, m);
+    fclose(fp);
 
     // Load uba
     fileno++;
@@ -188,6 +192,7 @@ int main(int argc, char*argv[]){
         fprintf(stderr, "Could not open file %s\n", argv[fileno]);
     }
     c_float* bmax = mtx_load_dense(fp, m);
+    fclose(fp);
 
     // Problem settings
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));

@@ -15,9 +15,7 @@ add_executable(run_all_tests
             src/test_nonconvex_qp.c
             src/test_degen_hess.c
             src/test_error_handling.c
-            src/test_ls_qp.c
-            src/test_big_qp.c
-            src/load_data.c)
+            src/test_ls_qp.c)
 
 target_include_directories(run_all_tests 
         PRIVATE 

@@ -6,7 +6,10 @@
 #include <math.h>
 #include <string.h>
 
-void load_sparse_matrix(FILE *fp, cholmod_sparse *A, c_int m){
+void load_sparse_matrix(FILE *fp, cholmod_sparse *A){
+
+    c_int m = A->nrow;
+    c_int n = A->ncol;
 
     c_float *Ax; c_int *Ai, *Ap;
     Ax = A->x; Ap = A->p; Ai = A->i;
@@ -18,9 +21,7 @@ void load_sparse_matrix(FILE *fp, cholmod_sparse *A, c_int m){
     while (fscanf(fp, "%le", &temp) != EOF) {
         
         if (temp != 0) {
-            c_print("k: %d, Read value: %5.4f\n", k, temp);
             row = mod(k,m); col = (k/m)+1;
-            c_print("row: %ld\n", row);
             Ai[elem] = row;
             Ax[elem] = temp;
 
@@ -35,7 +36,19 @@ void load_sparse_matrix(FILE *fp, cholmod_sparse *A, c_int m){
         k++;
         
     }
-    c_print("in A: nnz = %ld, size = %ld\n", elem, k);
+
+    for (; col < n; col++) {
+        Ap[col+1] = Ap[col];
+    }
+
+    c_print("in A/Q: nnz = %ld, size = %ld\n", elem, k);
+    for (k = 0; k < elem; k++) {
+        c_print("Ax[%ld] = %.16f;\n", k, Ax[k]);
+        c_print("Ai[%ld] = %ld;\n", k, Ai[k]);
+    }
+    for (k = 0; k < n+1; k++) {
+        c_print("Ap[%ld] = %ld;\n", k, Ap[k]);
+    }
 }
 
 c_float *load_dense(FILE *fp, size_t n) {
@@ -83,14 +96,14 @@ void load_data(const char* name, QPALMData* data) {
     if(fp == NULL) {
         fprintf(stderr, "Could not open file %s\n", name_A);
     }
-    load_sparse_matrix(fp, data->A, data->m);
+    load_sparse_matrix(fp, data->A);
     fclose(fp);
 
     fp = fopen(name_Q, "r");
     if(fp == NULL) {
         fprintf(stderr, "Could not open file %s\n", name_Q);
     }
-    load_sparse_matrix(fp, data->Q, data->n);
+    load_sparse_matrix(fp, data->Q);
     fclose(fp);
 
     fp = fopen(name_q, "r");

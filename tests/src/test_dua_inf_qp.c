@@ -56,7 +56,7 @@ void dua_inf_qp_suite_setup(void) {
     Qx = Q->x;
     Qp = Q->p;
     Qi = Q->i;
-    Qx[0] = 0.0; Qx[1] = 0.0; 
+    Qx[0] = 1e-10; Qx[1] = 1e-10; 
     Qp[0] = 0; Qp[1] = 1; Qp[2] = 2;
     Qi[0] = 0; Qi[1] = 1; 
 
@@ -108,9 +108,9 @@ MU_TEST(test_dua_inf_qp_unscaled) {
 MU_TEST(test_dua_inf_qp_noprox) {
     //This will crash actually, hence the large gamma value
     // settings->proximal = FALSE;
-    settings->proximal = TRUE;
-    settings->gamma_init = 1e13;
-    settings->gamma_max = settings->gamma_init;
+    settings->proximal = FALSE;
+    // settings->gamma_init = 1e13;
+    // settings->gamma_max = settings->gamma_init;
     settings->scaling = 2;
     // Setup workspace
     work = qpalm_setup(data, settings, c);
@@ -122,9 +122,9 @@ MU_TEST(test_dua_inf_qp_noprox) {
 MU_TEST(test_dua_inf_qp_noprox_unscaled) {
     //This will crash actually, hence the large gamma value
     // settings->proximal = FALSE;
-    settings->proximal = TRUE;
-    settings->gamma_init = 1e13;
-    settings->gamma_max = settings->gamma_init;
+    settings->proximal = FALSE;
+    // settings->gamma_init = 1e13;
+    // settings->gamma_max = settings->gamma_init;
     settings->scaling = 0;
     // Setup workspace
     work = qpalm_setup(data, settings, c);

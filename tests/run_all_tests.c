@@ -9,7 +9,6 @@
 #include "test_update.h"
 #include "test_validate.h"
 #include "test_error_handling.h"
-#include "test_big_qp.h"
 #include "test_ls_qp.h"
 
 
@@ -25,7 +24,6 @@ int main(){
     MU_RUN_SUITE(suite_update);
     MU_RUN_SUITE(suite_validation);
     MU_RUN_SUITE(suite_error_handling);
-    MU_RUN_SUITE(suite_big_qp);
     MU_RUN_SUITE(suite_ls_qp);
     MU_REPORT();
     

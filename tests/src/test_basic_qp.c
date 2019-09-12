@@ -4,16 +4,17 @@
 #include "global_opts.h"
 #include "constants.h"
 
-#define N 2
-#define M 3
+#define N 4
+#define M 5
 #define ANZMAX 4
-#define QNZMAX 2
+#define QNZMAX 4
 
 QPALMWorkspace *work; // Workspace
 QPALMSettings *settings;
 QPALMData *data;
 cholmod_common *c;
 cholmod_common common;
+static c_float solution[N] = {2.0000000e+00, -6.3801365e+01, -3.3821109e+03, -6.0483288e+00};
 
 void basic_qp_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
@@ -24,38 +25,66 @@ void basic_qp_suite_setup(void) {
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
     data->m = M;
-    data->q = c_calloc(N,sizeof(c_float));
-    data->q[0] = 1; data->q[1] = -2; 
-    data->bmin = c_calloc(M,sizeof(c_float));
-    data->bmin[0] = -0.1; data->bmin[1] = -0.3; data->bmin[2] = -0.2; 
-    data->bmax = c_calloc(M,sizeof(c_float));
-    data->bmax[0] = 0.1; data->bmax[1] = 0.3; data->bmax[2] = 0.2; 
 
-    // cholmod_common common;
     c = &common;
     CHOLMOD(start)(c);
-    cholmod_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
-    c_float *Ax;
-    c_int *Ai, *Ap;
-    Ax = A->x;
-    Ap = A->p;
-    Ai = A->i;
-    Ax[0] = 1.0; Ax[1] = 1.0; Ax[2] = 1.0; Ax[3] = 1.0;
-    Ap[0] = 0; Ap[1] = 2; Ap[2] = 4;
-    Ai[0] = 0; Ai[1] = 2; Ai[2] = 1; Ai[3] = 2;
-    cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
-    c_float *Qx;
-    c_int *Qi, *Qp;
-    Qx = Q->x;
-    Qp = Q->p;
-    Qi = Q->i;
-    Qx[0] = 1.0; Qx[1] = 1.5; 
-    Qp[0] = 0; Qp[1] = 1; Qp[2] = 2;
-    Qi[0] = 0; Qi[1] = 1; 
+    data->A = CHOLMOD(allocate_sparse)(data->m, data->n, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
+    data->Q = CHOLMOD(allocate_sparse)(data->n, data->n, QNZMAX , TRUE, TRUE, -1, CHOLMOD_REAL, c);
+    CHOLMOD(finish)(c);
+    
+    c_float *Ax = data->A->x;
+    c_int *Ai = data->A->i;
+    c_int *Ap = data->A->p;
+    Ax[0] = -1.0000000000000000;
+    Ai[0] = 3;
+    Ax[1] = 0.0254311360000000;
+    Ai[1] = 4;
+    Ax[2] = -0.0001000000000000;
+    Ai[2] = 0;
+    Ax[3] = 0.3306698500000000;
+    Ai[3] = 2;
+    Ap[0] = 0;
+    Ap[1] = 1;
+    Ap[2] = 2;
+    Ap[3] = 3;
+    Ap[4] = 4;
 
-    data->A = A;
-    data->Q = Q;
-    CHOLMOD(finish)(c); 
+    c_float *Qx = data->Q->x;
+    c_int *Qi = data->Q->i;
+    c_int *Qp = data->Q->p;
+    Qx[0] = 1.0000000000000000;
+    Qi[0] = 0;
+    Qx[1] = 0.0464158880000000;
+    Qi[1] = 1;
+    Qx[2] = 0.0021544347000000;
+    Qi[2] = 2;
+    Qx[3] = 0.0001000000000000;
+    Qi[3] = 3;
+    Qp[0] = 0;
+    Qp[1] = 1;
+    Qp[2] = 2;
+    Qp[3] = 3;
+    Qp[4] = 4;
+
+    data->q = c_calloc(N,sizeof(c_float));
+    data->bmin = c_calloc(M,sizeof(c_float));
+    data->bmax = c_calloc(M,sizeof(c_float));
+    data->bmin[0] = -2; 
+    data->bmin[1] = -2;
+    data->bmin[2] = -2;
+    data->bmin[3] = -2;
+    data->bmin[4] = -2;
+
+    data->bmax[0] = 2; 
+    data->bmax[1] = 2;
+    data->bmax[2] = 2;
+    data->bmax[3] = 2;
+    data->bmax[4] = 2;
+
+    data->q[0] = -2.0146781e+00; 
+    data->q[1] = 2.9613971e+00; 
+    data->q[2] = 7.2865370e+00; 
+    data->q[3] = 7.8925204e+00;
 }
 
 void basic_qp_suite_teardown(void) {
@@ -84,8 +113,12 @@ MU_TEST(test_basic_qp) {
     qpalm_solve(work);
 
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
-    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
-    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
+    c_float tol;
+    for(c_int i = 0; i < N; i++) {
+        tol = c_absval(1e-5*solution[i]);
+        mu_assert_double_eq(work->solution->x[i], solution[i], tol);
+    }
+    c_print("iter: %ld\n", work->info->iter);
 }
 
 MU_TEST(test_basic_qp_unscaled) {
@@ -96,8 +129,11 @@ MU_TEST(test_basic_qp_unscaled) {
     qpalm_solve(work);
 
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
-    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
-    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
+    c_float tol;
+    for(c_int i = 0; i < N; i++) {
+        tol = c_absval(1e-5*solution[i]);
+        mu_assert_double_eq(work->solution->x[i], solution[i], tol);
+    }
 }
 MU_TEST(test_basic_qp_noprox) {
     // Setup workspace
@@ -108,8 +144,11 @@ MU_TEST(test_basic_qp_noprox) {
     qpalm_solve(work);
 
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
-    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
-    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
+    c_float tol;
+    for(c_int i = 0; i < N; i++) {
+        tol = c_absval(1e-5*solution[i]);
+        mu_assert_double_eq(work->solution->x[i], solution[i], tol);
+    }
 }
 MU_TEST(test_basic_qp_noprox_unscaled) {
     // Setup workspace
@@ -120,8 +159,11 @@ MU_TEST(test_basic_qp_noprox_unscaled) {
     qpalm_solve(work);
 
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
-    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
-    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
+    c_float tol;
+    for(c_int i = 0; i < N; i++) {
+        tol = c_absval(1e-5*solution[i]);
+        mu_assert_double_eq(work->solution->x[i], solution[i], tol);
+    }
 }
 
 MU_TEST(test_basic_qp_warm_start) {
@@ -130,16 +172,19 @@ MU_TEST(test_basic_qp_warm_start) {
     settings->proximal = TRUE;
     settings->warm_start = TRUE;
     work = qpalm_setup(data, settings, c);
-    c_float x[N] = {-0.1, 0.3};
-    c_float y[M] = {-0.9, 1.55, 0.0};
+    c_float x[N] = {2.0, -60.0, -3380.0, -6.0};
+    c_float y[M] = {0.0, 0.0, -23.0, -0.014, 0.0};
     qpalm_warm_start(work, x, y);
 
     // Solve Problem
     qpalm_solve(work);
-    mu_assert_true(work->info->iter < 2);
+    mu_assert_true(work->info->iter < 12);
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
-    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
-    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
+    c_float tol;
+    for(c_int i = 0; i < N; i++) {
+        tol = c_absval(1e-5*solution[i]);
+        mu_assert_double_eq(work->solution->x[i], solution[i], tol);
+    }
 }
 
 MU_TEST(test_basic_qp_warm_start_unscaled) {
@@ -148,16 +193,19 @@ MU_TEST(test_basic_qp_warm_start_unscaled) {
     settings->proximal = TRUE;
     settings->warm_start = TRUE;
     work = qpalm_setup(data, settings, c);
-    c_float x[N] = {-0.1, 0.3};
-    c_float y[M] = {-0.9, 1.55, 0.0};
+    c_float x[N] = {2.0, -60.0, -3380.0, -6.0};
+    c_float y[M] = {0.0, 0.0, -23.0, -0.01, 0.0};
     qpalm_warm_start(work, x, y);
 
     // Solve Problem
     qpalm_solve(work);
-    mu_assert_true(work->info->iter < 2);
+    mu_assert_true(work->info->iter < 12);
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
-    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
-    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
+    c_float tol;
+    for(c_int i = 0; i < N; i++) {
+        tol = c_absval(1e-5*solution[i]);
+        mu_assert_double_eq(work->solution->x[i], solution[i], tol);
+    }
 }
 
 MU_TEST(test_basic_qp_warm_start_noprox) {
@@ -166,16 +214,19 @@ MU_TEST(test_basic_qp_warm_start_noprox) {
     settings->proximal = FALSE;
     settings->warm_start = TRUE;
     work = qpalm_setup(data, settings, c);
-    c_float x[N] = {-0.1, 0.3};
-    c_float y[M] = {-0.9, 1.55, 0.0};
+    c_float x[N] = {2.0, -60.0, -3380.0, -6.0};
+    c_float y[M] = {0.0, 0.0, -23.0, -0.01, 0.0};
     qpalm_warm_start(work, x, y);
 
     // Solve Problem
     qpalm_solve(work);
-    mu_assert_true(work->info->iter < 2);
+    mu_assert_true(work->info->iter < 12);
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
-    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
-    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
+    c_float tol;
+    for(c_int i = 0; i < N; i++) {
+        tol = c_absval(1e-5*solution[i]);
+        mu_assert_double_eq(work->solution->x[i], solution[i], tol);
+    }
 }
 
 MU_TEST(test_basic_qp_warm_start_noprox_unscaled) {
@@ -184,16 +235,19 @@ MU_TEST(test_basic_qp_warm_start_noprox_unscaled) {
     settings->proximal = FALSE;
     settings->warm_start = TRUE;
     work = qpalm_setup(data, settings, c);
-    c_float x[N] = {-0.1, 0.3};
-    c_float y[M] = {-0.9, 1.55, 0.0};
+    c_float x[N] = {2.0, -60.0, -3380.0, -6.0};
+    c_float y[M] = {0.0, 0.0, -23.0, -0.01, 0.0};
     qpalm_warm_start(work, x, y);
 
     // Solve Problem
     qpalm_solve(work);
-    mu_assert_true(work->info->iter < 2);
+    mu_assert_true(work->info->iter < 12);
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
-    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
-    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
+    c_float tol;
+    for(c_int i = 0; i < N; i++) {
+        tol = c_absval(1e-5*solution[i]);
+        mu_assert_double_eq(work->solution->x[i], solution[i], tol);
+    }
 }
 
 MU_TEST(test_basic_qp_warm_start_resolve) {
@@ -207,7 +261,7 @@ MU_TEST(test_basic_qp_warm_start_resolve) {
     
     // Solve Problem
     qpalm_solve(work);
-    // mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
 
     // Store solution
     c_float x_sol[N], y_sol[M];
@@ -220,11 +274,13 @@ MU_TEST(test_basic_qp_warm_start_resolve) {
     qpalm_solve(work);
     // mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
     mu_assert_long_eq(work->info->iter, iter);
-    mu_assert_double_eq(work->solution->x[0], x_sol[0], 1e-15);
-    mu_assert_double_eq(work->solution->x[1], x_sol[1], 1e-15);
-    mu_assert_double_eq(work->solution->y[0], y_sol[0], 1e-15);
-    mu_assert_double_eq(work->solution->y[1], y_sol[1], 1e-15);
-    mu_assert_double_eq(work->solution->y[2], y_sol[2], 1e-15);
+    c_float tol = 1e-15;
+    for(c_int i = 0; i < N; i++) {
+        mu_assert_double_eq(work->solution->x[i], x_sol[i], tol);
+    }
+    for(c_int i = 0; i < M; i++) {
+        mu_assert_double_eq(work->solution->y[i], y_sol[i], tol);
+    }
 
 }
 
@@ -269,8 +325,11 @@ MU_TEST(test_basic_qp_dual_objective) {
     qpalm_solve(work);
 
     mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
-    mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
-    mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
+    c_float tol;
+    for(c_int i = 0; i < N; i++) {
+        tol = c_absval(1e-5*solution[i]);
+        mu_assert_double_eq(work->solution->x[i], solution[i], tol);
+    }
     mu_assert_double_eq(work->info->objective, work->info->dual_objective, 1e-5);
 }
 
@@ -280,7 +339,7 @@ MU_TEST(test_basic_qp_dual_early_termination) {
     settings->eps_abs = 1e-6;
     settings->eps_rel = 1e-6;
     settings->enable_dual_termination = TRUE;
-    settings->dual_objective_limit = -1000.0;
+    settings->dual_objective_limit = -1000000000.0;
 
     work = qpalm_setup(data, settings, c);
     // Solve Problem
