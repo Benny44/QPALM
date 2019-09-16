@@ -104,17 +104,56 @@ void vec_add_scaled(const c_float *a, const c_float *b, c_float *c, c_float sc, 
   }
 }
 
+// c_float vec_norm_inf(const c_float *a, size_t n) {
+//   size_t   i;
+//   c_float abs_a_i;
+//   c_float max = 0.0;
+
+//   for (i = 0; i < n; i++) {
+//     abs_a_i = c_absval(a[i]);
+
+//     if (abs_a_i > max) max = abs_a_i;
+//   }
+//   return max;
+// }
+
 c_float vec_norm_inf(const c_float *a, size_t n) {
-  size_t   i;
-  c_float abs_a_i;
-  c_float max = 0.0;
+    register size_t j = 0;
+    register c_float s0 = 0.;
+    register c_float s1 = 0.;
+    register c_float s2 = 0.;
+    register c_float s3 = 0.;
+    register c_float max0 = 0.;
+    register c_float max1 = 0.;
+    register c_float max2 = 0.;
+    register c_float max3 = 0.;
+    const size_t block_size = 4;
+    const size_t block_len = n >> 2;
+    const size_t remaining = n % block_size; /*Initializing four blocks for 
+                                                * efficient implementation of 
+                                                * inner product using registers */
 
-  for (i = 0; i < n; i++) {
-    abs_a_i = c_absval(a[i]);
+    while (j < block_len * block_size) {
+      s0 = c_absval(a[j]); max0 = s0 > max0 ? s0 : max0;
+      s1 = c_absval(a[j+1]); max1 = s1 > max1 ? s1 : max1;
+      s2 = c_absval(a[j+2]); max2 = s2 > max2 ? s2 : max2;
+      s3 = c_absval(a[j+3]); max3 = s3 > max3 ? s3 : max3;
+      j+=4;
+    }    
 
-    if (abs_a_i > max) max = abs_a_i;
-  }
-  return max;
+    max0 = max0 > max1 ? max0 : max1;
+    max0 = max0 > max2 ? max0 : max2;
+    max0 = max0 > max3 ? max0 : max3;
+    j = block_size * block_len;
+    switch (remaining) {
+        case 3: max0 = max0 > c_absval(a[j+2]) ? max0 : c_absval(a[j+2]);
+        case 2: max0 = max0 > c_absval(a[j+1]) ? max0 : c_absval(a[j+1]);
+        case 1: max0 = max0 > c_absval(a[j+0]) ? max0 : c_absval(a[j]); /*Taking contribution from the last terms
+                                    * that were not included in the block*/
+        case 0:;
+    }
+    return max0;
+
 }
 
 void vec_ew_recipr(const c_float *a, c_float *b, size_t n) {
