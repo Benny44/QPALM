@@ -91,7 +91,6 @@ void ldlchol(cholmod_sparse *M, QPALMWorkspace *work) {
   }
   /* If integers are used, supernodal might fail, so check for this and switch to simplicial if necessary. */
   #ifndef DLONG
-
   if ((&work->chol->c)->status != CHOLMOD_OK) {
       (&work->chol->c)->supernodal = CHOLMOD_SIMPLICIAL;
       if (work->settings->proximal) {

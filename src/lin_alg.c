@@ -104,19 +104,6 @@ void vec_add_scaled(const c_float *a, const c_float *b, c_float *c, c_float sc, 
   }
 }
 
-// c_float vec_norm_inf(const c_float *a, size_t n) {
-//   size_t   i;
-//   c_float abs_a_i;
-//   c_float max = 0.0;
-
-//   for (i = 0; i < n; i++) {
-//     abs_a_i = c_absval(a[i]);
-
-//     if (abs_a_i > max) max = abs_a_i;
-//   }
-//   return max;
-// }
-
 c_float vec_norm_inf(const c_float *a, size_t n) {
     register size_t j = 0;
     register c_float s0 = 0.;
