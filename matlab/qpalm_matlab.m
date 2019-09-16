@@ -8,6 +8,12 @@ if nargin<6 || isempty(x)
     x = zeros(n,1);
 end
 
+if nargin<8 || ~isfield(opts,'verbose')
+    verbose = false; 
+else
+    verbose = opts.verbose;
+end
+
 if nargin<8 || ~isfield(opts,'scaling')
     scaling = ''; %'ruiz', 'simple', 'outer_iter'
 else
@@ -244,9 +250,11 @@ k_prev = 0;
 
 for k = 1:maxiter
         
-    if k > 1 && mod(k,10000)==0
-        fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e\n', k-2, nrm_rp, nrm_rd);
+    
+    if verbose && k > 1 && mod(k,1)==0
+        fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e,\t nrm_rd2: %e,\t tau: %e \n', k-2, nrm_rp, nrm_rd, nrm_rd2, tau);
     end
+    
     stats.gamma(k) = gamma;
 %     stats.sigma(:,k) = sig;
     
@@ -347,6 +355,7 @@ for k = 1:maxiter
        end
        
    elseif nrm_rd2 <= eps_dual_in
+       if verbose; fprintf('-------------------------------------------------------------\n'); end;
        k_prev = k;
 %        if K == 1 || eps_abs_in ~= eps_abs
            y = yh; Aty = Atyh;
@@ -458,11 +467,12 @@ for k = 1:maxiter
                       dlam  = -ldlsparse([Q A(active_cnstrs,:)';A(active_cnstrs,:) -sparse(1:na,1:na,1./sig(active_cnstrs),na,na)],[],[dphi;zeros(na,1)]);
                       d     = dlam(1:n,1);
               end
-              active_cnstrs_old = active_cnstrs;
           else
               LD = ldlchol(Q);
               d = -ldlsolve (LD,dphi);
           end
+        active_cnstrs_old = active_cnstrs;
+
           
       elseif strcmp(solver, 'lbfgs')
           % lbfgs direction
@@ -742,7 +752,9 @@ function [x,y,Q,q,A,bmin,bmax,D,E,c] = simple_equilibration(x,y,Q,q,A,bmin,bmax,
     for k=1:scaling_iter
         Aabs = abs(A);
         r = 1./sqrt(max(Aabs,[],2));
-        c = 1./sqrt(max(Aabs,[],1))';
+        cint = sqrt(max(Aabs,[],1));
+        cint(cint < 1e-12) = 1;
+        c = 1./cint';
         R = sparse(colinds,colinds,r,m,m);
         C = sparse(rowinds,rowinds,c,n,n);
         A = R*A*C;
