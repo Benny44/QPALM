@@ -41,14 +41,14 @@ void load_sparse_matrix(FILE *fp, cholmod_sparse *A){
         Ap[col+1] = Ap[col];
     }
 
-    c_print("in A/Q: nnz = %ld, size = %ld\n", elem, k);
-    for (k = 0; k < elem; k++) {
-        c_print("Ax[%ld] = %.16f;\n", k, Ax[k]);
-        c_print("Ai[%ld] = %ld;\n", k, Ai[k]);
-    }
-    for (k = 0; k < n+1; k++) {
-        c_print("Ap[%ld] = %ld;\n", k, Ap[k]);
-    }
+    // c_print("in A/Q: nnz = %ld, size = %ld\n", elem, k);
+    // for (k = 0; k < elem; k++) {
+    //     c_print("Ax[%ld] = %.16f;\n", k, Ax[k]);
+    //     c_print("Ai[%ld] = %ld;\n", k, Ai[k]);
+    // }
+    // for (k = 0; k < n+1; k++) {
+    //     c_print("Ap[%ld] = %ld;\n", k, Ap[k]);
+    // }
 }
 
 c_float *load_dense(FILE *fp, size_t n) {

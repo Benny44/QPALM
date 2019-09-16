@@ -50,10 +50,20 @@ if (PRINTING)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPRINTING")
 endif()
 
-#Rest of suitesparse
-#add_subdirectory(cmakeSuitesparse)
+option (PROF "Create executable demo for profiling with gprof" OFF)
+if (PROF)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pg")
+endif()
 
-add_library(qpalm SHARED
+
+option (TIMING "Enable timing" OFF)
+if (TIMING)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPROFILING")
+endif()
+
+option (BUILD_SHARED_LIBS "Shared if on, static if off" ON)
+
+add_library(qpalm 
                 src/newton.c
                 src/util.c
                 src/qpalm.c
@@ -89,6 +99,12 @@ target_include_directories(qpalm
 
 target_link_libraries(qpalm ${CHOLMOD_LIB} ${SUITESPARSE_LIB})
 
+option (PPROF "Create executable demo for profiling with cpuprofile" OFF)
+if (PPROF)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,--no-as-needed -lprofiler -Wl,--as-needed")
+    # target_link_libraries(qpalm profiler)
+    add_subdirectory(profiling)
+endif()
 
 # Add unittests
 if (UNITTESTS)
@@ -97,6 +113,11 @@ if (UNITTESTS)
     include(CTest)
     enable_testing()
     add_test(NAME qpalm_tester COMMAND $<TARGET_FILE:run_all_tests>)
+endif()
+
+# Add profiling demo
+if (PROF)
+    add_subdirectory(profiling)
 endif()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
