@@ -1,0 +1,197 @@
+-- The C compiler identification is GNU 7.4.0
+-- The CXX compiler identification is GNU 7.4.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Root lib is set to: /home/ben/miniconda3/lib
+-- Root include is set to: /home/ben/miniconda3/include
+-- /home/ben/miniconda3/lib/libcholmod.so
+-- /home/ben/miniconda3/include
+-- /home/ben/miniconda3/lib/libsuitesparseconfig.so
+-- Unit testing is OFF
+-- Code coverage is OFF
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/ben/Documents/Projects/QPALM/build/debug
+Scanning dependencies of target qpalm
+[  6%] Building C object CMakeFiles/qpalm.dir/src/newton.c.o
+[ 13%] Building C object CMakeFiles/qpalm.dir/src/util.c.o
+[ 20%] Building C object CMakeFiles/qpalm.dir/src/qpalm.c.o
+[ 26%] Building C object CMakeFiles/qpalm.dir/src/scaling.c.o
+[ 33%] Building C object CMakeFiles/qpalm.dir/src/linesearch.c.o
+[ 40%] Building C object CMakeFiles/qpalm.dir/src/lin_alg.c.o
+[ 46%] Building C object CMakeFiles/qpalm.dir/src/termination.c.o
+[ 53%] Building C object CMakeFiles/qpalm.dir/src/cholmod_interface.c.o
+[ 60%] Building C object CMakeFiles/qpalm.dir/src/nonconvex.c.o
+[ 66%] Building C object CMakeFiles/qpalm.dir/src/validate.c.o
+[ 73%] Building C object CMakeFiles/qpalm.dir/src/iteration.c.o
+[ 80%] Linking C static library libqpalm.a
+[ 80%] Built target qpalm
+Scanning dependencies of target demo_profile
+[ 86%] Building C object profiling/CMakeFiles/demo_profile.dir/demo_profile.c.o
+[ 93%] Building C object profiling/CMakeFiles/demo_profile.dir/load_data.c.o
+[100%] Linking C executable ../bin/demo_profile
+[100%] Built target demo_profile
+Runtime: 5.0332 s
+Iter: 167
+Total: 1516 samples
+    1197  79.0%  79.0%     1234  81.4% _INTERNAL_25_______src_kmp_barrier_cpp_71f3cf03::__kmp_hyper_barrier_release
+      60   4.0%  82.9%      106   7.0% _IO_vfscanf_internal
+      37   2.4%  85.4%       37   2.4% __GI___sched_yield
+      26   1.7%  87.1%       28   1.8% cholmod_l_updown_mask
+      25   1.6%  88.7%       37   2.4% __GI_____strtod_l_internal
+      19   1.3%  90.0%       20   1.3% _INTERNAL_25_______src_kmp_barrier_cpp_71f3cf03::__kmp_hyper_barrier_gather
+      12   0.8%  90.8%       12   0.8% ATL_drotmg
+       8   0.5%  91.3%      119   7.8% __isoc99_fscanf
+       7   0.5%  91.8%        7   0.5% ATL_dJIK0x0x19TN19x19x0_a1_bX
+       6   0.4%  92.2%        6   0.4% ATL_dJIK0x0x48NN0x0x0_aX_bX
+       6   0.4%  92.5%        6   0.4% cholmod_l_rowfac_mask
+       5   0.3%  92.9%       11   0.7% ATL_dJIK0x0x0NT0x0x0_aX_bX
+       5   0.3%  93.2%        5   0.3% ATL_dJIK0x0x28TN28x28x0_a1_bX
+       5   0.3%  93.5%        5   0.3% ATL_daxpy_xp0yp0aXbX
+       5   0.3%  93.9%        5   0.3% __GI___libc_read
+       5   0.3%  94.2%        5   0.3% __strlen_avx2
+       5   0.3%  94.5%      116   7.7% _init@50e0
+       4   0.3%  94.8%        4   0.3% ATL_dJIK0x0x15TN15x15x0_a1_bX
+       3   0.2%  95.0%        3   0.2% ATL_dJIK0x0x11TN11x11x0_a1_bX
+       3   0.2%  95.2%        3   0.2% ATL_dJIK0x0x17TN17x17x0_a1_bX
+       3   0.2%  95.4%        3   0.2% ATL_dJIK0x0x27TN27x27x0_a1_bX
+       3   0.2%  95.6%        3   0.2% ATL_dJIK0x0x33TN33x33x0_a1_bX
+       3   0.2%  95.8%        3   0.2% ATL_dJIK0x0x42TN42x42x0_a1_bX
+       3   0.2%  96.0%        3   0.2% ATL_dJIK0x0x43TN43x43x0_a1_bX
+       3   0.2%  96.2%        3   0.2% ATL_dgezero
+       3   0.2%  96.4%        3   0.2% char_buffer_add
+       3   0.2%  96.6%      123   8.1% load_sparse_matrix
+       2   0.1%  96.7%        2   0.1% ATL_dJIK0x0x36TN36x36x0_a1_bX
+       2   0.1%  96.8%        2   0.1% ATL_dtrsmKR_rk4
+       2   0.1%  97.0%        2   0.1% ATL_dupNBmm0_2_0_b0
+       2   0.1%  97.1%        2   0.1% ATL_dupNBmm0_2_0_b1
+       2   0.1%  97.2%        2   0.1% __mpn_mul
+       2   0.1%  97.4%        3   0.2% round_and_return
+       2   0.1%  97.5%        2   0.1% scratch_buffer_init
+       2   0.1%  97.6%        2   0.1% vec_norm_inf
+       1   0.1%  97.7%        1   0.1% 0x00007ffd7e9fcae1
+       1   0.1%  97.8%        1   0.1% ATL_dJIK0x0x16TN16x16x0_a1_bX
+       1   0.1%  97.8%        1   0.1% ATL_dJIK0x0x20TN20x20x0_a1_bX
+       1   0.1%  97.9%        1   0.1% ATL_dJIK0x0x21TN21x21x0_a1_bX
+       1   0.1%  98.0%        1   0.1% ATL_dJIK0x0x29TN29x29x0_a1_bX
+       1   0.1%  98.0%        1   0.1% ATL_dJIK0x0x31TN31x31x0_a1_bX
+       1   0.1%  98.1%        1   0.1% ATL_dJIK0x0x32TN32x32x0_a1_bX
+       1   0.1%  98.2%        1   0.1% ATL_dJIK0x0x44TN44x44x0_a1_bX
+       1   0.1%  98.2%        1   0.1% ATL_dJIK0x0x48NT0x0x0_aX_bX
+       1   0.1%  98.3%        1   0.1% ATL_dJIK0x0x52TN52x52x0_a1_bX
+       1   0.1%  98.4%        1   0.1% ATL_dJIK0x0x6TN6x6x0_a1_bX
+       1   0.1%  98.4%        1   0.1% ATL_dcpsc_xp0yp0aXbX
+       1   0.1%  98.5%        1   0.1% ATL_dupKBmm16_2_1_b0
+       1   0.1%  98.5%        1   0.1% ATL_dupKBmm28_2_1_b0
+       1   0.1%  98.6%        1   0.1% ATL_dupKBmm52_2_1_b0
+       1   0.1%  98.7%        1   0.1% ATL_dupNBmm0_1_0_b0
+       1   0.1%  98.7%        1   0.1% __GI__IO_sputbackc
+       1   0.1%  98.8%        1   0.1% __GI___strtod_internal
+       1   0.1%  98.9%        1   0.1% __GI_munmap
+       1   0.1%  98.9%        1   0.1% __brk
+       1   0.1%  99.0%        2   0.1% __kmp_get_global_thread_id_reg
+       1   0.1%  99.1%        1   0.1% __kmp_release_ticket_lock
+       1   0.1%  99.1%        1   0.1% __kmp_yield
+       1   0.1%  99.2%        1   0.1% __mpn_construct_double
+       1   0.1%  99.3%        1   0.1% __mpn_lshift
+       1   0.1%  99.3%        1   0.1% __tls_get_addr
+       1   0.1%  99.4%        1   0.1% _init@21b8
+       1   0.1%  99.5%        1   0.1% _pthread_cleanup_pop_restore
+       1   0.1%  99.5%        1   0.1% _pthread_cleanup_push_defer
+       1   0.1%  99.6%        1   0.1% cholmod_l_change_factor
+       1   0.1%  99.7%        1   0.1% cholmod_l_copy
+       1   0.1%  99.7%        1   0.1% cholmod_l_copy_sparse
+       1   0.1%  99.8%        1   0.1% cholmod_l_reallocate_column
+       1   0.1%  99.9%        1   0.1% cholmod_l_super_ltsolve
+       1   0.1%  99.9%        1   0.1% cholmod_l_transpose_sym
+       1   0.1% 100.0%        1   0.1% str_to_mpn.isra.0
+       0   0.0% 100.0%        1   0.1% ATL_dIBJBmm
+       0   0.0% 100.0%       33   2.2% ATL_dMBJBmm
+       0   0.0% 100.0%       12   0.8% ATL_dNCmmIJK
+       0   0.0% 100.0%       12   0.8% ATL_dNCmmJIK
+       0   0.0% 100.0%       73   4.8% ATL_dgemm
+       0   0.0% 100.0%       46   3.0% ATL_dmmIJK
+       0   0.0% 100.0%       44   2.9% ATL_dmmIJK2
+       0   0.0% 100.0%        9   0.6% ATL_dmmJIK
+       0   0.0% 100.0%        9   0.6% ATL_dmmJIK2
+       0   0.0% 100.0%        6   0.4% ATL_dmmJKI
+       0   0.0% 100.0%        6   0.4% ATL_dmm_axpy
+       0   0.0% 100.0%        5   0.3% ATL_dprk_kmm
+       0   0.0% 100.0%        2   0.1% ATL_drow2blkT_a1
+       0   0.0% 100.0%        5   0.3% ATL_dsprk_rK
+       0   0.0% 100.0%        5   0.3% ATL_dsyrk
+       0   0.0% 100.0%        2   0.1% ATL_dtrsm
+       0   0.0% 100.0%        2   0.1% ATL_dtrsmRLTN
+       0   0.0% 100.0%        1   0.1% ATL_rtrsmRLT
+       0   0.0% 100.0%        2   0.1% SuiteSparse_free
+       0   0.0% 100.0%        1   0.1% SuiteSparse_tic
+       0   0.0% 100.0%        1   0.1% SuiteSparse_time
+       0   0.0% 100.0%     1253  82.7% _INTERNAL_26_______src_z_Linux_util_cpp_ea62c7c0::__kmp_launch_worker
+       0   0.0% 100.0%        5   0.3% _IO_new_file_underflow
+       0   0.0% 100.0%        5   0.3% __GI__IO_default_uflow
+       0   0.0% 100.0%        1   0.1% __GI___clock_gettime
+       0   0.0% 100.0%     1253  82.7% __GI___clone
+       0   0.0% 100.0%        1   0.1% __GI___default_morecore
+       0   0.0% 100.0%        1   0.1% __GI___sbrk
+       0   0.0% 100.0%        1   0.1% __kmp_GOMP_fork_call
+       0   0.0% 100.0%       19   1.3% __kmp_GOMP_microtask_wrapper
+       0   0.0% 100.0%       30   2.0% __kmp_api_GOMP_parallel_40_alias
+       0   0.0% 100.0%     1234  81.4% __kmp_fork_barrier
+       0   0.0% 100.0%        1   0.1% __kmp_fork_call
+       0   0.0% 100.0%       20   1.3% __kmp_internal_join
+       0   0.0% 100.0%       19   1.3% __kmp_invoke_microtask
+       0   0.0% 100.0%       19   1.3% __kmp_invoke_task_func
+       0   0.0% 100.0%       20   1.3% __kmp_join_barrier
+       0   0.0% 100.0%       20   1.3% __kmp_join_call
+       0   0.0% 100.0%     1253  82.7% __kmp_launch_thread
+       0   0.0% 100.0%        2   0.1% __kmpc_bound_num_threads
+       0   0.0% 100.0%      255  16.8% __libc_start_main
+       0   0.0% 100.0%        1   0.1% _int_free
+       0   0.0% 100.0%      255  16.8% _start
+       0   0.0% 100.0%        2   0.1% check_termination
+       0   0.0% 100.0%        1   0.1% cholmod_l_add
+       0   0.0% 100.0%        1   0.1% cholmod_l_amd
+       0   0.0% 100.0%        1   0.1% cholmod_l_analyze_ordering
+       0   0.0% 100.0%        3   0.2% cholmod_l_analyze_p2
+       0   0.0% 100.0%      112   7.4% cholmod_l_factorize_p
+       0   0.0% 100.0%        2   0.1% cholmod_l_free
+       0   0.0% 100.0%        1   0.1% cholmod_l_free_factor
+       0   0.0% 100.0%        1   0.1% cholmod_l_free_sparse
+       0   0.0% 100.0%        1   0.1% cholmod_l_ptranspose
+       0   0.0% 100.0%        5   0.3% cholmod_l_sdmult
+       0   0.0% 100.0%        6   0.4% cholmod_l_solve
+       0   0.0% 100.0%        6   0.4% cholmod_l_solve2
+       0   0.0% 100.0%      111   7.3% cholmod_l_super_numeric
+       0   0.0% 100.0%        1   0.1% cholmod_l_super_symbolic2
+       0   0.0% 100.0%        1   0.1% cholmod_l_updown
+       0   0.0% 100.0%        1   0.1% cholmod_l_updown_mask2
+       0   0.0% 100.0%       73   4.8% dgemm_
+       0   0.0% 100.0%        5   0.3% dsyrk_
+       0   0.0% 100.0%        2   0.1% dtrsm_
+       0   0.0% 100.0%        5   0.3% exact_linesearch
+       0   0.0% 100.0%        1   0.1% is_primal_infeasible
+       0   0.0% 100.0%       35   2.3% ldlcholQ
+       0   0.0% 100.0%       81   5.3% ldlcholQAtsigmaA
+       0   0.0% 100.0%        6   0.4% ldlsolveLD_neg_dphi
+       0   0.0% 100.0%        1   0.1% ldlupdate_entering_constraints
+       0   0.0% 100.0%      123   8.1% load_data
+       0   0.0% 100.0%      255  16.8% main
+       0   0.0% 100.0%        5   0.3% mat_vec
+       0   0.0% 100.0%        1   0.1% munmap_chunk
+       0   0.0% 100.0%      123   8.1% newton_set_direction
+       0   0.0% 100.0%        1   0.1% qpalm_cleanup
+       0   0.0% 100.0%        1   0.1% qpalm_setup
+       0   0.0% 100.0%      130   8.6% qpalm_solve
+       0   0.0% 100.0%     1253  82.7% start_thread
+       0   0.0% 100.0%        1   0.1% systrim.isra.1.constprop.11
+       0   0.0% 100.0%      128   8.4% update_primal_iterate
