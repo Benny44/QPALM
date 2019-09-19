@@ -234,6 +234,7 @@ end
 K = 1; 
 sig_updated = true; %Reset lbfgs initially and perform gradient descent step
 reset_newton = true;
+gamma_maxed = false;
 
 %Initialization for Qdx and Adx used in is_dual_infeasible;
 tau = 0; Qd = zeros(n,1); Ad = zeros(m,1); d = zeros(n,1);
@@ -305,7 +306,7 @@ for k = 1:maxiter
    elseif k == k_prev + inner_maxiter %inner problem maxiter termination
        %do outer update except dual and tolerance updates
        k_prev = k;
-       gamma_changed = proximal && gamma ~= gammaMax;
+       gamma_changed = proximal && gamma < gammaMax;
            
        if K > 1 && nrm_rp > eps_primal
            if scalar_sig
@@ -344,7 +345,7 @@ for k = 1:maxiter
        K   = K+1;
        if proximal
            x0=x;
-           if gamma ~= gammaMax
+           if gamma < gammaMax
                Q=Q-1/gamma*speye(n);
                Qx = Qx-1/gamma*x; 
                gamma=min(gamma*gammaUpd, gammaMax);
@@ -367,7 +368,7 @@ for k = 1:maxiter
        eps_rel_in = max(rho*eps_rel_in,eps_rel);
        if K > 1 && nrm_rp > eps_primal
 
-           gamma_changed = proximal && gamma ~= gammaMax;
+           gamma_changed = proximal && gamma < gammaMax;
            
            if scalar_sig
                adj_sig  = norm(rp,inf)>theta*norm(rpK,inf)&active_cnstrs;
@@ -405,7 +406,7 @@ for k = 1:maxiter
        K   = K+1;
        if proximal
            x0=x;
-           if gamma ~= gammaMax
+           if gamma < gammaMax
                Q=Q-1/gamma*speye(n);
                Qx = Qx-1/gamma*x; 
                gamma=min(gamma*gammaUpd, gammaMax);
@@ -417,6 +418,7 @@ for k = 1:maxiter
 %        reset_newton = true;
        
    else
+      
       if strcmp(solver, 'newton') 
           % Newton direction
           active_cnstrs = (Axys<=bmin | Axys>=bmax);
@@ -426,9 +428,27 @@ for k = 1:maxiter
               stats.nact_changed(k) = na;
           else
               stats.nact_changed(k) = sum(abs(active_cnstrs-active_cnstrs_old));
+              
               if reset_newton
                   stats.nact_changed(k) = -1*stats.nact_changed(k);
               end
+          end
+          if stats.nact_changed(k)==0 && ~gamma_maxed && nrm_rp < eps_primal && K > 2
+              x0=x;
+              Q=Q-1/gamma*speye(n);
+              Qx = Qx-1/gamma*x; 
+              dphi = dphi - 1/gamma*(x-x0);
+              if na == 0
+                  gamma=1e12;
+              else
+                  gamma=max(1e14/gershgorin_max(A(active_cnstrs,:)'*diag(sig(active_cnstrs))*A(active_cnstrs,:)), gammaMax);
+                  gamma_maxed = true;
+              end
+              Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
+              Qx = Qx+1/gamma*x;
+              dphi = dphi + 1/gamma*(x-x0);
+              reset_newton = true;
+              fprintf('Gamma boost activated on iter %d, gamma = %.4e \n', k, gamma);
           end
           if na 
               switch linsys
@@ -444,7 +464,9 @@ for k = 1:maxiter
                       if mod(k,reset_newton_iter)==0
                           reset_newton = true;
                       end
+                      
                       [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton);
+%                       continue;
                       reset_newton = false;
     %                   LD = ldlchol(Q+A(active_cnstrs,:)'*spdiags(sig(active_cnstrs),0,na,na)*A(active_cnstrs,:));
     %                   d  = -ldlsolve (LD,dphi);
