@@ -101,9 +101,12 @@ void update_sigma(QPALMWorkspace* work) {
 void update_gamma(QPALMWorkspace *work) {
     c_float prev_gamma = work->gamma;
     work->gamma = c_min(work->gamma*work->settings->gamma_upd, work->settings->gamma_max);
-    if (work->gamma != prev_gamma) work->chol->reset_newton = TRUE;
+    if (work->gamma != prev_gamma) {
+        work->chol->reset_newton = TRUE;
+        vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->gamma - 1/prev_gamma, work->data->n);
+    }
+
     prea_vec_copy(work->x, work->x0, work->data->n);
-    vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->gamma - 1/prev_gamma, work->data->n);
 }
 
 void update_primal_iterate(QPALMWorkspace *work) {

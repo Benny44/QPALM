@@ -6,7 +6,8 @@
 #define N 2000
 #define M 3
 #define ANZMAX 600
-#define QNZMAX 380904
+// #define QNZMAX 380904
+#define QNZMAX 2000
 
 // static c_float solution[N] = {2.0000000e+00, -6.3801365e+01, -3.3821109e+03, -6.0483288e+00};
 

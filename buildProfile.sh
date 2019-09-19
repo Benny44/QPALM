@@ -38,9 +38,11 @@ cd $builddir/bin
 #rm -f $LD_PROFILE.profile
 #export LD_PROFILE_OUTPUT=/home/ben/Documents/Projects/QPALM/build/debug/bin
 #export LD_LIBRARY_PATH=/home/ben/Documents/Projects/QPALM/build/lib:$SUITESPARSE_ROOT_LIB
-env CPUPROFILE=demo_profile.prof CPUPROFILE_FREQUENCY=1000 /home/ben/Documents/Projects/QPALM/build/debug/bin/demo_profile 
+env CPUPROFILE=demo_profile.prof CPUPROFILE_FREQUENCY=10000 /home/ben/Documents/Projects/QPALM/build/debug/bin/demo_profile 
 # /home/ben/Documents/Projects/QPALM/build/debug/bin/demo_profile
-pprof --text /home/ben/Documents/Projects/QPALM/build/debug/bin/demo_profile demo_profile.prof
+#pprof --text /home/ben/Documents/Projects/QPALM/build/debug/bin/demo_profile demo_profile.prof
+pprof --callgrind /home/ben/Documents/Projects/QPALM/build/debug/bin/demo_profile demo_profile.prof > log.callgrind
+kcachegrind log.callgrind
 # ./demo_profile
 #sprof /home/ben/Documents/Projects/QPALM/build/lib/$LD_PROFILE $LD_PROFILE.profile -p > log
 #gprof demo_profile gmon.out > analysis.txt

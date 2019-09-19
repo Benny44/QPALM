@@ -11,3 +11,12 @@ if(UNIX)
 target_link_libraries(demo_profile m)
 endif(UNIX)
 
+add_executable(profile
+            profile.c
+            load_data.c)
+
+target_link_libraries(profile qpalm)
+
+if(UNIX)
+target_link_libraries(profile m)
+endif(UNIX)
