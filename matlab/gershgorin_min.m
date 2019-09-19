@@ -1,12 +1,6 @@
 function lb_eig = gershgorin_min(M)
 % Use Gershgorin to lower bound the eigenvalues of the matrix M.
 
-for row = 1:size(M,1)
-    center = M(row,row);
-    radius = sum(abs(M(row,:))) - abs(center);
-    if row==1
-        lb_eig = center - radius;
-    else
-        lb_eig = min(center-radius, lb_eig);
-    end
-end
+center = diag(M);
+radius = sum(abs(M), 2) - abs(center);
+lb_eig = min(center-radius);

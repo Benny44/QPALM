@@ -433,23 +433,7 @@ for k = 1:maxiter
                   stats.nact_changed(k) = -1*stats.nact_changed(k);
               end
           end
-          if stats.nact_changed(k)==0 && ~gamma_maxed && nrm_rp < eps_primal && K > 2
-              x0=x;
-              Q=Q-1/gamma*speye(n);
-              Qx = Qx-1/gamma*x; 
-              dphi = dphi - 1/gamma*(x-x0);
-              if na == 0
-                  gamma=1e12;
-              else
-                  gamma=max(1e14/gershgorin_max(A(active_cnstrs,:)'*diag(sig(active_cnstrs))*A(active_cnstrs,:)), gammaMax);
-                  gamma_maxed = true;
-              end
-              Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
-              Qx = Qx+1/gamma*x;
-              dphi = dphi + 1/gamma*(x-x0);
-              reset_newton = true;
-              fprintf('Gamma boost activated on iter %d, gamma = %.4e \n', k, gamma);
-          end
+          
           if na 
               switch linsys
                   case 0 % sparse backslash
@@ -592,6 +576,24 @@ for k = 1:maxiter
       Ax    = Ax + Adx;
       Qdx   = tau*Qd;
       Qx    = Qx + Qdx;
+      
+      
+      if stats.nact_changed(k)==0 && ~gamma_maxed && K > 2 && nrm_rp < eps_primal 
+          prev_gamma = gamma;
+          if na == 0
+              gamma=1e12;
+          else
+              gamma=max(1e14/gershgorin_max(A(active_cnstrs,:)'*Asig(active_cnstrs,:)), gammaMax);
+              gamma_maxed = true;
+          end
+          if prev_gamma ~= gamma             
+              Q=Q+(1/gamma-1/prev_gamma)*speye(n);
+              Qx = Qx+(1/gamma-1/prev_gamma)*x; 
+              reset_newton = true;
+          end
+              fprintf('Gamma boost activated on iter %d, gamma = %.4e \n', k, gamma);
+      end
+      
    end
 end
 if k == maxiter
