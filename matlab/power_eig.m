@@ -1,20 +1,21 @@
 function [ lambda ] = power_eig(A)
 %Power method to compute largest (in absolute value) eigenvalue of A
-TOL = 1e-3;
+TOL = 1e-5;
 
 [m,n] = size(A);
 
 assert(m==n, 'A must be square');
 
-x = ones(n,1);
+x = rand(n,1);
+x = x/norm(x);
 
 lambda = 0;
-lambda_prev = -inf;
+% lambda_prev = -inf;
 
 iter = 0;
-while abs(lambda-lambda_prev) > TOL
+while norm(A*x - lambda*x, inf) > TOL
     iter = iter+1;
-    lambda_prev = lambda;
+%     lambda_prev = lambda;
     
     x_next = A*x;
     
