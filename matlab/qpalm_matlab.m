@@ -148,6 +148,12 @@ else
     reset_newton_iter = opts.reset_newton_iter;
 end
 
+if nargin<8 || ~isfield(opts,'print_iter')
+    print_iter = 1;
+else
+    print_iter = opts.print_iter;
+end
+
 
 if nargin<8 || ~isfield(opts,'solver')
     solver = 'newton';
@@ -252,7 +258,7 @@ k_prev = 0;
 for k = 1:maxiter
         
     
-    if verbose && k > 1 && mod(k,1)==0
+    if verbose && k > 1 && mod(k,print_iter)==0
         fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e,\t nrm_rd2: %e,\t tau: %e \n', k-2, nrm_rp, nrm_rd, nrm_rd2, tau);
     end
     
@@ -294,6 +300,9 @@ for k = 1:maxiter
           
    if nrm_rd <= eps_dual && nrm_rp <= eps_primal
        stats.status = 'solved';
+       if verbose && k > 1 && mod(k,print_iter)==0
+        fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e,\t nrm_rd2: %e,\t tau: %e \n', k-1, nrm_rp, nrm_rd, nrm_rd2, tau);
+       end
        break
    elseif is_primal_infeasible(dy, Atdy, bmin, bmax, D_scale, E_scale, eps_pinf)
        stats.status = 'primal_infeasible';
@@ -578,7 +587,7 @@ for k = 1:maxiter
       Qx    = Qx + Qdx;
       
       
-      if stats.nact_changed(k)==0 && ~gamma_maxed && K > 2 && nrm_rp < eps_primal 
+      if proximal && stats.nact_changed(k)==0 && ~gamma_maxed && K > 2 && nrm_rp < eps_primal 
           prev_gamma = gamma;
           if na == 0
               gamma=1e12;
@@ -591,7 +600,7 @@ for k = 1:maxiter
               Qx = Qx+(1/gamma-1/prev_gamma)*x; 
               reset_newton = true;
           end
-              fprintf('Gamma boost activated on iter %d, gamma = %.4e \n', k, gamma);
+%               fprintf('Gamma boost activated on iter %d, gamma = %.14e \n', k, gamma);
       end
       
    end
