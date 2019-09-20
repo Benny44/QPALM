@@ -13,6 +13,7 @@
 #include "global_opts.h"
 #include "lin_alg.h"
 
+
 #define TOL 1e-3 /*TODO: make this a setting */
 
 c_float minimum_eigenvalue_Q(QPALMWorkspace *work){
@@ -52,6 +53,33 @@ c_float power_iterations_Q(QPALMWorkspace *work, c_float gamma){
     }
 
     return lambda;
+}
+
+c_float gershgorin_max(cholmod_sparse* M, c_float *center, c_float *radius){
+    /* NB: Assume M is symmetric, so Gershgorin may be performed along the columns as well. */
+    c_float ub_eig;
+    c_float *Mx = M->x; c_int *Mi = M->i; c_int *Mp = M->p;
+    c_int row, i, j;
+
+    for (i=0; i < M->ncol; i++) {
+        center[i] = 0.0;
+        radius[i] = 0.0;
+        for (j = Mp[i]; j < Mp[i+1]; j++) {
+            row = Mi[j];
+            if (row == i) {
+                center[i] = Mx[j];
+            } else {
+                radius[i] += c_absval(Mx[j]);
+            }    
+        }
+        if (i==0) {
+            ub_eig = center[i] + radius[i];
+        } else {
+            ub_eig = c_max(ub_eig, (center[i] + radius[i]));
+        }
+    }
+
+    return ub_eig;
 }
 
 void set_settings_nonconvex(QPALMWorkspace *work){

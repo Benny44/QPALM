@@ -3,6 +3,7 @@
 #include "cholmod_interface.h"
 #include "newton.h"
 #include "linesearch.h"
+#include "nonconvex.h"
 
 void compute_residuals(QPALMWorkspace *work) {
 
@@ -31,6 +32,7 @@ void compute_residuals(QPALMWorkspace *work) {
 }
 
 void initialize_sigma(QPALMWorkspace *work) {
+    
     // Compute initial sigma
     size_t n = work->data->n;
     size_t m = work->data->m;
@@ -53,6 +55,7 @@ void initialize_sigma(QPALMWorkspace *work) {
 }
 
 void update_sigma(QPALMWorkspace* work) {
+    
     work->nb_sigma_changed = 0;
     c_float *At_scalex = work->chol->At_scale->x;
     c_float pri_res_unscaled_norm = vec_norm_inf(work->pri_res, work->data->m);
@@ -88,28 +91,54 @@ void update_sigma(QPALMWorkspace* work) {
 
     CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
     
-    if ((work->settings->proximal && work->gamma != work->settings->gamma_max) || (work->nb_sigma_changed > 0.25*MAX_RANK_UPDATE)) {
+    if ((work->settings->proximal && work->gamma < work->settings->gamma_max) || (work->nb_sigma_changed > 0.25*MAX_RANK_UPDATE)) {
         work->chol->reset_newton = TRUE;
       } else if (work->nb_sigma_changed == 0){
         /* do nothing */
       } else {  
           ldlupdate_sigma_changed(work);
-        // work->chol->reset_newton = TRUE;
     }
 }
 
 void update_gamma(QPALMWorkspace *work) {
-    c_float prev_gamma = work->gamma;
-    work->gamma = c_min(work->gamma*work->settings->gamma_upd, work->settings->gamma_max);
-    if (work->gamma != prev_gamma) {
+    
+    if (work->gamma < work->settings->gamma_max) {
+        c_float prev_gamma = work->gamma;
+        work->gamma = c_min(work->gamma*work->settings->gamma_upd, work->settings->gamma_max);
         work->chol->reset_newton = TRUE;
         vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->gamma - 1/prev_gamma, work->data->n);
     }
+    
+}
 
-    prea_vec_copy(work->x, work->x0, work->data->n);
+void boost_gamma(QPALMWorkspace *work) {
+
+    c_float prev_gamma = work->gamma;
+    if (work->chol->nb_active_constraints) {
+        cholmod_sparse *AtsigmaA;
+        size_t nb_active = 0;
+        for (size_t i = 0; i < work->data->m; i++){
+            if (work->chol->active_constraints[i]){
+                work->chol->enter[nb_active] = i;
+                nb_active++;
+            }      
+        }
+        AtsigmaA = CHOLMOD(aat)(work->chol->At_sqrt_sigma, work->chol->enter, nb_active, TRUE, &work->chol->c);
+        work->gamma = c_max(work->settings->gamma_max, 1e14/gershgorin_max(AtsigmaA, work->temp_n, work->neg_dphi));
+
+        work->gamma_maxed = TRUE;
+        CHOLMOD(free_sparse)(&AtsigmaA, &work->chol->c);
+    } else {
+        work->gamma = 1e12;
+    }
+    if (prev_gamma != work->gamma) {
+        vec_add_scaled(work->Qx, work->x, work->Qx, 1.0/work->gamma - 1.0/prev_gamma, work->data->n);
+        work->chol->reset_newton = TRUE;
+    }
 }
 
 void update_primal_iterate(QPALMWorkspace *work) {
+    
     newton_set_direction(work);
 
     work->tau = exact_linesearch(work);
@@ -127,6 +156,7 @@ void update_primal_iterate(QPALMWorkspace *work) {
 }
 
 c_float compute_objective(QPALMWorkspace *work) {
+    
     c_float objective = 0.0;
     size_t n = work->data->n;
     size_t i = 0; 

@@ -317,6 +317,7 @@ void qpalm_solve(QPALMWorkspace *work) {
   work->eps_rel_in = work->settings->eps_rel_in;
   work->chol->reset_newton = TRUE;
   work->gamma = work->settings->gamma_init;
+  work->gamma_maxed = FALSE;
   vec_set_scalar_int(work->chol->active_constraints_old, FALSE, work->data->m);
 
   //Check if the internal variables were correctly initialized. A path that leads to
@@ -425,6 +426,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       if(work->settings->proximal) {
         update_gamma(work);
+        prea_vec_copy(work->x, work->x0, work->data->n);
       }
 
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
@@ -446,6 +448,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       if(work->settings->proximal) {
         update_gamma(work);
+        prea_vec_copy(work->x, work->x0, work->data->n);
       }
 
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
@@ -456,6 +459,12 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       if (mod(iter, work->settings->reset_newton_iter) == 0) work->chol->reset_newton = TRUE; 
       update_primal_iterate(work);
+
+      if (work->settings->proximal && !work->gamma_maxed && iter_out > 1 
+          && work->chol->nb_enter == 0 && work->chol->nb_leave == 0 
+          && work->info->pri_res_norm < work->eps_pri) {
+        boost_gamma(work);
+      }
 
       #ifdef PRINTING
       if (work->settings->verbose && mod(iter, work->settings->print_iter) == 0) {

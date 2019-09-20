@@ -186,6 +186,7 @@ typedef struct {
   c_float sqrt_sigma_max;  ///< sqrt(sigma_max)
   c_int nb_sigma_changed; ///< number of sigma-components that changed in an outer iteration (relevant for factorization update)
   c_float gamma;          ///< proximal penalty factor
+  c_int gamma_maxed;      ///< flag to indicate whether gamma has been maximized when the primal residual was low
   c_float *Axys;          ///< Ax + y./sigma
   c_float *z;             ///< projection of Axys onto the constraint set [bmin, bmax]
   c_float *pri_res;       ///< primal residual

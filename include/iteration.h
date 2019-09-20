@@ -52,6 +52,18 @@ void update_sigma(QPALMWorkspace* work);
 void update_gamma(QPALMWorkspace* work);
 
 /**
+ * Maximize the proximal penalty. 
+ * 
+ * The proximal penalty parameter can be increased when the primal residual is low and the number
+ * of active constraints no longer changes. Increasing the proximal penalty will significantly speed
+ * up the convergence of the dual residual in that case. First, the maximum allowed value is computed,
+ * based on the fact that @f$Q+A^T \Sigma A + \frac{1}{\gamma}I@f$ should be sufficiently positive 
+ * definite for the factorization routines.
+ * @param work Workspace
+ */
+void boost_gamma(QPALMWorkspace* work);
+
+/**
  * Update the primal iterate.
  * 
  * This function calls the functions that compute the newton direction and stepsize from exact linesearch,

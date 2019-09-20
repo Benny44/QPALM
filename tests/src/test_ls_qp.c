@@ -100,7 +100,6 @@ MU_TEST(test_ls_qp) {
     for(c_int i = 0; i < N; i++) {
         mu_assert_double_eq(work->solution->x[i], solution[i], 1e-5);
     }
-    mu_assert_long_eq(work->info->iter, 16);
 
     c_free(solution);
 }

@@ -40,6 +40,20 @@ c_float power_iterations_Q(QPALMWorkspace *work,
                          c_float         gamma);
 
 /**
+ * Calculate the Gershgorin upper bound for the eigenvalues of a symmetric matrix.
+ * 
+ * This routine uses the Gershgorin circle theorem to compute an upper bound on the eigenvalues of 
+ * a matrix.
+ * 
+ * @assumption M is symmetric
+ * @param M Matrix
+ * @param center Vector of size M->ncol to hold the values of the centers of the discs
+ * @param radius Vector of size M->ncol to hold the values of the radii of the discs
+ * @return Upper bound on the eigenvalues of M
+ */
+c_float gershgorin_max(cholmod_sparse* M, c_float *center, c_float *radius);
+
+/**
  * Set the proximal parameters for nonconvex QPs.
  * 
  * QPALM can deal with nonconvex QPs, by setting the initial and maximal proximal penalty small enough 
