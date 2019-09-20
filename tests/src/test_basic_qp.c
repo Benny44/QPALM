@@ -347,9 +347,24 @@ MU_TEST(test_basic_qp_dual_early_termination) {
 
     mu_assert_long_eq(work->info->status_val, QPALM_DUAL_TERMINATED);
     mu_assert_long_eq(work->info->iter_out, 0); /* terminate on the first outer iteration */
+
+    settings->enable_dual_termination = FALSE;
 }
 
+MU_TEST(test_basic_qp_sigma_max) {
+    // Setup workspace
+    settings->sigma_max = 1e3;
+    work = qpalm_setup(data, settings, c);
+    // Solve Problem
+    qpalm_solve(work);
 
+    mu_assert_long_eq(work->info->status_val, QPALM_SOLVED);
+    c_float tol;
+    for(c_int i = 0; i < N; i++) {
+        tol = c_absval(1e-5*solution[i]);
+        mu_assert_double_eq(work->solution->x[i], solution[i], tol);
+    }
+}
 
 
 MU_TEST_SUITE(suite_basic_qp) {
@@ -368,4 +383,5 @@ MU_TEST_SUITE(suite_basic_qp) {
     MU_RUN_TEST(test_basic_qp_inner_maxiter);
     MU_RUN_TEST(test_basic_qp_dual_objective);
     MU_RUN_TEST(test_basic_qp_dual_early_termination);
+    MU_RUN_TEST(test_basic_qp_sigma_max);
 }
