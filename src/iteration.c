@@ -133,6 +133,7 @@ void boost_gamma(QPALMWorkspace *work) {
     }
     if (prev_gamma != work->gamma) {
         vec_add_scaled(work->Qx, work->x, work->Qx, 1.0/work->gamma - 1.0/prev_gamma, work->data->n);
+        vec_add_scaled(work->Qd, work->d, work->Qd, work->tau/work->gamma - work->tau/prev_gamma, work->data->n);
         work->chol->reset_newton = TRUE;
     }
 }
