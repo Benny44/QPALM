@@ -15,6 +15,14 @@ find_library(SUITESPARSE_LIB names suitesparseconfig
 find_path(SUITESPARSE_INCLUDE names cholmod.h 
     HINTS ${CMAKE_INCLUDE_PATH} $ENV{SUITESPARSE_ROOT_INCLUDE})
 
+find_library(LAPACK_LIB names lapacke
+    HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
+
+    #LAPACKE_INCLUDE assumed to be = to SUITESPARSE_INCLUDE
+# find_path(LAPACK_INCLUDE names lapacke.h
+#     HINTS ${CMAKE_INCLUDE_PATH} $ENV{SUITESPARSE_ROOT_INCLUDE})
+
+
 message(STATUS "Root lib is set to: $ENV{SUITESPARSE_ROOT_LIB}")
 message(STATUS "Root include is set to: $ENV{SUITESPARSE_ROOT_INCLUDE}")
 message(STATUS ${CHOLMOD_LIB})
@@ -97,7 +105,7 @@ target_include_directories(qpalm
                 ${SUITESPARSE_INCLUDE})
         
 
-target_link_libraries(qpalm ${CHOLMOD_LIB} ${SUITESPARSE_LIB})
+target_link_libraries(qpalm ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACK_LIB})
 
 option (PPROF "Create executable demo for profiling with cpuprofile" OFF)
 if (PPROF)

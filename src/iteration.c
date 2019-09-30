@@ -150,8 +150,8 @@ void update_primal_iterate(QPALMWorkspace *work) {
     prea_vec_copy(work->dphi, work->dphi_prev, work->data->n);
     //x = x+tau*d
     vec_add_scaled(work->x, work->d, work->x, work->tau, work->data->n);
-    vec_mult_scalar(work->Qd, work->tau, work->data->n); //Qdx used in dua_infeas check
-    vec_mult_scalar(work->Ad, work->tau, work->data->m); //Adx used in dua_infeas check
+    vec_self_mult_scalar(work->Qd, work->tau, work->data->n); //Qdx used in dua_infeas check
+    vec_self_mult_scalar(work->Ad, work->tau, work->data->m); //Adx used in dua_infeas check
     vec_add_scaled(work->Qx, work->Qd, work->Qx, 1, work->data->n);
     vec_add_scaled(work->Ax, work->Ad, work->Ax, 1, work->data->m);
 }

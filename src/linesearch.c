@@ -29,7 +29,7 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     //delta = [-sqrt(sigma).*Ad; sqrt(sigma).*Ad]
     vec_ew_prod(work->sqrt_sigma, work->Ad, work->temp_m, m);
     prea_vec_copy(work->temp_m, work->delta + m, m); //shifted copy
-    vec_mult_scalar(work->temp_m, -1, m);
+    vec_self_mult_scalar(work->temp_m, -1, m);
     prea_vec_copy(work->temp_m, work->delta, m); 
     //alpha = [(y+sigma.*(Ax-bmin))./sigma_sqrt; (-y+sigma.*(bmax-Ax))./sigma_sqrt]
     vec_add_scaled(work->Ax, work->data->bmin, work->temp_m, -1, m);

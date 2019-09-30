@@ -12,47 +12,200 @@
 #include "constants.h"
 #include "global_opts.h"
 #include "lin_alg.h"
+#include <lapacke.h>
 
 
-#define TOL 1e-3 /*TODO: make this a setting */
+#define TOL 1e-5 /*TODO: make this a setting */
 
-c_float minimum_eigenvalue_Q(QPALMWorkspace *work){
-    c_float lambda;
-    /* calculate largest (in absolute value) eigenvalue */
-    lambda = power_iterations_Q(work, 0);
-    if (lambda > 0) {
-        /* calculate smallest eigenvalue by shifting */
-        lambda += power_iterations_Q(work, -lambda); 
-    }
-    return lambda;
-}
+// c_float minimum_eigenvalue_Q(QPALMWorkspace *work){
+//     c_float lambda;
+//     /* calculate largest (in absolute value) eigenvalue */
+//     lambda = power_iterations_Q(work, 0);
+//     if (lambda > 0) {
+//         /* calculate smallest eigenvalue by shifting */
+//         lambda += power_iterations_Q(work, -lambda); 
+//     }
+//     return lambda;
+// }
 
-c_float power_iterations_Q(QPALMWorkspace *work, c_float gamma){
-    /* NB: use neg_dphi and Qd as links to cholmod data structures */
-    c_float lambda, lambda_prev, Qd_norm;
+// c_float power_iterations_Q(QPALMWorkspace *work, c_float gamma){
+//     /* NB: use neg_dphi and Qd as links to cholmod data structures */
+//     c_float lambda, lambda_prev, Qd_norm;
+
+//     size_t n = work->data->n;
+//     lambda = 0;
+//     lambda_prev = -QPALM_INFTY;
+//     vec_set_scalar(work->neg_dphi, 1.0, n);
+
+//     while(c_absval(lambda-lambda_prev) > TOL) {
+//         lambda_prev = lambda;
+//         /* Qd = (Q + gamma*I)*neg_dphi */ 
+//         mat_vec(work->data->Q, work->chol->neg_dphi, work->chol->Qd, &work->chol->c);
+//         vec_add_scaled(work->Qd, work->neg_dphi, work->Qd, gamma, n);
+
+//         Qd_norm = vec_norm_inf(work->Qd, n);
+//         if (Qd_norm == 0) { /*Q is zeros*/
+//             return TOL; /*zero after adjustments later*/
+//         }
+        
+//         lambda = vec_prod(work->Qd, work->neg_dphi, n) / vec_prod(work->neg_dphi, work->neg_dphi, n);
+//         vec_mult_scalar(work->Qd, 1/Qd_norm, n);
+//         prea_vec_copy(work->Qd, work->neg_dphi, n);
+//     }
+
+//     return lambda;
+// }
+
+
+c_float lobpcg(QPALMWorkspace *work, c_float *x) {
+    c_float lambda, norm_w;
+    size_t i;
 
     size_t n = work->data->n;
-    lambda = 0;
-    lambda_prev = -QPALM_INFTY;
-    vec_set_scalar(work->neg_dphi, 1.0, n);
+    cholmod_sparse* A = work->data->Q;
+    // size_t m = work->data->m;
 
-    while(c_absval(lambda-lambda_prev) > TOL) {
-        lambda_prev = lambda;
-        /* Qd = (Q + gamma*I)*neg_dphi */ 
-        mat_vec(work->data->Q, work->chol->neg_dphi, work->chol->Qd, &work->chol->c);
-        vec_add_scaled(work->Qd, work->neg_dphi, work->Qd, gamma, n);
-
-        Qd_norm = vec_norm_inf(work->Qd, n);
-        if (Qd_norm == 0) { /*Q is zeros*/
-            return TOL; /*zero after adjustments later*/
+    /*Current guess of the eigenvector */
+    if (x == NULL) {
+        x = work->d; 
+        /* Initialize eigenvector randomly. */
+        for (i = 0; i < n; i++) {
+            x[i] = (c_float) rand()/RAND_MAX;
         }
-        
-        lambda = vec_prod(work->Qd, work->neg_dphi, n) / vec_prod(work->neg_dphi, work->neg_dphi, n);
-        vec_mult_scalar(work->Qd, 1/Qd_norm, n);
-        prea_vec_copy(work->Qd, work->neg_dphi, n);
+        vec_self_mult_scalar(x, 1.0/vec_norm_two(x, n), n);
+    } else {
+        /* NB: Assume x is already normalized */
+        prea_vec_copy(x, work->d, n);
+        x = work->d;
     }
+    cholmod_dense *x_chol = work->chol->d;
 
+    
+    c_float *Ax = work->Qd;
+    cholmod_dense * Ax_chol = work->chol->Qd;
+    mat_vec(A, x_chol , Ax_chol, &work->chol->c);
+    lambda = vec_prod(x, Ax, n);
+
+    /*Current residual, Ax - lambda*x */
+    c_float *w = work->neg_dphi; 
+    cholmod_dense * w_chol = work->chol->neg_dphi;
+    c_float *Aw = work->Atyh;
+    cholmod_dense * Aw_chol = work->chol->Atyh;
+
+    /* Conjugate gradient direction */
+    c_float *p = work->temp_n; 
+    c_float *Ap = work->xx0;
+    c_float p_norm_inv;
+
+    /* Compressed system B = [x, w, p]'*Q*[x, w, p] */
+    c_float B[3][3]; 
+    c_float C[3][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}; /* C = [1 0 xp; 0 1 wp; xp wp 1] Takes into account that p is not orthonormal with x, w */
+    c_float lambda_B[3]; /* The eigenvalues of B */
+    c_float *y; /* Eigenvector corresponding to min(lambda_B) */
+    c_float xAw, wAw, xAp, wAp, pAp, xp, wp;
+
+    /* Compute residual and make it orthonormal wrt x */
+    vec_add_scaled(Ax, x, w, -lambda, n);
+    vec_add_scaled(w, x, w, -vec_prod(x, w, n), n);
+    vec_self_mult_scalar(w, 1.0/vec_norm_two(w, n), n);
+    mat_vec(A, w_chol, Aw_chol, &work->chol->c);
+    xAw = vec_prod(Aw, x, n);
+    wAw = vec_prod(Aw, w, n);
+
+    /* In the first compressed system, there is no p yet, so it is 2 by 2 */
+    c_float B_init[2][2] = {{lambda, xAw}, {xAw, wAw}};
+    c_float lambda_init[2];
+
+    /* Lapack variables */
+    long int info = 0, dim = 2, itype = 1;
+ 
+    /* Solve eigenvalue problem */
+    info = LAPACKE_dsyev(LAPACK_COL_MAJOR, 'V', 'L', dim, *B_init, dim, lambda_init);
+    // dsyev(&jobz, &uplo, &dim, *B_init, &dim, lambda_init, work, &lwork, &info);
+    lambda = lambda_init[0];
+
+    // double C_init[2][2] = {{1, 0}, {0, 1}};
+    // info = LAPACKE_dsygv(LAPACK_COL_MAJOR, itype, 'V', 'L', dim, *B_init, dim, C_init, dim, lambda_init);
+    // c_print("Info: %ld\n", info);
+
+    // c_print("Init lambda: %.14f %.14f\n", lambda_init[0], lambda_init[1]);
+
+    y = B_init[0];
+
+    /* Compute first p */
+    vec_mult_scalar(w, y[1], p, n);
+    vec_mult_scalar(Aw, y[1], Ap, n);
+    vec_add_scaled(p, x, x, y[0], n);
+    vec_add_scaled(Ap, Ax, Ax, y[0], n);
+    
+    dim = 3; /* From now on, the dimension of the eigenproblem to solve will be 3 */
+    size_t max_iter = 1000;
+    for (i = 0; i < max_iter; i++) {
+
+        /* Update w */
+        vec_add_scaled(Ax, x, w, -lambda, n);
+        /* Note: check inf norm because it is cheaper */
+        c_print("Norm_w: %.4f\n",vec_norm_inf(w, n));
+        if (vec_norm_inf(w, n) < TOL) {
+            norm_w = vec_norm_two(w, n);
+            lambda -= c_sqrt(2)*norm_w; /* Theoretical bound on the eigenvalue */
+            if (n <= 3) lambda -= 1e-6; /* If n <= 3, we should have the exact eigenvalue, hence we subtract a small value */
+            return lambda;
+        } 
+        vec_add_scaled(w, x, w, -vec_prod(x, w, n), n);
+        vec_self_mult_scalar(w, 1.0/vec_norm_two(w, n), n);
+        mat_vec(A, w_chol, Aw_chol, &work->chol->c);
+        xAw = vec_prod(Ax, w, n);
+        wAw = vec_prod(w, Aw, n);
+
+        /* Normalize p */
+        p_norm_inv = 1.0/vec_norm_two(p, n);
+        vec_self_mult_scalar(p, p_norm_inv, n);
+        vec_self_mult_scalar(Ap, p_norm_inv, n);
+
+        /* Compress the system */
+        xAp = vec_prod(Ax, p, n);
+        wAp = vec_prod(Aw, p, n);
+        pAp = vec_prod(Ap, p, n);
+        xp = vec_prod(x, p, n);
+        wp = vec_prod(w, p, n);
+
+        B[0][0] = lambda; B[0][1] = xAw; B[0][2] = xAp; 
+        B[1][0] = xAw;    B[1][1] = wAw; B[1][2] = wAp; 
+        B[2][0] = xAp;    B[2][1] = wAp; B[2][2] = pAp;
+
+        C[0][2] = xp; C[1][2] = wp; C[2][0] = xp; C[2][1] = wp; 
+        C[2][2] = 1.0; /* The dsygv routine might override this element, therefore we reset it here.*/
+
+        /* Solve eigenproblem B*x = lambda*C*x */
+        info = LAPACKE_dsygv(LAPACK_COL_MAJOR, itype, 'V', 'L', dim, *B, dim, C, dim, lambda_B);
+        // dsygv(&itype, &jobz, &uplo, &dim, *B, &dim, *C, &dim, lambda_B, work, &lwork, &info);
+        lambda = lambda_B[0];
+        y = B[0];
+
+        /* Update p and x */
+        vec_mult_add_scaled(p, w, y[2], y[1], n);
+        vec_mult_add_scaled(Ap, Aw, y[2], y[1], n);
+        vec_mult_add_scaled(x, p, y[0], 1, n);
+        vec_mult_add_scaled(Ax, Ap, y[0], 1, n);
+
+    }
+    
+    //TODO: Implement error handling here
     return lambda;
+
+}
+
+
+void set_settings_nonconvex(QPALMWorkspace *work){
+    c_float lambda;
+    lambda = lobpcg(work, NULL);
+    c_print("Lambda: %.14f\n", lambda);
+    if (lambda < 0) {
+        work->settings->proximal = TRUE;
+        work->settings->gamma_init = 1/c_absval(lambda);
+        work->settings->gamma_max = work->settings->gamma_init;
+    }
 }
 
 c_float gershgorin_max(cholmod_sparse* M, c_float *center, c_float *radius){
@@ -81,17 +234,4 @@ c_float gershgorin_max(cholmod_sparse* M, c_float *center, c_float *radius){
 
     return ub_eig;
 }
-
-void set_settings_nonconvex(QPALMWorkspace *work){
-    c_float lambda;
-    lambda = minimum_eigenvalue_Q(work);
-    /*adjust for power iterations tolerance */
-    lambda -= TOL; 
-    if (lambda < 0) {
-        work->settings->proximal = TRUE;
-        work->settings->gamma_init = 1/c_absval(lambda);
-        work->settings->gamma_max = work->settings->gamma_init;
-    }
-}
-
 

@@ -53,11 +53,19 @@ void vec_set_scalar_int(c_int *a, c_int sc, size_t n) {
   }
 }
 
-void vec_mult_scalar(c_float *a, c_float sc, size_t n) {
+void vec_self_mult_scalar(c_float *a, c_float sc, size_t n) {
   size_t i;
 
   for (i = 0; i < n; i++) {
     a[i] *= sc;
+  }
+}
+
+void vec_mult_scalar(const c_float *a, c_float sc, c_float *b, size_t n) {
+  size_t i;
+
+  for (i = 0; i < n; i++) {
+    b[i] = sc*a[i];
   }
 }
 
@@ -77,6 +85,9 @@ c_float vec_prod(const c_float *a, const c_float *b, size_t n) {
   return prod;
 }
 
+c_float vec_norm_two(const c_float *a, size_t n) {
+    return c_sqrt(vec_prod(a, a, n));
+}
 
 void vec_ew_prod(const c_float *a, const c_float *b, c_float *c, size_t n) {
   size_t i;
@@ -101,6 +112,14 @@ void vec_add_scaled(const c_float *a, const c_float *b, c_float *c, c_float sc, 
 
   for (i = 0; i < n; i++) {
     c[i] =  a[i] + sc * b[i];
+  }
+}
+
+void vec_mult_add_scaled(c_float *a, const c_float *b, c_float sc1, c_float sc2, size_t n) {
+  size_t i;
+
+  for (i = 0; i < n; i++) {
+    a[i] = sc1*a[i] + sc2*b[i];
   }
 }
 

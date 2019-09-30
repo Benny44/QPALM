@@ -32,9 +32,9 @@ MU_TEST(test_vec_set_scalar_int){
     }
 }
 
-MU_TEST(test_vec_mult_scalar){
+MU_TEST(test_vec_self_mult_scalar){
     c_float scalar = 3.0;
-    vec_mult_scalar(a, scalar, DIM);
+    vec_self_mult_scalar(a, scalar, DIM);
     mu_assert_double_eq(a[0], 0.3, TOL);
     mu_assert_double_eq(a[1], 7.5, TOL);
     mu_assert_double_eq(a[2], -11.7, TOL);
@@ -116,7 +116,7 @@ MU_TEST_SUITE(suite_lin_alg) {
 
     MU_RUN_TEST(test_vec_set_scalar);
     MU_RUN_TEST(test_vec_set_scalar_int);
-    MU_RUN_TEST(test_vec_mult_scalar);
+    MU_RUN_TEST(test_vec_self_mult_scalar);
     MU_RUN_TEST(test_vec_prod);
     MU_RUN_TEST(test_vec_add_scaled);
     MU_RUN_TEST(test_vec_norm_inf);

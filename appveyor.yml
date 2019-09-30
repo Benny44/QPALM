@@ -8,7 +8,7 @@ branches:
   only:
     - master
     - development
-    - fix-tests
+    - lobpcg
 
 platform:
   - x64

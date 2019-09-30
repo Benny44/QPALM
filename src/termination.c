@@ -28,7 +28,7 @@ c_int check_termination(QPALMWorkspace *work) {
     } else if (is_primal_infeasible(work)) {
         update_status(work->info, QPALM_PRIMAL_INFEASIBLE);
         if (work->settings->scaling) {
-            vec_mult_scalar(work->delta_y, work->scaling->cinv, work->data->m);
+            vec_self_mult_scalar(work->delta_y, work->scaling->cinv, work->data->m);
             vec_ew_prod(work->scaling->E, work->delta_y, work->delta_y, work->data->m);
         } 
         return 1;
@@ -236,7 +236,7 @@ c_int is_dual_infeasible(QPALMWorkspace *work) {
 void store_solution(QPALMWorkspace *work) {
     if (work->settings->scaling) {
         vec_ew_prod(work->x, work->scaling->D, work->solution->x, work->data->n);
-        vec_mult_scalar(work->yh, work->scaling->cinv, work->data->m);
+        vec_self_mult_scalar(work->yh, work->scaling->cinv, work->data->m);
         vec_ew_prod(work->yh, work->scaling->E, work->solution->y, work->data->m);
     } else {
         prea_vec_copy(work->x, work->solution->x, work->data->n);

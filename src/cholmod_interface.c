@@ -172,7 +172,7 @@ void ldlupdate_sigma_changed(QPALMWorkspace *work) {
 void ldlsolveLD_neg_dphi(QPALMWorkspace *work) {
   //set -dphi
   prea_vec_copy(work->dphi, work->neg_dphi, work->data->n);
-  vec_mult_scalar(work->neg_dphi, -1, work->data->n);
+  vec_self_mult_scalar(work->neg_dphi, -1, work->data->n);
   //d = ldlsolve(LD, -dphi)
   if (work->chol->d) {
       CHOLMOD(free_dense)(&work->chol->d, &work->chol->c);

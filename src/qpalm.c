@@ -193,6 +193,8 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   // CHOLMOD variables
   work->chol->neg_dphi = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, &work->chol->c);
   work->neg_dphi = work->chol->neg_dphi->x; 
+  work->chol->d = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, &work->chol->c);
+  work->d = work->chol->d->x;
   work->chol->Qd = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, &work->chol->c);
   work->Qd = work->chol->Qd->x;
   work->chol->Ad = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, &work->chol->c);
@@ -286,7 +288,7 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
       prea_vec_copy(y_warm_start, work->y, m);
       if (work->settings->scaling) {
         vec_ew_prod(work->y, work->scaling->Einv, work->y, m);
-        vec_mult_scalar(work->y, work->scaling->c, m);
+        vec_self_mult_scalar(work->y, work->scaling->c, m);
       }
     } else {
       vec_set_scalar(work->y, 0., m);
@@ -317,7 +319,7 @@ void qpalm_solve(QPALMWorkspace *work) {
   work->eps_rel_in = work->settings->eps_rel_in;
   work->chol->reset_newton = TRUE;
   work->gamma = work->settings->gamma_init;
-  work->gamma_maxed = FALSE;
+  work->gamma_maxed = (FALSE || work->settings->nonconvex);
   vec_set_scalar_int(work->chol->active_constraints_old, FALSE, work->data->m);
 
   //Check if the internal variables were correctly initialized. A path that leads to
@@ -583,7 +585,7 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
     vec_add_scaled(work->data->q, work->Qx, work->temp_n, work->scaling->cinv, n);
     work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->temp_n, n));
     work->scaling->cinv = 1/work->scaling->c;
-    vec_mult_scalar(work->data->q, work->scaling->c, n);
+    vec_self_mult_scalar(work->data->q, work->scaling->c, n);
     CHOLMOD(start)(&work->chol->c);
     cholmod_dense *c = CHOLMOD(ones)(1,1,CHOLMOD_REAL, &work->chol->c);
     c_float *cx = c->x;
@@ -592,7 +594,7 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
     CHOLMOD(free_dense)(&c, &work->chol->c);
     CHOLMOD(finish)(&work->chol->c);
 
-    vec_mult_scalar(work->Qx, work->scaling->c/c_old, n);
+    vec_self_mult_scalar(work->Qx, work->scaling->c/c_old, n);
     if (work->settings->proximal) {
       work->gamma = work->settings->gamma_init;
       vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->gamma, work->data->n);    
