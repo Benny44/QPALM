@@ -17,8 +17,9 @@ conda config --set always_yes yes --set changeps1 no
 conda config --set auto_update_conda false
 conda info -a
 
-:: Install the suitesparse binaries
+:: Install the suitesparse and lapack binaries
 conda install -c conda-forge suitesparse
+conda install -c conda-forge lapack
 
 
 IF "%PLATFORM%"=="x64" (
