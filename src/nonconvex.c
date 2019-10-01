@@ -12,49 +12,13 @@
 #include "constants.h"
 #include "global_opts.h"
 #include "lin_alg.h"
-#include <lapacke.h>
-
+#ifdef MATLAB /* For the mexinterface, call lapack included in matlab */
+    #include "lapack.h"
+#else
+    #include <lapacke.h>
+#endif
 
 #define TOL 1e-5 /*TODO: make this a setting */
-
-// c_float minimum_eigenvalue_Q(QPALMWorkspace *work){
-//     c_float lambda;
-//     /* calculate largest (in absolute value) eigenvalue */
-//     lambda = power_iterations_Q(work, 0);
-//     if (lambda > 0) {
-//         /* calculate smallest eigenvalue by shifting */
-//         lambda += power_iterations_Q(work, -lambda); 
-//     }
-//     return lambda;
-// }
-
-// c_float power_iterations_Q(QPALMWorkspace *work, c_float gamma){
-//     /* NB: use neg_dphi and Qd as links to cholmod data structures */
-//     c_float lambda, lambda_prev, Qd_norm;
-
-//     size_t n = work->data->n;
-//     lambda = 0;
-//     lambda_prev = -QPALM_INFTY;
-//     vec_set_scalar(work->neg_dphi, 1.0, n);
-
-//     while(c_absval(lambda-lambda_prev) > TOL) {
-//         lambda_prev = lambda;
-//         /* Qd = (Q + gamma*I)*neg_dphi */ 
-//         mat_vec(work->data->Q, work->chol->neg_dphi, work->chol->Qd, &work->chol->c);
-//         vec_add_scaled(work->Qd, work->neg_dphi, work->Qd, gamma, n);
-
-//         Qd_norm = vec_norm_inf(work->Qd, n);
-//         if (Qd_norm == 0) { /*Q is zeros*/
-//             return TOL; /*zero after adjustments later*/
-//         }
-        
-//         lambda = vec_prod(work->Qd, work->neg_dphi, n) / vec_prod(work->neg_dphi, work->neg_dphi, n);
-//         vec_mult_scalar(work->Qd, 1/Qd_norm, n);
-//         prea_vec_copy(work->Qd, work->neg_dphi, n);
-//     }
-
-//     return lambda;
-// }
 
 
 c_float lobpcg(QPALMWorkspace *work, c_float *x) {
@@ -117,10 +81,18 @@ c_float lobpcg(QPALMWorkspace *work, c_float *x) {
     c_float lambda_init[2];
 
     /* Lapack variables */
-    long int info = 0, dim = 2, itype = 1;
+    // long int info = 0, dim = 2, itype = 1;
  
+    long int info = 0, dim = 2, lwork = 10, itype = 1;
+    double lapack_work[10];
+    char jobz = 'V';
+    char uplo = 'L';
     /* Solve eigenvalue problem */
-    info = LAPACKE_dsyev(LAPACK_COL_MAJOR, 'V', 'L', dim, *B_init, dim, lambda_init);
+    #ifdef MATLAB
+        dsyev(&jobz, &uplo, &dim, *B_init, &dim, lambda_init, lapack_work, &lwork, &info);
+    #else
+        info = LAPACKE_dsyev(LAPACK_COL_MAJOR, jobz, uplo, dim, *B_init, dim, lambda_init);
+    #endif
     // dsyev(&jobz, &uplo, &dim, *B_init, &dim, lambda_init, work, &lwork, &info);
     lambda = lambda_init[0];
 
@@ -178,7 +150,11 @@ c_float lobpcg(QPALMWorkspace *work, c_float *x) {
         C[2][2] = 1.0; /* The dsygv routine might override this element, therefore we reset it here.*/
 
         /* Solve eigenproblem B*x = lambda*C*x */
-        info = LAPACKE_dsygv(LAPACK_COL_MAJOR, itype, 'V', 'L', dim, *B, dim, C, dim, lambda_B);
+        #ifdef MATLAB
+            dsygv(&itype, &jobz, &uplo, &dim, *B, &dim, *C, &dim, lambda_B, lapack_work, &lwork, &info);
+        #else
+            info = LAPACKE_dsygv(LAPACK_COL_MAJOR, itype, 'V', 'L', dim, *B, dim, C, dim, lambda_B);
+        #endif
         // dsygv(&itype, &jobz, &uplo, &dim, *B, &dim, *C, &dim, lambda_B, work, &lwork, &info);
         lambda = lambda_B[0];
         y = B[0];

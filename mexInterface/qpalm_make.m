@@ -351,6 +351,7 @@ for f = source
     o = [o obj_extension] ;
     obj = [obj  ' ' o] ;					            %#ok
     s = sprintf ('mex %s -DDLONG -O %s -c %s.c', flags, include, ff) ;
+    s = [s obj ' ' lapack] ;
     kk = do_cmd (s, kk, details) ;
 end
 
