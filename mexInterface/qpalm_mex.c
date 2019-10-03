@@ -409,15 +409,15 @@ mxArray* copyInfoToMxStruct(QPALMInfo* info){
 
   //map the QPALM_INFO fields one at a time into mxArrays
   //matlab all numeric values as doubles
-  mxSetField(mxPtr, 0, "iter",          mxCreateDoubleScalar(info->iter));
-  mxSetField(mxPtr, 0, "iter_out",      mxCreateDoubleScalar(info->iter_out));
-  mxSetField(mxPtr, 0, "status",        mxCreateString(info->status));
-  mxSetField(mxPtr, 0, "status_val",    mxCreateDoubleScalar(info->status_val));
-  mxSetField(mxPtr, 0, "pri_res_norm",  mxCreateDoubleScalar(info->pri_res_norm));
-  mxSetField(mxPtr, 0, "dua_res_norm",  mxCreateDoubleScalar(info->dua_res_norm));
-  mxSetField(mxPtr, 0, "dua2_res_norm", mxCreateDoubleScalar(info->dua2_res_norm));
-  mxSetField(mxPtr, 0, "objective",     mxCreateDoubleScalar(info->objective));
-  mxSetField(mxPtr, 0, "dual_objective",     mxCreateDoubleScalar(info->dual_objective));
+  mxSetField(mxPtr, 0, "iter",              mxCreateDoubleScalar(info->iter));
+  mxSetField(mxPtr, 0, "iter_out",          mxCreateDoubleScalar(info->iter_out));
+  mxSetField(mxPtr, 0, "status",            mxCreateString(info->status));
+  mxSetField(mxPtr, 0, "status_val",        mxCreateDoubleScalar(info->status_val));
+  mxSetField(mxPtr, 0, "pri_res_norm",      mxCreateDoubleScalar(info->pri_res_norm));
+  mxSetField(mxPtr, 0, "dua_res_norm",      mxCreateDoubleScalar(info->dua_res_norm));
+  mxSetField(mxPtr, 0, "dua2_res_norm",     mxCreateDoubleScalar(info->dua2_res_norm));
+  mxSetField(mxPtr, 0, "objective",         mxCreateDoubleScalar(info->objective));
+  mxSetField(mxPtr, 0, "dual_objective",    mxCreateDoubleScalar(info->dual_objective));
 
   #ifdef PROFILING
   //if not profiling, these fields will be empty

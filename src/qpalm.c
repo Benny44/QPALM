@@ -351,7 +351,7 @@ void qpalm_solve(QPALMWorkspace *work) {
     CHOLMOD(factorize) (work->data->Q, work->chol->LD_Q, &work->chol->c);
     work->info->dual_objective = compute_dual_objective(work);    
   } else {
-    work->info->dual_objective = QPALM_NAN;
+    work->info->dual_objective = QPALM_NULL;
   }
 
   c_int iter;
