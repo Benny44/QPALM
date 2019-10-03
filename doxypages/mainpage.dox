@@ -12,13 +12,9 @@
  * @f}
  * 
  * \section install_sec Installation
- * Make sure to clone this repository with the submodules (suitesparse). If this is the first time you are using QPALM, after cloning run 
- * \code{.sh}
- * git submodule update --init 
- * \endcode
  * \subsection c Compiling the C library
  * Binaries for Linux and MacOS can be obtained from <a href="https://bintray.com/benny44/generic/QPALM/1.0">bintray</a>. 
- * These were compiled against suitesparse from https://anaconda.org/conda-forge/suitesparse. Windows support coming soon.
+ * These were compiled against suitesparse and lapack from conda, see https://anaconda.org/conda-forge/suitesparse and https://anaconda.org/conda-forge/lapack. 
  * 
  * \subsection mex Compiling the Mex interface
  * Add QPALM/mexInterface to your Matlab path and run \c qpalm_make.m. With this command, you compile the cholmod and qpalm source files, and finally the qpalm Mex 

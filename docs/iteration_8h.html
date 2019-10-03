@@ -95,6 +95,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a2493eaf6f46fae7e188477e427acfece"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="iteration_8h.html#a2493eaf6f46fae7e188477e427acfece">update_gamma</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
 <tr class="memdesc:a2493eaf6f46fae7e188477e427acfece"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the proximal penalty.  <a href="#a2493eaf6f46fae7e188477e427acfece">More...</a><br /></td></tr>
 <tr class="separator:a2493eaf6f46fae7e188477e427acfece"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd468e1610375659fc592381b0bc554d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="iteration_8h.html#afd468e1610375659fc592381b0bc554d">boost_gamma</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:afd468e1610375659fc592381b0bc554d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximize the proximal penalty.  <a href="#afd468e1610375659fc592381b0bc554d">More...</a><br /></td></tr>
+<tr class="separator:afd468e1610375659fc592381b0bc554d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87fa70debe32ac31a449ac0adae58b95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="iteration_8h.html#a87fa70debe32ac31a449ac0adae58b95">update_primal_iterate</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
 <tr class="memdesc:a87fa70debe32ac31a449ac0adae58b95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the primal iterate.  <a href="#a87fa70debe32ac31a449ac0adae58b95">More...</a><br /></td></tr>
 <tr class="separator:a87fa70debe32ac31a449ac0adae58b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -110,6 +113,32 @@ Functions</h2></td></tr>
 <dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
 <p>This file contains the functions that make up the qpalm algorithm (the functions that qpalm_solve will use). These include the computation of the residuals at the start of the iteration, the update of the primal variables in an inner iteration, the update of the penalty factors and dual variables in an outer iteration, the computation of the primal and dual objective values, etc. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="afd468e1610375659fc592381b0bc554d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd468e1610375659fc592381b0bc554d">&#9670;&nbsp;</a></span>boost_gamma()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void boost_gamma </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
+          <td class="paramname"><em>work</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maximize the proximal penalty. </p>
+<p class="">The proximal penalty parameter can be increased when the primal residual is low and the number of active constraints no longer changes. Increasing the proximal penalty will significantly speed up the convergence of the dual residual in that case. First, the maximum allowed value is computed, based on the fact that <img class="formulaInl" alt="$Q+A^T \Sigma A + \frac{1}{\gamma}I$" src="form_94.png"/> should be sufficiently positive definite for the factorization routines. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a34b3622f347ef66f861e51832266968a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a34b3622f347ef66f861e51832266968a">&#9670;&nbsp;</a></span>compute_dual_objective()</h2>
 

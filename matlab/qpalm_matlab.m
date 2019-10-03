@@ -253,6 +253,7 @@ Asig  = (sparse(1:m,1:m,sig,m,m)*A);
 y_next = zeros(m,1);
 k_prev = 0; 
 
+na = 0;
 
 
 for k = 1:maxiter
@@ -424,7 +425,9 @@ for k = 1:maxiter
                reset_newton = true; 
            end
        end
-%        reset_newton = true;
+        
+       stats.nact(k) = na;
+       stats.nact_changed(k) = 0;
        
    else
       

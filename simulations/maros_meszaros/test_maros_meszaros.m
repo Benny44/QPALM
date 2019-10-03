@@ -42,7 +42,7 @@ maros_files = {};
 Stats_qpalm_matlab = {};
 
 options.SCALING_ITER=2;
-options.EPS_ABS=1e-7;
+options.EPS_ABS=1e-6;
 
 for i = 1:ll
     baseFileName = Filename{i};

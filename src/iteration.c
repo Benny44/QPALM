@@ -1,3 +1,14 @@
+/**
+ * @file iteration.c
+ * @author Ben Hermans
+ * @brief QPALM main solver routines.
+ * @details This file contains the functions that make up the qpalm algorithm (the functions that qpalm_solve will use). 
+ * These include the computation of the residuals at the start of the iteration, 
+ * the update of the primal variables in an inner iteration, 
+ * the update of the penalty factors and dual variables in an outer iteration,
+ * the computation of the primal and dual objective values, etc.
+ */
+
 #include "iteration.h"
 #include "lin_alg.h"
 #include "cholmod_interface.h"

@@ -113,7 +113,7 @@ c_float vec_prod(const c_float *a,
                  size_t         n);
 
 /** 
- * 2-norm of a vector, @f$\|a\|_\two@f$. 
+ * 2-norm of a vector, @f$\|a\|_2@f$. 
  * 
  * @param a Vector
  * @param n Vector length

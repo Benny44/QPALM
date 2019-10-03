@@ -92,3 +92,7 @@
 \form#91:$ \frac{1}{|\lambda_\textrm{min}|} $
 \form#92:$ Q + \frac{1}{\gamma}I $
 \form#93:$sigma$
+\form#94:$Q+A^T \Sigma A + \frac{1}{\gamma}I$
+\form#95:$\|a\|_\two$
+\form#96:$a_i = sc1\cdota_i + sc2\cdot b_i$
+\form#97:$\|a\|_2$

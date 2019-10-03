@@ -86,6 +86,7 @@ if options.qpalm_matlab
         opts.gamma    = 1e1;
         opts.gammaUpd = 10;
         opts.gammaMax = 1e7;
+%         opts.verbose = true;
 %         opts.sig = 5;
         opts.Delta   = 100;
         opts.scaling = 'simple';

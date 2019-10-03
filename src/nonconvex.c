@@ -3,8 +3,9 @@
  * @author Ben Hermans
  * @brief Routines to deal with nonconvex QPs.
  * @details The functions in this file serve to set up QPALM for a nonconvex QP. The main routine in 
- * this file computes the minimum eigenvalue of a square matrix, based on power iterations. Furthermore, 
- * some setting updates are performed. 
+ * this file computes the minimum eigenvalue of a square matrix, based on lobpcg \cite knyazev2001toward. Furthermore, 
+ * some setting updates are performed. In addition, the spectrum of a matrix can be upper bounded using 
+ * Gershgorin's circle theorem, which is used in the gamma_boost routine in iteration.c.
  */
 
 #include "nonconvex.h"
@@ -18,10 +19,13 @@
     #include <lapacke.h>
 #endif
 
-#define TOL 1e-5 /*TODO: make this a setting */
+/*TODO: make this a setting */
+#define LOBPCG_TOL 1e-5 /**< Tolerance on the infinity norm of the residual in lobpcg. */ 
 
 
-c_float lobpcg(QPALMWorkspace *work, c_float *x) {
+
+
+static c_float lobpcg(QPALMWorkspace *work, c_float *x) {
     c_float lambda, norm_w;
     size_t i;
 
@@ -81,27 +85,18 @@ c_float lobpcg(QPALMWorkspace *work, c_float *x) {
     c_float lambda_init[2];
 
     /* Lapack variables */
-    // long int info = 0, dim = 2, itype = 1;
- 
     long int info = 0, dim = 2, lwork = 10, itype = 1;
     double lapack_work[10];
     char jobz = 'V';
     char uplo = 'L';
+
     /* Solve eigenvalue problem */
     #ifdef MATLAB
         dsyev(&jobz, &uplo, &dim, *B_init, &dim, lambda_init, lapack_work, &lwork, &info);
     #else
         info = LAPACKE_dsyev(LAPACK_COL_MAJOR, jobz, uplo, dim, *B_init, dim, lambda_init);
     #endif
-    // dsyev(&jobz, &uplo, &dim, *B_init, &dim, lambda_init, work, &lwork, &info);
     lambda = lambda_init[0];
-
-    // double C_init[2][2] = {{1, 0}, {0, 1}};
-    // info = LAPACKE_dsygv(LAPACK_COL_MAJOR, itype, 'V', 'L', dim, *B_init, dim, C_init, dim, lambda_init);
-    // c_print("Info: %ld\n", info);
-
-    // c_print("Init lambda: %.14f %.14f\n", lambda_init[0], lambda_init[1]);
-
     y = B_init[0];
 
     /* Compute first p */
@@ -111,14 +106,13 @@ c_float lobpcg(QPALMWorkspace *work, c_float *x) {
     vec_add_scaled(Ap, Ax, Ax, y[0], n);
     
     dim = 3; /* From now on, the dimension of the eigenproblem to solve will be 3 */
-    size_t max_iter = 1000;
+    size_t max_iter = 1000; /*TODO: make this a setting */
     for (i = 0; i < max_iter; i++) {
 
         /* Update w */
         vec_add_scaled(Ax, x, w, -lambda, n);
         /* Note: check inf norm because it is cheaper */
-        c_print("Norm_w: %.4f\n",vec_norm_inf(w, n));
-        if (vec_norm_inf(w, n) < TOL) {
+        if (vec_norm_inf(w, n) < LOBPCG_TOL) {
             norm_w = vec_norm_two(w, n);
             lambda -= c_sqrt(2)*norm_w; /* Theoretical bound on the eigenvalue */
             if (n <= 3) lambda -= 1e-6; /* If n <= 3, we should have the exact eigenvalue, hence we subtract a small value */
@@ -155,7 +149,6 @@ c_float lobpcg(QPALMWorkspace *work, c_float *x) {
         #else
             info = LAPACKE_dsygv(LAPACK_COL_MAJOR, itype, 'V', 'L', dim, *B, dim, C, dim, lambda_B);
         #endif
-        // dsygv(&itype, &jobz, &uplo, &dim, *B, &dim, *C, &dim, lambda_B, work, &lwork, &info);
         lambda = lambda_B[0];
         y = B[0];
 
@@ -176,7 +169,6 @@ c_float lobpcg(QPALMWorkspace *work, c_float *x) {
 void set_settings_nonconvex(QPALMWorkspace *work){
     c_float lambda;
     lambda = lobpcg(work, NULL);
-    c_print("Lambda: %.14f\n", lambda);
     if (lambda < 0) {
         work->settings->proximal = TRUE;
         work->settings->gamma_init = 1/c_absval(lambda);

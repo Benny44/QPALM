@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['validate_2ec',['validate.c',['../validate_8c.html',1,'']]],
-  ['validate_2eh',['validate.h',['../validate_8h.html',1,'']]],
   ['validate_5fdata',['validate_data',['../validate_8c.html#a095cca2f68e07f3b0ebd35a2f4a12d9b',1,'validate_data(const QPALMData *data):&#160;validate.c'],['../validate_8h.html#a095cca2f68e07f3b0ebd35a2f4a12d9b',1,'validate_data(const QPALMData *data):&#160;validate.c']]],
   ['validate_5fsettings',['validate_settings',['../validate_8c.html#aa3fa0338cebc63078430fed1211df147',1,'validate_settings(const QPALMSettings *settings):&#160;validate.c'],['../validate_8h.html#aa3fa0338cebc63078430fed1211df147',1,'validate_settings(const QPALMSettings *settings):&#160;validate.c']]],
   ['vec_5fadd_5fscaled',['vec_add_scaled',['../lin__alg_8c.html#a0fde1aeeea954e43db160ec6e3697cd5',1,'vec_add_scaled(const c_float *a, const c_float *b, c_float *c, c_float sc, size_t n):&#160;lin_alg.c'],['../lin__alg_8h.html#a0fde1aeeea954e43db160ec6e3697cd5',1,'vec_add_scaled(const c_float *a, const c_float *b, c_float *c, c_float sc, size_t n):&#160;lin_alg.c']]],
@@ -22,6 +20,5 @@ var searchData=
   ['vec_5fprod_5find',['vec_prod_ind',['../linesearch_8c.html#ac4bdfc80a644d8c75a672963c7682af9',1,'vec_prod_ind(const c_float *a, const c_float *b, const c_int *L, size_t n):&#160;linesearch.c'],['../linesearch_8h.html#ac4bdfc80a644d8c75a672963c7682af9',1,'vec_prod_ind(const c_float *a, const c_float *b, const c_int *L, size_t n):&#160;linesearch.c']]],
   ['vec_5fself_5fmult_5fscalar',['vec_self_mult_scalar',['../lin__alg_8c.html#a932b289ad07aea70e64b417ef9160674',1,'vec_self_mult_scalar(c_float *a, c_float sc, size_t n):&#160;lin_alg.c'],['../lin__alg_8h.html#a932b289ad07aea70e64b417ef9160674',1,'vec_self_mult_scalar(c_float *a, c_float sc, size_t n):&#160;lin_alg.c']]],
   ['vec_5fset_5fscalar',['vec_set_scalar',['../lin__alg_8c.html#a67ead739705f515285526db604c5bb7d',1,'vec_set_scalar(c_float *a, c_float sc, size_t n):&#160;lin_alg.c'],['../lin__alg_8h.html#a67ead739705f515285526db604c5bb7d',1,'vec_set_scalar(c_float *a, c_float sc, size_t n):&#160;lin_alg.c']]],
-  ['vec_5fset_5fscalar_5fint',['vec_set_scalar_int',['../lin__alg_8c.html#a7e2e62d3c501d9f6df8410658c73a1ad',1,'vec_set_scalar_int(c_int *a, c_int sc, size_t n):&#160;lin_alg.c'],['../lin__alg_8h.html#a7e2e62d3c501d9f6df8410658c73a1ad',1,'vec_set_scalar_int(c_int *a, c_int sc, size_t n):&#160;lin_alg.c']]],
-  ['verbose',['verbose',['../structQPALMSettings.html#a9ea17b9d594959ee2d589ef11ccd2dfd',1,'QPALMSettings::verbose()'],['../constants_8h.html#a42f8c497a1968074f38bf5055c650dca',1,'VERBOSE():&#160;constants.h']]]
+  ['vec_5fset_5fscalar_5fint',['vec_set_scalar_int',['../lin__alg_8c.html#a7e2e62d3c501d9f6df8410658c73a1ad',1,'vec_set_scalar_int(c_int *a, c_int sc, size_t n):&#160;lin_alg.c'],['../lin__alg_8h.html#a7e2e62d3c501d9f6df8410658c73a1ad',1,'vec_set_scalar_int(c_int *a, c_int sc, size_t n):&#160;lin_alg.c']]]
 ];

@@ -82,88 +82,68 @@ $(function() {
 <code>#include &quot;<a class="el" href="constants_8h_source.html">constants.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="global__opts_8h_source.html">global_opts.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="lin__alg_8h_source.html">lin_alg.h</a>&quot;</code><br />
+<code>#include &lt;lapacke.h&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a156b862ebf6d213f5da19b9e3ccb779e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8c.html#a156b862ebf6d213f5da19b9e3ccb779e">TOL</a>&#160;&#160;&#160;1e-3 /*TODO: make this a setting */</td></tr>
-<tr class="separator:a156b862ebf6d213f5da19b9e3ccb779e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8f250b38eea597d18296dec202f296b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8c.html#ad8f250b38eea597d18296dec202f296b">LOBPCG_TOL</a>&#160;&#160;&#160;1e-5</td></tr>
+<tr class="memdesc:ad8f250b38eea597d18296dec202f296b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tolerance on the infinity norm of the residual in lobpcg.  <a href="#ad8f250b38eea597d18296dec202f296b">More...</a><br /></td></tr>
+<tr class="separator:ad8f250b38eea597d18296dec202f296b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:adf42de4281a489f3fe92bf12fb0b7384"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8c.html#adf42de4281a489f3fe92bf12fb0b7384">minimum_eigenvalue_Q</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:adf42de4281a489f3fe92bf12fb0b7384"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the minimum eigenvalue of <img class="formulaInl" alt="$Q$" src="form_7.png"/>.  <a href="#adf42de4281a489f3fe92bf12fb0b7384">More...</a><br /></td></tr>
-<tr class="separator:adf42de4281a489f3fe92bf12fb0b7384"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3186053134c48ab4b1d1c00c908dc3b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8c.html#ae3186053134c48ab4b1d1c00c908dc3b">power_iterations_Q</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> gamma)</td></tr>
-<tr class="memdesc:ae3186053134c48ab4b1d1c00c908dc3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the maximum (in absolute value) eigenvalue of <img class="formulaInl" alt="$ Q + \gamma*I $" src="form_90.png"/>.  <a href="#ae3186053134c48ab4b1d1c00c908dc3b">More...</a><br /></td></tr>
-<tr class="separator:ae3186053134c48ab4b1d1c00c908dc3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57137c07fad57ec45a2e4ff37ec69d72"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8c.html#a57137c07fad57ec45a2e4ff37ec69d72">set_settings_nonconvex</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
 <tr class="memdesc:a57137c07fad57ec45a2e4ff37ec69d72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the proximal parameters for nonconvex QPs.  <a href="#a57137c07fad57ec45a2e4ff37ec69d72">More...</a><br /></td></tr>
 <tr class="separator:a57137c07fad57ec45a2e4ff37ec69d72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8d8f2961242a1367cab7c1957a3006c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8c.html#ae8d8f2961242a1367cab7c1957a3006c">gershgorin_max</a> (cholmod_sparse *M, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *center, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *radius)</td></tr>
+<tr class="memdesc:ae8d8f2961242a1367cab7c1957a3006c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the Gershgorin upper bound for the eigenvalues of a symmetric matrix.  <a href="#ae8d8f2961242a1367cab7c1957a3006c">More...</a><br /></td></tr>
+<tr class="separator:ae8d8f2961242a1367cab7c1957a3006c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Routines to deal with nonconvex QPs. </p>
 <dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
-<p>The functions in this file serve to set up QPALM for a nonconvex QP. The main routine in this file computes the minimum eigenvalue of a square matrix, based on power iterations. Furthermore, some setting updates are performed. </p>
+<p>The functions in this file serve to set up QPALM for a nonconvex QP. The main routine in this file computes the minimum eigenvalue of a square matrix, based on lobpcg <a class="el" href="citelist.html#CITEREF_knyazev2001toward">[3]</a>. Furthermore, some setting updates are performed. In addition, the spectrum of a matrix can be upper bounded using Gershgorin's circle theorem, which is used in the gamma_boost routine in <a class="el" href="iteration_8c.html" title="QPALM main solver routines.">iteration.c</a>. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a156b862ebf6d213f5da19b9e3ccb779e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a156b862ebf6d213f5da19b9e3ccb779e">&#9670;&nbsp;</a></span>TOL</h2>
+<a id="ad8f250b38eea597d18296dec202f296b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8f250b38eea597d18296dec202f296b">&#9670;&nbsp;</a></span>LOBPCG_TOL</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define TOL&#160;&#160;&#160;1e-3 /*TODO: make this a setting */</td>
+          <td class="memname">#define LOBPCG_TOL&#160;&#160;&#160;1e-5</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Tolerance on the infinity norm of the residual in lobpcg. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="adf42de4281a489f3fe92bf12fb0b7384"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf42de4281a489f3fe92bf12fb0b7384">&#9670;&nbsp;</a></span>minimum_eigenvalue_Q()</h2>
+<a id="ae8d8f2961242a1367cab7c1957a3006c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8d8f2961242a1367cab7c1957a3006c">&#9670;&nbsp;</a></span>gershgorin_max()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> minimum_eigenvalue_Q </td>
+          <td class="memname"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> gershgorin_max </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Calculate the minimum eigenvalue of <img class="formulaInl" alt="$Q$" src="form_7.png"/>. </p>
-<p class="">The routine can be broken down into two steps. 1) Compute <img class="formulaInl" alt="$\lambda =$" src="form_87.png"/> the maximum (in absolute value) eigenvalue of <img class="formulaInl" alt="$Q$" src="form_7.png"/>. If this is negative, then return. 2) Compute the maximum (in absolute value) eigenvalue of <img class="formulaInl" alt="$Q - \lambda*I$" src="form_88.png"/>. This is the smallest eigenvalue of <img class="formulaInl" alt="$Q$" src="form_7.png"/> offset by the initial <img class="formulaInl" alt="$\lambda$" src="form_89.png"/>, so return after adjusting.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">work</td><td>Workspace </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ae3186053134c48ab4b1d1c00c908dc3b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3186053134c48ab4b1d1c00c908dc3b">&#9670;&nbsp;</a></span>power_iterations_Q()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> power_iterations_Q </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em>, </td>
+          <td class="paramtype">cholmod_sparse *&#160;</td>
+          <td class="paramname"><em>M</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td>
-          <td class="paramname"><em>gamma</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramname"><em>center</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramname"><em>radius</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -173,15 +153,17 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Calculate the maximum (in absolute value) eigenvalue of <img class="formulaInl" alt="$ Q + \gamma*I $" src="form_90.png"/>. </p>
-<p class="">This routine implements a simple version of power iterations.</p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Calculate the Gershgorin upper bound for the eigenvalues of a symmetric matrix. </p>
+<p class="">This routine uses the Gershgorin circle theorem to compute an upper bound on the eigenvalues of a matrix.</p>
+<p class="">@assumption M is symmetric </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">work</td><td>Workspace </td></tr>
-    <tr><td class="paramname">gamma</td><td>Offset </td></tr>
+    <tr><td class="paramname">M</td><td>Matrix </td></tr>
+    <tr><td class="paramname">center</td><td>Vector of size M-&gt;ncol to hold the values of the centers of the discs </td></tr>
+    <tr><td class="paramname">radius</td><td>Vector of size M-&gt;ncol to hold the values of the radii of the discs </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Upper bound on the eigenvalues of M </dd></dl>
 
 </div>
 </div>
@@ -202,7 +184,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the proximal parameters for nonconvex QPs. </p>
-<p class="">QPALM can deal with nonconvex QPs, by setting the initial and maximal proximal penalty small enough (smaller than <img class="formulaInl" alt="$ \frac{1}{|\lambda_\textrm{min}|} $" src="form_91.png"/>). This ensures positive definiteness of <img class="formulaInl" alt="$ Q + \frac{1}{\gamma}I $" src="form_92.png"/> during the iterations.</p>
+<p class="">QPALM can deal with nonconvex QPs, by setting the initial and maximal proximal penalty small enough (smaller than <img class="formulaInl" alt="$ \frac{1}{|\lambda_\textrm{min}|} $" src="form_91.png"/>). This ensures positive definiteness of <img class="formulaInl" alt="$ Q + \frac{1}{\gamma}I $" src="form_92.png"/> during the iterations. The minimum eigenvalue is computed using lobpcg.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
