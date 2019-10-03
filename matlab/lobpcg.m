@@ -1,4 +1,4 @@
-function lambda_min = lobpcg( A )
+function lambda_min = lobpcg( A, x )
 %Calculate the minimum eigenvalue of the matrix A using the LOBPCG
 %algorithm
 
@@ -8,48 +8,74 @@ TOL = 1e-5;
 
 assert(m==n, 'A must be square');
 
-x = rand(n,1);
-x = x/norm(x);
+% rng(1);
 
-max_iter = 1000;
+if nargin < 2
+    x = rand(n,1);
+    % x = ones(n,1);
+    x = x/norm(x);
+end
+
+max_iter = 10000;
+Ax = A*x;
+
+lambda_min = Ax'*x;
+w = Ax - lambda_min*x;
+
+%get residual orthonormal wrt x
+w = w - x*(x'*w);
+w = w/norm(w);
+Aw = A*w;
+xAw = Ax'*w;
+wAw = w'*Aw;
+
+[V, lambda] = eig([lambda_min xAw; xAw wAw]);
+lambda_min = lambda(1,1); %The first eigenvalue is the smallest
+eig_vec = V(:,1);
+
+p = w*eig_vec(2);
+Ap = Aw*eig_vec(2);
+x = x*eig_vec(1)+p;
+Ax = Ax*eig_vec(1)+Ap;
+
 for i = 1:max_iter
-    w = A*x - rayleigh(A,x)*x;
-    if i == 1
-        V = orthonormal_basis([x, w]);
-    else
-        V = orthonormal_basis([x, w, x_prev]);
-    end
-    x_prev = x;
-    
-    B = V'*A*V;
-    [eig_vec_B, lambda_B] = eig(B);
-    [lambda_min, index] = min(diag(lambda_B));
-    x = V*eig_vec_B(:,index);
-    if norm(A*x - lambda_min*x, inf) < TOL
-        fprintf('Lambda: %.4e, Iter: %d \n', lambda_min, i);
+    w = Ax-lambda_min*x;
+    if norm(w, inf) < TOL 
+        lambda_min = lambda_min - sqrt(2)*norm(w); %theoretical bound on lambda
+        if n <= 3 %This means we have found the exact eigenvalue
+            lambda_min = lambda_min - 1e-6;
+        end
         break;
-    end 
-   
-end
-
-end
-
-function lambda = rayleigh(A,x)
-%Helper function to compute the rayleigh quotient
-lambda = (x'*A*x)/(x'*x);
-end
-
-function V = orthonormal_basis(vectors)
-%Assume vectors are LI
-n = size(vectors,2);
-V=zeros(size(vectors));
-for k = 1:n
-    v = vectors(:,k);
-    for j = k-1:-1:1
-        v = v - (V(:,j)'*v)*V(:,j);
     end
-    V(:,k) = v/norm(v);
+    w = w-x*(x'*w);
+    w = w/norm(w);
+    Aw = A*w;
+    
+    xAw = Ax'*w;
+    wAw = w'*Aw;
+    
+    norm_p = norm(p);
+    p = p/norm_p;
+    Ap = Ap/norm_p;
+    
+    xAp = Ax'*p;
+    wAp = Aw'*p;
+    pAp = Ap'*p;
+    xp = x'*p;
+    wp = w'*p;
+    
+    B = [lambda_min xAw xAp; xAw wAw wAp; xAp wAp pAp];
+    C = [1 0 xp; 0 1 wp; xp wp 1];
+ 
+    [eig_vec_B, lambda_B] = eig(B, C);
+    lambda_min = lambda_B(1,1);
+    eig_vec = eig_vec_B(:,1);
+    
+    p = w*eig_vec(2) + p*eig_vec(3);
+    Ap = Aw*eig_vec(2) + Ap*eig_vec(3);
+    x = x*eig_vec(1) + p;
+    Ax = Ax*eig_vec(1) + Ap;
+       
 end
 
 end
-

@@ -215,13 +215,17 @@ else
     nonconvex = opts.nonconvex;
 end
 
+gamma_maxed = false;
+
 if nonconvex
-    lambda = minimum_eig(Q);
-    lambda_adj = lambda - 1e-3; %adjust for tolerance
-    if lambda_adj < 0
+%     lambda = minimum_eig(Q);
+    lambda = lobpcg(Q);
+%     lambda_adj = lambda - 1e-3; %adjust for tolerance
+    if lambda < 0
         proximal = true;
-        gamma = 1/abs(lambda_adj);
+        gamma = 1/abs(lambda);
         gammaMax = gamma;
+        gamma_maxed = true;
     end
 end
 
@@ -240,7 +244,6 @@ end
 K = 1; 
 sig_updated = true; %Reset lbfgs initially and perform gradient descent step
 reset_newton = true;
-gamma_maxed = false;
 
 %Initialization for Qdx and Adx used in is_dual_infeasible;
 tau = 0; Qd = zeros(n,1); Ad = zeros(m,1); d = zeros(n,1);

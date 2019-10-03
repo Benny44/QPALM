@@ -2,7 +2,6 @@
 %nonconvex QP
 
 %% Generate data
-opts.nonconvex = true;
 Q = sparse([2 0; 0 -3]);
 q = [1;2];
 m = 2;
