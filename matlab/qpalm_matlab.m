@@ -65,17 +65,6 @@ else
     sigma_max = opts.sigma_max;
 end
 
-if nargin<8 || ~isfield(opts,'linsys')
-    linsys = 2;
-else
-    linsys = opts.linsys;
-end
-
-if linsys == 1
-    linopts.POSDEF = true;
-    linopts.SYM = true;
-end
-
 if nargin<8 || ~isfield(opts,'eps_abs')
     eps_abs = 1e-4;
 else
@@ -471,117 +460,21 @@ for k = 1:maxiter
           end
           
           if na 
-              switch linsys
-                  case 0 % sparse backslash
-                      d = -(Q+A(active_cnstrs,:)'*sparse(1:na,1:na,sig(active_cnstrs),na,na)*A(active_cnstrs,:))\dphi;
-                  case 1% Cholesky via backslash 1
-                      if na>1
-                          d = -linsolve((Q+A(active_cnstrs,:)'*diag(sig(active_cnstrs))*A(active_cnstrs,:)),dphi,linopts);
-                      else
-                          d = -(Q+A(active_cnstrs,:)'*diag(sig(active_cnstrs))*A(active_cnstrs,:))\dphi;
-                      end
-                  case 2% ldlchol 2
-                      if mod(k,reset_newton_iter)==0
-                          reset_newton = true;
-                      end
-                      
-                      [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton);
-%                       continue;
-                      reset_newton = false;
-    %                   LD = ldlchol(Q+A(active_cnstrs,:)'*spdiags(sig(active_cnstrs),0,na,na)*A(active_cnstrs,:));
-    %                   d  = -ldlsolve (LD,dphi);
-                  case 3% lchol  3
-                      [L,~,p] = lchol(Q+A(active_cnstrs,:)'*sparse(1:na,1:na,sig(active_cnstrs),na,na)*A(active_cnstrs,:));
-                      d(p,:)  = -L'\(L\(dphi(p,:)));
-                  case 4
-                      % chol 4
-                      [L,~,p]   = chol(Q+A(active_cnstrs,:)'*sparse(1:na,1:na,sig(active_cnstrs),na,na)*A(active_cnstrs,:),'lower','vector');
-                      d(p,:)    = -L'\(L\(dphi(p,:)));
-                  case 5% Backslash 5
-                      dlam  = -[Q A(active_cnstrs,:)';A(active_cnstrs,:) -sparse(1:na,1:na,1./sig(active_cnstrs),na,na)]\[dphi;zeros(na,1)];
-                      d     = dlam(1:n,1);
-                  case 6% Indefinite LDL 6
-                      [L, D, p] = ldl([Q A(active_cnstrs,:)';A(active_cnstrs,:) -sparse(1:na,1:na,1./sig(active_cnstrs),na,na)], 'vector');
-                      dlam      = -[dphi;zeros(na,1)];
-                      dlam(p,:) = L'\(D\(L\(dlam(p,:))));
-                      d         = dlam(1:n,1);
-                  case 7% ldlsparse
-                      dlam  = -ldlsparse([Q A(active_cnstrs,:)';A(active_cnstrs,:) -sparse(1:na,1:na,1./sig(active_cnstrs),na,na)],[],[dphi;zeros(na,1)]);
-                      d     = dlam(1:n,1);
+              if mod(k,reset_newton_iter)==0
+                  reset_newton = true;
               end
+
+              [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton);
+%                       continue;
+              reset_newton = false;
+%                   LD = ldlchol(Q+A(active_cnstrs,:)'*spdiags(sig(active_cnstrs),0,na,na)*A(active_cnstrs,:));
+%                   d  = -ldlsolve (LD,dphi);
           else
               LD = ldlchol(Q);
               d = -ldlsolve (LD,dphi);
           end
         active_cnstrs_old = active_cnstrs;
 
-          
-      elseif strcmp(solver, 'lbfgs')
-          % lbfgs direction
-          if sig_updated || memory==0 %do gradient descent and start over in lbfgs after sigma is updated
-              d = -dphi;
-              sig_updated = false;
-              mem = 0; 
-              curridx = 0;
-              Sbuffer = [];Ybuffer = []; YSbuffer = [];
-          else
-              lbfgs_s = x - x_prev;
-              lbfgs_y = dphi-dphi_prev;
-
-              lbfgs_ys  = lbfgs_y'*lbfgs_s;
-              
-              if abs(lbfgs_ys) >= 1e-8*norm(lbfgs_s,inf)*norm(lbfgs_y,inf)
-                  
-                  if mem == memory
-                      curridx = 1;
-                      Sbuffer   = [Sbuffer(:,2:end), lbfgs_s];
-                      Ybuffer   = [Ybuffer(:,2:end), lbfgs_y];
-                      YSbuffer  = [YSbuffer(2:end), lbfgs_ys];
-                  else
-                      mem = mem + 1;
-                      curridx = curridx+1;
-                      Sbuffer(:,mem) = lbfgs_s  ;
-                      Ybuffer(:,mem) = lbfgs_y  ;
-                      YSbuffer(mem)  = lbfgs_ys;
-                  end
-              end
-              
-              
-              if lbfgs_precon
-                  %Birgin/Martinez 8.2.3
-                  active_cnstrs = (Axys<bmin | Axys>bmax);
-                  Ac = A(active_cnstrs,:)'*diag(sig(active_cnstrs))*A(active_cnstrs,:);
-                  Dc = diag(Ac);
-                  sigma_spec = (lbfgs_y-Dc.*lbfgs_s)'*lbfgs_s/(lbfgs_s'*lbfgs_s);
-                  sigma = max(1e-12, min(sigma_spec, 1e12));
-                  Dc = Dc + sigma;
-                  Dcinv = diag(1./Dc);
-                  if lbfgs_ys <= 1e-8*norm(lbfgs_s)*norm(lbfgs_y)
-                      Hp = Dcinv;
-                  else
-                      Hp = Dcinv + ((lbfgs_s+Dcinv*lbfgs_y)*lbfgs_s' + ...
-                          lbfgs_s*(lbfgs_s-Dcinv*lbfgs_y)')/lbfgs_ys - ...
-                          (lbfgs_s-Dcinv*lbfgs_y)'*lbfgs_y*(lbfgs_s*lbfgs_s')/lbfgs_ys^2; 
-                  end
-              else
-                  Hp = lbfgs_ys/(lbfgs_y'*lbfgs_y);
-              end
-
-              alpha = zeros(1, mem);
-              qq = -dphi;
-              for i = mem:-1:1
-                  alpha(i)  = 1/YSbuffer(i) * (Sbuffer(:,i)'*qq);
-                  qq = qq - alpha(i)*Ybuffer(:,i);
-              end
-
-              d = Hp*qq;
-              for i = 1:mem
-                  bet = 1/YSbuffer(i) * Ybuffer(:,i)'*d;
-                  d   = d + (alpha(i)-bet)*Sbuffer(:,i);
-              end
-            
-%               d = lbfgs(Sbuffer, Ybuffer, YSbuffer, Hp,-dphi, int32(mem), int32(memory));
-          end
       end
       
       Qd = Q*d;
@@ -605,7 +498,6 @@ for k = 1:maxiter
 
       % Store previous values (lbfgs)
       x_prev  = x;
-      dphi_prev = dphi;
       % Update
       x     = x  + tau*d;
       Adx   = tau*Ad;
