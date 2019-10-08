@@ -204,17 +204,26 @@ else
     nonconvex = opts.nonconvex;
 end
 
+if nargin<8 || ~isfield(opts,'nonconvex_approx')
+    nonconvex_approx = true;
+else
+    nonconvex_approx = opts.nonconvex_approx;
+end
+
 gamma_maxed = false;
 
-if nonconvex
-%     lambda = minimum_eig(Q);
-    lambda = lobpcg(Q);
-%     lambda_adj = lambda - 1e-3; %adjust for tolerance
-    if lambda < 0
-        proximal = true;
-        gamma = 1/abs(lambda);
-        gammaMax = gamma;
-        gamma_maxed = true;
+if nonconvex 
+    if nonconvex_approx
+        %do nothing for now
+    else
+        lambda = lobpcg(Q);
+    %     lambda_adj = lambda - 1e-3; %adjust for tolerance
+        if lambda < 0
+            proximal = true;
+            gamma = 1/abs(lambda);
+            gammaMax = gamma;
+            gamma_maxed = true;
+        end
     end
 end
 
@@ -459,21 +468,13 @@ for k = 1:maxiter
               end
           end
           
-          if na 
-              if mod(k,reset_newton_iter)==0
-                  reset_newton = true;
-              end
-
-              [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton);
-%                       continue;
-              reset_newton = false;
-%                   LD = ldlchol(Q+A(active_cnstrs,:)'*spdiags(sig(active_cnstrs),0,na,na)*A(active_cnstrs,:));
-%                   d  = -ldlsolve (LD,dphi);
-          else
-              LD = ldlchol(Q);
-              d = -ldlsolve (LD,dphi);
+          if mod(k,reset_newton_iter)==0
+              reset_newton = true;
           end
-        active_cnstrs_old = active_cnstrs;
+          [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton, na);
+          reset_newton = false;
+              
+          active_cnstrs_old = active_cnstrs;
 
       end
       
