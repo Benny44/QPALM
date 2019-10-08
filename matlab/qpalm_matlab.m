@@ -258,6 +258,9 @@ k_prev = 0;
 
 na = 0;
 
+stats.nact(1) = 0;
+stats.nact_changed(1) = 0;
+
 
 for k = 1:maxiter
         
@@ -419,18 +422,36 @@ for k = 1:maxiter
        K   = K+1;
        if proximal
            x0=x;
-           if gamma < gammaMax
-               Q=Q-1/gamma*speye(n);
-               Qx = Qx-1/gamma*x; 
+           prev_gamma = gamma;
+           active_cnstrs_old = active_cnstrs;
+           Axys = Ax+y./sig;
+           active_cnstrs = (Axys<=bmin | Axys>=bmax);
+
+           stats.nact_changed(k+1) = sum(abs(active_cnstrs_old - active_cnstrs));
+           if K > 2 && ~gamma_maxed && stats.nact_changed(k) == 0 && stats.nact_changed(k+1) == 0 && nrm_rp < eps_primal 
+               fprintf('Gamma boosted on iter %d\n', k);
+               if na == 0
+                   gamma=1e12;
+               else
+                   gamma=max(1e14/gershgorin_max(A(active_cnstrs,:)'*Asig(active_cnstrs,:)), gammaMax);
+                   gamma_maxed = true;
+               end
+%                
+           elseif gamma < gammaMax
                gamma=min(gamma*gammaUpd, gammaMax);
-               Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
-               Qx = Qx+1/gamma*x;
-               reset_newton = true; 
            end
+           
+           if prev_gamma ~= gamma       
+               Q = Q - 1/prev_gamma*speye(n);
+               Q = Q + 1/gamma*speye(n);
+               Qx = Qx - 1/prev_gamma*x;
+               Qx = Qx + 1/gamma*x;
+               reset_newton = true;
+           end
+           
        end
         
-       stats.nact(k) = na;
-       stats.nact_changed(k) = 0;
+       stats.nact(k+1) = na;
        
    else
       
@@ -438,14 +459,14 @@ for k = 1:maxiter
           % Newton direction
           active_cnstrs = (Axys<=bmin | Axys>=bmax);
           na = nnz(active_cnstrs);
-          stats.nact(k) = na;
+          stats.nact(k+1) = na;
           if (isempty(active_cnstrs_old))
-              stats.nact_changed(k) = na;
+              stats.nact_changed(k+1) = na;
           else
-              stats.nact_changed(k) = sum(abs(active_cnstrs-active_cnstrs_old));
+              stats.nact_changed(k+1) = sum(abs(active_cnstrs-active_cnstrs_old));
               
               if reset_newton
-                  stats.nact_changed(k) = -1*stats.nact_changed(k);
+                  stats.nact_changed(k+1) = -1*stats.nact_changed(k+1);
               end
           end
           
@@ -591,23 +612,6 @@ for k = 1:maxiter
       Ax    = Ax + Adx;
       Qdx   = tau*Qd;
       Qx    = Qx + Qdx;
-      
-      
-      if proximal && stats.nact_changed(k)==0 && ~gamma_maxed && K > 2 && nrm_rp < eps_primal 
-          prev_gamma = gamma;
-          if na == 0
-              gamma=1e12;
-          else
-              gamma=max(1e14/gershgorin_max(A(active_cnstrs,:)'*Asig(active_cnstrs,:)), gammaMax);
-              gamma_maxed = true;
-          end
-          if prev_gamma ~= gamma             
-              Q=Q+(1/gamma-1/prev_gamma)*speye(n);
-              Qx = Qx+(1/gamma-1/prev_gamma)*x; 
-              reset_newton = true;
-          end
-%               fprintf('Gamma boost activated on iter %d, gamma = %.14e \n', k, gamma);
-      end
       
    end
 end
