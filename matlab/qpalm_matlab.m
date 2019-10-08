@@ -670,7 +670,7 @@ if  any((bmax < inf & Adx >= eps_dinf_norm_Ddx) | (bmin > -inf & Adx <= -eps_din
     is_dinf = false;return
 end
 
-is_dinf = norm(Qdx./D_scale,inf) <= c_scale*eps_dinf_norm_Ddx ...
+is_dinf = dx'*Qdx <= c_scale*eps_dinf_norm_Ddx^2 ...
     && q'*dx <= -c_scale*eps_dinf_norm_Ddx;
 
 end
