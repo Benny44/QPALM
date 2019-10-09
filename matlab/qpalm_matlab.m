@@ -215,6 +215,7 @@ gamma_maxed = false;
 if nonconvex 
     if nonconvex_approx
         %do nothing for now
+        gamma_maxed = true;
     else
         lambda = lobpcg(Q);
     %     lambda_adj = lambda - 1e-3; %adjust for tolerance
@@ -226,6 +227,11 @@ if nonconvex
         end
     end
 end
+
+Q = (Q+Q')/2;
+lmin = min(eig(Q));
+fprintf('Lowest eigenvalue of Q is: %.4f\n', lmin);
+fprintf('The maximal gamma should therefore be: %.4f\n', 1/abs(lmin));
 
 if proximal
     Q = Q+1/gamma*speye(n);
@@ -258,6 +264,7 @@ na = 0;
 
 stats.nact(1) = 0;
 stats.nact_changed(1) = 0;
+
 
 
 for k = 1:maxiter
@@ -471,8 +478,16 @@ for k = 1:maxiter
           if mod(k,reset_newton_iter)==0
               reset_newton = true;
           end
-          [d,LD] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton, na);
+          prev_gamma = gamma;
+          [d,LD,gamma, gammaMax] = computedir(LD,Q,A,Asqrtsigt,Asig,-dphi,active_cnstrs,active_cnstrs_old, reset_newton, na, gamma, gammaMax, nonconvex_approx); %TODO: Refactor
           reset_newton = false;
+          if prev_gamma ~= gamma       
+               Q = Q - 1/prev_gamma*speye(n);
+               Q = Q + 1/gamma*speye(n);
+               Qx = Qx - 1/prev_gamma*x;
+               Qx = Qx + 1/gamma*x;
+%                reset_newton = true;
+           end
               
           active_cnstrs_old = active_cnstrs;
 
