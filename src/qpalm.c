@@ -427,7 +427,22 @@ void qpalm_solve(QPALMWorkspace *work) {
       } 
 
       if(work->settings->proximal) {
-        update_gamma(work);
+        if (!work->gamma_maxed && iter_out > 0 && work->chol->nb_enter == 0 && work->chol->nb_leave == 0 && work->info->pri_res_norm < work->eps_pri) {
+          //Axys = Ax + y./sigma
+            vec_ew_div(work->y, work->sigma, work->temp_m, work->data->m);
+            vec_add_scaled(work->Ax, work->temp_m, work->Axys, 1, work->data->m);
+            set_active_constraints(work);
+            set_entering_leaving_constraints(work);
+            if (work->chol->nb_enter == 0 && work->chol->nb_leave == 0) {
+              c_print("Boosting gamma on iter: %d\n", iter);
+              boost_gamma(work);
+            } else {
+              update_gamma(work);
+            }
+          } else {
+            update_gamma(work);
+          }
+        
         prea_vec_copy(work->x, work->x0, work->data->n);
       }
 
@@ -462,11 +477,11 @@ void qpalm_solve(QPALMWorkspace *work) {
       if (mod(iter, work->settings->reset_newton_iter) == 0) work->chol->reset_newton = TRUE; 
       update_primal_iterate(work);
 
-      if (work->settings->proximal && !work->gamma_maxed && iter_out > 1 
-          && work->chol->nb_enter == 0 && work->chol->nb_leave == 0 
-          && work->info->pri_res_norm < work->eps_pri) {
-        boost_gamma(work);
-      }
+      // if (work->settings->proximal && !work->gamma_maxed && iter_out > 1 
+      //     && work->chol->nb_enter == 0 && work->chol->nb_leave == 0 
+      //     && work->info->pri_res_norm < work->eps_pri) {
+      //   boost_gamma(work);
+      // }
 
       #ifdef PRINTING
       if (work->settings->verbose && mod(iter, work->settings->print_iter) == 0) {

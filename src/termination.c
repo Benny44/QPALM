@@ -16,8 +16,6 @@
 #include "util.h"
 #include "iteration.h"
 
-#include <stdio.h>
-
 c_int check_termination(QPALMWorkspace *work) {
     calculate_residuals_and_tolerances(work);
     
