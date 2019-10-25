@@ -248,4 +248,6 @@ int main(int argc, char*argv[]){
     c_free(data->bmax);
     c_free(data);
     c_free(settings);
+
+    return 0;
 }

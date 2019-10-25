@@ -128,6 +128,13 @@ if (PROF)
     add_subdirectory(profiling)
 endif()
 
+# Add interfaces
+option (INTERFACES "Compile interfaces" ON)
+if (INTERFACES)
+    add_subdirectory(mtx)
+    add_subdirectory(qps)
+endif()
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
