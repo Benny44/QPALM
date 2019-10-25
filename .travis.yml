@@ -30,12 +30,11 @@ env:
   - DEPS_DIR="${HOME}/deps"
   - QPALM_VERSION="1.0"
 install:
-- travis_wait mvn install
 - gem install coveralls-lcov
 - chmod 755 travis/install.sh
 - chmod 755 travis/buildTest.sh
 - chmod 755 travis/deploy.sh
-- "travis/install.sh"
+- travis_wait "travis/install.sh"
 script:
 - "travis/buildTest.sh"
 cache:
