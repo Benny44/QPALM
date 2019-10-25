@@ -161,6 +161,7 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         // Create Data Structure
         data->n = (size_t) mxGetScalar(prhs[1]);
         data->m = (size_t) mxGetScalar(prhs[2]);
+        data->c = 0; //TODO: Allow for a constant to be passed.
         data->q = mxGetPr(q);
         data->bmin = mxGetPr(bmin);
         data->bmax = mxGetPr(bmax);

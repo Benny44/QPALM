@@ -45,6 +45,7 @@ int main() {
   data->n = n;
   data->m = m;
   data->q = random_vector(data->n);
+  data->c = 0;
   data->bmin = constant_vector(-2, data->m);
   data->bmax = constant_vector(2, data->m);
 

@@ -169,7 +169,7 @@ void update_primal_iterate(QPALMWorkspace *work) {
 
 c_float compute_objective(QPALMWorkspace *work) {
     
-    c_float objective = 0.0;
+    c_float objective = work->data->c;
     size_t n = work->data->n;
     size_t i = 0; 
 
@@ -208,7 +208,7 @@ c_float compute_objective(QPALMWorkspace *work) {
 
 c_float compute_dual_objective(QPALMWorkspace *work) {
     
-    c_float dual_objective = 0.0;
+    c_float dual_objective = work->data->c;
 
     vec_add_scaled(work->Aty, work->data->q, work->neg_dphi, 1.0, work->data->n);
     if (work->chol->D_temp) {

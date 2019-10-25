@@ -18,6 +18,7 @@ void validate_suite_setup(void) {
     qpalm_set_default_settings(settings);
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->m = M;
+    data->c = 0;
 
     data->bmin = c_calloc(M,sizeof(c_float));
     data->bmin[0] = -1.0; data->bmin[1] = -1.0; data->bmin[2] = -1.0; 

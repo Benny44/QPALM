@@ -205,11 +205,13 @@ int main(int argc, char*argv[]){
     data    = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = n;
     data->m = m;
+    data->c = 0;
     data->q = q;
     data->bmin = bmin;
     data->bmax = bmax;
     data->A = A;
     data->Q = Q;
+    
 
     // Define Solver settings as default
     qpalm_set_default_settings(settings);
