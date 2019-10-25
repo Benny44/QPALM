@@ -25,3 +25,4 @@ tests/run_all_tests
 *.mtx
 build
 coverage
+*.qps
