@@ -12,17 +12,6 @@ ub =  2*ones(m,1);
 Q = sprandsym(n, 1e-1, 1e-4);
 q = 10*randn(n,1);
 
-%% Solve with qpalm
-solver = qpalm;
-settings = solver.default_settings();
-%IMPORTANT: set nonconvex to true for nonconvex QPs
-settings.nonconvex = true;
-
-solver.setup(Q, q, A, lb, ub, settings); 
-res = solver.solve();
-
-fprintf('Elapsed time: %f seconds\n', res.info.run_time);
-fprintf('Status: %s\n', res.info.status);
 
 %% Solve with qpalm mex
 solver = qpalm;

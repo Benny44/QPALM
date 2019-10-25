@@ -205,7 +205,7 @@ else
 end
 
 if nargin<8 || ~isfield(opts,'nonconvex_approx')
-    nonconvex_approx = true;
+    nonconvex_approx = false;
 else
     nonconvex_approx = opts.nonconvex_approx;
 end
@@ -228,10 +228,12 @@ if nonconvex
     end
 end
 
-Q = (Q+Q')/2;
-lmin = min(eig(Q));
-fprintf('Lowest eigenvalue of Q is: %.4f\n', lmin);
-fprintf('The maximal gamma should therefore be: %.4f\n', 1/abs(lmin));
+% Q = (Q+Q')/2;
+% lmin = min(eig(Q));
+% fprintf('Lowest eigenvalue of Q is: %.4f\n', lmin);
+% if lmin < 0
+%     fprintf('The maximal gamma should therefore be: %.4f\n', 1/abs(lmin));
+% end
 
 if proximal
     Q = Q+1/gamma*speye(n);
@@ -268,7 +270,6 @@ stats.nact_changed(1) = 0;
 
 
 for k = 1:maxiter
-        
     
     if verbose && k > 1 && mod(k,print_iter)==0
         fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e,\t nrm_rd2: %e,\t tau: %e \n', k-2, nrm_rp, nrm_rd, nrm_rd2, tau);
@@ -497,7 +498,22 @@ for k = 1:maxiter
       Ad = A*d;
       % Exact line search
       eta = d'*Qd;
-      beta = d'*df;
+      beta = d'*df; 
+      
+      if nonconvex_approx 
+          if eta < 0 %a direction of negative curvature (after regularization)
+              Q = Q - 1/gamma*speye(n);
+              Qx = Qx - 1/gamma*x;
+              gamma = gamma/10; %Alternatively, use eta -1/gamma*d'*d / norm(d)^2 as an estimate for lambda_min
+              gammaMax = gamma;
+              reset_newton = true;
+              fprintf('Gamma updated (neg curve) to: %.4f\n', gamma);
+              Q = Q + 1/gamma*speye(n);
+              Qx = Qx + 1/gamma*x;
+              continue;
+          end
+      end
+      
       sig_sqr = sqrt(sig);
       delta = -sig_sqr.*Ad;
       delta = [delta;-delta];
@@ -545,7 +561,7 @@ stats.obj = (0.5*x'*(Q-1/gamma*speye(n))*x + q'*x)/c_scale;
 
 %unscale the solution
 x = D_scale.*x;
-y = (E_scale.*yh)/c_scale;
+yh = (E_scale.*yh)/c_scale;
 
 
 
@@ -591,6 +607,15 @@ function tf = PWALineSearch(eta,beta,delta,gamma)
 % inz    = abs(delta)>1e-12 & ~isinf(gamma); 
 % if sum(inz) ~= size(delta,1)
 %     fprintf('inz \n');
+% end
+% t = 0:0.001:1;
+% psi = zeros(length(t),1);
+% for k = 1:length(t)
+%     tau = t(k);
+%     psi(k) = eta*tau + beta + delta'*max(delta*tau-gamma,0);
+% end
+% if any(diff(psi) < 0)
+%     fprintf('nonconvexity in the linesearch\n');
 % end
 inz = 1:length(gamma);
 gamma  = gamma(inz);

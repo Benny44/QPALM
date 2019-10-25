@@ -18,11 +18,11 @@ if na
         AsigA = A(active_cnstrs,:)'*Asig_active_cnstrs;
         if nonconvex_approx
             [LD,p] = ldlchol(Q+AsigA);
-            while p || (condest(LD)*eps > .1)
+            while p || (condest(LD)*eps > 1)
             Q = Q - 1/gamma*speye(size(Q,1));
             gamma = gamma/10; %regularize more heavily. TODO: find a smart way to determine how heavy to regularize
             gammaMax = gamma;
-            fprintf('Gamma updated to: %.4f\n', gamma);
+            fprintf('Gamma updated (factorization) to: %.4f\n', gamma);
             pause(0.001)
             Q = Q + 1/gamma*speye(size(Q,1)); 
             [LD, p] = ldlchol(Q+AsigA);
