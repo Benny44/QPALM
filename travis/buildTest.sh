@@ -28,7 +28,7 @@ builddir=$curdir/build/debug
 
 cd $builddir
 
-cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON
+cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DINTERFACES=OFF
 make
 
 #Run the tests
