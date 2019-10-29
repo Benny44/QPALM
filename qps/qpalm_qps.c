@@ -12,7 +12,6 @@ int get_next_command_and_check(char* command, char* check, char next_char, FILE*
     char line[100];
     fgets(line, 100, fp);
     sscanf(line, "%s", &command[1]);
-    // printf("Next command: %s\n", command);
 
     if (strcmp(command, check)) {
         fprintf(stderr, "Wrong command. Expected next command to be %s, but was %s.\n", check, command);
@@ -23,7 +22,7 @@ int get_next_command_and_check(char* command, char* check, char next_char, FILE*
 
 long convert_to_long(char *s) {
     char c;
-    long i, digit, number;
+    long i, digit, number = 0;
     for(i=0;i<strlen(s);i++)
     {
     	c = s[i];
@@ -150,6 +149,7 @@ int main(int argc, char*argv[]){
         }
         next_char = fgetc(fp);
     }
+    Annz += n_bounds;
 
     if(get_next_command_and_check(command, "QUADOBJ", next_char, fp))
         return 1;
@@ -165,17 +165,38 @@ int main(int argc, char*argv[]){
         return 1;
     fclose(fp);
 
-    printf("Results: m = %lu, n = %lu, Qnnz = %lu, Annz = %lu\n", m, n, Qnnz, Annz);
+    // printf("Results: m = %lu, n = %lu, Qnnz = %lu, Annz = %lu\n", m, n, Qnnz, Annz);
 
-    c_float *q = c_calloc(n, sizeof(c_float));
-    c_float *bmin = c_calloc(m, sizeof(c_float));
-    if (n_bounds > 0) {
-        for (size_t k = m-n_bounds; k < m; k++) {
-            bmin[k] = 0;
-        }
+    QPALMData* data = c_calloc(1, sizeof(QPALMData));
+    data->m = m;
+    data->n = n;
+    data->c = 0;
+    data->q = c_calloc(n, sizeof(c_float));
+    size_t k;
+    for (k = 0; k < n; k++) {
+        data->q[k] = 0;
     }
-    c_float *bmax = c_calloc(m, sizeof(c_float));
-    
+    data->bmin = c_calloc(m, sizeof(c_float));
+    for (k = 0; k < m; k++) {
+        data->bmin[k] = 0;
+    }
+    data->bmax = c_calloc(m, sizeof(c_float));
+    for (k = 0; k < m; k++) {
+        data->bmax[k] = QPALM_INFTY;
+    }
+
+    cholmod_common c;
+    CHOLMOD(start)(&c);
+    data->A = CHOLMOD(allocate_sparse)(m, n, Annz, TRUE, TRUE, 0, CHOLMOD_REAL, &c);
+    data->Q = CHOLMOD(allocate_sparse)(n, n, Qnnz, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
+
+    c_float *Ax = data->A->x;
+    c_int *Ai = data->A->i;
+    c_int *Ap = data->A->p;
+
+    c_float *Qx = data->Q->x;
+    c_int *Qi = data->Q->i;
+    c_int *Qp = data->Q->p;
 
     fp = fopen(argv[1], "r");
     if(fp == NULL) {
@@ -183,58 +204,204 @@ int main(int argc, char*argv[]){
         return 1;
     }
     
-    cholmod_common c;
-    CHOLMOD(start)(&c);
+    fgets(line, 100, fp);
+    next_char = fgetc(fp);
 
-    cholmod_sparse *A = CHOLMOD(allocate_sparse)(m, n, Annz, TRUE, TRUE, 0, CHOLMOD_REAL, &c);
-    cholmod_sparse *Q = CHOLMOD(allocate_sparse)(n, n, Qnnz, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
+    if(get_next_command_and_check(command, "ROWS", next_char, fp))
+        return 1;
+
+    next_char = fgetc(fp);
+
+    char constraint_signs[m-n_bounds];
+    size_t index = 0;
+    while(next_char == ' ') {
+        fgets(line, 100, fp);
+        sscanf(line, "%s %s", NLGE, buf);
+        if (strcmp(NLGE, "N")) {
+            constraint_signs[index] = NLGE[0];
+            index++;
+        } 
+        
+        next_char = fgetc(fp);
+    }
+
+    if(get_next_command_and_check(command, "COLUMNS", next_char, fp))
+        return 1;
+    
+    next_char = fgetc(fp);
+
+    Ap[0] = 0;
+    size_t elemA = 0;
+    long row, col = 1, prev_col = 1;
+    while(next_char == ' ') {
+        fgets(line, 100, fp);
+        sscanf(line, "%s %s %le %s %le", colchar, rowchar, &temp, second_rowchar, &temp2);
+        row = convert_to_long(rowchar);
+        col = convert_to_long(colchar);
+        if (col > prev_col) {
+            for (; prev_col < col; prev_col++) {
+                if (prev_col <= n_bounds) { //take into account identity matrix for bounds
+                    Ap[prev_col]++;
+                    elemA++;
+                }
+                Ap[prev_col+1] = Ap[prev_col];
+            }
+        }
+
+        if (!strcmp(rowchar, objective)) { 
+            data->q[col-1] = temp;            
+        } else {
+            Ai[elemA] = row - 1;
+            Ap[col]++;
+            if (temp > QPALM_INFTY) {
+                temp = QPALM_INFTY;
+            } else if (temp < -QPALM_INFTY) {
+                temp = -QPALM_INFTY;
+            }
+            Ax[elemA] = temp;
+            elemA++;
+        }
+
+        if(!strcmp(second_rowchar, "")) {
+        } else {
+            row = convert_to_long(second_rowchar);
+            Ai[elemA] = row - 1;
+            Ap[col]++;
+            if (temp2 > QPALM_INFTY) {
+                temp2 = QPALM_INFTY;
+            } else if (temp2 < -QPALM_INFTY) {
+                temp2 = -QPALM_INFTY;
+            }
+            Ax[elemA] = temp2;
+            elemA++;
+            second_rowchar[0] = '\0';
+        }
+        
+        next_char = fgetc(fp);
+    }
+    col = n;
+    if (col > prev_col) {
+        for (; prev_col < col; prev_col++) {
+            if (prev_col <= n_bounds) { //take into account identity matrix for bounds
+                Ap[prev_col]++;
+                elemA++;
+            }
+            Ap[prev_col+1] = Ap[prev_col];
+        }
+    } else if ((col == prev_col) && prev_col <= n_bounds) { //take into account identity matrix for bounds
+        Ap[prev_col]++;
+    }
+
+    
+    if(get_next_command_and_check(command, "RHS", next_char, fp))
+        return 1;
+
+    next_char = fgetc(fp);
+    k = 0;
+    while(next_char == ' ') {
+        fgets(line, 100, fp);
+        sscanf(line, "%*s %s %le", rowchar, &temp);
+        row = convert_to_long(rowchar)-1;
+        if (!strcmp(rowchar, objective))
+            data->c = -temp;
+        else {
+            switch (constraint_signs[row]) {
+                case 'L':
+                    data->bmax[row] = temp;
+                    break; 
+                case 'G':
+                    data->bmin[row] = temp;
+                    break;
+                case 'E':
+                    data->bmin[row] = temp;
+                    data->bmax[row] = temp;
+                    break;
+            }
+             
+        }
+        next_char = fgetc(fp);
+    }
+
+    if(get_next_command_and_check(command, "RANGES", next_char, fp))
+        return 1;
+
+    next_char = fgetc(fp);
+
+    if(get_next_command_and_check(command, "BOUNDS", next_char, fp))
+        return 1;
+
+    next_char = fgetc(fp);
+    k = row; col = 1; long p; index = k; long prev_row = 0;
+    while(next_char == ' ') {
+        fgets(line, 100, fp);
+        sscanf(line, "%s %*s %s %le", bound_type, rowchar, &temp);
+        row = convert_to_long(rowchar);
+        if (!strcmp(bound_type, "UP")) {
+            data->bmax[index] = temp;
+            if(prev_row != row) {
+                p = Ap[col];
+                Ai[p-1] = row+k;
+                Ax[p-1] = 1;
+                col++;
+                index++;
+            }
+        } else if (!strcmp(bound_type, "LO")) {
+            data->bmin[index] = temp;
+            if(prev_row != row) {
+                p = Ap[col];
+                Ai[p-1] = row+k;
+                Ax[p-1] = 1;
+                col++;
+                index++;
+            }
+        }
+        prev_row = row;
+        next_char = fgetc(fp);
+    }
+
+    if(get_next_command_and_check(command, "QUADOBJ", next_char, fp))
+        return 1;
+    next_char = fgetc(fp);
+    prev_col = 1;
+    size_t elemQ = 0;
+    Qp[0] = 0;
+    while(next_char == ' ') {
+        fgets(line, 100, fp);
+        sscanf(line, "%s %s %le", colchar, rowchar, &temp);
+        col = convert_to_long(colchar);
+        row = convert_to_long(rowchar);
+
+        Qi[elemQ] = --row;
+        
+        if (col > prev_col) {
+            for (; prev_col < col; prev_col++) {
+                Qp[prev_col+1] = Qp[prev_col];
+            }          
+        }
+        Qp[col]++;
+        if (temp > QPALM_INFTY) {
+            temp = QPALM_INFTY;
+        } else if (temp < -QPALM_INFTY) {
+            temp = -QPALM_INFTY;
+        }
+        Qx[elemQ] = temp;
+
+        elemQ++;
+        next_char = fgetc(fp);
+    }
 
 
+    if(get_next_command_and_check(command, "ENDATA", next_char, fp))
+        return 1;
+    fclose(fp);
 
     CHOLMOD(finish)(&c);
-    // // Load Q
-    // fileno++;
-    // fp = fopen(argv[fileno], "r");
-    // if(fp == NULL) {
-    //     fprintf(stderr, "Could not open file %s\n", argv[fileno]);
-    // }
-    // cholmod_sparse* Q = mtx_load_Q(fp, n);
-    // fclose(fp);
+    
+    // Problem settings
+    QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
 
-    // // Load q
-    // fileno++;
-    // fp = fopen(argv[fileno], "r");
-    // if(fp == NULL) {
-    //     fprintf(stderr, "Could not open file %s\n", argv[fileno]);
-    // }
-    // c_float* q = mtx_load_dense(fp, n);
-    // fclose(fp);
-
-    // // Load lba
-    // fileno++;
-    // fp = fopen(argv[fileno], "r");
-    // if(fp == NULL) {
-    //     fprintf(stderr, "Could not open file %s\n", argv[fileno]);
-    // }
-    // c_float* bmin = mtx_load_dense(fp, m);
-    // fclose(fp);
-
-    // // Load uba
-    // fileno++;
-    // fp = fopen(argv[fileno], "r");
-    // if(fp == NULL) {
-    //     fprintf(stderr, "Could not open file %s\n", argv[fileno]);
-    // }
-    // c_float* bmax = mtx_load_dense(fp, m);
-    // fclose(fp);
-
-
-
-    // // Problem settings
-    // QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
-
-    // // Structures
-    // QPALMWorkspace *work; // Workspace
+    // Structures
+    QPALMWorkspace *work; // Workspace
     // QPALMData *data;      // QPALMData
 
     // // Populate data
@@ -247,42 +414,28 @@ int main(int argc, char*argv[]){
     // data->A = A;
     // data->Q = Q;
 
-    // // Define Solver settings as default
-    // qpalm_set_default_settings(settings);
+    // Define Solver settings as default
+    qpalm_set_default_settings(settings);
 
-    // // Setup workspace
+    // Setup workspace
     // cholmod_common c;
-    // work = qpalm_setup(data, settings, &c);
+    work = qpalm_setup(data, settings, &c);
 
-    // // Solve Problem
-    // qpalm_solve(work);
+    // Solve Problem
+    qpalm_solve(work);
 
-    // // printf("Solver status: %s\n", work->info->status);
-    // // printf("Iter: %d\n", work->info->iter);
-    // // printf("Iter_out: %d\n", work->info->iter_out);
+    // Clean workspace
+    CHOLMOD(start)(&c);
+    CHOLMOD(free_sparse)(&data->Q, &c);
+    CHOLMOD(free_sparse)(&data->A, &c);
+    CHOLMOD(finish)(&c);
+    qpalm_cleanup(work);
 
-    // // for (int i = 0; i < work->data->n; i++) {
-    // //     printf("%f ", work->solution->x[i]);
-    // // }
-    // // printf("\n");
+    c_free(data->q);
+    c_free(data->bmin);
+    c_free(data->bmax);
+    c_free(data);
+    c_free(settings);
 
-    // // #ifdef PROFILING
-    // // printf("Setup time: %f\n", work->info->setup_time);
-    // // printf("Solve time: %f\n", work->info->solve_time);
-    // // printf("Run time: %f\n", work->info->run_time);
-    // // #endif
-
-    // // Clean workspace
-    // CHOLMOD(start)(&work->chol->c);
-    // CHOLMOD(free_sparse)(&data->Q, &c);
-    // CHOLMOD(free_sparse)(&data->A, &c);
-    // CHOLMOD(finish)(&work->chol->c);
-
-    // qpalm_cleanup(work);
-    // c_free(data->q);
-    // c_free(data->bmin);
-    // c_free(data->bmax);
-    // c_free(data);
-    // c_free(settings);
     return 0;
 }
