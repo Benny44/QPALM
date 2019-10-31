@@ -132,6 +132,22 @@ int main(int argc, char*argv[]){
         return 1;
 
     next_char = fgetc(fp);
+
+    while(next_char == ' ') {
+        fgets(line, 100, fp);
+        sscanf(line, "%*s %s %le", rowchar, &temp);
+        // row = convert_to_long(rowchar)-1;
+        // switch (constraint_signs[row]) {
+        //     case 'L':
+        //         data->bmin[row] = data->bmax[row] - temp;
+        //         break; 
+        //     case 'G':
+        //         data->bmax[row] = data->bmin[row] + temp;
+        //         break;
+        // }
+        next_char = fgetc(fp);
+    }
+
     if(get_next_command_and_check(command, "BOUNDS", next_char, fp))
         return 1;
     next_char = fgetc(fp);
@@ -322,31 +338,48 @@ int main(int argc, char*argv[]){
         next_char = fgetc(fp);
     }
 
+    long prev_row = row;
     if(get_next_command_and_check(command, "RANGES", next_char, fp))
         return 1;
 
     next_char = fgetc(fp);
 
+    while(next_char == ' ') {
+        fgets(line, 100, fp);
+        sscanf(line, "%*s %s %le", rowchar, &temp);
+        row = convert_to_long(rowchar)-1;
+        switch (constraint_signs[row]) {
+            case 'L':
+                data->bmin[row] = data->bmax[row] - temp;
+                break; 
+            case 'G':
+                data->bmax[row] = data->bmin[row] + temp;
+                break;
+        }
+        next_char = fgetc(fp);
+    }
+
     if(get_next_command_and_check(command, "BOUNDS", next_char, fp))
         return 1;
 
     next_char = fgetc(fp);
-    k = row; col = 1; long p; index = k; long prev_row = 0;
+    k = prev_row; col = 1; long p; index = k; prev_row = -1;
     while(next_char == ' ') {
         fgets(line, 100, fp);
         sscanf(line, "%s %*s %s %le", bound_type, rowchar, &temp);
         row = convert_to_long(rowchar);
         if (!strcmp(bound_type, "UP")) {
+            
+            if(prev_row != row) {
+                p = Ap[col];
+                Ai[p-1] = row+k;
+                Ax[p-1] = 1;
+                col++;
+                index++;
+            }
             data->bmax[index] = temp;
-            if(prev_row != row) {
-                p = Ap[col];
-                Ai[p-1] = row+k;
-                Ax[p-1] = 1;
-                col++;
-                index++;
-            }
         } else if (!strcmp(bound_type, "LO")) {
-            data->bmin[index] = temp;
+            
             if(prev_row != row) {
                 p = Ap[col];
                 Ai[p-1] = row+k;
@@ -354,6 +387,7 @@ int main(int argc, char*argv[]){
                 col++;
                 index++;
             }
+            data->bmin[index] = temp;
         }
         prev_row = row;
         next_char = fgetc(fp);
@@ -393,36 +427,36 @@ int main(int argc, char*argv[]){
 
     if(get_next_command_and_check(command, "ENDATA", next_char, fp))
         return 1;
+
     fclose(fp);
 
     CHOLMOD(finish)(&c);
     
+
+    // Setup and solve problem
+
     // Problem settings
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
-
-    // Structures
-    QPALMWorkspace *work; // Workspace
-    // QPALMData *data;      // QPALMData
-
-    // // Populate data
-    // data    = (QPALMData *)c_malloc(sizeof(QPALMData));
-    // data->n = n;
-    // data->m = m;
-    // data->q = q;
-    // data->bmin = bmin;
-    // data->bmax = bmax;
-    // data->A = A;
-    // data->Q = Q;
-
     // Define Solver settings as default
     qpalm_set_default_settings(settings);
+    settings->eps_abs = 1e-6;
+    settings->eps_rel = 1e-6;
+    settings->max_iter = 10000;
+    // settings->verbose = FALSE;
 
-    // Setup workspace
-    // cholmod_common c;
-    work = qpalm_setup(data, settings, &c);
+    QPALMWorkspace *work = qpalm_setup(data, settings, &c);
 
     // Solve Problem
     qpalm_solve(work);
+
+    strcpy(name, &(argv[1][78]));
+    
+    // name = &name[78];
+    name[strlen(name)-4] = '\0';
+    // printf("%s\n", name);
+    fp = fopen("out.tex", "a");
+    fprintf(fp, "%s & %lu & %lu & %lu & %lu & %lu & %le \\\\", name, n, m, Annz, Qnnz, work->info->iter, work->info->objective);
+    fclose(fp);
 
     // Clean workspace
     CHOLMOD(start)(&c);
