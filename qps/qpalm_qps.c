@@ -360,6 +360,7 @@ int main(int argc, char*argv[]){
             switch (constraint_signs[row]) {
                 case 'L':
                     data->bmax[row] = temp;
+                    data->bmin[row] = -QPALM_INFTY;
                     break; 
                 case 'G':
                     data->bmin[row] = temp;
@@ -521,7 +522,7 @@ int main(int argc, char*argv[]){
     settings->eps_dual_inf = 1e-6;
     settings->eps_prim_inf = 1e-6;
     settings->max_iter = 10000;
-    // settings->verbose = FALSE;
+    settings->verbose = FALSE;
 
     QPALMWorkspace *work = qpalm_setup(data, settings, &c);
 
