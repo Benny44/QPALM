@@ -183,10 +183,10 @@ int main(int argc, char*argv[]){
     Annz += n_bounds;
     m += n_bounds;
 
-    for (k = 0; k < n; k++) {
-        printf("bounds[%ld] = %ld\n", k, bounds[k]);
-    }
-    printf("Annz: %ld, n_bounds: %lu\n", Annz, n_bounds);
+    // for (k = 0; k < n; k++) {
+    //     printf("bounds[%ld] = %ld\n", k, bounds[k]);
+    // }
+    // printf("Annz: %ld, n_bounds: %lu\n", Annz, n_bounds);
 
     if(get_next_command_and_check(command, "QUADOBJ", next_char, fp))
         return 1;
@@ -202,7 +202,7 @@ int main(int argc, char*argv[]){
         return 1;
     fclose(fp);
 
-    printf("Results: m = %lu, n = %lu, Qnnz = %lu, Annz = %lu\n", m, n, Qnnz, Annz);
+    // printf("Results: m = %lu, n = %lu, Qnnz = %lu, Annz = %lu\n", m, n, Qnnz, Annz);
 
     QPALMData* data = c_calloc(1, sizeof(QPALMData));
     data->m = m;
@@ -254,10 +254,14 @@ int main(int argc, char*argv[]){
     while(next_char == ' ') {
         fgets(line, 100, fp);
         sscanf(line, "%s %s", NLGE, buf);
+        if (!strcmp(NLGE, "E")) { //default in equality for bmax = bmin = 0
+            data->bmax[index] = 0;
+        }
         if (strcmp(NLGE, "N")) {
             constraint_signs[index] = NLGE[0];
             index++;
         } 
+        
         
         next_char = fgetc(fp);
     }
@@ -473,6 +477,15 @@ int main(int argc, char*argv[]){
         next_char = fgetc(fp);
     }
 
+
+
+    if(get_next_command_and_check(command, "ENDATA", next_char, fp))
+        return 1;
+
+    fclose(fp);
+
+    CHOLMOD(finish)(&c);
+    
     // for (k = 0; k < n; k++) {
     //     printf("q[%ld] = %le\n", k, data->q[k]);
     // }
@@ -485,13 +498,6 @@ int main(int argc, char*argv[]){
     // }
     // printf("data->c, %le\n", data->c);
 
-    if(get_next_command_and_check(command, "ENDATA", next_char, fp))
-        return 1;
-
-    fclose(fp);
-
-    CHOLMOD(finish)(&c);
-    
     // for (k = 0; k <= n; k++) {
     //     printf("Ap[%ld] = %ld\n", k, Ap[k]);
     // }
@@ -510,6 +516,8 @@ int main(int argc, char*argv[]){
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
     settings->eps_rel = 1e-6;
+    settings->eps_dual_inf = 1e-6;
+    settings->eps_prim_inf = 1e-6;
     settings->max_iter = 1000;
     // settings->verbose = FALSE;
 
