@@ -26,3 +26,8 @@ tests/run_all_tests
 build
 coverage
 *.qps
+*.aux
+*.pdf
+*.gz
+/qps/out.tex
+/simulations/maros_meszaros/mm_output.tex

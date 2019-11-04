@@ -152,20 +152,41 @@ int main(int argc, char*argv[]){
         return 1;
     next_char = fgetc(fp);
 
+    c_int *bounds = c_calloc(n, sizeof(c_int));
+    size_t k;
+    for (k = 0; k < n; k++) {
+        bounds[k] = TRUE; //default lower bound = 0
+    }
+
     char bound_type[20];
     char prev_rowchar[20];
     prev_rowchar[0] = '\0';
+    long row;
+    n_bounds = n;
     while(next_char == ' ') {
         fgets(line, 100, fp);
         sscanf(line, "%s %*s %s %le", bound_type, rowchar, &temp);
-        if (strcmp(bound_type, "FR") && strcmp(rowchar, prev_rowchar)) {
-            m++;
-            n_bounds++;
-            strcpy(prev_rowchar, rowchar);
-        }
+        if (!strcmp(bound_type, "FR")) {
+            row = convert_to_long(rowchar)-1;
+            bounds[row] = FALSE;
+            n_bounds -= 1;
+        } 
+
+        // if (strcmp(bound_type, "FR") && strcmp(rowchar, prev_rowchar)) {
+            
+        //     row = convert_to_long(rowchar)-1;
+        //     // bounds[row] = TRUE;
+            
+        // }
         next_char = fgetc(fp);
     }
     Annz += n_bounds;
+    m += n_bounds;
+
+    // for (k = 0; k < n; k++) {
+    //     printf("bounds[%ld] = %ld\n", k, bounds[k]);
+    // }
+    // printf("Annz: %ld, n_bounds: %lu\n", Annz, n_bounds);
 
     if(get_next_command_and_check(command, "QUADOBJ", next_char, fp))
         return 1;
@@ -188,7 +209,7 @@ int main(int argc, char*argv[]){
     data->n = n;
     data->c = 0;
     data->q = c_calloc(n, sizeof(c_float));
-    size_t k;
+    
     for (k = 0; k < n; k++) {
         data->q[k] = 0;
     }
@@ -248,17 +269,21 @@ int main(int argc, char*argv[]){
 
     Ap[0] = 0;
     size_t elemA = 0;
-    long row, col = 1, prev_col = 1;
+    long bounds_row = m-n_bounds, col, prev_col = 1; 
     while(next_char == ' ') {
         fgets(line, 100, fp);
         sscanf(line, "%s %s %le %s %le", colchar, rowchar, &temp, second_rowchar, &temp2);
-        row = convert_to_long(rowchar);
+        row = convert_to_long(rowchar)-1;
         col = convert_to_long(colchar);
         if (col > prev_col) {
             for (; prev_col < col; prev_col++) {
-                if (prev_col <= n_bounds) { //take into account identity matrix for bounds
+                if (bounds[prev_col-1]) { //take into account identity matrix for bounds
+                // p = Ap[col+1];
+                    Ai[Ap[prev_col]] = bounds_row;
+                    Ax[Ap[prev_col]] = 1;
                     Ap[prev_col]++;
                     elemA++;
+                    bounds_row++;
                 }
                 Ap[prev_col+1] = Ap[prev_col];
             }
@@ -298,14 +323,21 @@ int main(int argc, char*argv[]){
     col = n;
     if (col > prev_col) {
         for (; prev_col < col; prev_col++) {
-            if (prev_col <= n_bounds) { //take into account identity matrix for bounds
-                Ap[prev_col]++;
-                elemA++;
+            if (bounds[prev_col-1]) { //take into account identity matrix for bounds
+                Ai[Ap[prev_col]] = bounds_row;
+                    Ax[Ap[prev_col]] = 1;
+                    Ap[prev_col]++;
+                    elemA++;
+                    bounds_row++;
             }
             Ap[prev_col+1] = Ap[prev_col];
         }
-    } else if ((col == prev_col) && prev_col <= n_bounds) { //take into account identity matrix for bounds
+    } else if ((col == prev_col) && bounds[prev_col-1]) { //take into account identity matrix for bounds
+        Ai[Ap[prev_col]] = bounds_row;
+        Ax[Ap[prev_col]] = 1;
         Ap[prev_col]++;
+        elemA++;
+        bounds_row++;
     }
 
     
@@ -362,36 +394,53 @@ int main(int argc, char*argv[]){
     if(get_next_command_and_check(command, "BOUNDS", next_char, fp))
         return 1;
 
+    // printf("Reading BOUNDS\n");
+
     next_char = fgetc(fp);
-    k = prev_row; col = 1; long p; index = k; prev_row = -1;
+    long p; row = prev_row+1; prev_col = -1; index = prev_row;
     while(next_char == ' ') {
         fgets(line, 100, fp);
-        sscanf(line, "%s %*s %s %le", bound_type, rowchar, &temp);
-        row = convert_to_long(rowchar);
+        sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
+        col = convert_to_long(colchar)-1;
         if (!strcmp(bound_type, "UP")) {
             
-            if(prev_row != row) {
-                p = Ap[col];
-                Ai[p-1] = row+k;
-                Ax[p-1] = 1;
-                col++;
-                index++;
-            }
-            data->bmax[index] = temp;
+            // if(prev_col != col) {
+            //     p = Ap[col+1];
+            //     Ai[p-1] = row;
+            //     Ax[p-1] = 1;
+            //     // col++;
+            //     index++; row++;
+            // }
+            data->bmax[index+col+1] = temp;
         } else if (!strcmp(bound_type, "LO")) {
             
-            if(prev_row != row) {
-                p = Ap[col];
-                Ai[p-1] = row+k;
-                Ax[p-1] = 1;
-                col++;
-                index++;
-            }
-            data->bmin[index] = temp;
+            // if(prev_col != col) {
+                // p = Ap[col+1];
+                // Ai[p-1] = row;
+                // Ax[p-1] = 1;
+                // // col++;
+                // index++; row++;
+            // }
+            data->bmin[index+col+1] = temp;
+        } else if (!strcmp(bound_type, "FX")) {
+                // p = Ap[col+1];
+                // Ai[p-1] = row;
+                // Ax[p-1] = 1;
+                // row++;
+                // index++;
+                data->bmin[index+col+1] = temp;
+                data->bmax[index+col+1] = temp;
         }
-        prev_row = row;
+        prev_col = col;
         next_char = fgetc(fp);
     }
+
+    // for (k = 0; k < m; k++) {
+    //     printf("bmin[%ld] = %le, bmax[%ld] = %le\n", k, data->bmin[k], k, data->bmax[k]);
+    // }
+
+    // printf("Finish Reading BOUNDS\n");
+
 
     if(get_next_command_and_check(command, "QUADOBJ", next_char, fp))
         return 1;
@@ -424,6 +473,17 @@ int main(int argc, char*argv[]){
         next_char = fgetc(fp);
     }
 
+    // for (k = 0; k < n; k++) {
+    //     printf("q[%ld] = %le\n", k, data->q[k]);
+    // }
+    // for (k = 0; k <= n; k++) {
+    //     printf("Qp[%ld] = %ld\n", k, Qp[k]);
+    // }
+    // for (k = 0; k < Qnnz; k++) {
+    //     printf("Qi[%ld] = %ld\n", k, Qi[k]);
+    //     printf("Qx[%ld] = %le\n", k, Qx[k]);
+    // }
+    // printf("data->c, %le\n", data->c);
 
     if(get_next_command_and_check(command, "ENDATA", next_char, fp))
         return 1;
@@ -432,8 +492,17 @@ int main(int argc, char*argv[]){
 
     CHOLMOD(finish)(&c);
     
+    // for (k = 0; k <= n; k++) {
+    //     printf("Ap[%ld] = %ld\n", k, Ap[k]);
+    // }
+    // for (k = 0; k < Annz; k++) {
+    //     printf("Ai[%ld] = %ld\n", k, Ai[k]);
+    //     printf("Ax[%ld] = %le\n", k, Ax[k]);
+    // }
+
 
     // Setup and solve problem
+    // printf("Before setup\n");
 
     // Problem settings
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
@@ -446,8 +515,15 @@ int main(int argc, char*argv[]){
 
     QPALMWorkspace *work = qpalm_setup(data, settings, &c);
 
+    // printf("Before solve\n");
+
     // Solve Problem
     qpalm_solve(work);
+    // printf("After solve\n");
+
+    // for (k = 0; k < n; k++) {
+    //     printf("x_sol[%ld] = %le\n", k, work->solution->x[k]);
+    // }
 
     strcpy(name, &(argv[1][78]));
     
@@ -470,6 +546,8 @@ int main(int argc, char*argv[]){
     c_free(data->bmax);
     c_free(data);
     c_free(settings);
+
+    c_free(bounds);
 
     return 0;
 }
