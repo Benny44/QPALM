@@ -183,10 +183,10 @@ int main(int argc, char*argv[]){
     Annz += n_bounds;
     m += n_bounds;
 
-    // for (k = 0; k < n; k++) {
-    //     printf("bounds[%ld] = %ld\n", k, bounds[k]);
-    // }
-    // printf("Annz: %ld, n_bounds: %lu\n", Annz, n_bounds);
+    for (k = 0; k < n; k++) {
+        printf("bounds[%ld] = %ld\n", k, bounds[k]);
+    }
+    printf("Annz: %ld, n_bounds: %lu\n", Annz, n_bounds);
 
     if(get_next_command_and_check(command, "QUADOBJ", next_char, fp))
         return 1;
@@ -202,7 +202,7 @@ int main(int argc, char*argv[]){
         return 1;
     fclose(fp);
 
-    // printf("Results: m = %lu, n = %lu, Qnnz = %lu, Annz = %lu\n", m, n, Qnnz, Annz);
+    printf("Results: m = %lu, n = %lu, Qnnz = %lu, Annz = %lu\n", m, n, Qnnz, Annz);
 
     QPALMData* data = c_calloc(1, sizeof(QPALMData));
     data->m = m;
@@ -292,7 +292,7 @@ int main(int argc, char*argv[]){
         if (!strcmp(rowchar, objective)) { 
             data->q[col-1] = temp;            
         } else {
-            Ai[elemA] = row - 1;
+            Ai[elemA] = row;
             Ap[col]++;
             if (temp > QPALM_INFTY) {
                 temp = QPALM_INFTY;
@@ -305,8 +305,8 @@ int main(int argc, char*argv[]){
 
         if(!strcmp(second_rowchar, "")) {
         } else {
-            row = convert_to_long(second_rowchar);
-            Ai[elemA] = row - 1;
+            row = convert_to_long(second_rowchar)-1;
+            Ai[elemA] = row;
             Ap[col]++;
             if (temp2 > QPALM_INFTY) {
                 temp2 = QPALM_INFTY;
@@ -510,7 +510,7 @@ int main(int argc, char*argv[]){
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
     settings->eps_rel = 1e-6;
-    settings->max_iter = 10000;
+    settings->max_iter = 1000;
     // settings->verbose = FALSE;
 
     QPALMWorkspace *work = qpalm_setup(data, settings, &c);
