@@ -374,7 +374,7 @@ int main(int argc, char*argv[]){
         next_char = fgetc(fp);
     }
 
-    long prev_row = row;
+    long prev_row = m-n_bounds;
     if(get_next_command_and_check(command, "RANGES", next_char, fp))
         return 1;
 
@@ -401,7 +401,7 @@ int main(int argc, char*argv[]){
     // printf("Reading BOUNDS\n");
 
     next_char = fgetc(fp);
-    long p; row = prev_row+1; prev_col = -1; index = prev_row;
+    long p; row = prev_row; prev_col = -1; index = prev_row;
     while(next_char == ' ') {
         fgets(line, 100, fp);
         sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
@@ -415,7 +415,7 @@ int main(int argc, char*argv[]){
             //     // col++;
             //     index++; row++;
             // }
-            data->bmax[index+col+1] = temp;
+            data->bmax[index+col] = temp;
         } else if (!strcmp(bound_type, "LO")) {
             
             // if(prev_col != col) {
@@ -425,23 +425,21 @@ int main(int argc, char*argv[]){
                 // // col++;
                 // index++; row++;
             // }
-            data->bmin[index+col+1] = temp;
+            data->bmin[index+col] = temp;
         } else if (!strcmp(bound_type, "FX")) {
                 // p = Ap[col+1];
                 // Ai[p-1] = row;
                 // Ax[p-1] = 1;
                 // row++;
                 // index++;
-                data->bmin[index+col+1] = temp;
-                data->bmax[index+col+1] = temp;
+                data->bmin[index+col] = temp;
+                data->bmax[index+col] = temp;
         }
         prev_col = col;
         next_char = fgetc(fp);
     }
 
-    // for (k = 0; k < m; k++) {
-    //     printf("bmin[%ld] = %le, bmax[%ld] = %le\n", k, data->bmin[k], k, data->bmax[k]);
-    // }
+    
 
     // printf("Finish Reading BOUNDS\n");
 
@@ -485,6 +483,10 @@ int main(int argc, char*argv[]){
     fclose(fp);
 
     CHOLMOD(finish)(&c);
+
+    // for (k = 0; k < m; k++) {
+    //     printf("bmin[%ld] = %le, bmax[%ld] = %le\n", k, data->bmin[k], k, data->bmax[k]);
+    // }
     
     // for (k = 0; k < n; k++) {
     //     printf("q[%ld] = %le\n", k, data->q[k]);
@@ -518,7 +520,7 @@ int main(int argc, char*argv[]){
     settings->eps_rel = 1e-6;
     settings->eps_dual_inf = 1e-6;
     settings->eps_prim_inf = 1e-6;
-    settings->max_iter = 1000;
+    settings->max_iter = 10000;
     // settings->verbose = FALSE;
 
     QPALMWorkspace *work = qpalm_setup(data, settings, &c);
