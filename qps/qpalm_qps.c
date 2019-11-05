@@ -475,6 +475,12 @@ int main(int argc, char*argv[]){
         elemQ++;
         next_char = fgetc(fp);
     }
+    col = n;
+    if (col > prev_col) {
+            for (; prev_col < col; prev_col++) {
+                Qp[prev_col+1] = Qp[prev_col];
+            }          
+    }
 
 
 
