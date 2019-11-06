@@ -214,13 +214,7 @@ int main(int argc, char*argv[]){
         data->q[k] = 0;
     }
     data->bmin = c_calloc(m, sizeof(c_float));
-    for (k = 0; k < m; k++) {
-        data->bmin[k] = 0;
-    }
-    data->bmax = c_calloc(m, sizeof(c_float));
-    for (k = 0; k < m; k++) {
-        data->bmax[k] = QPALM_INFTY;
-    }
+    data->bmax = c_calloc(m, sizeof(c_float));    
 
     cholmod_common c;
     CHOLMOD(start)(&c);
@@ -266,6 +260,27 @@ int main(int argc, char*argv[]){
         next_char = fgetc(fp);
     }
 
+    for (k = 0; k < m; k++) {
+        if (k >= m-n_bounds) {
+            data->bmin[k] = 0;
+            data->bmax[k] = QPALM_INFTY;
+        }
+        else switch (constraint_signs[k]) {
+                case 'L':
+                    data->bmax[k] = 0;
+                    data->bmin[k] = -QPALM_INFTY;
+                    break; 
+                case 'G':
+                    data->bmin[k] = 0;
+                    data->bmax[k] = QPALM_INFTY;
+                    break;
+                case 'E':
+                    data->bmin[k] = 0;
+                    data->bmax[k] = 0;
+                    break;
+            
+        }
+    }
     if(get_next_command_and_check(command, "COLUMNS", next_char, fp))
         return 1;
     
