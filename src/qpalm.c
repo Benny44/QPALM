@@ -508,7 +508,8 @@ void qpalm_solve(QPALMWorkspace *work) {
   work->initialized = FALSE;
 
   #ifdef PRINTING
-    print_final_message(work);
+    if (work->settings->verbose)
+      print_final_message(work);
   #endif /* PRINTING */
 }
 
