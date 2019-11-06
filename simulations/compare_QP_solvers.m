@@ -15,8 +15,11 @@ timings = {};
 iter = {};
 status = {};
 
-
-VERBOSE = false;
+if ~isfield(options, 'VERBOSE')
+    VERBOSE = false;
+else
+    VERBOSE = options.VERBOSE;
+end
 if ~isfield(options, 'SCALING_ITER')
     SCALING_ITER = 10;
 else
@@ -86,7 +89,7 @@ if options.qpalm_matlab
         opts.gamma    = 1e1;
         opts.gammaUpd = 10;
         opts.gammaMax = 1e7;
-%         opts.verbose = true;
+        opts.verbose = VERBOSE;
 %         opts.sig = 5;
         opts.Delta   = 100;
         opts.scaling = 'simple';
