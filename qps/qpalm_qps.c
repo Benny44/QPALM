@@ -7,6 +7,31 @@
 #include <math.h>
 #include <string.h>
 
+/* Print a cholmod matrix so the output can be entered into matlab */
+void print_cholmod_matlab(cholmod_sparse *M) {
+    printf("M = sparse(%ld, %ld);\n", M->nrow, M->ncol);
+    size_t col, index = 0, row;
+    double *Mx = M->x;
+    long int *Mi = M->i;
+    long int *Mp = M->p;
+
+
+    for (col = 1; col <= M->ncol; col++) {
+        for (row = Mp[col-1]; row < Mp[col]; row++) {
+            printf("M(%ld, %ld) = %.16le;\n", Mi[index]+1, col, Mx[index]);
+            index++;
+        }
+    }
+}
+
+void print_dense_vector_matlab(double* x, size_t len) {
+    size_t k;
+    printf("x = zeros(%lu, 1);", len);
+    for (k = 0; k < len; k++) {
+        printf("x(%lu) = %.16le;", k+1, x[k]);
+    }
+    printf("\n");
+}
 int get_next_command_and_check(char* command, char* check, char next_char, FILE* fp) {
     command[0] = next_char;
     char line[100];
