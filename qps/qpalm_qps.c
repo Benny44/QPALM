@@ -46,6 +46,15 @@ int get_next_command_and_check(char* command, char* check, char next_char, FILE*
     return 0;
 }
 
+int get_next_command(char* command, char next_char, FILE* fp) {
+    command[0] = next_char;
+    char line[100];
+    fgets(line, 100, fp);
+    sscanf(line, "%s", &command[1]);
+
+    return strcmp(command, "ENDATA");
+}
+
 long convert_to_long(char *s) {
     char c;
     long i, digit, number = 0;
@@ -94,138 +103,134 @@ int main(int argc, char*argv[]){
 
     char next_char;
     next_char = fgetc(fp);
-
-    if(get_next_command_and_check(command, "ROWS", next_char, fp))
-        return 1;
-
-    next_char = fgetc(fp);
     char NLGE[1], buf[20], objective[20];
-
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        sscanf(line, "%s %s", NLGE, buf);
-        if (!strcmp(NLGE, "N")) {
-            strcpy(objective, buf);
-        } else {
-            m++;
-        }
-        
-        next_char = fgetc(fp);
-    }
-    if(get_next_command_and_check(command, "COLUMNS", next_char, fp))
-        return 1;
-    
-    next_char = fgetc(fp);
-    
     c_float temp, temp2;
     char colchar[20], rowchar[20], prev_colchar[20], second_rowchar[20];
     prev_colchar[0] = '\0';
     second_rowchar[0] = '\0';
 
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        sscanf(line, "%s %s %le %s %le", colchar, rowchar, &temp, second_rowchar, &temp2);
-
-        if (strcmp(colchar, prev_colchar)) {
-            n++;
-            strcpy(prev_colchar, colchar);
-        }
-
-        if (!strcmp(rowchar, objective)) {            
-        } else {
-            Annz++;
-        }
-
-        if (!strcmp(second_rowchar, objective)){
-        } else if(!strcmp(second_rowchar, "")) {
-        } else {
-            Annz++;
-            second_rowchar[0] = '\0';
-        }
-        
-        next_char = fgetc(fp);
-    }
-    if(get_next_command_and_check(command, "RHS", next_char, fp))
-        return 1;
-
-    next_char = fgetc(fp);
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        next_char = fgetc(fp);
-    }
-
-    if(get_next_command_and_check(command, "RANGES", next_char, fp))
-        return 1;
-
-    next_char = fgetc(fp);
-
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        sscanf(line, "%*s %s %le", rowchar, &temp);
-        // row = convert_to_long(rowchar)-1;
-        // switch (constraint_signs[row]) {
-        //     case 'L':
-        //         data->bmin[row] = data->bmax[row] - temp;
-        //         break; 
-        //     case 'G':
-        //         data->bmax[row] = data->bmin[row] + temp;
-        //         break;
-        // }
-        next_char = fgetc(fp);
-    }
-
-    if(get_next_command_and_check(command, "BOUNDS", next_char, fp))
-        return 1;
-    next_char = fgetc(fp);
-
-    c_int *bounds = c_calloc(n, sizeof(c_int));
+    // c_int *bounds = c_calloc(n, sizeof(c_int));
+    c_int *bounds;
     size_t k;
-    for (k = 0; k < n; k++) {
-        bounds[k] = TRUE; //default lower bound = 0
-    }
-
+    
     char bound_type[20];
     char prev_rowchar[20];
     prev_rowchar[0] = '\0';
     long row;
-    n_bounds = n;
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        sscanf(line, "%s %*s %s %le", bound_type, rowchar, &temp);
-        if (!strcmp(bound_type, "FR")) {
-            row = convert_to_long(rowchar)-1;
-            bounds[row] = FALSE;
-            n_bounds -= 1;
-        } 
+    
 
-        // if (strcmp(bound_type, "FR") && strcmp(rowchar, prev_rowchar)) {
-            
-        //     row = convert_to_long(rowchar)-1;
-        //     // bounds[row] = TRUE;
-            
-        // }
+    /*First pass through the file to get the sizes*/
+    while(get_next_command(command, next_char, fp)){
         next_char = fgetc(fp);
-    }
-    Annz += n_bounds;
-    m += n_bounds;
 
-    // for (k = 0; k < n; k++) {
-    //     printf("bounds[%ld] = %ld\n", k, bounds[k]);
+        if (!strcmp(command, "ROWS")) {
+    
+            while(next_char == ' ') {
+                fgets(line, 100, fp);
+                sscanf(line, "%s %s", NLGE, buf);
+                if (!strcmp(NLGE, "N")) {
+                    strcpy(objective, buf);
+                } else {
+                    m++;
+                }
+                
+                next_char = fgetc(fp);
+            }
+
+        } else if (!strcmp(command, "COLUMNS")) {
+
+            while(next_char == ' ') {
+                fgets(line, 100, fp);
+                sscanf(line, "%s %s %le %s %le", colchar, rowchar, &temp, second_rowchar, &temp2);
+
+                if (strcmp(colchar, prev_colchar)) {
+                    n++;
+                    strcpy(prev_colchar, colchar);
+                }
+
+                if (!strcmp(rowchar, objective)) {            
+                } else {
+                    Annz++;
+                }
+
+                if (!strcmp(second_rowchar, objective)){
+                } else if(!strcmp(second_rowchar, "")) {
+                } else {
+                    Annz++;
+                    second_rowchar[0] = '\0';
+                }
+                
+                next_char = fgetc(fp);
+            }
+
+        } else if (!strcmp(command, "RHS") || !strcmp(command, "RANGES")) {
+            while(next_char == ' ') {
+                fgets(line, 100, fp);
+                next_char = fgetc(fp);
+            }
+
+        } else if (!strcmp(command, "BOUNDS")) {
+            bounds = c_calloc(n, sizeof(c_int));
+            for (k = 0; k < n; k++) {
+                bounds[k] = TRUE; //default lower bound = 0
+            }
+            n_bounds = n;
+
+            while(next_char == ' ') {
+                fgets(line, 100, fp);
+                sscanf(line, "%s %*s %s %le", bound_type, rowchar, &temp);
+                if (!strcmp(bound_type, "FR")) {
+                    row = convert_to_long(rowchar)-1;
+                    bounds[row] = FALSE;
+                    n_bounds -= 1;
+                } 
+
+                next_char = fgetc(fp);
+            }
+            Annz += n_bounds;
+            m += n_bounds;
+
+        } else if (!strcmp(command, "QUADOBJ")) {
+            while(next_char == ' ') {
+                fgets(line, 100, fp);
+                next_char = fgetc(fp);
+                Qnnz++;
+            }
+        }
+    }
+
+
+    // if(get_next_command_and_check(command, "ROWS", next_char, fp))
+    //     return 1;
+
+    
+    // if(get_next_command_and_check(command, "COLUMNS", next_char, fp))
+    //     return 1;
+    
+    
+    // if(get_next_command_and_check(command, "RHS", next_char, fp))
+    //     return 1;
+
+    
+
+    // if(get_next_command_and_check(command, "RANGES", next_char, fp))
+    //     return 1;
+
+    // if(get_next_command_and_check(command, "BOUNDS", next_char, fp))
+    //     return 1;
+
+    // if(get_next_command_and_check(command, "QUADOBJ", next_char, fp))
+    //     return 1;
+    // next_char = fgetc(fp);
+    // while(next_char == ' ') {
+    //     fgets(line, 100, fp);
+    //     next_char = fgetc(fp);
+    //     Qnnz++;
     // }
-    // printf("Annz: %ld, n_bounds: %lu\n", Annz, n_bounds);
-
-    if(get_next_command_and_check(command, "QUADOBJ", next_char, fp))
-        return 1;
-    next_char = fgetc(fp);
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        next_char = fgetc(fp);
-        Qnnz++;
-    }
 
 
-    if(get_next_command_and_check(command, "ENDATA", next_char, fp))
-        return 1;
+    // if(get_next_command_and_check(command, "ENDATA", next_char, fp))
+    //     return 1;
     fclose(fp);
 
     // printf("Results: m = %lu, n = %lu, Qnnz = %lu, Annz = %lu\n", m, n, Qnnz, Annz);
