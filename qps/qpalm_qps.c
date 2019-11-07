@@ -32,6 +32,7 @@ void print_dense_vector_matlab(double* x, size_t len) {
     }
     printf("\n");
 }
+
 int get_next_command_and_check(char* command, char* check, char next_char, FILE* fp) {
     command[0] = next_char;
     char line[100];
@@ -306,6 +307,7 @@ int main(int argc, char*argv[]){
             
         }
     }
+
     if(get_next_command_and_check(command, "COLUMNS", next_char, fp))
         return 1;
     
@@ -447,42 +449,20 @@ int main(int argc, char*argv[]){
         fgets(line, 100, fp);
         sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
         col = convert_to_long(colchar)-1;
-        if (!strcmp(bound_type, "UP")) {
-            
-            // if(prev_col != col) {
-            //     p = Ap[col+1];
-            //     Ai[p-1] = row;
-            //     Ax[p-1] = 1;
-            //     // col++;
-            //     index++; row++;
-            // }
+        
+        if (!strcmp(bound_type, "FR")) {
+            index--;
+        } else if (!strcmp(bound_type, "UP")) {
             data->bmax[index+col] = temp;
         } else if (!strcmp(bound_type, "LO")) {
-            
-            // if(prev_col != col) {
-                // p = Ap[col+1];
-                // Ai[p-1] = row;
-                // Ax[p-1] = 1;
-                // // col++;
-                // index++; row++;
-            // }
             data->bmin[index+col] = temp;
         } else if (!strcmp(bound_type, "FX")) {
-                // p = Ap[col+1];
-                // Ai[p-1] = row;
-                // Ax[p-1] = 1;
-                // row++;
-                // index++;
-                data->bmin[index+col] = temp;
-                data->bmax[index+col] = temp;
+            data->bmin[index+col] = temp;
+            data->bmax[index+col] = temp;
         }
-        prev_col = col;
+        
         next_char = fgetc(fp);
     }
-
-    
-
-    // printf("Finish Reading BOUNDS\n");
 
 
     if(get_next_command_and_check(command, "QUADOBJ", next_char, fp))
@@ -531,6 +511,9 @@ int main(int argc, char*argv[]){
 
     CHOLMOD(finish)(&c);
 
+    // print_cholmod_matlab(data->Q);
+    // print_dense_vector_matlab(data->bmin, m);
+
     // for (k = 0; k < m; k++) {
     //     printf("bmin[%ld] = %le, bmax[%ld] = %le\n", k, data->bmin[k], k, data->bmax[k]);
     // }
@@ -546,6 +529,12 @@ int main(int argc, char*argv[]){
     //     printf("Qx[%ld] = %le\n", k, Qx[k]);
     // }
     // printf("data->c, %le\n", data->c);
+
+    // c.print = 4;
+    // CHOLMOD(print_sparse)(data->A, "Amatrix", &c);
+    // printf("Check A: %d\n", CHOLMOD(check_sparse)(data->A, &c));
+    // CHOLMOD(print_sparse)(data->Q, "Qmatrix", &c);
+    // printf("Check Q: %d\n", CHOLMOD(check_sparse)(data->Q, &c));
 
     // for (k = 0; k <= n; k++) {
     //     printf("Ap[%ld] = %ld\n", k, Ap[k]);
@@ -569,6 +558,8 @@ int main(int argc, char*argv[]){
     settings->eps_prim_inf = 1e-6;
     settings->max_iter = 10000;
     settings->verbose = FALSE;
+    settings->scaling = FALSE;
+    // settings->proximal = TRUE;
 
     QPALMWorkspace *work = qpalm_setup(data, settings, &c);
 
@@ -581,7 +572,9 @@ int main(int argc, char*argv[]){
     // for (k = 0; k < n; k++) {
     //     printf("x_sol[%ld] = %le\n", k, work->solution->x[k]);
     // }
-
+    printf("Iter: %ld\n", work->info->iter);
+    printf("Status: %s\n", work->info->status);
+    printf("Objective: %le\n", work->info->objective);
     strcpy(name, &(argv[1][78]));
     
     // name = &name[78];

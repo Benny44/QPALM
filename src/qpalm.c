@@ -435,7 +435,7 @@ void qpalm_solve(QPALMWorkspace *work) {
             set_active_constraints(work);
             set_entering_leaving_constraints(work);
             if (work->chol->nb_enter == 0 && work->chol->nb_leave == 0) {
-              c_print("Boosting gamma on iter: %d\n", iter);
+              // c_print("Boosting gamma on iter: %d\n", iter);
               boost_gamma(work);
             } else {
               update_gamma(work);
@@ -477,12 +477,6 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       if (mod(iter, work->settings->reset_newton_iter) == 0) work->chol->reset_newton = TRUE; 
       update_primal_iterate(work);
-
-      // if (work->settings->proximal && !work->gamma_maxed && iter_out > 1 
-      //     && work->chol->nb_enter == 0 && work->chol->nb_leave == 0 
-      //     && work->info->pri_res_norm < work->eps_pri) {
-      //   boost_gamma(work);
-      // }
 
       #ifdef PRINTING
       if (work->settings->verbose && mod(iter, work->settings->print_iter) == 0) {
