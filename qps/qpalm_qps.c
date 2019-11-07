@@ -199,38 +199,6 @@ int main(int argc, char*argv[]){
         }
     }
 
-
-    // if(get_next_command_and_check(command, "ROWS", next_char, fp))
-    //     return 1;
-
-    
-    // if(get_next_command_and_check(command, "COLUMNS", next_char, fp))
-    //     return 1;
-    
-    
-    // if(get_next_command_and_check(command, "RHS", next_char, fp))
-    //     return 1;
-
-    
-
-    // if(get_next_command_and_check(command, "RANGES", next_char, fp))
-    //     return 1;
-
-    // if(get_next_command_and_check(command, "BOUNDS", next_char, fp))
-    //     return 1;
-
-    // if(get_next_command_and_check(command, "QUADOBJ", next_char, fp))
-    //     return 1;
-    // next_char = fgetc(fp);
-    // while(next_char == ' ') {
-    //     fgets(line, 100, fp);
-    //     next_char = fgetc(fp);
-    //     Qnnz++;
-    // }
-
-
-    // if(get_next_command_and_check(command, "ENDATA", next_char, fp))
-    //     return 1;
     fclose(fp);
 
     // printf("Results: m = %lu, n = %lu, Qnnz = %lu, Annz = %lu\n", m, n, Qnnz, Annz);
@@ -265,252 +233,222 @@ int main(int argc, char*argv[]){
         fprintf(stderr, "Could not open file %s\n", argv[1]);
         return 1;
     }
+
+    char constraint_signs[m-n_bounds];
+    size_t index = 0;
+    long bounds_row = m-n_bounds, col, prev_col = 1;
     
     fgets(line, 100, fp);
     next_char = fgetc(fp);
 
-    if(get_next_command_and_check(command, "ROWS", next_char, fp))
-        return 1;
-
-    next_char = fgetc(fp);
-
-    char constraint_signs[m-n_bounds];
-    size_t index = 0;
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        sscanf(line, "%s %s", NLGE, buf);
-        if (!strcmp(NLGE, "E")) { //default in equality for bmax = bmin = 0
-            data->bmax[index] = 0;
-        }
-        if (strcmp(NLGE, "N")) {
-            constraint_signs[index] = NLGE[0];
-            index++;
-        } 
-        
-        
+    while (get_next_command(command, next_char, fp)) {
         next_char = fgetc(fp);
-    }
+        if (!strcmp(command, "ROWS")) {
+            index = 0;
+            while(next_char == ' ') {
+                fgets(line, 100, fp);
+                sscanf(line, "%s %s", NLGE, buf);
+                if (!strcmp(NLGE, "E")) { //default in equality for bmax = bmin = 0
+                    data->bmax[index] = 0;
+                }
+                if (strcmp(NLGE, "N")) {
+                    constraint_signs[index] = NLGE[0];
+                    index++;
+                } 
+                next_char = fgetc(fp);
+            }
 
-    for (k = 0; k < m; k++) {
-        if (k >= m-n_bounds) {
-            data->bmin[k] = 0;
-            data->bmax[k] = QPALM_INFTY;
-        }
-        else switch (constraint_signs[k]) {
-                case 'L':
-                    data->bmax[k] = 0;
-                    data->bmin[k] = -QPALM_INFTY;
-                    break; 
-                case 'G':
+            for (k = 0; k < m; k++) {
+                if (k >= m-n_bounds) {
                     data->bmin[k] = 0;
                     data->bmax[k] = QPALM_INFTY;
-                    break;
-                case 'E':
-                    data->bmin[k] = 0;
-                    data->bmax[k] = 0;
-                    break;
-            
-        }
-    }
-
-    if(get_next_command_and_check(command, "COLUMNS", next_char, fp))
-        return 1;
-    
-    next_char = fgetc(fp);
-
-    Ap[0] = 0;
-    size_t elemA = 0;
-    long bounds_row = m-n_bounds, col, prev_col = 1; 
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        sscanf(line, "%s %s %le %s %le", colchar, rowchar, &temp, second_rowchar, &temp2);
-        row = convert_to_long(rowchar)-1;
-        col = convert_to_long(colchar);
-        if (col > prev_col) {
-            for (; prev_col < col; prev_col++) {
-                if (bounds[prev_col-1]) { //take into account identity matrix for bounds
-                // p = Ap[col+1];
-                    Ai[Ap[prev_col]] = bounds_row;
-                    Ax[Ap[prev_col]] = 1;
-                    Ap[prev_col]++;
-                    elemA++;
-                    bounds_row++;
                 }
-                Ap[prev_col+1] = Ap[prev_col];
+                else switch (constraint_signs[k]) {
+                        case 'L':
+                            data->bmax[k] = 0;
+                            data->bmin[k] = -QPALM_INFTY;
+                            break; 
+                        case 'G':
+                            data->bmin[k] = 0;
+                            data->bmax[k] = QPALM_INFTY;
+                            break;
+                        case 'E':
+                            data->bmin[k] = 0;
+                            data->bmax[k] = 0;
+                            break;
+                    
+                }
             }
-        }
-
-        if (!strcmp(rowchar, objective)) { 
-            data->q[col-1] = temp;            
-        } else {
-            Ai[elemA] = row;
-            Ap[col]++;
-            if (temp > QPALM_INFTY) {
-                temp = QPALM_INFTY;
-            } else if (temp < -QPALM_INFTY) {
-                temp = -QPALM_INFTY;
-            }
-            Ax[elemA] = temp;
-            elemA++;
-        }
-
-        if(!strcmp(second_rowchar, "")) {
-        } else {
-            row = convert_to_long(second_rowchar)-1;
-            Ai[elemA] = row;
-            Ap[col]++;
-            if (temp2 > QPALM_INFTY) {
-                temp2 = QPALM_INFTY;
-            } else if (temp2 < -QPALM_INFTY) {
-                temp2 = -QPALM_INFTY;
-            }
-            Ax[elemA] = temp2;
-            elemA++;
-            second_rowchar[0] = '\0';
-        }
-        
-        next_char = fgetc(fp);
-    }
-    col = n;
-    if (col > prev_col) {
-        for (; prev_col < col; prev_col++) {
-            if (bounds[prev_col-1]) { //take into account identity matrix for bounds
-                Ai[Ap[prev_col]] = bounds_row;
-                    Ax[Ap[prev_col]] = 1;
-                    Ap[prev_col]++;
-                    elemA++;
-                    bounds_row++;
-            }
-            Ap[prev_col+1] = Ap[prev_col];
-        }
-    } else if ((col == prev_col) && bounds[prev_col-1]) { //take into account identity matrix for bounds
-        Ai[Ap[prev_col]] = bounds_row;
-        Ax[Ap[prev_col]] = 1;
-        Ap[prev_col]++;
-        elemA++;
-        bounds_row++;
-    }
-
-    
-    if(get_next_command_and_check(command, "RHS", next_char, fp))
-        return 1;
-
-    next_char = fgetc(fp);
-    k = 0;
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        sscanf(line, "%*s %s %le", rowchar, &temp);
-        row = convert_to_long(rowchar)-1;
-        if (!strcmp(rowchar, objective))
-            data->c = -temp;
-        else {
-            switch (constraint_signs[row]) {
-                case 'L':
-                    data->bmax[row] = temp;
-                    data->bmin[row] = -QPALM_INFTY;
-                    break; 
-                case 'G':
-                    data->bmin[row] = temp;
-                    break;
-                case 'E':
-                    data->bmin[row] = temp;
-                    data->bmax[row] = temp;
-                    break;
-            }
+        } else if (!strcmp(command, "COLUMNS")) {
+            Ap[0] = 0;
+            size_t elemA = 0;
+            prev_col = 1;
              
+            while(next_char == ' ') {
+                fgets(line, 100, fp);
+                sscanf(line, "%s %s %le %s %le", colchar, rowchar, &temp, second_rowchar, &temp2);
+                row = convert_to_long(rowchar)-1;
+                col = convert_to_long(colchar);
+                if (col > prev_col) {
+                    for (; prev_col < col; prev_col++) {
+                        if (bounds[prev_col-1]) { //take into account identity matrix for bounds
+                        // p = Ap[col+1];
+                            Ai[Ap[prev_col]] = bounds_row;
+                            Ax[Ap[prev_col]] = 1;
+                            Ap[prev_col]++;
+                            elemA++;
+                            bounds_row++;
+                        }
+                        Ap[prev_col+1] = Ap[prev_col];
+                    }
+                }
+
+                if (!strcmp(rowchar, objective)) { 
+                    data->q[col-1] = temp;            
+                } else {
+                    Ai[elemA] = row;
+                    Ap[col]++;
+                    if (temp > QPALM_INFTY) {
+                        temp = QPALM_INFTY;
+                    } else if (temp < -QPALM_INFTY) {
+                        temp = -QPALM_INFTY;
+                    }
+                    Ax[elemA] = temp;
+                    elemA++;
+                }
+
+                if(!strcmp(second_rowchar, "")) {
+                } else {
+                    row = convert_to_long(second_rowchar)-1;
+                    Ai[elemA] = row;
+                    Ap[col]++;
+                    if (temp2 > QPALM_INFTY) {
+                        temp2 = QPALM_INFTY;
+                    } else if (temp2 < -QPALM_INFTY) {
+                        temp2 = -QPALM_INFTY;
+                    }
+                    Ax[elemA] = temp2;
+                    elemA++;
+                    second_rowchar[0] = '\0';
+                }
+                
+                next_char = fgetc(fp);
+            }
+            col = n;
+            if (col > prev_col) {
+                for (; prev_col < col; prev_col++) {
+                    if (bounds[prev_col-1]) { //take into account identity matrix for bounds
+                        Ai[Ap[prev_col]] = bounds_row;
+                            Ax[Ap[prev_col]] = 1;
+                            Ap[prev_col]++;
+                            elemA++;
+                            bounds_row++;
+                    }
+                    Ap[prev_col+1] = Ap[prev_col];
+                }
+            } else if ((col == prev_col) && bounds[prev_col-1]) { //take into account identity matrix for bounds
+                Ai[Ap[prev_col]] = bounds_row;
+                Ax[Ap[prev_col]] = 1;
+                Ap[prev_col]++;
+                elemA++;
+                bounds_row++;
+            }
+        } else if (!strcmp(command, "RHS")) {
+            while(next_char == ' ') {
+                fgets(line, 100, fp);
+                sscanf(line, "%*s %s %le", rowchar, &temp);
+                row = convert_to_long(rowchar)-1;
+                if (!strcmp(rowchar, objective))
+                    data->c = -temp;
+                else {
+                    switch (constraint_signs[row]) {
+                        case 'L':
+                            data->bmax[row] = temp;
+                            data->bmin[row] = -QPALM_INFTY;
+                            break; 
+                        case 'G':
+                            data->bmin[row] = temp;
+                            break;
+                        case 'E':
+                            data->bmin[row] = temp;
+                            data->bmax[row] = temp;
+                            break;
+                    }
+                    
+                }
+                next_char = fgetc(fp);
+            }
+        } else if (!strcmp(command, "RANGES")) {
+            while(next_char == ' ') {
+                fgets(line, 100, fp);
+                sscanf(line, "%*s %s %le", rowchar, &temp);
+                row = convert_to_long(rowchar)-1;
+                switch (constraint_signs[row]) {
+                    case 'L':
+                        data->bmin[row] = data->bmax[row] - temp;
+                        break; 
+                    case 'G':
+                        data->bmax[row] = data->bmin[row] + temp;
+                        break;
+                }
+                next_char = fgetc(fp);
+            }
+        } else if (!strcmp(command, "BOUNDS")) {
+            index = m-n_bounds;
+            while(next_char == ' ') {
+                fgets(line, 100, fp);
+                sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
+                col = convert_to_long(colchar)-1;
+                
+                if (!strcmp(bound_type, "FR")) {
+                    index--;
+                } else if (!strcmp(bound_type, "UP")) {
+                    data->bmax[index+col] = temp;
+                } else if (!strcmp(bound_type, "LO")) {
+                    data->bmin[index+col] = temp;
+                } else if (!strcmp(bound_type, "FX")) {
+                    data->bmin[index+col] = temp;
+                    data->bmax[index+col] = temp;
+                }
+                
+                next_char = fgetc(fp);
+            }
+        } else if (!strcmp(command, "QUADOBJ")) {
+            prev_col = 1;
+            size_t elemQ = 0;
+            Qp[0] = 0;
+            while(next_char == ' ') {
+                fgets(line, 100, fp);
+                sscanf(line, "%s %s %le", colchar, rowchar, &temp);
+                col = convert_to_long(colchar);
+                row = convert_to_long(rowchar);
+
+                Qi[elemQ] = --row;
+                
+                if (col > prev_col) {
+                    for (; prev_col < col; prev_col++) {
+                        Qp[prev_col+1] = Qp[prev_col];
+                    }          
+                }
+                Qp[col]++;
+                if (temp > QPALM_INFTY) {
+                    temp = QPALM_INFTY;
+                } else if (temp < -QPALM_INFTY) {
+                    temp = -QPALM_INFTY;
+                }
+                Qx[elemQ] = temp;
+
+                elemQ++;
+                next_char = fgetc(fp);
+            }
+            col = n;
+            if (col > prev_col) {
+                    for (; prev_col < col; prev_col++) {
+                        Qp[prev_col+1] = Qp[prev_col];
+                    }          
+            }
         }
-        next_char = fgetc(fp);
     }
-
-    long prev_row = m-n_bounds;
-    if(get_next_command_and_check(command, "RANGES", next_char, fp))
-        return 1;
-
-    next_char = fgetc(fp);
-
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        sscanf(line, "%*s %s %le", rowchar, &temp);
-        row = convert_to_long(rowchar)-1;
-        switch (constraint_signs[row]) {
-            case 'L':
-                data->bmin[row] = data->bmax[row] - temp;
-                break; 
-            case 'G':
-                data->bmax[row] = data->bmin[row] + temp;
-                break;
-        }
-        next_char = fgetc(fp);
-    }
-
-    if(get_next_command_and_check(command, "BOUNDS", next_char, fp))
-        return 1;
-
-    // printf("Reading BOUNDS\n");
-
-    next_char = fgetc(fp);
-    long p; row = prev_row; prev_col = -1; index = prev_row;
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
-        col = convert_to_long(colchar)-1;
-        
-        if (!strcmp(bound_type, "FR")) {
-            index--;
-        } else if (!strcmp(bound_type, "UP")) {
-            data->bmax[index+col] = temp;
-        } else if (!strcmp(bound_type, "LO")) {
-            data->bmin[index+col] = temp;
-        } else if (!strcmp(bound_type, "FX")) {
-            data->bmin[index+col] = temp;
-            data->bmax[index+col] = temp;
-        }
-        
-        next_char = fgetc(fp);
-    }
-
-
-    if(get_next_command_and_check(command, "QUADOBJ", next_char, fp))
-        return 1;
-    next_char = fgetc(fp);
-    prev_col = 1;
-    size_t elemQ = 0;
-    Qp[0] = 0;
-    while(next_char == ' ') {
-        fgets(line, 100, fp);
-        sscanf(line, "%s %s %le", colchar, rowchar, &temp);
-        col = convert_to_long(colchar);
-        row = convert_to_long(rowchar);
-
-        Qi[elemQ] = --row;
-        
-        if (col > prev_col) {
-            for (; prev_col < col; prev_col++) {
-                Qp[prev_col+1] = Qp[prev_col];
-            }          
-        }
-        Qp[col]++;
-        if (temp > QPALM_INFTY) {
-            temp = QPALM_INFTY;
-        } else if (temp < -QPALM_INFTY) {
-            temp = -QPALM_INFTY;
-        }
-        Qx[elemQ] = temp;
-
-        elemQ++;
-        next_char = fgetc(fp);
-    }
-    col = n;
-    if (col > prev_col) {
-            for (; prev_col < col; prev_col++) {
-                Qp[prev_col+1] = Qp[prev_col];
-            }          
-    }
-
-
-
-    if(get_next_command_and_check(command, "ENDATA", next_char, fp))
-        return 1;
 
     fclose(fp);
 
