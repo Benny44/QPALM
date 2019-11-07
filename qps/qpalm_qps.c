@@ -575,10 +575,16 @@ int main(int argc, char*argv[]){
     printf("Iter: %ld\n", work->info->iter);
     printf("Status: %s\n", work->info->status);
     printf("Objective: %le\n", work->info->objective);
-    strcpy(name, &(argv[1][78]));
     
+    strcpy(line, argv[1]);
+    size_t last_slash = 0;
+    for (k = 0; k < strlen(line); k++) {
+        if (line[k] == '/') /*assume linux directory*/
+            last_slash = k+1;
+    }
+    strcpy(name, &line[last_slash]);
     // name = &name[78];
-    name[strlen(name)-4] = '\0';
+    name[strlen(name)-4] = '\0'; /*delete .qps*/
     // printf("%s\n", name);
     fp = fopen("out.tex", "a");
     fprintf(fp, "%s & %lu & %lu & %lu & %lu & %lu & %le \\\\", name, n, m, Annz, Qnnz, work->info->iter, work->info->objective);
