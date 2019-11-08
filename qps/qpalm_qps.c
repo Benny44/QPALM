@@ -492,7 +492,7 @@ int main(int argc, char*argv[]){
             // printf("RHS\n");
             while(next_char == ' ') {
                 fgets(line, 100, fp);
-                sscanf(line, "%*s %s %le", rowchar, &temp);
+                sscanf(line, "%*s %s %le %s %le", rowchar, &temp, second_rowchar, &temp2);
                 // row = convert_to_long(rowchar)-1;
 
                 if (!strcmp(rowchar, objective))
@@ -516,6 +516,28 @@ int main(int argc, char*argv[]){
                     }
                     
                 }
+
+                if (!strcmp(second_rowchar, objective))
+                    data->c = -temp2;
+                else if (strcmp(second_rowchar, "")){
+                    row_node = lookup(row_index_table, second_rowchar);
+                    row = row_node->index;
+                    
+                    switch (row_node->sign) {
+                        case 'L':
+                            data->bmax[row] = temp2;
+                            data->bmin[row] = -QPALM_INFTY;
+                            break; 
+                        case 'G':
+                            data->bmin[row] = temp2;
+                            break;
+                        case 'E':
+                            data->bmin[row] = temp2;
+                            data->bmax[row] = temp2;
+                            break;
+                    }
+                }
+
                 next_char = fgetc(fp);
             }
         } else if (!strcmp(command, "RANGES")) {
@@ -523,7 +545,7 @@ int main(int argc, char*argv[]){
 
             while(next_char == ' ') {
                 fgets(line, 100, fp);
-                sscanf(line, "%*s %s %le", rowchar, &temp);
+                sscanf(line, "%*s %s %le %s %le", rowchar, &temp, second_rowchar, &temp2);
                 // row = convert_to_long(rowchar)-1;
                 row_node = lookup(row_index_table, rowchar);
                 row = row_node->index;
@@ -535,6 +557,20 @@ int main(int argc, char*argv[]){
                         data->bmax[row] = data->bmin[row] + temp;
                         break;
                 }
+
+                if (strcmp(second_rowchar, "")) {
+                    row_node = lookup(row_index_table, second_rowchar);
+                    row = row_node->index;
+                    switch (row_node->sign) {
+                        case 'L':
+                            data->bmin[row] = data->bmax[row] - temp2;
+                            break; 
+                        case 'G':
+                            data->bmax[row] = data->bmin[row] + temp2;
+                            break;
+                    }
+                }
+
                 next_char = fgetc(fp);
             }
         } else if (!strcmp(command, "BOUNDS")) {
