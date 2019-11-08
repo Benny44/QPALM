@@ -6,10 +6,89 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+struct node{
+    char* key; /*name of the row/col*/
+    c_int index; /*index of the row/col */
+    char sign; /*constraint sign for a row*/
+    struct node *next;
+};
+struct index_table{
+    c_int size;
+    struct node **list;
+};
+struct index_table *create_index_table(c_int size){
+    struct index_table *t = (struct table*)malloc(sizeof(struct index_table));
+    t->size = size;
+    t->list = (struct node**)malloc(sizeof(struct node*)*size);
+    c_int i;
+    for(i=0; i<size; i++)
+        t->list[i] = NULL;
+    return t;
+}
+c_int hashcode(struct index_table *t,char* key){
+    c_int code = 0;
+    while(*key) code += (c_int)*key++;
+    return code % t->size;
+}
+void insert(struct index_table *t, char* key, c_int index, char sign){
+    c_int pos = hashcode(t,key);
+    struct node *list = t->list[pos];
+    struct node *new = (struct node*)malloc(sizeof(struct node));
+    struct node *temp = list;
+    while (temp) temp = temp->next;
+    new->key = (char*)malloc(sizeof(char)*(strlen(key)+1));
+    strcpy(new->key, key);
+    new->index = index;
+    new->sign = sign;
+    new->next = list;
+    t->list[pos] = new;
+}
+struct node* lookup(struct index_table *t,char* key){
+    c_int pos = hashcode(t,key);
+    struct node *list = t->list[pos];
+    struct node *temp = list;
+    while(temp){
+        if (strcmp(key, temp->key)) temp=temp->next;
+        else return temp;
+    }
+    return NULL;
+}
+void print_table(struct index_table *t, c_int size){
+    struct node *temp;
+    struct node *list;
+    c_int pos;
+    for (pos = 0; pos < size; pos++) {
+        list = t->list[pos];
+        temp = list;
+        while (temp) {
+            printf("Entry: %s, %ld\n", temp->key, temp->index);
+            temp = temp->next;
+        }
+    }
+}
 
+void free_index_table(struct index_table *t, c_int size) {
+    struct node *temp, *temp_next;
+    struct node *list;
+    c_int pos;
+    for (pos = 0; pos < size; pos++) {
+        list = t->list[pos];
+        temp = list;
+        while (temp) {
+            temp_next = temp->next;
+            c_free(temp->key);
+            c_free(temp);
+            temp = temp_next;
+            // printf("Entry: %s, %ld\n", temp->key, temp->index);
+            // temp = temp->next;
+        }
+    }
+    c_free(t->list);
+    c_free(t);
+}
 /* Print a cholmod matrix so the output can be entered into matlab */
 void print_cholmod_matlab(cholmod_sparse *M) {
-    printf("M = sparse(%ld, %ld);\n", M->nrow, M->ncol);
+    printf("M = sparse(%ld, %ld);", M->nrow, M->ncol);
     size_t col, index = 0, row;
     double *Mx = M->x;
     long int *Mi = M->i;
@@ -18,10 +97,11 @@ void print_cholmod_matlab(cholmod_sparse *M) {
 
     for (col = 1; col <= M->ncol; col++) {
         for (row = Mp[col-1]; row < Mp[col]; row++) {
-            printf("M(%ld, %ld) = %.16le;\n", Mi[index]+1, col, Mx[index]);
+            printf("M(%ld, %ld) = %.16le;", Mi[index]+1, col, Mx[index]);
             index++;
         }
     }
+    printf("\n");
 }
 
 void print_dense_vector_matlab(double* x, size_t len) {
@@ -118,6 +198,7 @@ int main(int argc, char*argv[]){
     prev_rowchar[0] = '\0';
     long row;
     
+    struct index_table * free_bounds;
 
     /*First pass through the file to get the sizes*/
     while(get_next_command(command, next_char, fp)){
@@ -162,6 +243,14 @@ int main(int argc, char*argv[]){
                 
                 next_char = fgetc(fp);
             }
+            // bounds = c_calloc(n, sizeof(c_int));
+            // for (k = 0; k < n; k++) {
+            //     bounds[k] = TRUE; //default lower bound = 0
+            // }
+            n_bounds = n;
+            Annz += n_bounds;
+            m += n_bounds;
+            free_bounds = create_index_table(c_max(n/5,1));
 
         } else if (!strcmp(command, "RHS") || !strcmp(command, "RANGES")) {
             while(next_char == ' ') {
@@ -170,25 +259,22 @@ int main(int argc, char*argv[]){
             }
 
         } else if (!strcmp(command, "BOUNDS")) {
-            bounds = c_calloc(n, sizeof(c_int));
-            for (k = 0; k < n; k++) {
-                bounds[k] = TRUE; //default lower bound = 0
-            }
-            n_bounds = n;
-
+            
             while(next_char == ' ') {
                 fgets(line, 100, fp);
-                sscanf(line, "%s %*s %s %le", bound_type, rowchar, &temp);
+                sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
                 if (!strcmp(bound_type, "FR")) {
-                    row = convert_to_long(rowchar)-1;
-                    bounds[row] = FALSE;
-                    n_bounds -= 1;
+                    // col = convert_to_long(colchar)-1;
+                    // bounds[col] = FALSE;
+                    insert(free_bounds, colchar, 0, ' ');
+                    n_bounds--;
+                    m--;
+                    Annz--;
                 } 
 
                 next_char = fgetc(fp);
             }
-            Annz += n_bounds;
-            m += n_bounds;
+            
 
         } else if (!strcmp(command, "QUADOBJ")) {
             while(next_char == ' ') {
@@ -202,6 +288,9 @@ int main(int argc, char*argv[]){
     fclose(fp);
 
     // printf("Results: m = %lu, n = %lu, Qnnz = %lu, Annz = %lu\n", m, n, Qnnz, Annz);
+
+    struct index_table* row_index_table = create_index_table(c_max((m-n_bounds)/5, 1));
+    struct index_table* col_index_table = create_index_table(c_max(n/5, 1));
 
     QPALMData* data = c_calloc(1, sizeof(QPALMData));
     data->m = m;
@@ -234,12 +323,18 @@ int main(int argc, char*argv[]){
         return 1;
     }
 
-    char constraint_signs[m-n_bounds];
+    // char constraint_signs[m-n_bounds];
     size_t index = 0;
     long bounds_row = m-n_bounds, col, prev_col = 1;
     
     fgets(line, 100, fp);
     next_char = fgetc(fp);
+
+    char constraint_sign;
+    struct node *row_node;
+    struct node *col_node;
+
+    // print_table(free_bounds, c_max(n/5,1));
 
     while (get_next_command(command, next_char, fp)) {
         next_char = fgetc(fp);
@@ -248,50 +343,80 @@ int main(int argc, char*argv[]){
             while(next_char == ' ') {
                 fgets(line, 100, fp);
                 sscanf(line, "%s %s", NLGE, buf);
-                if (!strcmp(NLGE, "E")) { //default in equality for bmax = bmin = 0
+                constraint_sign = NLGE[0];
+                if (constraint_sign == 'E') { //default in equality for bmax = bmin = 0
                     data->bmax[index] = 0;
                 }
-                if (strcmp(NLGE, "N")) {
-                    constraint_signs[index] = NLGE[0];
+                if (constraint_sign != 'N') {
+                    insert(row_index_table, buf, index, constraint_sign);
+                    switch (constraint_sign) {
+                        case 'L':
+                            data->bmax[index] = 0;
+                            data->bmin[index] = -QPALM_INFTY;
+                            break; 
+                        case 'G':
+                            data->bmin[index] = 0;
+                            data->bmax[index] = QPALM_INFTY;
+                            break;
+                        case 'E':
+                            data->bmin[index] = 0;
+                            data->bmax[index] = 0;
+                            break;
+                    
+                    }
+                    // constraint_signs[index] = NLGE[0];
                     index++;
                 } 
                 next_char = fgetc(fp);
             }
 
-            for (k = 0; k < m; k++) {
-                if (k >= m-n_bounds) {
+            for (k = m-n_bounds; k < m; k++) {
+                // if (k >= m-n_bounds) {
                     data->bmin[k] = 0;
                     data->bmax[k] = QPALM_INFTY;
-                }
-                else switch (constraint_signs[k]) {
-                        case 'L':
-                            data->bmax[k] = 0;
-                            data->bmin[k] = -QPALM_INFTY;
-                            break; 
-                        case 'G':
-                            data->bmin[k] = 0;
-                            data->bmax[k] = QPALM_INFTY;
-                            break;
-                        case 'E':
-                            data->bmin[k] = 0;
-                            data->bmax[k] = 0;
-                            break;
+                // }
+                // else switch (constraint_signs[k]) {
+                //         case 'L':
+                //             data->bmax[k] = 0;
+                //             data->bmin[k] = -QPALM_INFTY;
+                //             break; 
+                //         case 'G':
+                //             data->bmin[k] = 0;
+                //             data->bmax[k] = QPALM_INFTY;
+                //             break;
+                //         case 'E':
+                //             data->bmin[k] = 0;
+                //             data->bmax[k] = 0;
+                //             break;
                     
-                }
+                // }
             }
         } else if (!strcmp(command, "COLUMNS")) {
+            // print_table(row_index_table, c_max((m-n_bounds)/5,1));
             Ap[0] = 0;
             size_t elemA = 0;
             prev_col = 1;
-             
+            col = 0;
+            prev_colchar[0] = '\0';
+
             while(next_char == ' ') {
                 fgets(line, 100, fp);
                 sscanf(line, "%s %s %le %s %le", colchar, rowchar, &temp, second_rowchar, &temp2);
-                row = convert_to_long(rowchar)-1;
-                col = convert_to_long(colchar);
-                if (col > prev_col) {
+                // row = convert_to_long(rowchar)-1;
+                
+                // col_node = lookup(col_index_table, colchar);
+                // col = col_node->index;
+                // col = convert_to_long(colchar);
+
+                if (strcmp(colchar, prev_colchar)) {
+                    // n++;
+                    col++;
+                    // printf("Inserting: %s as column %ld \n", colchar, col);
+                    insert(col_index_table, colchar, col, ' ');
                     for (; prev_col < col; prev_col++) {
-                        if (bounds[prev_col-1]) { //take into account identity matrix for bounds
+                        // if (bounds[prev_col-1]) { //take into account identity matrix for bounds
+                        if (lookup(free_bounds, prev_colchar) == NULL) {
+                        // printf("Prev_col: %ld, bounds = %ld\n", prev_col, bounds[prev_col-1]);
                         // p = Ap[col+1];
                             Ai[Ap[prev_col]] = bounds_row;
                             Ax[Ap[prev_col]] = 1;
@@ -301,11 +426,18 @@ int main(int argc, char*argv[]){
                         }
                         Ap[prev_col+1] = Ap[prev_col];
                     }
+                    strcpy(prev_colchar, colchar);
                 }
+
+                // if (col > prev_col) {
+                    
+                // }
 
                 if (!strcmp(rowchar, objective)) { 
                     data->q[col-1] = temp;            
                 } else {
+                    row_node = lookup(row_index_table, rowchar);
+                    row = row_node->index;
                     Ai[elemA] = row;
                     Ap[col]++;
                     if (temp > QPALM_INFTY) {
@@ -317,9 +449,12 @@ int main(int argc, char*argv[]){
                     elemA++;
                 }
 
-                if(!strcmp(second_rowchar, "")) {
-                } else {
-                    row = convert_to_long(second_rowchar)-1;
+                if(strcmp(second_rowchar, "") && strcmp(second_rowchar, objective)) {
+                    // printf("Second row: %s\n", second_rowchar);
+                    row_node = lookup(row_index_table, second_rowchar);
+                    // if (row_node == NULL) printf("Row not found\n");
+                    row = row_node->index;
+                    // row = convert_to_long(second_rowchar)-1;
                     Ai[elemA] = row;
                     Ap[col]++;
                     if (temp2 > QPALM_INFTY) {
@@ -346,7 +481,7 @@ int main(int argc, char*argv[]){
                     }
                     Ap[prev_col+1] = Ap[prev_col];
                 }
-            } else if ((col == prev_col) && bounds[prev_col-1]) { //take into account identity matrix for bounds
+            } else if ((col == prev_col) && lookup(free_bounds, prev_colchar) == NULL) { //take into account identity matrix for bounds
                 Ai[Ap[prev_col]] = bounds_row;
                 Ax[Ap[prev_col]] = 1;
                 Ap[prev_col]++;
@@ -354,14 +489,19 @@ int main(int argc, char*argv[]){
                 bounds_row++;
             }
         } else if (!strcmp(command, "RHS")) {
+            // printf("RHS\n");
             while(next_char == ' ') {
                 fgets(line, 100, fp);
                 sscanf(line, "%*s %s %le", rowchar, &temp);
-                row = convert_to_long(rowchar)-1;
+                // row = convert_to_long(rowchar)-1;
+
                 if (!strcmp(rowchar, objective))
                     data->c = -temp;
                 else {
-                    switch (constraint_signs[row]) {
+                    row_node = lookup(row_index_table, rowchar);
+                    row = row_node->index;
+                    
+                    switch (row_node->sign) {
                         case 'L':
                             data->bmax[row] = temp;
                             data->bmin[row] = -QPALM_INFTY;
@@ -379,11 +519,15 @@ int main(int argc, char*argv[]){
                 next_char = fgetc(fp);
             }
         } else if (!strcmp(command, "RANGES")) {
+                        // printf("RANGES\n");
+
             while(next_char == ' ') {
                 fgets(line, 100, fp);
                 sscanf(line, "%*s %s %le", rowchar, &temp);
-                row = convert_to_long(rowchar)-1;
-                switch (constraint_signs[row]) {
+                // row = convert_to_long(rowchar)-1;
+                row_node = lookup(row_index_table, rowchar);
+                row = row_node->index;
+                switch (row_node->sign) {
                     case 'L':
                         data->bmin[row] = data->bmax[row] - temp;
                         break; 
@@ -394,17 +538,24 @@ int main(int argc, char*argv[]){
                 next_char = fgetc(fp);
             }
         } else if (!strcmp(command, "BOUNDS")) {
+
             index = m-n_bounds;
+            // print_table(col_index_table, c_max(n/5, 1));
             while(next_char == ' ') {
                 fgets(line, 100, fp);
                 sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
-                col = convert_to_long(colchar)-1;
+                // col = convert_to_long(colchar)-1;
+                col_node = lookup(col_index_table, colchar);
+                col = col_node->index - 1;
                 
+                // printf("Found %s with index %ld\n", colchar, col_node->index);
+
                 if (!strcmp(bound_type, "FR")) {
                     index--;
                 } else if (!strcmp(bound_type, "UP")) {
                     data->bmax[index+col] = temp;
                 } else if (!strcmp(bound_type, "LO")) {
+                    // printf("Inserting in bmin at %ld + %ld\n", index, col);
                     data->bmin[index+col] = temp;
                 } else if (!strcmp(bound_type, "FX")) {
                     data->bmin[index+col] = temp;
@@ -420,8 +571,12 @@ int main(int argc, char*argv[]){
             while(next_char == ' ') {
                 fgets(line, 100, fp);
                 sscanf(line, "%s %s %le", colchar, rowchar, &temp);
-                col = convert_to_long(colchar);
-                row = convert_to_long(rowchar);
+                // col = convert_to_long(colchar);
+                // row = convert_to_long(rowchar);
+                col_node = lookup(col_index_table, colchar);
+                col = col_node->index;
+                row_node = lookup(col_index_table, rowchar);
+                row = row_node->index;
 
                 Qi[elemQ] = --row;
                 
@@ -455,6 +610,7 @@ int main(int argc, char*argv[]){
     CHOLMOD(finish)(&c);
 
     // print_cholmod_matlab(data->Q);
+    // print_cholmod_matlab(data->A);
     // print_dense_vector_matlab(data->bmin, m);
 
     // for (k = 0; k < m; k++) {
@@ -488,8 +644,6 @@ int main(int argc, char*argv[]){
     // }
 
 
-    // Setup and solve problem
-    // printf("Before setup\n");
 
     // Problem settings
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
@@ -499,7 +653,7 @@ int main(int argc, char*argv[]){
     settings->eps_rel = 1e-6;
     settings->eps_dual_inf = 1e-6;
     settings->eps_prim_inf = 1e-6;
-    settings->max_iter = 10000;
+    settings->max_iter = 1000;
     settings->verbose = FALSE;
     settings->scaling = FALSE;
     // settings->proximal = TRUE;
@@ -546,7 +700,10 @@ int main(int argc, char*argv[]){
     c_free(data);
     c_free(settings);
 
-    c_free(bounds);
+    // c_free(bounds);
+    free_index_table(row_index_table, c_max((m-n_bounds)/5,1));
+    free_index_table(col_index_table, c_max((n)/5,1));
+    free_index_table(free_bounds, c_max((n)/5,1));
 
     return 0;
 }
