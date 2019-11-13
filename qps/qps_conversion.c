@@ -198,12 +198,6 @@ void convert_to_new_format(const char* filename, char* new_filename) {
             c_strcpy(buf2, &line[13], BUFFER_LEN);
             remove_spaces(buf2_copy, buf2);
             c_strcpy(temp1, &line[27], BUFFER_LEN+1);
-            // if (len > 40) {
-            //   c_strcpy(buf3, &line[38], BUFFER_LEN);
-            //   remove_spaces(buf3_copy, buf3);
-            //   // printf("buf3: %s, buf3_copy: %s\n", buf3, buf3_copy);
-            //   c_strcpy(temp2, &line[51], BUFFER_LEN+1);
-            // }
 
             line[3] = '\0';
             strcat(line, buf1_copy);
@@ -211,14 +205,28 @@ void convert_to_new_format(const char* filename, char* new_filename) {
             strcat(line, buf2_copy);
             strcat(line, "    ");
             strcat(line, temp1);
-            // if (len > 40) {
-            //   // printf("Len: %u, line: %s\n", len, line);
-            //   strcat(line, "    ");
-            //   strcat(line, buf3_copy);
-            //   strcat(line, "    ");
-            //   strcat(line, temp2);
-            // }
-            // fputs("    ", fp_out);
+            fputs(" ", fp_out);
+            fputs(line, fp_out);
+            fputs("\n", fp_out);
+            next_char = fgetc(fp_in);
+        }
+      } else if (!strcmp(command, "QUADOBJ")) {
+          while (next_char == ' ') {
+            fgets(line, 100, fp_in);
+            len = strlen(line);
+            // printf("line: %s\n", line);
+            c_strcpy(buf1, &line[3], BUFFER_LEN);
+            remove_spaces(buf1_copy, buf1);
+            c_strcpy(buf2, &line[13], BUFFER_LEN);
+            remove_spaces(buf2_copy, buf2);
+            c_strcpy(temp1, &line[27], BUFFER_LEN+1);
+
+            line[3] = '\0';
+            strcat(line, buf1_copy);
+            strcat(line, "  ");
+            strcat(line, buf2_copy);
+            strcat(line, "    ");
+            strcat(line, temp1);
             fputs(" ", fp_out);
             fputs(line, fp_out);
             fputs("\n", fp_out);
@@ -229,69 +237,6 @@ void convert_to_new_format(const char* filename, char* new_filename) {
       }
     }
     fputs("ENDATA\n", fp_out);
-
-
-
-    // while (next_char == ' ') {
-    //     fgets(line, 100, fp_in);
-    //     c_strcpy(buf1, &line[3], BUFFER_LEN);
-    //     remove_spaces(buf1_copy, buf1);
-    //     line[3] = '\0';
-    //     strcat(line, buf1_copy);
-    //     fputs(" ", fp_out);
-    //     fputs(line, fp_out);
-    //     fputs("\n", fp_out);
-    //     next_char = fgetc(fp_in);
-    // }
-
-    // get_next_command(command, next_char, fp_in);
-    // fputs(command, fp_out);
-    // fputs("\n", fp_out);
-    // next_char = fgetc(fp_in);
-    // printf("Reading %s\n", command);
-    // while (next_char == ' ') {
-    //     fgets(line, 100, fp_in);
-    //     len = strlen(line);
-    //     c_strcpy(buf1, &line[3], BUFFER_LEN);
-    //     remove_spaces(buf1_copy, buf1);
-    //     c_strcpy(buf2, &line[13], BUFFER_LEN);
-    //     remove_spaces(buf2_copy, buf2);
-    //     c_strcpy(temp1, &line[29], BUFFER_LEN);
-    //     if (len > 40) {
-    //       c_strcpy(buf3, &line[38], BUFFER_LEN);
-    //       remove_spaces(buf3_copy, buf3);
-    //       c_strcpy(temp2, &line[54], BUFFER_LEN);
-    //     }
-
-    //     line[0] = '\0';
-    //     strcat(line, buf1_copy);
-    //     strcat(line, "  ");
-    //     strcat(line, buf2_copy);
-    //     strcat(line, "    ");
-    //     strcat(line, temp1);
-    //     if (len > 40) {
-    //       strcat(line, buf3_copy);
-    //       strcat(line, "    ");
-    //       strcat(line, temp2);
-    //     }
-    //     fputs("    ", fp_out);
-    //     fputs(line, fp_out);
-
-    //     fputs("\n", fp_out);
-    //     next_char = fgetc(fp_in);
-    // }
-    // get_next_command(command, next_char, fp_in);
-    // fputs(command, fp_out);
-    // fputs("\n", fp_out);
-    // next_char = fgetc(fp_in);
-    // printf("Reading %s\n", command);
-
-    // while (next_char == ' ') {
-
-
-    //   next_char = fgetc(fp_in);
-    // }
-
 
 }
 
