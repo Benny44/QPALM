@@ -2,6 +2,8 @@
 #include "constants.h"
 #include "global_opts.h"
 #include "cholmod.h"
+#include "qpalm_qps.h"
+#include "qps_conversion.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -9,7 +11,7 @@
 
 #define BUFFER_LEN 9 
 
-void c_strcpy(char dest[], const char source[], size_t len) {
+void c_strcpy_limit(char dest[], const char source[], size_t len) {
     size_t i;
     for(i = 0; i < len && (dest[i] = source[i]) != '\0'; i++);
     dest[len-1] = '\0';
@@ -34,17 +36,14 @@ void add_spaces(char *line, size_t nb) {
     strcat(line, " ");
 }
 
-int get_next_command(char* command, char next_char, FILE* fp) {
-    command[0] = next_char;
-    char line[100];
-    fgets(line, 100, fp);
-    sscanf(line, "%s", &command[1]);
-
-    return strcmp(command, "ENDATA");
-}
-
-void convert_to_new_format(const char* filename, char* new_filename) {
+char* convert_qps_to_new_format(const char* filename) {
     FILE* fp_in, *fp_out;
+    char* new_filename = c_malloc(strlen(filename)+5+1);
+    new_filename[0] = '\0';
+    strcat(new_filename, filename);
+    new_filename[strlen(filename)-4] = '\0';
+    strcat(new_filename, "_copy");
+    strcat(new_filename, ".qps");
 
     fp_in = fopen(filename, "r");
     if(fp_in == NULL) {
@@ -57,7 +56,7 @@ void convert_to_new_format(const char* filename, char* new_filename) {
         return 1;
     }
 
-    char line[100], command[20], name[50], NLGE[1], buf1[9], buf1_copy[9], buf2[9], buf2_copy[9], buf3[9], buf3_copy[9], temp1[BUFFER_LEN+1], temp2[BUFFER_LEN+1];
+    char line[100], command[20], name[50], buf1[9], buf1_copy[9], buf2[9], buf2_copy[9], buf3[9], buf3_copy[9], temp1[BUFFER_LEN+1], temp2[BUFFER_LEN+1];
     size_t len, k;
 
     fgets(line, 100, fp_in);
@@ -72,7 +71,7 @@ void convert_to_new_format(const char* filename, char* new_filename) {
       if (!strcmp(command, "ROWS")) {
         while (next_char == ' ') {
             fgets(line, 100, fp_in);
-            c_strcpy(buf1, &line[3], BUFFER_LEN);
+            c_strcpy_limit(buf1, &line[3], BUFFER_LEN);
             remove_spaces(buf1_copy, buf1);
             line[3] = '\0';
             strcat(line, buf1_copy);
@@ -85,15 +84,15 @@ void convert_to_new_format(const char* filename, char* new_filename) {
           while (next_char == ' ') {
             fgets(line, 100, fp_in);
             len = strlen(line);
-            c_strcpy(buf1, &line[3], BUFFER_LEN);
+            c_strcpy_limit(buf1, &line[3], BUFFER_LEN);
             remove_spaces(buf1_copy, buf1);
-            c_strcpy(buf2, &line[13], BUFFER_LEN);
+            c_strcpy_limit(buf2, &line[13], BUFFER_LEN);
             remove_spaces(buf2_copy, buf2);
-            c_strcpy(temp1, &line[27], BUFFER_LEN+1);
+            c_strcpy_limit(temp1, &line[27], BUFFER_LEN+1);
             if (len > 40) {
-              c_strcpy(buf3, &line[38], BUFFER_LEN);
+              c_strcpy_limit(buf3, &line[38], BUFFER_LEN);
               remove_spaces(buf3_copy, buf3);
-              c_strcpy(temp2, &line[51], BUFFER_LEN+1);
+              c_strcpy_limit(temp2, &line[51], BUFFER_LEN+1);
             }
 
             line[3] = '\0';
@@ -117,11 +116,11 @@ void convert_to_new_format(const char* filename, char* new_filename) {
         while (next_char == ' ') {
             fgets(line, 100, fp_in);
             len = strlen(line);
-            c_strcpy(buf1, &line[3], BUFFER_LEN);
+            c_strcpy_limit(buf1, &line[3], BUFFER_LEN);
             remove_spaces(buf1_copy, buf1);
-            c_strcpy(buf2, &line[13], BUFFER_LEN);
+            c_strcpy_limit(buf2, &line[13], BUFFER_LEN);
             remove_spaces(buf2_copy, buf2);
-            c_strcpy(temp1, &line[27], BUFFER_LEN+1);
+            c_strcpy_limit(temp1, &line[27], BUFFER_LEN+1);
 
             line[3] = '\0';
             strcat(line, buf1_copy);
@@ -142,19 +141,18 @@ void convert_to_new_format(const char* filename, char* new_filename) {
     }
     fputs("ENDATA\n", fp_out);
 
-}
-
-int main(int argc, char *argv[]) {
-    char* filename = argv[1];
-    char* new_filename = c_malloc(strlen(filename)+5+1);
-    new_filename[0] = '\0';
-    strcat(new_filename, filename);
-    new_filename[strlen(filename)-4] = '\0';
-    strcat(new_filename, "_copy");
-    strcat(new_filename, ".qps");
-    convert_to_new_format(filename, new_filename);  
-
-    c_free(new_filename);
-    return 0;
+    fclose(fp_in);
+    fclose(fp_out);
+    return new_filename;
 
 }
+
+// int main(int argc, char *argv[]) {
+//     char* filename = argv[1];
+
+//     char* new_filename = convert_qps_to_new_format(filename);  
+
+//     c_free(new_filename);
+//     return 0;
+
+// }

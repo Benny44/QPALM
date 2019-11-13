@@ -2,10 +2,14 @@
 #include "constants.h"
 #include "global_opts.h"
 #include "cholmod.h"
+#include "qpalm_qps.h"
+#include "qps_conversion.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+
+
 struct node{
     char* key; /*name of the row/col*/
     c_int index; /*index of the row/col */
@@ -155,7 +159,7 @@ int main(int argc, char*argv[]){
     if (argc != 2) {
         fprintf(stderr, "Wrong number of arguments. Correct usage is qpalm_qps problem.qps\n");
     }
-    
+
     // Load problem data
     size_t n, m, Annz, Qnnz, n_bounds;
     n = 0; m = 0; Annz = 0; Qnnz = 0; n_bounds = 0;
@@ -183,7 +187,12 @@ int main(int argc, char*argv[]){
 
     char next_char;
     next_char = fgetc(fp);
-    char NLGE[1], buf[20], objective[20];
+    
+    
+    int old_format_detected = FALSE;
+    char *file_copy = NULL;
+    char NLGE[1], buf[20], buf2[20], objective[20];
+    buf2[0] = '\0';
     c_float temp, temp2;
     char colchar[20], rowchar[20], prev_colchar[20], second_rowchar[20];
     prev_colchar[0] = '\0';
@@ -208,7 +217,12 @@ int main(int argc, char*argv[]){
     
             while(next_char == ' ') {
                 fgets(line, 100, fp);
-                sscanf(line, "%s %s", NLGE, buf);
+                sscanf(line, "%s %s %s", NLGE, buf, buf2);
+                if (strcmp(buf2, "")){
+                    // printf("Old qps format detected. First performing conversion to new format.\n");
+                    old_format_detected = TRUE;
+                    break;
+                }
                 if (!strcmp(NLGE, "N")) {
                     strcpy(objective, buf);
                 } else {
@@ -216,6 +230,9 @@ int main(int argc, char*argv[]){
                 }
                 
                 next_char = fgetc(fp);
+            }
+            if (old_format_detected) {
+                break;
             }
 
         } else if (!strcmp(command, "COLUMNS")) {
@@ -243,10 +260,6 @@ int main(int argc, char*argv[]){
                 
                 next_char = fgetc(fp);
             }
-            // bounds = c_calloc(n, sizeof(c_int));
-            // for (k = 0; k < n; k++) {
-            //     bounds[k] = TRUE; //default lower bound = 0
-            // }
             n_bounds = n;
             Annz += n_bounds;
             m += n_bounds;
@@ -286,6 +299,109 @@ int main(int argc, char*argv[]){
     }
 
     fclose(fp);
+    
+    if (old_format_detected) {
+        m = 0;
+        buf2[0] = '\0';
+        file_copy = convert_qps_to_new_format(argv[1]);
+        fp = fopen(file_copy, "r");
+        if(fp == NULL) {
+            fprintf(stderr, "Could not open file %s\n", file_copy);
+            return 1;
+        }
+        fgets(line, 100, fp);
+        next_char = fgetc(fp);
+        old_format_detected = FALSE;
+
+        /*First pass through the file to get the sizes*/
+        while(get_next_command(command, next_char, fp)){
+            next_char = fgetc(fp);
+
+            if (!strcmp(command, "ROWS")) {
+        
+                while(next_char == ' ') {
+                    fgets(line, 100, fp);
+                    sscanf(line, "%s %s %s", NLGE, buf, buf2);
+                    if (strcmp(buf2, "")){
+                        // printf("Old qps format detected. First performing conversion to new format.\n");
+                        old_format_detected = TRUE;
+                        break;
+                    }
+                    if (!strcmp(NLGE, "N")) {
+                        strcpy(objective, buf);
+                    } else {
+                        m++;
+                    }
+                    
+                    next_char = fgetc(fp);
+                }
+                if (old_format_detected) {
+                    break;
+                }
+
+            } else if (!strcmp(command, "COLUMNS")) {
+
+                while(next_char == ' ') {
+                    fgets(line, 100, fp);
+                    sscanf(line, "%s %s %le %s %le", colchar, rowchar, &temp, second_rowchar, &temp2);
+
+                    if (strcmp(colchar, prev_colchar)) {
+                        n++;
+                        strcpy(prev_colchar, colchar);
+                    }
+
+                    if (!strcmp(rowchar, objective)) {            
+                    } else {
+                        Annz++;
+                    }
+
+                    if (!strcmp(second_rowchar, objective)){
+                    } else if(!strcmp(second_rowchar, "")) {
+                    } else {
+                        Annz++;
+                        second_rowchar[0] = '\0';
+                    }
+                    
+                    next_char = fgetc(fp);
+                }
+                n_bounds = n;
+                Annz += n_bounds;
+                m += n_bounds;
+                free_bounds = create_index_table(c_max(n/5,1));
+
+            } else if (!strcmp(command, "RHS") || !strcmp(command, "RANGES")) {
+                while(next_char == ' ') {
+                    fgets(line, 100, fp);
+                    next_char = fgetc(fp);
+                }
+
+            } else if (!strcmp(command, "BOUNDS")) {
+                
+                while(next_char == ' ') {
+                    fgets(line, 100, fp);
+                    sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
+                    if (!strcmp(bound_type, "FR")) {
+                        // col = convert_to_long(colchar)-1;
+                        // bounds[col] = FALSE;
+                        insert(free_bounds, colchar, 0, ' ');
+                        n_bounds--;
+                        m--;
+                        Annz--;
+                    } 
+
+                    next_char = fgetc(fp);
+                }
+                
+
+            } else if (!strcmp(command, "QUADOBJ")) {
+                while(next_char == ' ') {
+                    fgets(line, 100, fp);
+                    next_char = fgetc(fp);
+                    Qnnz++;
+                }
+            }
+        } 
+    }
 
     // printf("Results: m = %lu, n = %lu, Qnnz = %lu, Annz = %lu\n", m, n, Qnnz, Annz);
 
@@ -317,7 +433,8 @@ int main(int argc, char*argv[]){
     c_int *Qi = data->Q->i;
     c_int *Qp = data->Q->p;
 
-    fp = fopen(argv[1], "r");
+    if (file_copy == NULL) fp = fopen(argv[1], "r");
+    else fp = fopen(file_copy, "r");
     if(fp == NULL) {
         fprintf(stderr, "Could not open file %s\n", argv[1]);
         return 1;
@@ -437,6 +554,10 @@ int main(int argc, char*argv[]){
                     data->q[col-1] = temp;            
                 } else {
                     row_node = lookup(row_index_table, rowchar);
+                    if (row_node == NULL) {
+                        printf("Line: %s\n", line);
+                        printf("Rowchar: %s\n", rowchar);
+                    }
                     row = row_node->index;
                     Ai[elemA] = row;
                     Ap[col]++;
@@ -469,19 +590,20 @@ int main(int argc, char*argv[]){
                 
                 next_char = fgetc(fp);
             }
-            col = n;
-            if (col > prev_col) {
-                for (; prev_col < col; prev_col++) {
-                    if (bounds[prev_col-1]) { //take into account identity matrix for bounds
-                        Ai[Ap[prev_col]] = bounds_row;
-                            Ax[Ap[prev_col]] = 1;
-                            Ap[prev_col]++;
-                            elemA++;
-                            bounds_row++;
-                    }
-                    Ap[prev_col+1] = Ap[prev_col];
-                }
-            } else if ((col == prev_col) && lookup(free_bounds, prev_colchar) == NULL) { //take into account identity matrix for bounds
+            // col = n;
+            // if (col > prev_col) {
+            //     for (; prev_col < col; prev_col++) {
+            //         if (bounds[prev_col-1]) { //take into account identity matrix for bounds
+            //             Ai[Ap[prev_col]] = bounds_row;
+            //                 Ax[Ap[prev_col]] = 1;
+            //                 Ap[prev_col]++;
+            //                 elemA++;
+            //                 bounds_row++;
+            //         }
+            //         Ap[prev_col+1] = Ap[prev_col];
+            //     }
+            // } else 
+            if ((col == prev_col) && lookup(free_bounds, prev_colchar) == NULL) { //take into account identity matrix for bounds
                 Ai[Ap[prev_col]] = bounds_row;
                 Ax[Ap[prev_col]] = 1;
                 Ap[prev_col]++;
@@ -642,43 +764,14 @@ int main(int argc, char*argv[]){
     }
 
     fclose(fp);
+    if (file_copy) c_free(file_copy);
 
     CHOLMOD(finish)(&c);
 
     // print_cholmod_matlab(data->Q);
     // print_cholmod_matlab(data->A);
     // print_dense_vector_matlab(data->bmin, m);
-
-    // for (k = 0; k < m; k++) {
-    //     printf("bmin[%ld] = %le, bmax[%ld] = %le\n", k, data->bmin[k], k, data->bmax[k]);
-    // }
-    
-    // for (k = 0; k < n; k++) {
-    //     printf("q[%ld] = %le\n", k, data->q[k]);
-    // }
-    // for (k = 0; k <= n; k++) {
-    //     printf("Qp[%ld] = %ld\n", k, Qp[k]);
-    // }
-    // for (k = 0; k < Qnnz; k++) {
-    //     printf("Qi[%ld] = %ld\n", k, Qi[k]);
-    //     printf("Qx[%ld] = %le\n", k, Qx[k]);
-    // }
-    // printf("data->c, %le\n", data->c);
-
-    // c.print = 4;
-    // CHOLMOD(print_sparse)(data->A, "Amatrix", &c);
-    // printf("Check A: %d\n", CHOLMOD(check_sparse)(data->A, &c));
-    // CHOLMOD(print_sparse)(data->Q, "Qmatrix", &c);
-    // printf("Check Q: %d\n", CHOLMOD(check_sparse)(data->Q, &c));
-
-    // for (k = 0; k <= n; k++) {
-    //     printf("Ap[%ld] = %ld\n", k, Ap[k]);
-    // }
-    // for (k = 0; k < Annz; k++) {
-    //     printf("Ai[%ld] = %ld\n", k, Ai[k]);
-    //     printf("Ax[%ld] = %le\n", k, Ax[k]);
-    // }
-
+    // print_dense_vector_matlab(data->bmax, m);
 
 
     // Problem settings
