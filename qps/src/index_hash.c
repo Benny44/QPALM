@@ -41,10 +41,25 @@ struct node* lookup(struct index_table *t,char* key){
     return NULL;
 }
 
-void print_table(struct index_table *t, c_int size){
+size_t length_table(struct index_table *t, size_t size){
     struct node *temp;
     struct node *list;
-    c_int pos;
+    size_t pos, len = 0;
+    for (pos = 0; pos < size; pos++) {
+        list = t->list[pos];
+        temp = list;
+        while (temp) {
+            len++;
+            temp = temp->next;
+        }
+    }
+    return len;
+}
+
+void print_table(struct index_table *t, size_t size){
+    struct node *temp;
+    struct node *list;
+    size_t pos;
     for (pos = 0; pos < size; pos++) {
         list = t->list[pos];
         temp = list;

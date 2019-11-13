@@ -23,7 +23,9 @@ void insert(struct index_table *t, char* key, c_int index, char sign);
 
 struct node* lookup(struct index_table *t,char* key);
 
-void print_table(struct index_table *t, c_int size);
+void print_table(struct index_table *t, size_t size);
+
+size_t length_table(struct index_table *t, size_t size);
 
 void free_index_table(struct index_table *t, c_int size);
 
