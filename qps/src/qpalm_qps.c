@@ -103,7 +103,6 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
     /*First pass through the file to get the sizes*/
     while(get_next_command(command, next_char, fp)){
         next_char = fgetc(fp);
-        printf("Command: %s\n", command);
         if (!strcmp(command, "ROWS")) {
     
             while(next_char == ' ') {
@@ -155,8 +154,6 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
             Annz += n_bounds;
             m += n_bounds;
             *free_bounds = create_index_table(c_max(n/5,1));
-            // if (free_bounds == NULL) printf("NULL Here\n");
-            // else printf("Not NULL here\n");
 
         } else if (!strcmp(command, "RHS") || !strcmp(command, "RANGES")) {
             while(next_char == ' ') {
@@ -213,101 +210,30 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
     return old_format_detected;
 }
 
-int main(int argc, char*argv[]){
-
-    if (argc != 2) {
-        fprintf(stderr, "Wrong number of arguments. Correct usage is qpalm_qps problem.qps\n");
-    }
-
-    // Load problem data
-    size_t n, m, Annz, Qnnz, n_bounds;
-    n = 0; m = 0; Annz = 0; Qnnz = 0; n_bounds = 0;
-    FILE* fp;
-
-    fp = fopen(argv[1], "r");
-    if(fp == NULL) {
-        fprintf(stderr, "Could not open file %s\n", argv[1]);
-        return 1;
-    }
-
-    char line[100], command[20], name[50];
-    fgets(line, 100, fp);
-    if (sscanf(line, "%s %s", command, name) != 2) {
-        fprintf(stderr, "Wrong file format. Expected first line to contain NAME problem_name nnz.\n");
-        return 1;
-    }
-
-    if (strcmp(command, "NAME")) {
-        fprintf(stderr, "Wrong file format. Expected first line to contain NAME problem_name nnz.\n");
-        return 1;
-    }
-
-    printf("Reading problem %s\n", name);
+void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
+                struct index_table* col_index_table, struct index_table* free_bounds) {
 
     char next_char;
-    // next_char = fgetc(fp);
-    
-    
-    int old_format_detected = FALSE;
-    char *file_copy = NULL;
     char NLGE[1], buf[20], buf2[20], objective[20];
     buf2[0] = '\0';
+    objective[0] = '\0';
     c_float temp, temp2;
     char colchar[20], rowchar[20], prev_colchar[20], second_rowchar[20];
     prev_colchar[0] = '\0';
     second_rowchar[0] = '\0';
 
-    // c_int *bounds = c_calloc(n, sizeof(c_int));
     size_t k;
     
     char bound_type[20];
     char prev_rowchar[20];
     prev_rowchar[0] = '\0';
-    long row;
-    
-    struct index_table * free_bounds = NULL;
+    c_int row;
 
-    QPALMData* data = c_calloc(1, sizeof(QPALMData));
-
-    /*First pass through the file to get the sizes*/
-    if (get_sizes_and_check_format(fp, data, &free_bounds)) {
-        file_copy = convert_qps_to_new_format(argv[1]);
-        fp = fopen(file_copy, "r");
-        if(fp == NULL) {
-            fprintf(stderr, "Could not open file %s\n", file_copy);
-            return 1;
-        }
-        fgets(line, 100, fp);
-        get_sizes_and_check_format(fp, data, &free_bounds);
-    }
-
-    // printf("Results: m = %lu, n = %lu, Qnnz = %lu, Annz = %lu\n", m, n, Qnnz, Annz);
-
+    char line[100], command[20], name[50];
+    size_t n, m, n_bounds;
     m = data->m;
     n = data->n;
-    if (free_bounds == NULL) printf("NULL\n");
-    print_table(free_bounds, c_max(n/5,1));
     n_bounds = n - length_table(free_bounds, c_max(n/5,1));
-
-    struct index_table* row_index_table = create_index_table(c_max((m-n_bounds)/5, 1));
-    struct index_table* col_index_table = create_index_table(c_max(n/5, 1));
-
-    
-    // data->m = m;
-    // data->n = n;
-    // data->c = 0;
-    // data->q = c_calloc(n, sizeof(c_float));
-    
-    // for (k = 0; k < n; k++) {
-    //     data->q[k] = 0;
-    // }
-    // data->bmin = c_calloc(m, sizeof(c_float));
-    // data->bmax = c_calloc(m, sizeof(c_float));    
-
-    cholmod_common c;
-    CHOLMOD(start)(&c);
-    // data->A = CHOLMOD(allocate_sparse)(m, n, Annz, TRUE, TRUE, 0, CHOLMOD_REAL, &c);
-    // data->Q = CHOLMOD(allocate_sparse)(n, n, Qnnz, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
 
     c_float *Ax = data->A->x;
     c_int *Ai = data->A->i;
@@ -317,26 +243,15 @@ int main(int argc, char*argv[]){
     c_int *Qi = data->Q->i;
     c_int *Qp = data->Q->p;
 
-    if (file_copy == NULL) fp = fopen(argv[1], "r");
-    else fp = fopen(file_copy, "r");
-    if(fp == NULL) {
-        fprintf(stderr, "Could not open file %s\n", argv[1]);
-        return 1;
-    }
-
-    // char constraint_signs[m-n_bounds];
     size_t index = 0;
     long bounds_row = m-n_bounds, col, prev_col = 1;
-    
-    fgets(line, 100, fp);
-    next_char = fgetc(fp);
 
     char constraint_sign;
     struct node *row_node;
     struct node *col_node;
 
-    // print_table(free_bounds, c_max(n/5,1));
-
+    fgets(line, 100, fp);
+    next_char = fgetc(fp);
     while (get_next_command(command, next_char, fp)) {
         next_char = fgetc(fp);
         if (!strcmp(command, "ROWS")) {
@@ -364,35 +279,16 @@ int main(int argc, char*argv[]){
                             break;
                     
                     }
-                    // constraint_signs[index] = NLGE[0];
                     index++;
                 } 
                 next_char = fgetc(fp);
             }
 
             for (k = m-n_bounds; k < m; k++) {
-                // if (k >= m-n_bounds) {
                     data->bmin[k] = 0;
                     data->bmax[k] = QPALM_INFTY;
-                // }
-                // else switch (constraint_signs[k]) {
-                //         case 'L':
-                //             data->bmax[k] = 0;
-                //             data->bmin[k] = -QPALM_INFTY;
-                //             break; 
-                //         case 'G':
-                //             data->bmin[k] = 0;
-                //             data->bmax[k] = QPALM_INFTY;
-                //             break;
-                //         case 'E':
-                //             data->bmin[k] = 0;
-                //             data->bmax[k] = 0;
-                //             break;
-                    
-                // }
             }
         } else if (!strcmp(command, "COLUMNS")) {
-            // print_table(row_index_table, c_max((m-n_bounds)/5,1));
             Ap[0] = 0;
             size_t elemA = 0;
             prev_col = 1;
@@ -402,22 +298,12 @@ int main(int argc, char*argv[]){
             while(next_char == ' ') {
                 fgets(line, 100, fp);
                 sscanf(line, "%s %s %le %s %le", colchar, rowchar, &temp, second_rowchar, &temp2);
-                // row = convert_to_long(rowchar)-1;
-                
-                // col_node = lookup(col_index_table, colchar);
-                // col = col_node->index;
-                // col = convert_to_long(colchar);
 
                 if (strcmp(colchar, prev_colchar)) {
-                    // n++;
                     col++;
-                    // printf("Inserting: %s as column %ld \n", colchar, col);
                     insert(col_index_table, colchar, col, ' ');
                     for (; prev_col < col; prev_col++) {
-                        // if (bounds[prev_col-1]) { //take into account identity matrix for bounds
                         if (lookup(free_bounds, prev_colchar) == NULL) {
-                        // printf("Prev_col: %ld, bounds = %ld\n", prev_col, bounds[prev_col-1]);
-                        // p = Ap[col+1];
                             Ai[Ap[prev_col]] = bounds_row;
                             Ax[Ap[prev_col]] = 1;
                             Ap[prev_col]++;
@@ -429,10 +315,6 @@ int main(int argc, char*argv[]){
                     strcpy(prev_colchar, colchar);
                 }
 
-                // if (col > prev_col) {
-                    
-                // }
-
                 if (!strcmp(rowchar, objective)) { 
                     data->q[col-1] = temp;            
                 } else {
@@ -440,6 +322,7 @@ int main(int argc, char*argv[]){
                     if (row_node == NULL) {
                         printf("Line: %s\n", line);
                         printf("Rowchar: %s\n", rowchar);
+                        printf("Objective: %s\n", objective);
                     }
                     row = row_node->index;
                     Ai[elemA] = row;
@@ -473,19 +356,6 @@ int main(int argc, char*argv[]){
                 
                 next_char = fgetc(fp);
             }
-            // col = n;
-            // if (col > prev_col) {
-            //     for (; prev_col < col; prev_col++) {
-            //         if (bounds[prev_col-1]) { //take into account identity matrix for bounds
-            //             Ai[Ap[prev_col]] = bounds_row;
-            //                 Ax[Ap[prev_col]] = 1;
-            //                 Ap[prev_col]++;
-            //                 elemA++;
-            //                 bounds_row++;
-            //         }
-            //         Ap[prev_col+1] = Ap[prev_col];
-            //     }
-            // } else 
             if ((col == prev_col) && lookup(free_bounds, prev_colchar) == NULL) { //take into account identity matrix for bounds
                 Ai[Ap[prev_col]] = bounds_row;
                 Ax[Ap[prev_col]] = 1;
@@ -645,11 +515,86 @@ int main(int argc, char*argv[]){
             }
         }
     }
+}
+
+
+int main(int argc, char*argv[]){
+
+    if (argc != 2) {
+        fprintf(stderr, "Wrong number of arguments. Correct usage is qpalm_qps problem.qps\n");
+    }
+
+
+    FILE* fp;
+    fp = fopen(argv[1], "r");
+    if(fp == NULL) {
+        fprintf(stderr, "Could not open file %s\n", argv[1]);
+        return 1;
+    }
+
+    char line[100], command[20], name[50];
+    fgets(line, 100, fp);
+    if (sscanf(line, "%s %s", command, name) != 2) {
+        fprintf(stderr, "Wrong file format. Expected first line to contain NAME problem_name nnz.\n");
+        return 1;
+    }
+
+    if (strcmp(command, "NAME")) {
+        fprintf(stderr, "Wrong file format. Expected first line to contain NAME problem_name nnz.\n");
+        return 1;
+    }
+
+    printf("Reading problem %s\n", name);
+
+    char next_char;
+    char *file_copy = NULL;    
+    struct index_table * free_bounds;
+    QPALMData* data = c_calloc(1, sizeof(QPALMData));
+
+    /* First pass through the file to get the sizes. If an old QPS-format is 
+       detected (which allows for spaces in names), first a conversion is 
+       performed to the new format and then the (new) file is read again.
+    */
+    if (get_sizes_and_check_format(fp, data, &free_bounds)) {
+        file_copy = convert_qps_to_new_format(argv[1]);
+        fp = fopen(file_copy, "r");
+        if(fp == NULL) {
+            fprintf(stderr, "Could not open file %s\n", file_copy);
+            return 1;
+        }
+        fgets(line, 100, fp);
+        get_sizes_and_check_format(fp, data, &free_bounds);
+    }
+
+    
+    /* Go through file a second time to read in the data*/
+    if (file_copy == NULL) {
+        fp = fopen(argv[1], "r");
+        if(fp == NULL) {
+            fprintf(stderr, "Could not open file %s\n", argv[1]);
+            return 1;
+        }
+    } else {
+        fp = fopen(file_copy, "r");
+        if(fp == NULL) {
+            fprintf(stderr, "Could not open file %s\n", file_copy);
+            return 1;
+        }
+    } 
+
+    size_t m, n, n_bounds;
+    m = data->m;
+    n = data->n;
+    n_bounds = n - length_table(free_bounds, c_max(n/5,1));
+
+    struct index_table* row_index_table = create_index_table(c_max((m-n_bounds)/5, 1));
+    struct index_table* col_index_table = create_index_table(c_max(n/5, 1));
+    read_data(fp, data, row_index_table, col_index_table, free_bounds);
 
     fclose(fp);
     if (file_copy) c_free(file_copy);
 
-    CHOLMOD(finish)(&c);
+    printf("Reading successful.\n");
 
     // print_cholmod_matlab(data->Q);
     // print_cholmod_matlab(data->A);
@@ -657,9 +602,8 @@ int main(int argc, char*argv[]){
     // print_dense_vector_matlab(data->bmax, m);
 
 
-    // Problem settings
+    /* Setup problem */
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
-    // Define Solver settings as default
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
     settings->eps_rel = 1e-6;
@@ -670,33 +614,29 @@ int main(int argc, char*argv[]){
     settings->scaling = FALSE;
     // settings->proximal = TRUE;
 
+    cholmod_common c;
     QPALMWorkspace *work = qpalm_setup(data, settings, &c);
 
-    // printf("Before solve\n");
-
-    // Solve Problem
+    /* Solve Problem */
     qpalm_solve(work);
-    // printf("After solve\n");
-
-    // for (k = 0; k < n; k++) {
-    //     printf("x_sol[%ld] = %le\n", k, work->solution->x[k]);
-    // }
+    
     printf("Iter: %ld\n", work->info->iter);
     printf("Status: %s\n", work->info->status);
     printf("Objective: %le\n", work->info->objective);
     
+
+
     strcpy(line, argv[1]);
     size_t last_slash = 0;
+    size_t k;
     for (k = 0; k < strlen(line); k++) {
         if (line[k] == '/') /*assume linux directory*/
             last_slash = k+1;
     }
     strcpy(name, &line[last_slash]);
-    // name = &name[78];
     name[strlen(name)-4] = '\0'; /*delete .qps*/
-    // printf("%s\n", name);
     fp = fopen("out.tex", "a");
-    fprintf(fp, "%s & %lu & %lu & %lu & %lu & %lu & %le \\\\", name, n, m, Annz, Qnnz, work->info->iter, work->info->objective);
+    fprintf(fp, "%s & %lu & %lu & %lu & %lu & %lu & %le \\\\", name, n, m, data->A->nzmax, data->Q->nzmax, work->info->iter, work->info->objective);
     fclose(fp);
 
     // Clean workspace
