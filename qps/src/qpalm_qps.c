@@ -517,6 +517,21 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
     }
 }
 
+void print_out_latex(QPALMData *data, QPALMInfo *info, char* file){
+    char line[100], name[20];
+    strcpy(line, file);
+    size_t last_slash = 0;
+    size_t k;
+    for (k = 0; k < strlen(line); k++) {
+        if (line[k] == '/') /*assume linux directory*/
+            last_slash = k+1;
+    }
+    strcpy(name, &line[last_slash]);
+    name[strlen(name)-4] = '\0'; /*delete .qps*/
+    FILE *fp = fopen("out.tex", "a");
+    fprintf(fp, "%s & %lu & %lu & %lu & %lu & %lu & %le \\\\ \n", name, data->n, data->m, data->A->nzmax, data->Q->nzmax, info->iter, info->objective);
+    fclose(fp);
+}
 
 int main(int argc, char*argv[]){
 
@@ -625,19 +640,7 @@ int main(int argc, char*argv[]){
     printf("Objective: %le\n", work->info->objective);
     
 
-
-    strcpy(line, argv[1]);
-    size_t last_slash = 0;
-    size_t k;
-    for (k = 0; k < strlen(line); k++) {
-        if (line[k] == '/') /*assume linux directory*/
-            last_slash = k+1;
-    }
-    strcpy(name, &line[last_slash]);
-    name[strlen(name)-4] = '\0'; /*delete .qps*/
-    fp = fopen("out.tex", "a");
-    fprintf(fp, "%s & %lu & %lu & %lu & %lu & %lu & %le \\\\", name, n, m, data->A->nzmax, data->Q->nzmax, work->info->iter, work->info->objective);
-    fclose(fp);
+    print_out_latex(data, work->info, argv[1]);
 
     // Clean workspace
     CHOLMOD(start)(&c);
