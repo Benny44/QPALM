@@ -533,6 +533,59 @@ void print_out_latex(QPALMData *data, QPALMInfo *info, char* file){
     fclose(fp);
 }
 
+void convert_underscore_to_dash(char* name) {
+    char c;
+    while ((c = *name) != '\0') {
+        if (c == '_')
+            *name = '-';
+        name++;
+    }
+}
+
+void print_out_bpmpd(QPALMData *data, QPALMInfo *info, char* file){
+    char line[100], name[20], buf[20];
+    c_float temp = -QPALM_INFTY;
+    strcpy(line, file);
+    size_t last_slash = 0;
+    size_t k;
+    for (k = 0; k < strlen(line); k++) {
+        if (line[k] == '/') /*assume linux directory*/
+            last_slash = k+1;
+    }
+    strcpy(name, &line[last_slash]);
+    name[strlen(name)-4] = '\0'; /*delete .qps*/
+    FILE *fp = fopen("out.tex", "a");
+
+    /*Get the objective from BPMPD*/
+    FILE *fp_bpmpd = fopen("/home/ben/Documents/Projects/QPALM/qps/BPMPD.txt", "r");
+    if (fp_bpmpd == NULL) {
+        printf("Could not open\n");
+        return;
+    }
+
+    fgets(line, 100, fp_bpmpd);
+    sscanf(line, "%s %le", buf, &temp);
+    while (strcmp(buf, name)) {
+        if (fgets(line, 100, fp_bpmpd) != NULL) {
+            sscanf(line, "%s %le", buf, &temp);
+            // printf("Buf: %s, temp: %le\n", buf, temp);
+        }
+        else
+            break;
+    }
+
+    if (!strcmp(buf, name)) {
+        convert_underscore_to_dash(name);
+        fprintf(fp, "%s & %lu & %lu & %lu & %lu & %lu & %le & %le \\\\ \n", name, data->n, data->m, data->A->nzmax, data->Q->nzmax, info->iter, info->objective, temp);
+        // fprintf(fp, "%s & %le \\\\ \n", name, temp);
+    } else
+        printf("Name not found in BPMPD file: %s\n");
+
+    // fprintf(fp, "%s & %lu & %lu & %lu & %lu & %lu & %le \\\\ \n", name, data->n, data->m, data->A->nzmax, data->Q->nzmax, info->iter, info->objective);
+    fclose(fp);
+    fclose(fp_bpmpd);
+}
+
 int main(int argc, char*argv[]){
 
     if (argc != 2) {
@@ -625,8 +678,8 @@ int main(int argc, char*argv[]){
     settings->eps_dual_inf = 1e-6;
     settings->eps_prim_inf = 1e-6;
     settings->max_iter = 10000;
-    settings->verbose = FALSE;
-    settings->scaling = FALSE;
+    settings->verbose = TRUE;
+    // settings->scaling = 2;
     // settings->proximal = TRUE;
 
     cholmod_common c;
@@ -635,14 +688,14 @@ int main(int argc, char*argv[]){
     /* Solve Problem */
     qpalm_solve(work);
     
-    printf("Iter: %ld\n", work->info->iter);
-    printf("Status: %s\n", work->info->status);
-    printf("Objective: %le\n", work->info->objective);
-    
+    // printf("Iter: %ld\n", work->info->iter);
+    // printf("Status: %s\n", work->info->status);
+    // printf("Objective: %le\n", work->info->objective);
 
-    print_out_latex(data, work->info, argv[1]);
+    // print_out_latex(data, work->info, argv[1]);
+    print_out_bpmpd(data, work->info, argv[1]);
 
-    // Clean workspace
+    // // Clean workspace
     CHOLMOD(start)(&c);
     CHOLMOD(free_sparse)(&data->Q, &c);
     CHOLMOD(free_sparse)(&data->A, &c);
