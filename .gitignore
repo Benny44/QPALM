@@ -31,3 +31,5 @@ coverage
 *.gz
 /qps/out.tex
 /simulations/maros_meszaros/mm_output.tex
+*.txt
+buildQPS.sh
