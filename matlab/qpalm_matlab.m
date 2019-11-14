@@ -656,6 +656,9 @@ iz = indL(is(i));
 if  P(iz)
     a = a+delta(iz)^2;
     b = b-delta(iz)*gamma(iz);
+else
+    a = a-delta(iz)^2;
+    b = b+delta(iz)*gamma(iz);
 end
 tf=-b/a;
 

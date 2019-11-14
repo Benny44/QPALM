@@ -15,8 +15,11 @@ timings = {};
 iter = {};
 status = {};
 
-
-VERBOSE = false;
+if ~isfield(options, 'VERBOSE')
+    VERBOSE = false;
+else
+    VERBOSE = options.VERBOSE;
+end
 if ~isfield(options, 'SCALING_ITER')
     SCALING_ITER = 10;
 else
@@ -28,7 +31,7 @@ else
     MAXITER = options.MAXITER;
 end
 
-MAX_TIME = 10000;
+TIME_LIMIT = 3600;
 
 if ~isfield(options, 'EPS_ABS')
     EPS_ABS = 1e-6;
@@ -75,7 +78,7 @@ if options.qpalm_matlab
     for k = 1:n
         opts.solver = 'newton';
         opts.scalar_sig = false;
-        opts.maxiter = 50000;
+        opts.maxiter = MAXITER;
         opts.eps_abs = EPS_ABS;
         opts.eps_rel = EPS_REL;
         opts.eps_abs_in = min(EPS_ABS*1e6, 1);
@@ -86,8 +89,7 @@ if options.qpalm_matlab
         opts.gamma    = 1e1;
         opts.gammaUpd = 10;
         opts.gammaMax = 1e7;
-%         opts.verbose = true;
-%         opts.sig = 5;
+        opts.verbose = VERBOSE;
         opts.Delta   = 100;
         opts.scaling = 'simple';
         opts.scaling_iter = SCALING_ITER;
@@ -127,14 +129,22 @@ if options.qpalm_c
         settings.eps_rel = EPS_REL;
         settings.eps_prim_inf = EPS_ABS;
         settings.eps_dual_inf = EPS_ABS;
-        settings.delta   = 100;
-        settings.gamma_init = 1e1;
-        settings.gamma_max = 1e7;
-%         settings.memory  = 20;
+%         settings.delta   = 100;
+%         settings.gamma_init = 1e1;
+%         settings.gamma_max = 1e7;
+%         settings.proximal = true;
         
         solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
-        res_qpalm = solver.solve();
-        t(k) = res_qpalm.info.run_time;
+        try
+            res_qpalm = solver.solve();
+            t(k) = res_qpalm.info.run_time;
+        catch
+            t(k) = TIME_LIMIT;
+            res_qpalm.info.status = 'failed';
+            res_qpalm.info.iter = inf;
+            res_qpalm.x = nan;
+        end
+        solver.delete();
     end
 
     status.qpalm_c = res_qpalm.info.status;
@@ -142,9 +152,9 @@ if options.qpalm_c
     timings.qpalm_c = sum(t)/n;
     x.qpalm_c = res_qpalm.x;
     
-    if timings.qpalm_c > MAX_TIME
-        options.qpalm_c = false;
-    end
+%     if timings.qpalm_c > MAX_TIME
+%         options.qpalm_c = false;
+%     end
     
 end
 %% OSQP
@@ -154,25 +164,37 @@ if options.osqp
         solver = osqp;
         osqp_settings = solver.default_settings();
 
-        osqp_settings.scaling = SCALING_ITER;
-        osqp_settings.max_iter = MAXITER;
+%         osqp_settings.scaling = SCALING_ITER;
+        osqp_settings.max_iter = 10000000000;
+        osqp_settings.time_limit = TIME_LIMIT;
         osqp_settings.eps_abs = EPS_ABS;
         osqp_settings.eps_rel = EPS_REL;
+        osqp_settings.eps_prim_inf = EPS_ABS;
+        osqp_settings.eps_dual_inf = EPS_ABS;
+        
         osqp_settings.verbose = VERBOSE;
-        osqp_settings.polish = true;
+%         osqp_settings.polish = true;
         solver.setup(prob.Q, prob.q, A,lbA,ubA, osqp_settings);
-        res_osqp = solver.solve();
+        try
+            res_osqp = solver.solve();
+            t(k) = res_osqp.info.run_time;
+        catch
+            t(k) = TIME_LIMIT;
+            res_osqp.info.status = 'failed';
+            res_osqp.info.iter = inf;
+            res_osqp.x = nan;
+        end
+
         solver.delete();
-        t(k) = res_osqp.info.run_time;
         
     end
 
     status.osqp = res_osqp.info.status;
     iter.osqp = res_osqp.info.iter;
     timings.osqp = sum(t)/n;
-    if timings.osqp > MAX_TIME
-        options.osqp = false;
-    end
+%     if timings.osqp > MAX_TIME
+%         options.osqp = false;
+%     end
     x.osqp = res_osqp.x;
 end
 %% qpoases
@@ -191,7 +213,7 @@ else
 end
 
 if options.qpoases
-    qpoases_options = qpOASES_options('default', 'printLevel', 0, 'terminationTolerance', 1e-6);
+    qpoases_options = qpOASES_options('default', 'printLevel', 0, 'terminationTolerance', 1e-6, 'maxCpuTime', TIME_LIMIT);
 
     for k = 1:n
         [x.qpoases,fval,status.qpoases,iter.qpoases,lambda,auxOutput] = qpOASES(prob.Q,prob.q,prob.A,l,u,prob.lb,prob.ub,qpoases_options);
@@ -199,9 +221,9 @@ if options.qpoases
     end
     timings.qpoases = sum(t)/n;
     
-    if timings.qpoases > MAX_TIME
-        options.qpoases = false;
-    end
+%     if timings.qpoases > MAX_TIME
+%         options.qpoases = false;
+%     end
 
 end
 
@@ -263,10 +285,18 @@ if options.gurobi
     params.outputflag = 0;
     params.OptimalityTol = EPS_ABS;
     params.FeasibilityTol = EPS_ABS;
+    params.TimeLimit = TIME_LIMIT;
     
     for k = 1:n
-        results = gurobi(model,params);
-        t(k) = results.runtime;
+        try
+            results = gurobi(model,params);
+            t(k) = results.runtime;
+        catch
+            results.status = 'FAILED';
+            results.baritercount = inf;
+            t(k) = TIME_LIMIT;
+        end
+        
     end
     timings.gurobi = sum(t)/n;
     status.gurobi = results.status;
@@ -276,9 +306,9 @@ if options.gurobi
     else
         x.gurobi = nan;
     end
-    if timings.gurobi > MAX_TIME
-        options.gurobi = false;
-    end
+%     if timings.gurobi > MAX_TIME
+%         options.gurobi = false;
+%     end
     
 
 end

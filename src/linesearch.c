@@ -111,6 +111,9 @@ c_float exact_linesearch(QPALMWorkspace *work) {
     if (work->index_P[iz]) {
         a = a + work->delta[iz]*work->delta[iz];
         b = b - work->delta[iz]*work->alpha[iz];
+    } else {
+        a = a - work->delta[iz]*work->delta[iz];
+        b = b + work->delta[iz]*work->alpha[iz];
     }
     return -b/a;
 

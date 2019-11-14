@@ -153,7 +153,7 @@ int main(int argc, char*argv[]){
     fileno++;
     fp = fopen(argv[fileno], "r");
     if(fp == NULL) {
-        fprintf(stderr, "Could not open file %s\n", argv[fileno]);
+        fprintf(stderr, "Could not open file %s\n", argv[fileno]);return 1;
     }
     cholmod_sparse* A = mtx_load_A(fp, &n, &m);
     fclose(fp);
@@ -162,7 +162,7 @@ int main(int argc, char*argv[]){
     fileno++;
     fp = fopen(argv[fileno], "r");
     if(fp == NULL) {
-        fprintf(stderr, "Could not open file %s\n", argv[fileno]);
+        fprintf(stderr, "Could not open file %s\n", argv[fileno]);return 1;
     }
     cholmod_sparse* Q = mtx_load_Q(fp, n);
     fclose(fp);
@@ -171,7 +171,7 @@ int main(int argc, char*argv[]){
     fileno++;
     fp = fopen(argv[fileno], "r");
     if(fp == NULL) {
-        fprintf(stderr, "Could not open file %s\n", argv[fileno]);
+        fprintf(stderr, "Could not open file %s\n", argv[fileno]);return 1;
     }
     c_float* q = mtx_load_dense(fp, n);
     fclose(fp);
@@ -180,7 +180,7 @@ int main(int argc, char*argv[]){
     fileno++;
     fp = fopen(argv[fileno], "r");
     if(fp == NULL) {
-        fprintf(stderr, "Could not open file %s\n", argv[fileno]);
+        fprintf(stderr, "Could not open file %s\n", argv[fileno]);return 1;
     }
     c_float* bmin = mtx_load_dense(fp, m);
     fclose(fp);
@@ -189,7 +189,7 @@ int main(int argc, char*argv[]){
     fileno++;
     fp = fopen(argv[fileno], "r");
     if(fp == NULL) {
-        fprintf(stderr, "Could not open file %s\n", argv[fileno]);
+        fprintf(stderr, "Could not open file %s\n", argv[fileno]);return 1;
     }
     c_float* bmax = mtx_load_dense(fp, m);
     fclose(fp);
@@ -205,11 +205,13 @@ int main(int argc, char*argv[]){
     data    = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = n;
     data->m = m;
+    data->c = 0;
     data->q = q;
     data->bmin = bmin;
     data->bmax = bmax;
     data->A = A;
     data->Q = Q;
+    
 
     // Define Solver settings as default
     qpalm_set_default_settings(settings);
@@ -220,21 +222,6 @@ int main(int argc, char*argv[]){
 
     // Solve Problem
     qpalm_solve(work);
-
-    printf("Solver status: %s\n", work->info->status);
-    printf("Iter: %d\n", work->info->iter);
-    printf("Iter_out: %d\n", work->info->iter_out);
-
-    for (int i = 0; i < work->data->n; i++) {
-        printf("%f ", work->solution->x[i]);
-    }
-    printf("\n");
-
-    #ifdef PROFILING
-    printf("Setup time: %f\n", work->info->setup_time);
-    printf("Solve time: %f\n", work->info->solve_time);
-    printf("Run time: %f\n", work->info->run_time);
-    #endif
 
     // Clean workspace
     CHOLMOD(start)(&work->chol->c);

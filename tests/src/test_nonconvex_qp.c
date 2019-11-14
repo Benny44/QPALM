@@ -22,6 +22,7 @@ void nonconvex_qp_suite_setup(void) {
     QPALMData *data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
     data->m = M;
+    data->c = 0;
 
     cholmod_common common, *c;
     c = &common;

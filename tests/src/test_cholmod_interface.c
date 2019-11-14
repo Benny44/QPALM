@@ -25,6 +25,7 @@ void cholmod_suite_setup(void) {
     QPALMData *data    = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
     data->m = M;
+    data->c = 0;
     c_float q[N] = {1, -2};
     data->q = q;
     c_float bmin[M] = {-5, -10, -2};

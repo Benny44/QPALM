@@ -23,6 +23,7 @@ void error_handling_suite_setup(void) {
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
     data->m = M;
+    data->c = 0;
     data->q = c_calloc(N,sizeof(c_float));
     data->q[0] = 1; data->q[1] = -2; 
     data->bmin = c_calloc(M,sizeof(c_float));

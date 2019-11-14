@@ -29,6 +29,7 @@ void ls_qp_suite_setup(void) {
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
     data->m = M;
+    data->c = 0;
 
     c = &common;
     CHOLMOD(start)(c);

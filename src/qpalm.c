@@ -114,6 +114,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->data->bmin = vec_copy(data->bmin, m);      
   work->data->bmax = vec_copy(data->bmax, m);       
   work->data->q    = vec_copy(data->q, n);          
+  work->data->c    = data->c;
 
   work->data->A    = CHOLMOD(copy_sparse)(data->A, &work->chol->c);    
   work->data->Q    = CHOLMOD(copy_sparse)(data->Q, &work->chol->c);     
@@ -434,7 +435,7 @@ void qpalm_solve(QPALMWorkspace *work) {
             set_active_constraints(work);
             set_entering_leaving_constraints(work);
             if (work->chol->nb_enter == 0 && work->chol->nb_leave == 0) {
-              c_print("Boosting gamma on iter: %d\n", iter);
+              // c_print("Boosting gamma on iter: %d\n", iter);
               boost_gamma(work);
             } else {
               update_gamma(work);
@@ -477,12 +478,6 @@ void qpalm_solve(QPALMWorkspace *work) {
       if (mod(iter, work->settings->reset_newton_iter) == 0) work->chol->reset_newton = TRUE; 
       update_primal_iterate(work);
 
-      // if (work->settings->proximal && !work->gamma_maxed && iter_out > 1 
-      //     && work->chol->nb_enter == 0 && work->chol->nb_leave == 0 
-      //     && work->info->pri_res_norm < work->eps_pri) {
-      //   boost_gamma(work);
-      // }
-
       #ifdef PRINTING
       if (work->settings->verbose && mod(iter, work->settings->print_iter) == 0) {
         work->info->objective = compute_objective(work);
@@ -507,7 +502,8 @@ void qpalm_solve(QPALMWorkspace *work) {
   work->initialized = FALSE;
 
   #ifdef PRINTING
-    print_final_message(work);
+    if (work->settings->verbose)
+      print_final_message(work);
   #endif /* PRINTING */
 }
 

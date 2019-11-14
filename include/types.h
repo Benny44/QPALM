@@ -91,6 +91,7 @@ typedef struct {
   cholmod_sparse *Q;    ///< sparse quadratic part of the cost Q (size n x n)           
   cholmod_sparse *A;    ///< sparse linear constraints matrix A (size m x n)
   c_float        *q;    ///< dense array for linear part of cost function (size n)
+  c_float         c;    ///< constant part of cost 
   c_float        *bmin; ///< dense array for lower bounds (size m)
   c_float        *bmax; ///< dense array for upper bounds (size m)
 } QPALMData;
