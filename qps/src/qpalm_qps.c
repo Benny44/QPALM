@@ -352,7 +352,10 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                     Ax[elemA] = temp2;
                     elemA++;
                     second_rowchar[0] = '\0';
+                } else if (!strcmp(second_rowchar, objective)) {
+                    data->q[col-1] = temp2;  
                 }
+                second_rowchar[0] = '\0';
                 
                 next_char = fgetc(fp);
             }
