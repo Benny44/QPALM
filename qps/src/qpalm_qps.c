@@ -10,6 +10,11 @@
 #include <math.h>
 #include <string.h>
 
+typedef struct {
+    int no_name_bounds;
+    int no_name_rhs;
+} read_options;
+
 /* Print a cholmod matrix so the output can be entered into matlab */
 void print_cholmod_matlab(cholmod_sparse *M) {
     printf("M = sparse(%ld, %ld);", M->nrow, M->ncol);
@@ -74,7 +79,7 @@ long convert_to_long(char *s) {
     return number;
 }
 
-int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **free_bounds) {
+int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **free_bounds, read_options *opts) {
 
     size_t n, m, Annz, Qnnz, n_bounds;
     n = 0; m = 0; Annz = 0; Qnnz = 0; n_bounds = 0;
@@ -98,6 +103,7 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
     prev_rowchar[0] = '\0';
     long row;
     
+    int temp_int;
 
     next_char = fgetc(fp);
     /*First pass through the file to get the sizes*/
@@ -145,9 +151,8 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
                 } else if(!strcmp(second_rowchar, "")) {
                 } else {
                     Annz++;
-                    second_rowchar[0] = '\0';
                 }
-                
+                second_rowchar[0] = '\0';
                 next_char = fgetc(fp);
             }
             n_bounds = n;
@@ -156,8 +161,11 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
             *free_bounds = create_index_table(c_max(n/5,1));
 
         } else if (!strcmp(command, "RHS") || !strcmp(command, "RANGES")) {
+            c_float temp1, temp2;
             while(next_char == ' ') {
                 fgets(line, 100, fp);
+                temp_int = sscanf(line, "%s %s %le %s %le", buf, rowchar, &temp1, second_rowchar, &temp2);
+                if (temp_int == 2 || temp_int == 4) opts->no_name_rhs = TRUE;
                 next_char = fgetc(fp);
             }
 
@@ -165,7 +173,19 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
             
             while(next_char == ' ') {
                 fgets(line, 100, fp);
-                sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
+                if (opts->no_name_bounds) {
+                    // printf("No name bounds\n");
+
+                    sscanf(line, "%s %s %le", bound_type, colchar, &temp);
+                } else {
+                    temp_int = sscanf(line, "%s %s %s %le", bound_type, buf, colchar, &temp);
+                    // printf("Temp");
+                    if ((temp_int != 4) && !((temp_int == 3) && (!strcmp(bound_type, "FR")))) {
+                        opts->no_name_bounds = TRUE;
+                        strcpy(colchar, buf);
+                        // sscanf(line, "%s %s %le", bound_type, colchar, &temp);
+                    }
+                }
                 if (!strcmp(bound_type, "FR")) {
                     // col = convert_to_long(colchar)-1;
                     // bounds[col] = FALSE;
@@ -211,7 +231,7 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
 }
 
 void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
-                struct index_table* col_index_table, struct index_table* free_bounds) {
+                struct index_table* col_index_table, struct index_table* free_bounds, read_options *opts) {
 
     char next_char;
     char NLGE[1], buf[20], buf2[20], objective[20];
@@ -370,7 +390,12 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
             // printf("RHS\n");
             while(next_char == ' ') {
                 fgets(line, 100, fp);
-                sscanf(line, "%*s %s %le %s %le", rowchar, &temp, second_rowchar, &temp2);
+                if (opts->no_name_rhs) {
+                    sscanf(line, "%s %le %s %le", rowchar, &temp, second_rowchar, &temp2);
+                } else {
+                    sscanf(line, "%*s %s %le %s %le", rowchar, &temp, second_rowchar, &temp2);
+                }
+                
                 // row = convert_to_long(rowchar)-1;
 
                 if (!strcmp(rowchar, objective))
@@ -457,7 +482,11 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
             // print_table(col_index_table, c_max(n/5, 1));
             while(next_char == ' ') {
                 fgets(line, 100, fp);
-                sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
+                if (opts->no_name_bounds) {
+                    sscanf(line, "%s %s %le", bound_type, colchar, &temp);
+                } else {
+                    sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
+                }
                 // col = convert_to_long(colchar)-1;
                 col_node = lookup(col_index_table, colchar);
                 col = col_node->index - 1;
@@ -621,12 +650,15 @@ int main(int argc, char*argv[]){
     char *file_copy = NULL;    
     struct index_table * free_bounds;
     QPALMData* data = c_calloc(1, sizeof(QPALMData));
+    read_options opts;
+    opts.no_name_bounds = FALSE;
+    opts.no_name_rhs = FALSE;
 
     /* First pass through the file to get the sizes. If an old QPS-format is 
        detected (which allows for spaces in names), first a conversion is 
        performed to the new format and then the (new) file is read again.
     */
-    if (get_sizes_and_check_format(fp, data, &free_bounds)) {
+    if (get_sizes_and_check_format(fp, data, &free_bounds, &opts)) {
         file_copy = convert_qps_to_new_format(argv[1]);
         fp = fopen(file_copy, "r");
         if(fp == NULL) {
@@ -634,7 +666,7 @@ int main(int argc, char*argv[]){
             return 1;
         }
         fgets(line, 100, fp);
-        get_sizes_and_check_format(fp, data, &free_bounds);
+        get_sizes_and_check_format(fp, data, &free_bounds, &opts);
     }
 
     
@@ -660,7 +692,7 @@ int main(int argc, char*argv[]){
 
     struct index_table* row_index_table = create_index_table(c_max((m-n_bounds)/5, 1));
     struct index_table* col_index_table = create_index_table(c_max(n/5, 1));
-    read_data(fp, data, row_index_table, col_index_table, free_bounds);
+    read_data(fp, data, row_index_table, col_index_table, free_bounds, &opts);
 
     fclose(fp);
     if (file_copy) c_free(file_copy);
