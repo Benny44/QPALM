@@ -1,8 +1,24 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(SUITESPARSE VERSION 0.1.0)
 
-find_package(BLAS REQUIRED)
-find_package(LAPACK REQUIRED)
+# find_package(BLAS REQUIRED)
+# find_package(LAPACK REQUIRED)
+
+
+# find_library(BLAS names mwblas
+#     HINTS /home/ben/.MATLAB/R2015a/bin/glnxa64)
+
+# find_library(LAPACK names mwlapack
+#     HINTS /home/ben/.MATLAB/R2015a/bin/glnxa64)
+
+# find_library(BLAS names openblas
+#     HINTS /home/ben/miniconda3/lib)
+
+# find_library(BLAS names mkl_intel_lp64 mkl_core mkl_intel_thread iomp5 pthread
+#     HINTS /home/ben/miniconda3/lib)
+
+find_library(LAPACK names lapack
+    HINTS /home/ben/miniconda3/lib)
 
 #cmake for AMD, CAMD, COLAMD, CCOLAMD, CHOLMOD, SUITESPARSECONFIG
 set(SUITESPARSE_CONFIG_PATH ${CMAKE_SOURCE_DIR}/suitesparse/SuiteSparse_config)
@@ -42,17 +58,17 @@ set(METIS_PATH ${CMAKE_SOURCE_DIR}/suitesparse/metis-5.1.0)
 add_compile_options("-DDLONG")
 
 #SUITESPARSECONFIG
-add_library(suitesparseconfig SHARED
+add_library(suitesparseconfig_new SHARED
 ${SUITESPARSE_CONFIG_PATH}/SuiteSparse_config.c
 ${SUITESPARSE_CONFIG_PATH}/SuiteSparse_config.h
 )
 
-target_include_directories(suitesparseconfig
+target_include_directories(suitesparseconfig_new
         PUBLIC 
                 ${SUITESPARSE_CONFIG_PATH})
 
 #AMD
-add_library(amd SHARED
+add_library(amd_new SHARED
 ${AMD_PATH}/Source/amd_post_tree.c
                 ${AMD_PATH}/Source/amd_1.c
                 ${AMD_PATH}/Source/amd_control.c
@@ -70,15 +86,15 @@ ${AMD_PATH}/Source/amd_post_tree.c
                 ${AMD_PATH}/Include/amd.h
                 ${SUITESPARSE_CONFIG_PATH}/SuiteSparse_config.h)
 
-target_include_directories(amd 
+target_include_directories(amd_new
         PUBLIC
                 ${AMD_PATH}/Include
                 ${SUITESPARSE_CONFIG_PATH})
 
-target_link_libraries(amd suitesparseconfig)
+target_link_libraries(amd_new suitesparseconfig_new)
 
 #CAMD
-add_library(camd SHARED
+add_library(camd_new SHARED
                 ${CAMD_PATH}/Source/camd_dump.c
                 ${CAMD_PATH}/Source/camd_order.c
                 ${CAMD_PATH}/Source/camd_control.c
@@ -95,43 +111,43 @@ add_library(camd SHARED
                 ${CAMD_PATH}/Include/camd.h
                 ${SUITESPARSE_CONFIG_PATH}/SuiteSparse_config.h)
 
-include_directories(camd 
+include_directories(camd_new
         PUBLIC
                 ${CAMD_PATH}/Include
                 ${SUITESPARSE_CONFIG_PATH})
 
-target_link_libraries(camd suitesparseconfig)
+target_link_libraries(camd_new suitesparseconfig_new)
 
 #COLAMD
-add_library(colamd SHARED
+add_library(colamd_new SHARED
                 ${COLAMD_PATH}/Source/colamd.c
                 ${COLAMD_PATH}/Include/colamd.h
                 ${SUITESPARSE_CONFIG_PATH}/SuiteSparse_config.h
 )
 
-target_include_directories(colamd
+target_include_directories(colamd_new
         PUBLIC
                 ${COLAMD_PATH}/Include
                 ${SUITESPARSE_CONFIG_PATH})
 
-target_link_libraries(colamd suitesparseconfig)
+target_link_libraries(colamd_new suitesparseconfig_new)
 
 #CCOLAMD
-add_library(ccolamd SHARED
+add_library(ccolamd_new SHARED
                 ${CCOLAMD_PATH}/Source/ccolamd.c
                 ${CCOLAMD_PATH}/Include/ccolamd.h
                 ${SUITESPARSE_CONFIG_PATH}/SuiteSparse_config.h
 )
 
-target_include_directories(ccolamd 
+target_include_directories(ccolamd_new
         PUBLIC
                 ${CCOLAMD_PATH}/Include
                 ${SUITESPARSE_CONFIG_PATH})
 
-target_link_libraries(ccolamd suitesparseconfig)
+target_link_libraries(ccolamd_new suitesparseconfig_new)
 
 #CHOLMOD
-add_library(cholmod SHARED
+add_library(cholmod_new SHARED
                 ${CHOLMOD_PATH}/Core/cholmod_factor.c
                 ${CHOLMOD_PATH}/Core/cholmod_band.c
                 ${CHOLMOD_PATH}/Core/cholmod_version.c
@@ -201,7 +217,7 @@ add_library(cholmod SHARED
                 ${CHOLMOD_PATH}/Include/cholmod_template.h
                 ${CHOLMOD_PATH}/Include/cholmod_matrixops.h)
 
-target_include_directories(cholmod
+target_include_directories(cholmod_new
         PUBLIC
                 ${CHOLMOD_PATH}/Include
                 ${AMD_PATH}/Include
@@ -211,21 +227,41 @@ target_include_directories(cholmod
                 ${SUITESPARSE_CONFIG_PATH}
                 ${METIS_PATH}/include)
 
-
+message("LIB_DIR is ${LIB_DIR}")
 find_library(METIS_LIB
     names metis
     HINTS ${LIB_DIR})
 
-target_link_libraries(cholmod 
-                        blas lapack 
-                        ${METIS_LIB}
-                        suitesparseconfig
-                        amd
-                        camd
-                        colamd
-                        ccolamd)
 
-find_package(OpenMP)
-if (OPENMP_FOUND)
-        target_link_libraries(cholmod ${OpenMP_C_LIBRARIES})
-endif()
+# find_package(OpenMP)
+# if (OPENMP_FOUND)
+#         target_link_libraries(cholmod_new ${OpenMP_C_LIBRARIES})
+# endif()
+
+# target_link_libraries(cholmod_new 
+#                         ${BLAS} ${LAPACK} 
+#                         ${METIS_LIB}
+#                         suitesparseconfig_new
+#                         amd_new
+#                         camd_new
+#                         colamd_new
+#                         ccolamd_new)
+target_link_libraries(cholmod_new 
+                        ${MKL_INTEL_LP64} ${MKL_CORE} ${MKL_INTEL_THREAD} ${IOMP5} ${PTHREAD} 
+                        ${LAPACK} 
+                        ${METIS_LIB}
+                        suitesparseconfig_new
+                        amd_new
+                        camd_new
+                        colamd_new
+                        ccolamd_new)
+
+# target_link_libraries(cholmod_new 
+#                         blas lapack
+#                         ${METIS_LIB}
+#                         suitesparseconfig_new
+#                         amd_new
+#                         camd_new
+#                         colamd_new
+#                         ccolamd_new)
+

@@ -1,6 +1,27 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
+# find_package(BLAS REQUIRED)
+# find_package(LAPACK REQUIRED)
+
+
+# find_library(BLAS names openblas
+#     HINTS /home/ben/miniconda3/lib)
+
+find_library(MKL_INTEL_LP64 names mkl_intel_lp64 
+    HINTS /home/ben/miniconda3/lib)
+find_library(MKL_CORE names mkl_core 
+    HINTS /home/ben/miniconda3/lib)
+find_library(MKL_INTEL_THREAD names mkl_intel_thread 
+    HINTS /home/ben/miniconda3/lib)
+find_library(IOMP5 names iomp5 
+    HINTS /home/ben/miniconda3/lib)
+find_library(PTHREAD names pthread
+    HINTS /home/ben/miniconda3/lib)
+
+
+find_library(LAPACK names lapack
+    HINTS /home/ben/miniconda3/lib)
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -37,7 +58,7 @@ if (COVERAGE)
 endif()
 
 if (UNIX)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wconversion")
+    #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wconversion")
 endif (UNIX)
 
 # Add unit tests (if coverage is on, unit tests should also be on)
@@ -49,6 +70,7 @@ message(STATUS "Unit testing is ${UNITTESTS}")
 message(STATUS "Code coverage is ${COVERAGE}")
 
 set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/build/lib)
+message("Lib_dir is ${LIB_DIR}")
 set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/build/include)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
 
@@ -64,12 +86,14 @@ if (PROF)
 endif()
 
 
-option (TIMING "Enable timing" OFF)
+option (TIMING "Enable timing" ON)
 if (TIMING)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPROFILING")
 endif()
 
 option (BUILD_SHARED_LIBS "Shared if on, static if off" ON)
+
+add_subdirectory(cmakeSuitesparse)
 
 add_library(qpalm 
                 src/newton.c
@@ -104,8 +128,18 @@ target_include_directories(qpalm
                 $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
                 ${SUITESPARSE_INCLUDE})
         
+# find_package(OpenMP)
+# if (OPENMP_FOUND)
+#         target_link_libraries(qpalm ${OpenMP_C_LIBRARIES})
+# endif()
+# target_link_libraries(qpalm ${BLAS} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACK_LIB})
+# target_link_libraries(qpalm ${BLAS} ${LAPACK} cholmod_new ${LAPACK_LIB})
+target_link_libraries(qpalm ${MKL_INTEL_LP64} ${MKL_CORE} ${MKL_INTEL_THREAD} ${IOMP5} ${PTHREAD}
+                         ${LAPACK} cholmod_new ${SUITESPARSE_LIB} ${LAPACK_LIB})
 
-target_link_libraries(qpalm ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACK_LIB})
+# target_link_libraries(qpalm blas lapack cholmod_new ${LAPACK_LIB})
+
+
 
 option (PPROF "Create executable demo for profiling with cpuprofile" OFF)
 if (PPROF)
