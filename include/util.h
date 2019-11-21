@@ -144,7 +144,7 @@ struct QPALM_TIMER {
  * Start timer.
  * @param t Timer object
  */
-void    qpalm_tic(QPALMTimer *t);
+void qpalm_tic(QPALMTimer *t);
 
 /**
  * Report time in seconds since last call to qpalm_tic.
