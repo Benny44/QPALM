@@ -10,10 +10,27 @@ struct node{
     struct node *next;
 };
 
+struct list
+{
+    struct node* first;
+};
+
 struct index_table{
     c_int size;
     struct node **list;
 };
+
+struct list* list_create(void);
+
+void list_append(struct list* list, char* key);
+
+void list_populate_indices(struct list* list, struct index_table* col_index_table);
+
+void free_list(struct list* list);
+
+void print_list(struct list* list);
+
+c_int calculate_index_offset(struct list *list, c_int index);
 
 struct index_table *create_index_table(c_int size);
 

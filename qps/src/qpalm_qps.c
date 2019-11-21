@@ -79,7 +79,8 @@ long convert_to_long(char *s) {
     return number;
 }
 
-int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **free_bounds, read_options *opts) {
+int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **free_bounds,
+                                 struct list* free_bounds_list,read_options *opts) {
 
     size_t n, m, Annz, Qnnz, n_bounds;
     n = 0; m = 0; Annz = 0; Qnnz = 0; n_bounds = 0;
@@ -103,6 +104,7 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
     prev_rowchar[0] = '\0';
     long row;
     
+    // int no_name_bounds_rhs = FALSE;
     int temp_int;
 
     next_char = fgetc(fp);
@@ -186,10 +188,11 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
                         // sscanf(line, "%s %s %le", bound_type, colchar, &temp);
                     }
                 }
+                // temp_int = sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
+                
                 if (!strcmp(bound_type, "FR")) {
-                    // col = convert_to_long(colchar)-1;
-                    // bounds[col] = FALSE;
                     insert(*free_bounds, colchar, 0, ' ');
+                    list_append(free_bounds_list, colchar);
                     n_bounds--;
                     m--;
                     Annz--;
@@ -231,7 +234,8 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
 }
 
 void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
-                struct index_table* col_index_table, struct index_table* free_bounds, read_options *opts) {
+                struct index_table* col_index_table, struct index_table* free_bounds,
+                struct list* free_bounds_list, read_options *opts) {
 
     char next_char;
     char NLGE[1], buf[20], buf2[20], objective[20];
@@ -386,6 +390,9 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                 elemA++;
                 bounds_row++;
             }
+
+            list_populate_indices(free_bounds_list, col_index_table);
+
         } else if (!strcmp(command, "RHS")) {
             // printf("RHS\n");
             while(next_char == ' ') {
@@ -396,8 +403,6 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                     sscanf(line, "%*s %s %le %s %le", rowchar, &temp, second_rowchar, &temp2);
                 }
                 
-                // row = convert_to_long(rowchar)-1;
-
                 if (!strcmp(rowchar, objective))
                     data->c = -temp;
                 else {
@@ -440,6 +445,7 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                             break;
                     }
                 }
+                second_rowchar[0] = '\0';
 
                 next_char = fgetc(fp);
             }
@@ -489,13 +495,12 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                 }
                 // col = convert_to_long(colchar)-1;
                 col_node = lookup(col_index_table, colchar);
+                // printf("Colchar: %s\n", colchar);
                 col = col_node->index - 1;
-                
+                col += calculate_index_offset(free_bounds_list, col);
                 // printf("Found %s with index %ld\n", colchar, col_node->index);
 
-                if (!strcmp(bound_type, "FR")) {
-                    index--;
-                } else if (!strcmp(bound_type, "UP")) {
+                if (!strcmp(bound_type, "UP")) {
                     data->bmax[index+col] = temp;
                 } else if (!strcmp(bound_type, "LO")) {
                     // printf("Inserting in bmin at %ld + %ld\n", index, col);
@@ -504,7 +509,6 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                     data->bmin[index+col] = temp;
                     data->bmax[index+col] = temp;
                 }
-                
                 next_char = fgetc(fp);
             }
         } else if (!strcmp(command, "QUADOBJ")) {
@@ -649,6 +653,7 @@ int main(int argc, char*argv[]){
     char next_char;
     char *file_copy = NULL;    
     struct index_table * free_bounds;
+    struct list* free_bounds_list = list_create();
     QPALMData* data = c_calloc(1, sizeof(QPALMData));
     read_options opts;
     opts.no_name_bounds = FALSE;
@@ -658,7 +663,7 @@ int main(int argc, char*argv[]){
        detected (which allows for spaces in names), first a conversion is 
        performed to the new format and then the (new) file is read again.
     */
-    if (get_sizes_and_check_format(fp, data, &free_bounds, &opts)) {
+    if (get_sizes_and_check_format(fp, data, &free_bounds, free_bounds_list, &opts)) {
         file_copy = convert_qps_to_new_format(argv[1]);
         fp = fopen(file_copy, "r");
         if(fp == NULL) {
@@ -666,10 +671,11 @@ int main(int argc, char*argv[]){
             return 1;
         }
         fgets(line, 100, fp);
-        get_sizes_and_check_format(fp, data, &free_bounds, &opts);
+        get_sizes_and_check_format(fp, data, &free_bounds, free_bounds_list, &opts);
     }
 
-    
+    // printf("Annz = %ld, m = %ld, n = %ld\n", data->A->nzmax, data->A->nrow, data->A->ncol);
+
     /* Go through file a second time to read in the data*/
     if (file_copy == NULL) {
         fp = fopen(argv[1], "r");
@@ -692,16 +698,22 @@ int main(int argc, char*argv[]){
 
     struct index_table* row_index_table = create_index_table(c_max((m-n_bounds)/5, 1));
     struct index_table* col_index_table = create_index_table(c_max(n/5, 1));
-    read_data(fp, data, row_index_table, col_index_table, free_bounds, &opts);
+    read_data(fp, data, row_index_table, col_index_table, free_bounds, free_bounds_list, &opts);
 
     fclose(fp);
     if (file_copy) c_free(file_copy);
 
     printf("Reading successful.\n");
 
+    // printf("Q\n");
     // print_cholmod_matlab(data->Q);
+    // printf("A\n");
     // print_cholmod_matlab(data->A);
+    // printf("q\n");
+    // print_dense_vector_matlab(data->q, n);
+    // printf("bmin\n");
     // print_dense_vector_matlab(data->bmin, m);
+    // printf("bmax\n");
     // print_dense_vector_matlab(data->bmax, m);
 
 
@@ -723,10 +735,13 @@ int main(int argc, char*argv[]){
     /* Solve Problem */
     qpalm_solve(work);
     
-    // printf("Iter: %ld\n", work->info->iter);
+    printf("Iter: %ld\n", work->info->iter);
     // printf("Status: %s\n", work->info->status);
     // printf("Objective: %le\n", work->info->objective);
-
+    #ifdef PROFILING
+    printf("Runtime: %f seconds\n", work->info->run_time);
+    // printf("Runtime: %f seconds\n", work->info->setup_time);
+    #endif
     // print_out_latex(data, work->info, argv[1]);
     print_out_bpmpd(data, work->info, argv[1]);
 
@@ -747,6 +762,7 @@ int main(int argc, char*argv[]){
     free_index_table(row_index_table, c_max((m-n_bounds)/5,1));
     free_index_table(col_index_table, c_max((n)/5,1));
     free_index_table(free_bounds, c_max((n)/5,1));
+    free_list(free_bounds_list);
 
     return 0;
 }

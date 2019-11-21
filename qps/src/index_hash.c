@@ -1,5 +1,73 @@
 #include "index_hash.h"
 
+// create an empty list
+struct list* list_create(void)
+{
+    struct list* list = malloc(sizeof(struct list));
+    list->first = NULL;
+    return list;
+}
+
+// appends the given key to the given list
+void list_append(struct list* list, char* key)
+{
+    struct node* new_node = malloc(sizeof(struct node));
+    new_node->key = (char*)malloc(sizeof(char)*(strlen(key)+1));
+    strcpy(new_node->key, key);
+    new_node->next = NULL;
+    new_node->index = 0;
+    
+    // if the list is empty, make the new node the first node
+    if (list->first == NULL) list->first = new_node;
+    // else find the last node and set the new node as its next node
+    else {
+        struct node* node;
+        node = list->first;
+        while (node->next != NULL) node = node->next;
+        node->next = new_node;
+    }
+}
+
+void list_populate_indices(struct list* list, struct index_table* col_index_table) {
+    struct node* node = list->first;
+    struct node* col_node;
+    while (node != NULL) {
+        col_node = lookup(col_index_table, node->key);
+        node->index = col_node->index-1;
+        node = node->next;
+    }
+}
+
+c_int calculate_index_offset(struct list *list, c_int index) {
+    struct node* node = list->first;
+    c_int index_offset = 0;
+    while (node != NULL) {
+        if (index > node->index) index_offset--;
+        node = node->next;
+    }
+    return index_offset;
+}
+
+void free_list(struct list* list) {
+    struct node* node = list->first;
+    struct node* next_node;
+    while (node != NULL) {
+        next_node = node->next;
+        c_free(node->key);
+        c_free(node);
+        node = next_node;
+    }
+    c_free(list);
+}
+
+void print_list(struct list* list) {
+    struct node* node = list->first;
+    while (node != NULL) {
+        printf("Key: %s, index: %ld\n", node->key, node->index);
+        node = node->next;
+    }
+}
+
 struct index_table *create_index_table(c_int size){
     struct index_table *t = (struct table*)malloc(sizeof(struct index_table));
     t->size = size;
