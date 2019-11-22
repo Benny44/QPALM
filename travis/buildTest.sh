@@ -33,8 +33,11 @@ cd $metisdir
 
 cmake $curdir/suitesparse/metis-5.1.0 -DGKLIB_PATH=$curdir/suitesparse/metis-5.1.0/GKlib -DSHARED=1 && make 
 cd $curdir
-cp build/metis/libmetis/libmetis.so build/lib/
-
+if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
+    cp build/metis/libmetis/libmetis.dylib build/lib/
+else
+    cp build/metis/libmetis/libmetis.so build/lib/
+fi
 
 #Build QPALM and tests
 cd $curdir
