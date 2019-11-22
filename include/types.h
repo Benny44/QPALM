@@ -125,6 +125,7 @@ typedef struct {
   c_int   reset_newton_iter;        ///< frequency of performing a complete Cholesky factorization @details @note Assumption: @f$>0@f$
   c_int   enable_dual_termination;  ///< boolean, enable termination based on dual objective (useful in branch and bound) @details @note Assumption: @f$\in \{0,1\}@f$
   c_float dual_objective_limit;     ///< termination value for the dual objective (useful in branch and bound) @details @note Assumption: none
+  c_float time_limit;               ///< time limit @details @note Assumption: @f$>0@f$
 } QPALMSettings;
 
 /**

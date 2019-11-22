@@ -59,6 +59,7 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",                  //c_int
                                       "reset_newton_iter",          //c_int
                                       "enable_dual_termination",    //c_int
                                       "dual_objective_limit",       //c_int
+                                      "time_limit",                 //c_float
                                       "verbose"};                   //c_int
 
 
@@ -462,7 +463,7 @@ mxArray* copySettingsToMxStruct(QPALMSettings* settings){
   mxSetField(mxPtr, 0, "reset_newton_iter",         mxCreateDoubleScalar(settings->reset_newton_iter));
   mxSetField(mxPtr, 0, "enable_dual_termination",   mxCreateDoubleScalar(settings->enable_dual_termination));
   mxSetField(mxPtr, 0, "dual_objective_limit",      mxCreateDoubleScalar(settings->dual_objective_limit));
-
+  mxSetField(mxPtr, 0, "time_limit",      mxCreateDoubleScalar(settings->time_limit));
 
   return mxPtr;
 }
@@ -500,5 +501,6 @@ void copyMxStructToSettings(const mxArray* mxPtr, QPALMSettings* settings){
   settings->reset_newton_iter         = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "reset_newton_iter"));
   settings->enable_dual_termination   = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "enable_dual_termination"));
   settings->dual_objective_limit      = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "dual_objective_limit"));
+  settings->time_limit      = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "time_limit"));
 
 }

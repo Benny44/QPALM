@@ -32,7 +32,7 @@ extern "C" {
 void qpalm_set_default_settings(QPALMSettings *settings) {
 
   settings->max_iter                = MAX_ITER;                /* maximum iterations */
-  settings->inner_max_iter          = INNER_MAX_ITER;         /* maximum iterations per subproblem */
+  settings->inner_max_iter          = INNER_MAX_ITER;          /* maximum iterations per subproblem */
   settings->eps_abs                 = (c_float)EPS_ABS;        /* absolute convergence tolerance */
   settings->eps_rel                 = (c_float)EPS_REL;        /* relative convergence tolerance */
   settings->eps_abs_in              = (c_float)EPS_ABS_IN;     /* intermediate absolute convergence tolerance */
@@ -52,9 +52,10 @@ void qpalm_set_default_settings(QPALMSettings *settings) {
   settings->warm_start              = WARM_START;              /* boolean, warm start solver */
   settings->verbose                 = VERBOSE;                 /* boolean, write out progress */
   settings->print_iter              = PRINT_ITER;              /* frequency of printing */
-  settings->reset_newton_iter       = RESET_NEWTON_ITER;   /* frequency of performing a full Cholesky factorization */
+  settings->reset_newton_iter       = RESET_NEWTON_ITER;       /* frequency of performing a full Cholesky factorization */
   settings->enable_dual_termination = ENABLE_DUAL_TERMINATION; /* allow for dual termination (useful in branch and bound) */
-  settings->dual_objective_limit    = DUAL_OBJECTIVE_LIMIT; /* termination value for the dual objective (useful in branch and bound) */
+  settings->dual_objective_limit    = DUAL_OBJECTIVE_LIMIT;    /* termination value for the dual objective (useful in branch and bound) */
+  settings->time_limit              = TIME_LIMIT;              /* time limit */
 }
 
 
@@ -334,6 +335,7 @@ void qpalm_solve(QPALMWorkspace *work) {
   // Start the timer (after warm_start because this is already added to the setup time)
   #ifdef PROFILING
   qpalm_tic(work->timer); // Start timer
+  c_float current_time;
   #endif /* ifdef PROFILING */
 
   //Initialize CHOLMOD and its settings
@@ -487,6 +489,31 @@ void qpalm_solve(QPALMWorkspace *work) {
 
     
     }
+
+    #ifdef PROFILING
+    current_time = work->info->setup_time + qpalm_toc(work->timer); // Start timer
+    if (current_time > work->settings->time_limit) {
+      update_status(work->info, QPALM_TIME_LIMIT_REACHED);
+      work->info->iter = iter;
+      work->info->iter_out = iter_out;
+      store_solution(work);
+      #ifdef PROFILING
+        work->info->solve_time = qpalm_toc(work->timer);
+        work->info->run_time = work->info->setup_time +
+                              work->info->solve_time;
+      #endif /* ifdef PROFILING */
+      CHOLMOD(finish)(&work->chol->c);
+      work->initialized = FALSE;
+
+      #ifdef PRINTING
+        if (work->settings->verbose)
+          print_final_message(work);
+      #endif /* PRINTING */
+
+      return;
+    }
+
+    #endif /* ifdef PROFILING */
   }
   // maxiter reached
   update_status(work->info, QPALM_MAX_ITER_REACHED);

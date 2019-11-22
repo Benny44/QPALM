@@ -46,7 +46,8 @@ QPALMSettings* copy_settings(const QPALMSettings *settings) {
     new->warm_start               = settings->warm_start;
     new->reset_newton_iter        = settings->reset_newton_iter;
     new->enable_dual_termination  = settings->enable_dual_termination;
-    new->dual_objective_limit     = settings->dual_objective_limit;  
+    new->dual_objective_limit     = settings->dual_objective_limit;
+    new->time_limit               = settings->time_limit;
     return new;
 }
 
@@ -68,6 +69,9 @@ void update_status(QPALMInfo *info, c_int status_val) {
       break;
     case QPALM_DUAL_INFEASIBLE:
       c_strcpy(info->status, "dual infeasible");
+      break;
+    case QPALM_TIME_LIMIT_REACHED:
+      c_strcpy(info->status, "time limit exceeded");
       break;
     case QPALM_MAX_ITER_REACHED:
       c_strcpy(info->status, "maximum iterations reached");
@@ -139,7 +143,13 @@ void print_final_message(QPALMWorkspace *work) {
         characters_box =  c_print("| QPALM hit the maximum number of iterations.               |\n");
                           c_print("| primal residual: %5.4e, primal tolerance: %5.4e |\n", work->info->pri_res_norm, work->eps_pri);
                           c_print("| dual residual  : %5.4e, dual tolerance  : %5.4e |\n", work->info->dua_res_norm, work->eps_dua);
-                          c_print("| objective value: %+-5.4e                               |\n", work->info->objective);
+                          c_print("| objective value: %+-5.4e                              |\n", work->info->objective);
+        break;
+      case QPALM_TIME_LIMIT_REACHED:
+        characters_box =  c_print("| QPALM has exceeded the specified time limit.              |\n");
+                          c_print("| primal residual: %5.4e, primal tolerance: %5.4e |\n", work->info->pri_res_norm, work->eps_pri);
+                          c_print("| dual residual  : %5.4e, dual tolerance  : %5.4e |\n", work->info->dua_res_norm, work->eps_dua);
+                          c_print("| objective value: %+-5.4e                              |\n", work->info->objective);
         break;
       default:
         c_strcpy(work->info->status, "unrecognised status value");

@@ -28,11 +28,12 @@ extern "C" {
  * @{
  */
 
-# define QPALM_SOLVED (1)             /**< status to indicate the problem is solved to optimality given the specified tolerances */
-# define QPALM_DUAL_TERMINATED (2)    /**< status to indicate the problem has a dual objective that is higher than the specified bound */
-# define QPALM_MAX_ITER_REACHED (-2)  /**< status to indicate termination due to reaching the maximum number of iterations  */
-# define QPALM_PRIMAL_INFEASIBLE (-3) /**< status to indicate the problem is primal infeasible  */
-# define QPALM_DUAL_INFEASIBLE (-4)   /**< status to indicate the problem is dual infeasible  */
+# define QPALM_SOLVED (1)               /**< status to indicate the problem is solved to optimality given the specified tolerances */
+# define QPALM_DUAL_TERMINATED (2)      /**< status to indicate the problem has a dual objective that is higher than the specified bound */
+# define QPALM_MAX_ITER_REACHED (-2)    /**< status to indicate termination due to reaching the maximum number of iterations  */
+# define QPALM_PRIMAL_INFEASIBLE (-3)   /**< status to indicate the problem is primal infeasible  */
+# define QPALM_DUAL_INFEASIBLE (-4)     /**< status to indicate the problem is dual infeasible  */
+# define QPALM_TIME_LIMIT_REACHED (-5)  /**< status to indicate the problem's runtime has exceeded the specified time limit */
 # define QPALM_UNSOLVED (-10)         /**< status to indicate the problem is unsolved. Only setup function has been called */
 # define QPALM_ERROR (0)              /**< status to indicate an error has occured (this error should automatically be printed) */
 
@@ -93,6 +94,7 @@ extern "C" {
 
 # define ENABLE_DUAL_TERMINATION (FALSE) /**< enable termination after dual objective > something (useful in branch and bound) */
 # define DUAL_OBJECTIVE_LIMIT (QPALM_INFTY) /**< termination value for the dual objective (useful in branch and bound) */
+# define TIME_LIMIT (QPALM_INFTY) /**< time limit after which the solver aborts */
 
 # define MAX_RANK_UPDATE 160 /**< maximum rank for the sparse factorization update */
 

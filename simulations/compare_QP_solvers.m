@@ -129,11 +129,8 @@ if options.qpalm_c
         settings.eps_rel = EPS_REL;
         settings.eps_prim_inf = EPS_ABS;
         settings.eps_dual_inf = EPS_ABS;
-%         settings.delta   = 100;
-%         settings.gamma_init = 1e1;
-%         settings.gamma_max = 1e7;
-%         settings.proximal = true;
-        
+        settings.time_limit = TIME_LIMIT;
+
         solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
         try
             res_qpalm = solver.solve();
