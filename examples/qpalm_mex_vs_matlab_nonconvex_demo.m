@@ -4,7 +4,7 @@
 %% Generate data
 m = 300;n = 50;
 % m = 1; n = 2000;
-A = sprandn(m, n, 1e-1, 1e-4); 
+A = sprandn(m, n, 1e-1, 1e-2); 
 
 lb = -2*ones(m,1);
 ub =  2*ones(m,1);
@@ -12,7 +12,7 @@ ub =  2*ones(m,1);
 Q = sprandsym(n, 1e-1, 1e-4);
 q = 10*randn(n,1);
 
-
+% load('nonconvex_theory')
 %% Solve with qpalm mex
 solver = qpalm;
 settings = solver.default_settings();
@@ -24,7 +24,7 @@ settings.proximal = true;
 settings.scaling = 2;
 settings.max_iter = 5000;
 settings.eps_abs = 1e-4;
-settings.eps_rel = 1e-10;
+settings.eps_rel = 0;
 settings.gamma_init = 1e1;
 settings.gamma_max = 1e7;
 settings.verbose = false;
@@ -39,7 +39,7 @@ opts.nonconvex_approx = false;
 
 opts.Delta   = 100;
 opts.eps_abs = 1e-4;
-opts.eps_rel = 1e-10;
+opts.eps_rel = 1e-4;
 opts.maxiter = 5000;
 opts.scaling = 'simple';
 opts.scaling_iter = 2;
@@ -63,6 +63,8 @@ fprintf('Time (ms)  |      %.7f       |      %.7f \n', res.info.run_time*1000, q
 fprintf('Objective  | %.13e  | %.13e \n', 0.5*res.x'*Q*res.x + q'*res.x, 0.5*x_qpalm'*Q*x_qpalm + q'*x_qpalm )
 fprintf('Status     | %20s | %20s \n', res.info.status, stats_qpalm.status);
 fprintf('\n Difference in x: %.16e\n', norm(res.x-x_qpalm,inf)/norm(res.x,inf));
+
+res.info.iter_out
 
 solver.delete();
 

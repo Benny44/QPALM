@@ -20,8 +20,8 @@ out_maha             = cell(1, ll);
 out_osqp             = cell(1, ll);
 new                  = {};
 
-options.qpalm_matlab = true;
-options.qpalm_c = false;
+options.qpalm_matlab = false;
+options.qpalm_c = true;
 options.osqp = false;
 options.qpoases = false;
 options.gurobi = false;
@@ -43,6 +43,7 @@ Stats_qpalm_matlab = {};
 
 options.SCALING_ITER=2;
 options.EPS_ABS=1e-6;
+options.VERBOSE=true;
 
 for i = 1:ll
     baseFileName = Filename{i};
@@ -59,6 +60,12 @@ for i = 1:ll
     lb           = matData{i}.l;
     ub           = matData{i}.u;
     A            = matData{i}.A;
+    
+    ind = ~(lb==-1e20 & ub==1e20);
+    m = sum(ind);
+    lb = lb(ind);
+    ub = ub(ind);
+    A = A(ind, :);
     
     prob.Q = P; prob.q = q; prob.lb = lb; prob.ub = ub; prob.A = A;
     

@@ -267,6 +267,10 @@ na = 0;
 stats.nact(1) = 0;
 stats.nact_changed(1) = 0;
 
+K_prox = 1; 
+
+eps_pri = 1; %eps in algorithm
+%delta in algorithm = eps_abs_in 
 
 
 for k = 1:maxiter
@@ -298,10 +302,14 @@ for k = 1:maxiter
    stats.nrm_rd(k) = nrm_rd;
    stats.nrm_rp(k) = nrm_rp;
 
-   eps_primal   = eps_abs + eps_rel*max(norm(Ax./E_scale,inf),norm(z./E_scale,inf));            % primal eps
-   rel_d        = norm([Qx./D_scale;Atyh./D_scale;q./D_scale],inf)/c_scale;
-   eps_dual     = eps_abs + eps_rel*rel_d;    % dual eps
-   eps_dual_in  = eps_abs_in + eps_rel_in*rel_d;  % inner dual eps
+   %Ignoring eps_rel to implement the nonconvex algorithm 
+   eps_primal   = eps_abs;
+   eps_dual     = eps_abs;
+   eps_dual_in  = eps_abs_in;
+%    eps_primal   = eps_abs + eps_rel*max(norm(Ax./E_scale,inf),norm(z./E_scale,inf));            % primal eps
+%    rel_d        = norm([Qx./D_scale;Atyh./D_scale;q./D_scale],inf)/c_scale;
+%    eps_dual     = eps_abs + eps_rel*rel_d;    % dual eps
+%    eps_dual_in  = eps_abs_in + eps_rel_in*rel_d;  % inner dual eps
    
    dy = yh-y; Atdy = Atyh - Aty;
    dx = x-x_prev; 
@@ -312,6 +320,7 @@ for k = 1:maxiter
    end
           
    if nrm_rd <= eps_dual && nrm_rp <= eps_primal
+       fprintf('Eps_pri: %e, eps_abs_in: %e, K_prox: %d, K: %d\n', eps_pri, eps_abs_in, K_prox, K);
        stats.status = 'solved';
        if verbose && k > 1 && mod(k,print_iter)==0
         fprintf('iter: %5d,\t nrm_rp: %e,\t nrm_rd: %e,\t nrm_rd2: %e,\t tau: %e \n', k-1, nrm_rp, nrm_rd, nrm_rd2, tau);
@@ -325,57 +334,72 @@ for k = 1:maxiter
        stats.status = 'dual_infeasible';
        stats.dinf_certificate = D_scale.*dx;
        break
-   elseif k == k_prev + inner_maxiter %inner problem maxiter termination
-       %do outer update except dual and tolerance updates
-       k_prev = k;
-       gamma_changed = proximal && gamma < gammaMax;
-           
-       if K > 1 && nrm_rp > eps_primal
-           if scalar_sig
-               adj_sig  = norm(rp,inf)>theta*norm(rpK,inf) &active_cnstrs;
-           else
-               adj_sig  = abs(rp)>theta*abs(rpK) &active_cnstrs;
-           end
-    %            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
-            prev_sig = sig;
-            sig(adj_sig) = min(sigma_max, max(1, Delta*abs(rp(adj_sig))/(nrm_rp_unscaled+1e-6)).*sig(adj_sig));
-            sig_changed = sig ~= prev_sig;
-            nb_sig_changed = sum(sig_changed);
-
-            if gamma_changed 
-                reset_newton = true; 
-            elseif nb_sig_changed == 0
-                %do nothing
-            elseif nb_sig_changed <= 40 
-                LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
-                    sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
-                    *A(sig_changed,:))','+');
-            else
-                reset_newton = true; 
-            end            
-
-           Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
-           Asig      = (sparse(1:m,1:m,sig,m,m)*A);
-       end
-       
-       rpK = rp;
-       if K>1
-           stats.iter_in(K) = k-(sum(stats.iter_in));
+%    elseif k == k_prev + inner_maxiter %inner problem maxiter termination
+%        %do outer update except dual and tolerance updates
+%        k_prev = k;
+%        gamma_changed = proximal && gamma < gammaMax;
+%            
+%        if K > 1 && nrm_rp > eps_primal
+%            if scalar_sig
+%                adj_sig  = norm(rp,inf)>theta*norm(rpK,inf) &active_cnstrs;
+%            else
+%                adj_sig  = abs(rp)>theta*abs(rpK) &active_cnstrs;
+%            end
+%     %            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
+%             prev_sig = sig;
+%             sig(adj_sig) = min(sigma_max, max(1, Delta*abs(rp(adj_sig))/(nrm_rp_unscaled+1e-6)).*sig(adj_sig));
+%             sig_changed = sig ~= prev_sig;
+%             nb_sig_changed = sum(sig_changed);
+% 
+%             if gamma_changed 
+%                 reset_newton = true; 
+%             elseif nb_sig_changed == 0
+%                 %do nothing
+%             elseif nb_sig_changed <= 40 
+%                 LD = ldlupdate(LD, (sparse(1:nb_sig_changed, 1:nb_sig_changed, ...
+%                     sqrt(sig(sig_changed)-prev_sig(sig_changed)), nb_sig_changed, nb_sig_changed)...
+%                     *A(sig_changed,:))','+');
+%             else
+%                 reset_newton = true; 
+%             end            
+% 
+%            Asqrtsigt = (sparse(1:m,1:m,sqrt(sig),m,m)*A)';
+%            Asig      = (sparse(1:m,1:m,sig,m,m)*A);
+%        end
+%        
+%        rpK = rp;
+%        if K>1
+%            stats.iter_in(K) = k-(sum(stats.iter_in));
+%        else
+%            stats.iter_in(K) = k;
+%        end
+%        K   = K+1;
+%        if proximal
+%            x0=x;
+%            if gamma < gammaMax
+%                Q=Q-1/gamma*speye(n);
+%                Qx = Qx-1/gamma*x; 
+%                gamma=min(gamma*gammaUpd, gammaMax);
+%                Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
+%                Qx = Qx+1/gamma*x; 
+%                reset_newton = true; 
+%            end
+%        end
+   elseif nrm_rd2 <= eps_dual_in && nrm_rp <= eps_pri
+       if verbose; fprintf('----------------------------------------------------------pri\n'); end;
+%        y = yh;
+       K_prox = K_prox+1;
+       y = max(-1e8, min(yh, 1e8));
+       if (~all(y==yh))
+           Aty = A'*y;
        else
-           stats.iter_in(K) = k;
+           Aty = Atyh;
        end
-       K   = K+1;
-       if proximal
-           x0=x;
-           if gamma < gammaMax
-               Q=Q-1/gamma*speye(n);
-               Qx = Qx-1/gamma*x; 
-               gamma=min(gamma*gammaUpd, gammaMax);
-               Q=Q+1/gamma*speye(n); %Q = original Q + 1/gamma*eye
-               Qx = Qx+1/gamma*x; 
-               reset_newton = true; 
-           end
-       end
+%        eps_pri = max(rho*eps_pri, eps_abs); %should we cap this?
+       eps_pri = max(1/K_prox^3, eps_abs); %alternative eps_pri update
+       eps_abs_in = max(rho*eps_pri/max(sig), eps_abs);
+       x0 = x;
+       
        
    elseif nrm_rd2 <= eps_dual_in
        if verbose; fprintf('-------------------------------------------------------------\n'); end;
@@ -386,8 +410,12 @@ for k = 1:maxiter
 %            y = yh + (K-2)/(K+1)*(yh-y);
 %            Aty = Atyh + (K-2)/(K+1)*(Atyh-Aty);
 %        end
+%        eps_abs_in = max(rho*eps_abs_in,eps_abs);
+%        eps_rel_in = max(rho*eps_rel_in,eps_rel);
+
        eps_abs_in = max(rho*eps_abs_in,eps_abs);
-       eps_rel_in = max(rho*eps_rel_in,eps_rel);
+       
+       
        if K > 1 && nrm_rp > eps_primal
 
            gamma_changed = proximal && gamma < gammaMax;
@@ -401,6 +429,10 @@ for k = 1:maxiter
 %            sig  = min((1-(1-Delta).*adj_sig).*sig,1e8);
             sig(adj_sig) = min(sigma_max, max(1, Delta*abs(rp(adj_sig))/(nrm_rp_unscaled+1e-6)).*sig(adj_sig));
             sig_changed = sig ~= prev_sig;
+            if any(sig_changed)
+                eps_abs_in = max(eps_abs_in*max(prev_sig)/max(sig), eps_abs);
+            end
+            
             nb_sig_changed = sum(sig_changed);
             
            if gamma_changed 
@@ -419,6 +451,7 @@ for k = 1:maxiter
            Asig      = (sparse(1:m,1:m,sig,m,m)*A);
   
        end
+              
        rpK = rp;
        if K>1
            stats.iter_in(K) = k-(sum(stats.iter_in));
@@ -427,7 +460,7 @@ for k = 1:maxiter
        end
        K   = K+1;
        if proximal
-           x0=x;
+%            x0=x;
            prev_gamma = gamma;
            active_cnstrs_old = active_cnstrs;
            Axys = Ax+y./sig;
@@ -595,9 +628,10 @@ if  any((bmax < inf & Adx >= eps_dinf_norm_Ddx) | (bmin > -inf & Adx <= -eps_din
 end
 
 dxQdx = dx'*Qdx;
+dxdx = dx'*dx;
 
-is_dinf = dxQdx <= -c_scale*eps_dinf_norm_Ddx^2 || ...
-    (dxQdx <= c_scale*eps_dinf_norm_Ddx^2 && q'*dx <= -c_scale*eps_dinf_norm_Ddx);
+is_dinf = dxQdx <= -c_scale*eps_dinf*dxdx || ...
+    (dxQdx <= c_scale*eps_dinf*dxdx && q'*dx <= -c_scale*eps_dinf_norm_Ddx);
 
 end
 %% ========================================================================
