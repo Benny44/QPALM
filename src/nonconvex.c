@@ -147,7 +147,7 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x) {
         #ifdef MATLAB
             dsygv(&itype, &jobz, &uplo, &dim, *B, &dim, *C, &dim, lambda_B, lapack_work, &lwork, &info);
         #else
-            info = LAPACKE_dsygv(LAPACK_COL_MAJOR, itype, 'V', 'L', dim, *B, dim, C, dim, lambda_B);
+            info = LAPACKE_dsygv(LAPACK_COL_MAJOR, itype, 'V', 'L', dim, *B, dim, *C, dim, lambda_B);
         #endif
         lambda = lambda_B[0];
         y = B[0];
