@@ -165,8 +165,9 @@ endif()
 # Add interfaces
 option (INTERFACES "Compile interfaces" ON)
 if (INTERFACES)
-    add_subdirectory(mtx)
-    add_subdirectory(qps)
+    add_subdirectory(interfaces)
+    # add_subdirectory(mtx)
+    # add_subdirectory(qps)
 endif()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

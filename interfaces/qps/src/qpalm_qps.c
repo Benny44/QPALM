@@ -593,7 +593,7 @@ void print_out_bpmpd(QPALMData *data, QPALMInfo *info, char* file){
     FILE *fp = fopen("out.tex", "a");
 
     /*Get the objective from BPMPD*/
-    FILE *fp_bpmpd = fopen("/home/ben/Documents/Projects/QPALM/qps/BPMPD.txt", "r");
+    FILE *fp_bpmpd = fopen("/home/ben/Documents/Projects/QPALM/interfaces/qps/BPMPD.txt", "r");
     if (fp_bpmpd == NULL) {
         printf("Could not open\n");
         return;
