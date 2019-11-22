@@ -2,3 +2,7 @@
 	path = suitesparse
 	url = https://github.com/jluttine/suitesparse.git
 	branch = master
+[submodule "interfaces/QPALM.jl"]
+	path = interfaces/QPALM.jl
+	url = https://github.com/kul-forbes/QPALM.jl
+	branch = master
