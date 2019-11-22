@@ -17,8 +17,8 @@ project(SUITESPARSE VERSION 0.1.0)
 # find_library(BLAS names mkl_intel_lp64 mkl_core mkl_intel_thread iomp5 pthread
 #     HINTS /home/ben/miniconda3/lib)
 
-find_library(LAPACK names lapack
-    HINTS /home/ben/miniconda3/lib)
+# find_library(LAPACK names lapack
+#     HINTS /home/ben/miniconda3/lib)
 
 #cmake for AMD, CAMD, COLAMD, CCOLAMD, CHOLMOD, SUITESPARSECONFIG
 set(SUITESPARSE_CONFIG_PATH ${CMAKE_SOURCE_DIR}/suitesparse/SuiteSparse_config)

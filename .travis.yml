@@ -5,6 +5,7 @@ branches:
   - master
   - development
   - lobpcg
+  - interfaces
 matrix:
   include:
   - os: linux

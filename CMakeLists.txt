@@ -8,47 +8,49 @@ project(QPALM VERSION 0.1.0)
 # find_library(BLAS names openblas
 #     HINTS /home/ben/miniconda3/lib)
 
+message("Miniconda lib is $ENV{MINICONDA_LIB}")
+
 find_library(MKL_INTEL_LP64 names mkl_intel_lp64 
-    HINTS /home/ben/miniconda3/lib)
+    HINTS $ENV{MINICONDA_LIB})
 find_library(MKL_CORE names mkl_core 
-    HINTS /home/ben/miniconda3/lib)
+    HINTS $ENV{MINICONDA_LIB})
 find_library(MKL_INTEL_THREAD names mkl_intel_thread 
-    HINTS /home/ben/miniconda3/lib)
+    HINTS $ENV{MINICONDA_LIB})
 find_library(IOMP5 names iomp5 
-    HINTS /home/ben/miniconda3/lib)
+    HINTS $ENV{MINICONDA_LIB})
 find_library(PTHREAD names pthread
-    HINTS /home/ben/miniconda3/lib)
+    HINTS $ENV{MINICONDA_LIB})
 
 
 find_library(LAPACK names lapack
-    HINTS /home/ben/miniconda3/lib)
+    HINTS $ENV{MINICONDA_LIB})
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-find_library(CHOLMOD_LIB names cholmod 
-    HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
+# find_library(CHOLMOD_LIB names cholmod 
+#     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
 
-find_library(SUITESPARSE_LIB names suitesparseconfig
-    HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
+# find_library(SUITESPARSE_LIB names suitesparseconfig
+#     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
 
 find_path(SUITESPARSE_INCLUDE names cholmod.h 
-    HINTS ${CMAKE_INCLUDE_PATH} $ENV{SUITESPARSE_ROOT_INCLUDE})
+    HINTS ${CMAKE_INCLUDE_PATH} $ENV{MINICONDA_INCLUDE})
 
-find_library(LAPACK_LIB names lapacke
-    HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
+find_library(LAPACKE names lapacke
+    HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
 
     #LAPACKE_INCLUDE assumed to be = to SUITESPARSE_INCLUDE
 # find_path(LAPACK_INCLUDE names lapacke.h
 #     HINTS ${CMAKE_INCLUDE_PATH} $ENV{SUITESPARSE_ROOT_INCLUDE})
 
 
-message(STATUS "Root lib is set to: $ENV{SUITESPARSE_ROOT_LIB}")
-message(STATUS "Root include is set to: $ENV{SUITESPARSE_ROOT_INCLUDE}")
-message(STATUS ${CHOLMOD_LIB})
-message(STATUS ${SUITESPARSE_INCLUDE})
-message(STATUS ${SUITESPARSE_LIB})
+# message(STATUS "Root lib is set to: $ENV{SUITESPARSE_ROOT_LIB}")
+# message(STATUS "Root include is set to: $ENV{SUITESPARSE_ROOT_INCLUDE}")
+# message(STATUS ${CHOLMOD_LIB})
+# message(STATUS ${SUITESPARSE_INCLUDE})
+# message(STATUS ${SUITESPARSE_LIB})
 
 
 # Add code coverage
@@ -70,7 +72,7 @@ message(STATUS "Unit testing is ${UNITTESTS}")
 message(STATUS "Code coverage is ${COVERAGE}")
 
 set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/build/lib)
-message("Lib_dir is ${LIB_DIR}")
+# message("Lib_dir is ${LIB_DIR}")
 set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/build/include)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
 
@@ -135,7 +137,7 @@ target_include_directories(qpalm
 # target_link_libraries(qpalm ${BLAS} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACK_LIB})
 # target_link_libraries(qpalm ${BLAS} ${LAPACK} cholmod_new ${LAPACK_LIB})
 target_link_libraries(qpalm ${MKL_INTEL_LP64} ${MKL_CORE} ${MKL_INTEL_THREAD} ${IOMP5} ${PTHREAD}
-                         ${LAPACK} cholmod_new ${SUITESPARSE_LIB} ${LAPACK_LIB})
+                         ${LAPACK} cholmod_new suitesparseconfig_new ${LAPACKE})
 
 # target_link_libraries(qpalm blas lapack cholmod_new ${LAPACK_LIB})
 
@@ -155,11 +157,6 @@ if (UNITTESTS)
     include(CTest)
     enable_testing()
     add_test(NAME qpalm_tester COMMAND $<TARGET_FILE:run_all_tests>)
-endif()
-
-# Add profiling demo
-if (PROF)
-    add_subdirectory(profiling)
 endif()
 
 # Add interfaces

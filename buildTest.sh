@@ -1,7 +1,10 @@
 #!/bin/bash
 
-export SUITESPARSE_ROOT_LIB=${HOME}/miniconda3/lib
-export SUITESPARSE_ROOT_INCLUDE=${HOME}/miniconda3/include
+# export SUITESPARSE_ROOT_LIB=${HOME}/miniconda3/lib
+# export SUITESPARSE_ROOT_INCLUDE=${HOME}/miniconda3/include
+
+export MINICONDA_LIB=${HOME}/miniconda3/lib
+export MINICONDA_INCLUDE=${HOME}/miniconda3/include
 
 #ls ${SUITESPARSE_ROOT_LIB}
 #ls ${SUITESPARSE_ROOT_INCLUDE}
