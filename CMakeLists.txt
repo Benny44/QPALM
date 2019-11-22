@@ -9,6 +9,7 @@ project(QPALM VERSION 0.1.0)
 #     HINTS /home/ben/miniconda3/lib)
 
 message("Miniconda lib is $ENV{MINICONDA_LIB}")
+message("Miniconda include is $ENV{MINICONDA_INCLUDE}")
 
 find_library(MKL_INTEL_LP64 names mkl_intel_lp64 
     HINTS $ENV{MINICONDA_LIB})
