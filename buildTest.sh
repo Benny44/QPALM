@@ -49,7 +49,7 @@ ctest -VV
 #../test/run_all_tests
 
 cd $builddir
-#valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet bin/run_all_tests
+#valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=$curdir/valgrind/dl_open.supp --quiet bin/run_all_tests
 #build/debug/bin/run_all_tests
 
 cd $builddir/CMakeFiles/qpalm.dir/src

@@ -34,5 +34,4 @@ coverage
 *.txt
 buildQPS.sh
 /simulations/maros_meszaros/out.tex
-*.supp
 /interfaces/qps/out.tex
