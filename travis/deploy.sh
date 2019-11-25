@@ -15,8 +15,8 @@ echo "Creating Bintray package..."
 
 # Compile QPALM
 
-export SUITESPARSE_ROOT_LIB=${DEPS_DIR}/miniconda/lib
-export SUITESPARSE_ROOT_INCLUDE=${DEPS_DIR}/miniconda/include
+export MINICONDA_LIB=${DEPS_DIR}/miniconda/lib
+export MINICONDA_INCLUDE=${DEPS_DIR}/miniconda/include
 
 curdir=`pwd`
 
@@ -56,16 +56,18 @@ else
 fi
 QPALM_DEPLOY_DIR=qpalm-${QPALM_VERSION}-${OS_NAME}64
 mkdir $QPALM_DEPLOY_DIR/
+mkdir $QPALM_DEPLOY_DIR/info
 mkdir $QPALM_DEPLOY_DIR/lib
 mkdir $QPALM_DEPLOY_DIR/include
 # Copy license
-cp ../../LICENSE $QPALM_DEPLOY_DIR/
+cp ../../LICENSE $QPALM_DEPLOY_DIR/info
+cp ../../suitesparse/LICENSE.txt $QPALM_DEPLOY_DIR/info/LICENSEsuitesparse.txt
 # Copy includes
-cp ../../include/*.h  $QPALM_DEPLOY_DIR/include
+cp ../include/*.h  $QPALM_DEPLOY_DIR/include
 # Copy static library
 #cp libqpalm.a $QPALM_DEPLOY_DIR/lib
 # Copy shared library
-cp ../lib/libqpalm.$OS_SHARED_LIB_EXT $QPALM_DEPLOY_DIR/lib
+cp ../lib/*.$OS_SHARED_LIB_EXT $QPALM_DEPLOY_DIR/lib
 # Compress package
 tar -czvf $QPALM_DEPLOY_DIR.tar.gz  $QPALM_DEPLOY_DIR
 
