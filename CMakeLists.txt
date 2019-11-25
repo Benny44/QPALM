@@ -1,10 +1,17 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
+
+set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/build/lib)
+# message("Lib_dir is ${LIB_DIR}")
+set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/build/include)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
 # find_package(BLAS REQUIRED)
 # find_package(LAPACK REQUIRED)
-
-
+make_directory(${INCLUDE_DIR})
+message("Include dir is ${INCLUDE_DIR}")
+execute_process(COMMAND bash -c "cp ${CMAKE_SOURCE_DIR}/include/* ${INCLUDE_DIR}")
+#${CMAKE_SOURCE_DIR}/
 # find_library(BLAS names openblas
 #     HINTS /home/ben/miniconda3/lib)
 
@@ -74,10 +81,7 @@ CMAKE_DEPENDENT_OPTION(UNITTESTS "Perform unit testing" OFF
 message(STATUS "Unit testing is ${UNITTESTS}")
 message(STATUS "Code coverage is ${COVERAGE}")
 
-set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/build/lib)
-# message("Lib_dir is ${LIB_DIR}")
-set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/build/include)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
+
 
 add_compile_options("-DDLONG")
 option (PRINTING "Allow printing" ON)
@@ -174,3 +178,7 @@ endif()
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
+
+
+#execute_process(COMMAND bash -c "ls ${INCLUDE_DIR}")
+#execute_process(COMMAND bash -c "ls ${LIB_DIR}")

@@ -30,7 +30,16 @@ set(CHOLMOD_PATH ${CMAKE_SOURCE_DIR}/suitesparse/CHOLMOD)
 set(METIS_PATH ${CMAKE_SOURCE_DIR}/suitesparse/metis-5.1.0)
 
 #copy header files
-#make_directory(${INCLUDE_DIR})
+# make_directory(${INCLUDE_DIR})
+execute_process(COMMAND bash -c "cp ${AMD_PATH}/Include/amd.h ${INCLUDE_DIR}")
+execute_process(COMMAND bash -c "cp ${CAMD_PATH}/Include/camd.h ${INCLUDE_DIR}")
+execute_process(COMMAND bash -c "cp ${COLAMD_PATH}/Include/colamd.h ${INCLUDE_DIR}")
+execute_process(COMMAND bash -c "cp ${CCOLAMD_PATH}/Include/ccolamd.h ${INCLUDE_DIR}")
+execute_process(COMMAND bash -c "cp ${METIS_PATH}/include/metis.h ${INCLUDE_DIR}")
+execute_process(COMMAND bash -c "cp ${SUITESPARSE_CONFIG_PATH}/SuiteSparse_config.h ${INCLUDE_DIR}")
+execute_process(COMMAND bash -c "cp ${CHOLMOD_PATH}/Include/* ${INCLUDE_DIR}")
+execute_process(COMMAND bash -c "rm ${INCLUDE_DIR}/README.txt")
+
 #execute_process(COMMAND bash -c "cp ${AMD_PATH}/Include/amd.h ${INCLUDE_DIR}")
 #execute_process(COMMAND bash -c "cp ${CAMD_PATH}/Include/camd.h ${INCLUDE_DIR}")
 #execute_process(COMMAND bash -c "cp ${COLAMD_PATH}/Include/colamd.h ${INCLUDE_DIR}")
