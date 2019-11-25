@@ -117,7 +117,8 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->data->q    = vec_copy(data->q, n);          
   work->data->c    = data->c;
 
-  work->data->A    = CHOLMOD(copy_sparse)(data->A, &work->chol->c);    
+  work->data->A    = CHOLMOD(copy_sparse)(data->A, &work->chol->c); 
+  work->data->A->stype = 0;   
   work->data->Q    = CHOLMOD(copy_sparse)(data->Q, &work->chol->c);     
 
   // Allocate internal solver variables 
