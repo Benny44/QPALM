@@ -36,8 +36,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # find_library(SUITESPARSE_LIB names suitesparseconfig
 #     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
 
-find_path(SUITESPARSE_INCLUDE names cholmod.h 
-    HINTS ${CMAKE_INCLUDE_PATH} $ENV{MINICONDA_INCLUDE})
+# find_path(SUITESPARSE_INCLUDE names cholmod.h 
+#     HINTS ${CMAKE_INCLUDE_PATH} $ENV{MINICONDA_INCLUDE})
+
+# message("Suitesparse_include is ${SUITESPARSE_INCLUDE}")
 
 find_library(LAPACKE names lapacke
     HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
@@ -128,8 +130,8 @@ add_library(qpalm
 
 target_include_directories(qpalm
         PUBLIC
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-                ${SUITESPARSE_INCLUDE})
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+                # ${SUITESPARSE_INCLUDE})
         
 # find_package(OpenMP)
 # if (OPENMP_FOUND)
