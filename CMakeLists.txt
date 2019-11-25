@@ -130,7 +130,8 @@ add_library(qpalm
 
 target_include_directories(qpalm
         PUBLIC
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+                $ENV{MINICONDA_INCLUDE})
                 # ${SUITESPARSE_INCLUDE})
         
 # find_package(OpenMP)
