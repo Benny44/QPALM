@@ -1,7 +1,7 @@
 @echo on
 :: Set suitesparse library and include paths
-set SUITESPARSE_ROOT_LIB=%MINICONDA_PATH%\Library\lib
-set SUITESPARSE_ROOT_INCLUDE=%MINICONDA_PATH%\Library\include\suitesparse
+set MINICONDA_LIB=%MINICONDA_PATH%\Library\lib
+set MINICONDA_INCLUDE=%MINICONDA_PATH%\Library\include\suitesparse
 
 cd %APPVEYOR_BUILD_FOLDER%
 
