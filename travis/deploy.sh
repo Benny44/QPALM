@@ -59,6 +59,8 @@ mkdir $QPALM_DEPLOY_DIR/
 mkdir $QPALM_DEPLOY_DIR/info
 mkdir $QPALM_DEPLOY_DIR/lib
 mkdir $QPALM_DEPLOY_DIR/include
+mkdir $QPALM_DEPLOY_DIR/interfaces
+
 # Copy license
 cp ../../LICENSE $QPALM_DEPLOY_DIR/info
 cp ../../suitesparse/LICENSE.txt $QPALM_DEPLOY_DIR/info/LICENSEsuitesparse.txt
@@ -68,6 +70,10 @@ cp ../include/*.h  $QPALM_DEPLOY_DIR/include
 #cp libqpalm.a $QPALM_DEPLOY_DIR/lib
 # Copy shared library
 cp ../lib/*.$OS_SHARED_LIB_EXT $QPALM_DEPLOY_DIR/lib
+# Copy compiled interfaces
+cp bin/qpalm_mtx $QPALM_DEPLOY_DIR/interfaces
+cp bin/qpalm_qps $QPALM_DEPLOY_DIR/interfaces
+
 # Compress package
 tar -czvf $QPALM_DEPLOY_DIR.tar.gz  $QPALM_DEPLOY_DIR
 
