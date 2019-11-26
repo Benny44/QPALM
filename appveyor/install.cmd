@@ -19,8 +19,9 @@ conda info -a
 
 :: Install the suitesparse and lapack binaries
 conda install -c conda-forge suitesparse
-conda install -c conda-forge lapack
-conda install -c intel mkl
+conda install -c isuruf/label/netlib liblapacke
+:: conda install -c conda-forge lapack
+:: conda install -c intel mkl
 
 IF "%PLATFORM%"=="x64" (
 call "C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\SetEnv.cmd" /x64

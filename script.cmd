@@ -1,5 +1,5 @@
-set MINICONDA_LIB=C:\Users\u0104126\AppData\Local\Continuum\miniconda3\Library\bin
-set MINICONDA_INCLUDE=C:\Users\u0104126\AppData\Local\Continuum\miniconda3\Library\include\suitesparse
+set MINICONDA_LIB=C:\Users\u0104126\Downloads\miniconda3\Library\lib
+set MINICONDA_INCLUDE=C:\Users\u0104126\Downloads\miniconda3\Library\include
 
 set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
 

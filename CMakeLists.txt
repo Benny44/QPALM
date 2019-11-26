@@ -50,7 +50,10 @@ if (WIN32)
         HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
 
     find_path(SUITESPARSE_INCLUDE names cholmod.h 
-        HINTS ${CMAKE_INCLUDE_PATH} $ENV{MINICONDA_INCLUDE})
+        HINTS ${CMAKE_INCLUDE_PATH} $ENV{MINICONDA_INCLUDE}\\suitesparse)
+
+	find_library(BLAS names openblas
+		HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
 endif()
 # find_library(CHOLMOD_LIB names cholmod 
 #     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
@@ -64,7 +67,8 @@ endif()
 # message("Suitesparse_include is ${SUITESPARSE_INCLUDE}")
 
 find_library(LAPACKE names lapacke
-    HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
+	HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
+
 
     #LAPACKE_INCLUDE assumed to be = to SUITESPARSE_INCLUDE
 # find_path(LAPACK_INCLUDE names lapacke.h
@@ -149,10 +153,7 @@ add_library(qpalm
                 include/iteration.h
                 )
 
-target_include_directories(qpalm
-        PUBLIC
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-                $ENV{MINICONDA_INCLUDE})
+
                 # ${SUITESPARSE_INCLUDE})
         
 # find_package(OpenMP)
@@ -162,11 +163,19 @@ target_include_directories(qpalm
 # target_link_libraries(qpalm ${BLAS} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACK_LIB})
 # target_link_libraries(qpalm ${BLAS} ${LAPACK} cholmod_new ${LAPACK_LIB})
 if (NOT WIN32)
+	target_include_directories(qpalm
+        PUBLIC
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+                $ENV{MINICONDA_INCLUDE})
     target_link_libraries(qpalm ${MKL_INTEL_LP64} ${MKL_CORE} ${MKL_INTEL_THREAD} ${IOMP5} ${PTHREAD}
                          ${LAPACK} cholmod_new suitesparseconfig_new ${LAPACKE})
 else()
-    target_link_libraries(qpalm ${MKL_INTEL_LP64} ${MKL_CORE} ${MKL_INTEL_THREAD} ${IOMP5} ${PTHREAD}
-                        ${LAPACK} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACKE})
+	target_include_directories(qpalm
+        PUBLIC
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+                $ENV{MINICONDA_INCLUDE}
+				${SUITESPARSE_INCLUDE})
+    target_link_libraries(qpalm ${BLAS} ${LAPACK} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACKE})
 endif()
 # target_link_libraries(qpalm blas lapack cholmod_new ${LAPACK_LIB})
 
@@ -191,7 +200,7 @@ endif()
 # Add interfaces
 option (INTERFACES "Compile interfaces" ON)
 if (INTERFACES)
-    add_subdirectory(interfaces)
+    # add_subdirectory(interfaces)
     # add_subdirectory(mtx)
     # add_subdirectory(qps)
 endif()
