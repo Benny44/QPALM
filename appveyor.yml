@@ -6,10 +6,6 @@ build: false
 
 branches:
   only:
-    - master
-    - development
-    - lobpcg
-    - interfaces
 
 platform:
   - x64
