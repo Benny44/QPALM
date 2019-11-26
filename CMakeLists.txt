@@ -3,14 +3,19 @@ project(QPALM VERSION 0.1.0)
 
 
 set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/build/lib)
-# message("Lib_dir is ${LIB_DIR}")
 set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/build/include)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
+
+
 # find_package(BLAS REQUIRED)
 # find_package(LAPACK REQUIRED)
+
 make_directory(${INCLUDE_DIR})
 message("Include dir is ${INCLUDE_DIR}")
-execute_process(COMMAND bash -c "cp ${CMAKE_SOURCE_DIR}/include/* ${INCLUDE_DIR}")
+
+if (NOT WIN32)
+    execute_process(COMMAND bash -c "cp ${CMAKE_SOURCE_DIR}/include/* ${INCLUDE_DIR}")
+endif()
 #${CMAKE_SOURCE_DIR}/
 # find_library(BLAS names openblas
 #     HINTS /home/ben/miniconda3/lib)
@@ -37,6 +42,16 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+if (WIN32)
+    find_library(CHOLMOD_LIB names cholmod 
+        HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
+
+    find_library(SUITESPARSE_LIB names suitesparseconfig
+        HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
+
+    find_path(SUITESPARSE_INCLUDE names cholmod.h 
+        HINTS ${CMAKE_INCLUDE_PATH} $ENV{MINICONDA_INCLUDE})
+endif()
 # find_library(CHOLMOD_LIB names cholmod 
 #     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
 
@@ -102,7 +117,9 @@ endif()
 
 option (BUILD_SHARED_LIBS "Shared if on, static if off" ON)
 
-add_subdirectory(cmakeSuitesparse)
+if (NOT WIN32)
+    add_subdirectory(cmakeSuitesparse)
+endif()
 
 add_library(qpalm 
                 src/newton.c
@@ -144,9 +161,13 @@ target_include_directories(qpalm
 # endif()
 # target_link_libraries(qpalm ${BLAS} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACK_LIB})
 # target_link_libraries(qpalm ${BLAS} ${LAPACK} cholmod_new ${LAPACK_LIB})
-target_link_libraries(qpalm ${MKL_INTEL_LP64} ${MKL_CORE} ${MKL_INTEL_THREAD} ${IOMP5} ${PTHREAD}
+if (NOT WIN32)
+    target_link_libraries(qpalm ${MKL_INTEL_LP64} ${MKL_CORE} ${MKL_INTEL_THREAD} ${IOMP5} ${PTHREAD}
                          ${LAPACK} cholmod_new suitesparseconfig_new ${LAPACKE})
-
+else()
+    target_link_libraries(qpalm ${MKL_INTEL_LP64} ${MKL_CORE} ${MKL_INTEL_THREAD} ${IOMP5} ${PTHREAD}
+                        ${LAPACK} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACKE})
+endif()
 # target_link_libraries(qpalm blas lapack cholmod_new ${LAPACK_LIB})
 
 
