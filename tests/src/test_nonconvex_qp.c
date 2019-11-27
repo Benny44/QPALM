@@ -86,7 +86,7 @@ void nonconvex_qp_suite_setup(void) {
     data->q[3] = 7.8925204e+00;
 
     // Setup workspace
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
 
     // Cleanup temporary structures
     c_free(settings);

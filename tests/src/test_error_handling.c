@@ -79,7 +79,7 @@ void error_handling_test_teardown(void) {
 MU_TEST(test_invalid_settings_during_setup) {
     // Setup workspace
     settings->max_iter = -1;
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     mu_assert_true(work == QPALM_NULL);
 
     settings->max_iter = 1000;
@@ -88,14 +88,14 @@ MU_TEST(test_invalid_settings_during_setup) {
 MU_TEST(test_invalid_data_during_setup) {
     // Setup workspace
     data->bmin[0] = 5; data->bmax[0] = 0;
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     mu_assert_true(work == QPALM_NULL);
 
     data->bmin[0] = -0.1;
 }
 
 MU_TEST(test_invalid_settings_during_update_settings) {
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     mu_assert_long_eq(work->info->status_val, QPALM_UNSOLVED);
 
     settings->max_iter = -10;
@@ -106,7 +106,7 @@ MU_TEST(test_invalid_settings_during_update_settings) {
 }
 
 MU_TEST(test_invalid_scaling_during_update_settings) {
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     mu_assert_long_eq(work->info->status_val, QPALM_UNSOLVED);
 
     /*ask to unscale during update -> not possible to decrease scaling iterations */
@@ -118,7 +118,7 @@ MU_TEST(test_invalid_scaling_during_update_settings) {
 }
 
 MU_TEST(test_invalid_data_during_update_bounds) {
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     mu_assert_long_eq(work->info->status_val, QPALM_UNSOLVED);
 
     data->bmin[0] = 5; data->bmax[0] = 0;
@@ -129,7 +129,7 @@ MU_TEST(test_invalid_data_during_update_bounds) {
 }
 
 MU_TEST(test_invalid_status_value) {
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     update_status(work->info, 999);
     mu_assert_string_eq(work->info->status, "unrecognised status value");
 

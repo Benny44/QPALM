@@ -16,7 +16,7 @@
 #include "linesearch.h"
 #include "nonconvex.h"
 
-void compute_residuals(QPALMWorkspace *work) {
+void compute_residuals(QPALMWorkspace *work, cholmod_common *c) {
 
     //Axys = Ax + y./sigma
     vec_ew_div(work->y, work->sigma, work->temp_m, work->data->m);
@@ -37,13 +37,13 @@ void compute_residuals(QPALMWorkspace *work) {
       vec_add_scaled(work->df, work->x0, work->df, -1/work->gamma, work->data->n);
     }
     // Atyh = A'*yh
-    mat_tpose_vec(work->data->A, work->chol->yh, work->chol->Atyh, &work->chol->c);
+    mat_tpose_vec(work->data->A, work->chol->yh, work->chol->Atyh, c);
     //dphi = df+Atyh
     vec_add_scaled(work->df, work->Atyh, work->dphi, 1, work->data->n);
 }
 
-void initialize_sigma(QPALMWorkspace *work) {
-    
+void initialize_sigma(QPALMWorkspace *work, cholmod_common *c) {
+
     // Compute initial sigma
     size_t n = work->data->n;
     size_t m = work->data->m;
@@ -58,14 +58,15 @@ void initialize_sigma(QPALMWorkspace *work) {
     c_float *At_scalex = work->chol->At_scale->x;
     prea_vec_copy(work->sqrt_sigma, At_scalex, m);
     if (work->chol->At_sqrt_sigma) 
-      CHOLMOD(free_sparse)(&work->chol->At_sqrt_sigma, &work->chol->c);
-    work->chol->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, &work->chol->c);
-    CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+      CHOLMOD(free_sparse)(&work->chol->At_sqrt_sigma, c);
+    work->chol->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, c);
+    CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, c);
 
     work->sqrt_sigma_max = c_sqrt(work->settings->sigma_max);
+
 }
 
-void update_sigma(QPALMWorkspace* work) {
+void update_sigma(QPALMWorkspace* work, cholmod_common *c) {
     
     work->nb_sigma_changed = 0;
     c_float *At_scalex = work->chol->At_scale->x;
@@ -100,15 +101,17 @@ void update_sigma(QPALMWorkspace* work) {
         }
     }
 
-    CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, &work->chol->c);
+    CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, c);
     
     if ((work->settings->proximal && work->gamma < work->settings->gamma_max) || (work->nb_sigma_changed > 0.25*MAX_RANK_UPDATE)) {
         work->chol->reset_newton = TRUE;
       } else if (work->nb_sigma_changed == 0){
         /* do nothing */
       } else {  
-          ldlupdate_sigma_changed(work);
+          ldlupdate_sigma_changed(work, c);
     }
+
+
 }
 
 void update_gamma(QPALMWorkspace *work) {
@@ -122,7 +125,7 @@ void update_gamma(QPALMWorkspace *work) {
     
 }
 
-void boost_gamma(QPALMWorkspace *work) {
+void boost_gamma(QPALMWorkspace *work, cholmod_common *c) {
 
     c_float prev_gamma = work->gamma;
     if (work->chol->nb_active_constraints) {
@@ -134,11 +137,11 @@ void boost_gamma(QPALMWorkspace *work) {
                 nb_active++;
             }      
         }
-        AtsigmaA = CHOLMOD(aat)(work->chol->At_sqrt_sigma, work->chol->enter, nb_active, TRUE, &work->chol->c);
+        AtsigmaA = CHOLMOD(aat)(work->chol->At_sqrt_sigma, work->chol->enter, nb_active, TRUE, c);
         work->gamma = c_max(work->settings->gamma_max, 1e14/gershgorin_max(AtsigmaA, work->temp_n, work->neg_dphi));
 
         work->gamma_maxed = TRUE;
-        CHOLMOD(free_sparse)(&AtsigmaA, &work->chol->c);
+        CHOLMOD(free_sparse)(&AtsigmaA, c);
     } else {
         work->gamma = 1e12;
     }
@@ -149,11 +152,11 @@ void boost_gamma(QPALMWorkspace *work) {
     }
 }
 
-void update_primal_iterate(QPALMWorkspace *work) {
+void update_primal_iterate(QPALMWorkspace *work, cholmod_common *c) {
     
-    newton_set_direction(work);
+    newton_set_direction(work, c);
 
-    work->tau = exact_linesearch(work);
+    work->tau = exact_linesearch(work, c);
 
     //x_prev = x
     prea_vec_copy(work->x, work->x_prev, work->data->n);
@@ -208,15 +211,15 @@ c_float compute_objective(QPALMWorkspace *work) {
     return objective;
 }
 
-c_float compute_dual_objective(QPALMWorkspace *work) {
-    
+c_float compute_dual_objective(QPALMWorkspace *work, cholmod_common *c) {
+
     c_float dual_objective = 0;
 
     vec_add_scaled(work->Aty, work->data->q, work->neg_dphi, 1.0, work->data->n);
     if (work->chol->D_temp) {
-      CHOLMOD(free_dense)(&work->chol->D_temp, &work->chol->c);
+      CHOLMOD(free_dense)(&work->chol->D_temp, c);
     }
-    work->chol->D_temp = CHOLMOD(solve) (CHOLMOD_LDLt, work->chol->LD_Q, work->chol->neg_dphi, &work->chol->c);
+    work->chol->D_temp = CHOLMOD(solve) (CHOLMOD_LDLt, work->chol->LD_Q, work->chol->neg_dphi, c);
     work->D_temp = work->chol->D_temp->x;
 
     dual_objective -= 0.5*vec_prod(work->neg_dphi, work->D_temp, work->data->n);

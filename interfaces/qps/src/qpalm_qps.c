@@ -730,7 +730,7 @@ int main(int argc, char*argv[]){
     // settings->proximal = TRUE;
 
     cholmod_common c;
-    QPALMWorkspace *work = qpalm_setup(data, settings, &c);
+    QPALMWorkspace *work = qpalm_setup(data, settings);
 
     /* Solve Problem */
     qpalm_solve(work);

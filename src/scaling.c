@@ -28,6 +28,10 @@ void limit_scaling(c_float *D, size_t n) {
 }
 
 void scale_data(QPALMWorkspace *work) {
+    cholmod_common c;
+    CHOLMOD(start)(&c);
+    cholmod_set_settings(&c);
+
     size_t n = work->data->n;
     size_t m = work->data->m;
     vec_set_scalar(work->scaling->D, 1, n);
@@ -55,8 +59,8 @@ void scale_data(QPALMWorkspace *work) {
 
         // Equilibrate matrix A
         // A <- EAD
-        CHOLMOD(scale)(work->chol->E_temp, CHOLMOD_ROW, work->data->A, &work->chol->c);
-        CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_COL, work->data->A, &work->chol->c);
+        CHOLMOD(scale)(work->chol->E_temp, CHOLMOD_ROW, work->data->A, &c);
+        CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_COL, work->data->A, &c);
 
         // Update equilibration matrices D and E
         vec_ew_prod(work->scaling->D, work->D_temp, work->scaling->D, n);
@@ -67,18 +71,18 @@ void scale_data(QPALMWorkspace *work) {
     // Equilibrate matrix Q and vector q
     // Q <- DQD, q <- Dq
     prea_vec_copy(work->scaling->D, work->D_temp, n);
-    CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_SYM, work->data->Q, &work->chol->c);
+    CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_SYM, work->data->Q, &c);
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, n);
 
     // Cost scaling
     vec_add_scaled(work->Qx, work->data->q, work->dphi, 1, n);
     work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->dphi, n));
     vec_self_mult_scalar(work->data->q, work->scaling->c, n);
-    cholmod_dense *c = CHOLMOD(ones)(1,1,CHOLMOD_REAL, &work->chol->c);
-    c_float *cx = c->x;
-    cx[0] = work->scaling->c;
-    CHOLMOD(scale)(c, CHOLMOD_SCALAR, work->data->Q, &work->chol->c);
-    CHOLMOD(free_dense)(&c, &work->chol->c);
+    cholmod_dense *scalar = CHOLMOD(ones)(1,1,CHOLMOD_REAL, &c);
+    c_float *scalarx = scalar->x;
+    scalarx[0] = work->scaling->c;
+    CHOLMOD(scale)(scalar, CHOLMOD_SCALAR, work->data->Q, &c);
+    CHOLMOD(free_dense)(&scalar, &c);
 
     // Store cinv, Dinv, Einv
     vec_ew_recipr(work->scaling->D, work->scaling->Dinv, n);
@@ -92,6 +96,7 @@ void scale_data(QPALMWorkspace *work) {
     // c_print("c: %6.16f\n ", work->scaling->c);
     // c_print("E: %6.16f\n ", work->scaling->E[0]);
     // c_print("D: %6.16f\n ", work->scaling->D[0]);
+    CHOLMOD(finish)(&c);
 }
 
 

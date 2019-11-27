@@ -25,7 +25,7 @@
 
 
 
-static c_float lobpcg(QPALMWorkspace *work, c_float *x) {
+static c_float lobpcg(QPALMWorkspace *work, c_float *x, cholmod_common *c) {
     c_float lambda, norm_w;
     size_t i;
 
@@ -51,7 +51,7 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x) {
     
     c_float *Ax = work->Qd;
     cholmod_dense * Ax_chol = work->chol->Qd;
-    mat_vec(A, x_chol , Ax_chol, &work->chol->c);
+    mat_vec(A, x_chol , Ax_chol, c);
     lambda = vec_prod(x, Ax, n);
 
     /*Current residual, Ax - lambda*x */
@@ -76,7 +76,7 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x) {
     vec_add_scaled(Ax, x, w, -lambda, n);
     vec_add_scaled(w, x, w, -vec_prod(x, w, n), n);
     vec_self_mult_scalar(w, 1.0/vec_norm_two(w, n), n);
-    mat_vec(A, w_chol, Aw_chol, &work->chol->c);
+    mat_vec(A, w_chol, Aw_chol, c);
     xAw = vec_prod(Aw, x, n);
     wAw = vec_prod(Aw, w, n);
 
@@ -120,7 +120,7 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x) {
         } 
         vec_add_scaled(w, x, w, -vec_prod(x, w, n), n);
         vec_self_mult_scalar(w, 1.0/vec_norm_two(w, n), n);
-        mat_vec(A, w_chol, Aw_chol, &work->chol->c);
+        mat_vec(A, w_chol, Aw_chol, c);
         xAw = vec_prod(Ax, w, n);
         wAw = vec_prod(w, Aw, n);
 
@@ -166,9 +166,9 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x) {
 }
 
 
-void set_settings_nonconvex(QPALMWorkspace *work){
+void set_settings_nonconvex(QPALMWorkspace *work, cholmod_common *c){
     c_float lambda;
-    lambda = lobpcg(work, NULL);
+    lambda = lobpcg(work, NULL, c);
     if (lambda < 0) {
         work->settings->proximal = TRUE;
         work->settings->gamma_init = 1/c_absval(lambda);

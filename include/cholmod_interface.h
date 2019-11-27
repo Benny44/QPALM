@@ -34,9 +34,8 @@ extern "C" {
  */
 void mat_vec(cholmod_sparse *A,
              cholmod_dense  *x,
-             cholmod_dense        *y,
-             cholmod_common       *c);
-
+             cholmod_dense  *y,
+             cholmod_common *c);
 /** 
  * Matrix-transpose-vector multiplication.
  *    
@@ -49,9 +48,8 @@ void mat_vec(cholmod_sparse *A,
  */
 void mat_tpose_vec(cholmod_sparse *A,
                    cholmod_dense  *x,
-                   cholmod_dense        *y,
-                   cholmod_common       *c);
-
+                   cholmod_dense  *y,
+                   cholmod_common *c);
 /**
  * Infinity norm of each matrix column, @f$E_i = \|M{(:,i)}\|_\infty@f$.
  * 
@@ -81,7 +79,8 @@ void mat_inf_norm_rows(cholmod_sparse *M,
  * @param work Workspace
  */
 void ldlchol(cholmod_sparse *M, 
-             QPALMWorkspace *work);
+             QPALMWorkspace *work,
+             cholmod_common *c);
 
 /**
  * Calculate @f$LDL^T@f$ factorization of @f$Q@f$.
@@ -92,7 +91,7 @@ void ldlchol(cholmod_sparse *M,
  * 
  * @param work Workspace
  */
-void ldlcholQ(QPALMWorkspace *work);
+// void ldlcholQ(QPALMWorkspace *work);
 
 /**
  * Calculate @f$LDL^T@f$ factorization of @f$Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}@f$, with @f$\Sigma=diag(\sigma)@f$ and @f$a@f$ the set of active constraints.
@@ -101,7 +100,8 @@ void ldlcholQ(QPALMWorkspace *work);
  * 
  * @param work Workspace
  */
-void ldlcholQAtsigmaA(QPALMWorkspace *work);
+void ldlcholQAtsigmaA(QPALMWorkspace *work,
+                      cholmod_common *c);
 
 /**
  * Update the @f$LDL^T@f$ factorization given a set of entering constraints.
@@ -110,7 +110,8 @@ void ldlcholQAtsigmaA(QPALMWorkspace *work);
  * 
  * @param work Workspace
  */
-void ldlupdate_entering_constraints(QPALMWorkspace *work);
+void ldlupdate_entering_constraints(QPALMWorkspace *work,
+                                    cholmod_common *c);
 
 /**
  * Downdate the @f$LDL^T@f$ factorization given a set of leaving constraints.
@@ -119,7 +120,8 @@ void ldlupdate_entering_constraints(QPALMWorkspace *work);
  * 
  * @param work Workspace
  */
-void ldldowndate_leaving_constraints(QPALMWorkspace *work);
+void ldldowndate_leaving_constraints(QPALMWorkspace *work,
+                                     cholmod_common *c);
 
 /**
  * Update the @f$LDL^T@f$ factorization given a set of indexes where @f$sigma@f$ has been updated.
@@ -128,7 +130,8 @@ void ldldowndate_leaving_constraints(QPALMWorkspace *work);
  * 
  * @param work Workspace
  */
-void ldlupdate_sigma_changed(QPALMWorkspace *work);
+void ldlupdate_sigma_changed(QPALMWorkspace *work,
+                             cholmod_common *c);
 
 
 /**
@@ -136,7 +139,8 @@ void ldlupdate_sigma_changed(QPALMWorkspace *work);
  * 
  * @param work Workspace
  */
-void ldlsolveLD_neg_dphi(QPALMWorkspace *work);
+void ldlsolveLD_neg_dphi(QPALMWorkspace *work,
+                         cholmod_common *c);
 
 /**
  * Cholmod settings to indicate that we use an @f$LDL^T@f$ factorization.

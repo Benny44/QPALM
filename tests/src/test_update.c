@@ -61,7 +61,7 @@ void update_suite_setup(void) {
     CHOLMOD(finish)(c); 
 
     // Setup workspace
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
 }
 
 void update_suite_teardown(void) {

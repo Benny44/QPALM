@@ -22,7 +22,7 @@ extern "C" {
  * 
  * @param work Workspace
  */
-void newton_set_direction(QPALMWorkspace *work);
+void newton_set_direction(QPALMWorkspace *work, cholmod_common *c);
 
 
 /**

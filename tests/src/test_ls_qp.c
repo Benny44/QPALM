@@ -87,7 +87,7 @@ void ls_qp_test_teardown(void) {
 
 MU_TEST(test_ls_qp) {
     // Setup workspace
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 

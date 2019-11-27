@@ -11,16 +11,16 @@
 #include "lin_alg.h"
 #include <stdlib.h> //for sorting
 
-c_float exact_linesearch(QPALMWorkspace *work) {
+c_float exact_linesearch(QPALMWorkspace *work, cholmod_common *c) {
     size_t n = work->data->n;
     size_t m = work->data->m;
     //Qd
-    mat_vec(work->data->Q, work->chol->d, work->chol->Qd, &work->chol->c);
+    mat_vec(work->data->Q, work->chol->d, work->chol->Qd, c);
     if (work->settings->proximal) {
         vec_add_scaled(work->Qd, work->d, work->Qd, 1/work->gamma, n);
     }
     //Ad
-    mat_vec(work->data->A, work->chol->d, work->chol->Ad, &work->chol->c);
+    mat_vec(work->data->A, work->chol->d, work->chol->Ad, c);
     //eta = d'*Qd
     work->eta = vec_prod(work->d, work->Qd, n);
     //beta = d'*df

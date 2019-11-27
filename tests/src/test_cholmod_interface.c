@@ -57,9 +57,11 @@ void cholmod_suite_setup(void) {
 
     data->A = A;
     data->Q = Q;
-    CHOLMOD(finish)(c);
+    
     // Setup workspace
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
+
+    CHOLMOD(finish)(c);
 
     c_free(data);
     c_free(settings);
@@ -78,32 +80,32 @@ void cholmod_suite_teardown(void) {
 void cholmod_test_setup(void) {
     work->Qd[0] = 1.1; work->Qd[1] = -0.5;
     work->Ad[0] = 1.1; work->Ad[1] = -0.5; work->Ad[2] = 20;
-    CHOLMOD(start)(&work->chol->c);
+    CHOLMOD(start)(&common);
 }
 
 void cholmod_test_teardown(void) {
-    CHOLMOD(finish)(&work->chol->c);
+    CHOLMOD(finish)(&common);
 }
 
 MU_TEST(test_mat_vec){
-    mat_vec(A, work->chol->Qd, work->chol->Ad, &work->chol->c);
+    mat_vec(A, work->chol->Qd, work->chol->Ad, c);
     mu_assert_double_eq(work->Ad[0], 0.1, TOL);
     mu_assert_double_eq(work->Ad[1], 1.3, TOL);
     mu_assert_double_eq(work->Ad[2], 5.5, TOL);
 
-    mat_vec(Q, work->chol->Qd, work->chol->Qd, &work->chol->c);
+    mat_vec(Q, work->chol->Qd, work->chol->Qd, c);
     mu_assert_double_eq(work->Qd[0], 1.6, TOL);
     mu_assert_double_eq(work->Qd[1], -2.1, TOL);
     work->Qd[0] = 1.1; work->Qd[1] = -0.5;
 
-    mat_tpose_vec(Q, work->chol->Qd, work->chol->Qd, &work->chol->c);
+    mat_tpose_vec(Q, work->chol->Qd, work->chol->Qd, c);
     mu_assert_double_eq(work->Qd[0], 1.6, TOL);
     mu_assert_double_eq(work->Qd[1], -2.1, TOL);
 
 }
 
 MU_TEST(test_mat_tpose_vec){
-    mat_tpose_vec(A, work->chol->Ad, work->chol->Qd, &work->chol->c);
+    mat_tpose_vec(A, work->chol->Ad, work->chol->Qd, c);
     mu_assert_double_eq(work->Qd[0], 99.6, TOL);
     mu_assert_double_eq(work->Qd[1], 0.2, TOL);
 }
@@ -124,16 +126,16 @@ MU_TEST(test_ldlchol){
     // without proximal
     work->settings->proximal = FALSE;
     work->dphi[0] = -1.0; work->dphi[1] = -2.0; //this is -rhs
-    ldlchol(Q, work);
-    ldlsolveLD_neg_dphi(work);
+    ldlchol(Q, work, c);
+    ldlsolveLD_neg_dphi(work, c);
     mu_assert_double_eq(work->d[0], 4.0, TOL);
     mu_assert_double_eq(work->d[1], 3.0, TOL);
 
     // with proximal
     work->settings->proximal = TRUE;
     work->gamma = 1e3;
-    ldlchol(Q, work);
-    ldlsolveLD_neg_dphi(work);
+    ldlchol(Q, work, c);
+    ldlsolveLD_neg_dphi(work, c);
     mu_assert_double_eq(work->d[0], 3.989028924198480, TOL);
     mu_assert_double_eq(work->d[1], 2.993017953122679, TOL);
 }

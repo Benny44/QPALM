@@ -80,7 +80,7 @@ void degen_hess_test_teardown(void) {
 
 MU_TEST(test_degen_hess) {
     // Setup workspace
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 

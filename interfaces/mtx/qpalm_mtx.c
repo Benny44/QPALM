@@ -218,16 +218,16 @@ int main(int argc, char*argv[]){
 
     // Setup workspace
     cholmod_common c;
-    work = qpalm_setup(data, settings, &c);
+    work = qpalm_setup(data, settings);
 
     // Solve Problem
     qpalm_solve(work);
 
     // Clean workspace
-    CHOLMOD(start)(&work->chol->c);
+    CHOLMOD(start)(&c);
     CHOLMOD(free_sparse)(&data->Q, &c);
     CHOLMOD(free_sparse)(&data->A, &c);
-    CHOLMOD(finish)(&work->chol->c);
+    CHOLMOD(finish)(&c);
 
     qpalm_cleanup(work);
     c_free(data->q);

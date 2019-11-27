@@ -22,7 +22,7 @@
  * which are required by the termination routines and by the other iteration routines.
  * @param work Workspace
  */
-void compute_residuals(QPALMWorkspace* work);
+void compute_residuals(QPALMWorkspace* work, cholmod_common *c);
 
 /**
  * Initialize penalty factors from initial x.
@@ -30,7 +30,7 @@ void compute_residuals(QPALMWorkspace* work);
  * The formula used here can be found in \cite birgin2014practical.  
  * @param work Workspace
  */
-void initialize_sigma(QPALMWorkspace *work);
+void initialize_sigma(QPALMWorkspace *work, cholmod_common *c);
 
 /**
  * Update the penalty factors. 
@@ -40,7 +40,7 @@ void initialize_sigma(QPALMWorkspace *work);
  * then the cholmod_factor LD is updated using a low-rank update based on the changed penalty factors.
  * @param work Workspace
  */
-void update_sigma(QPALMWorkspace* work);
+void update_sigma(QPALMWorkspace* work, cholmod_common *c);
 
 /**
  * Update the proximal penalty. 
@@ -61,7 +61,7 @@ void update_gamma(QPALMWorkspace* work);
  * definite for the factorization routines.
  * @param work Workspace
  */
-void boost_gamma(QPALMWorkspace* work);
+void boost_gamma(QPALMWorkspace* work, cholmod_common *c);
 
 /**
  * Update the primal iterate.
@@ -70,7 +70,7 @@ void boost_gamma(QPALMWorkspace* work);
  * and applies the update.
  * @param work Workspace
  */
-void update_primal_iterate(QPALMWorkspace *work);
+void update_primal_iterate(QPALMWorkspace *work, cholmod_common *c);
 
 /**
  * Compute the (unscaled) primal objective value at the current iterate.
@@ -84,7 +84,7 @@ c_float compute_objective(QPALMWorkspace *work);
  * @return The value of the dual objective at the current iterate.
  * @param work Workspace
  */ 
-c_float compute_dual_objective(QPALMWorkspace *work);
+c_float compute_dual_objective(QPALMWorkspace *work, cholmod_common *c);
 
 
 #endif

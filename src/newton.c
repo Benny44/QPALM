@@ -15,26 +15,26 @@ extern "C" {
 #include "cholmod.h"
 #include <stdio.h>
 
-void newton_set_direction(QPALMWorkspace *work) {
+void newton_set_direction(QPALMWorkspace *work, cholmod_common *c) {
 
     set_active_constraints(work);
     set_entering_leaving_constraints(work);
     if ((work->chol->reset_newton && work->chol->nb_active_constraints) || 
         (work->chol->nb_enter + work->chol->nb_leave) > MAX_RANK_UPDATE) {
         work->chol->reset_newton = FALSE;
-        ldlcholQAtsigmaA(work);   
+        ldlcholQAtsigmaA(work, c);   
     } else if (work->chol->nb_active_constraints) {
         if(work->chol->nb_enter) {
-            ldlupdate_entering_constraints(work);
+            ldlupdate_entering_constraints(work, c);
         }
         if(work->chol->nb_leave) {
-            ldldowndate_leaving_constraints(work); 
+            ldldowndate_leaving_constraints(work, c); 
         }
     } else {
-        ldlcholQ(work);
+        ldlchol(work->data->Q, work, c);
     }
 
-    ldlsolveLD_neg_dphi(work);
+    ldlsolveLD_neg_dphi(work, c);
 
     //Store old active set
     prea_int_vec_copy(work->chol->active_constraints, work->chol->active_constraints_old, work->data->m);

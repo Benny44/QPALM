@@ -109,7 +109,7 @@ void basic_qp_test_teardown(void) {
 
 MU_TEST(test_basic_qp) {
     // Setup workspace
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -124,7 +124,7 @@ MU_TEST(test_basic_qp) {
 MU_TEST(test_basic_qp_unscaled) {
     // Setup workspace
     settings->scaling = 0;
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -139,7 +139,7 @@ MU_TEST(test_basic_qp_noprox) {
     // Setup workspace
     settings->proximal = FALSE;
     settings->scaling = 2;
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -154,7 +154,7 @@ MU_TEST(test_basic_qp_noprox_unscaled) {
     // Setup workspace
     settings->proximal = FALSE;
     settings->scaling = 0;
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -171,7 +171,7 @@ MU_TEST(test_basic_qp_warm_start) {
     settings->scaling = 2;
     settings->proximal = TRUE;
     settings->warm_start = TRUE;
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     c_float x[N] = {2.0, -60.0, -3380.0, -6.0};
     c_float y[M] = {0.0, 0.0, -23.0, -0.014, 0.0};
     qpalm_warm_start(work, x, y);
@@ -192,7 +192,7 @@ MU_TEST(test_basic_qp_warm_start_unscaled) {
     settings->scaling = 0;
     settings->proximal = TRUE;
     settings->warm_start = TRUE;
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     c_float x[N] = {2.0, -60.0, -3380.0, -6.0};
     c_float y[M] = {0.0, 0.0, -23.0, -0.01, 0.0};
     qpalm_warm_start(work, x, y);
@@ -213,7 +213,7 @@ MU_TEST(test_basic_qp_warm_start_noprox) {
     settings->scaling = 2;
     settings->proximal = FALSE;
     settings->warm_start = TRUE;
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     c_float x[N] = {2.0, -60.0, -3380.0, -6.0};
     c_float y[M] = {0.0, 0.0, -23.0, -0.01, 0.0};
     qpalm_warm_start(work, x, y);
@@ -234,7 +234,7 @@ MU_TEST(test_basic_qp_warm_start_noprox_unscaled) {
     settings->scaling = 0;
     settings->proximal = FALSE;
     settings->warm_start = TRUE;
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     c_float x[N] = {2.0, -60.0, -3380.0, -6.0};
     c_float y[M] = {0.0, 0.0, -23.0, -0.01, 0.0};
     qpalm_warm_start(work, x, y);
@@ -252,7 +252,7 @@ MU_TEST(test_basic_qp_warm_start_noprox_unscaled) {
 
 MU_TEST(test_basic_qp_warm_start_resolve) {
     // Setup workspace
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     //Store initial guesses    
     c_float x[N]; 
     c_float y[M];
@@ -291,7 +291,7 @@ MU_TEST(test_basic_qp_maxiter) {
     settings->eps_rel = 1e-6;
     settings->max_iter = 1;
 
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -306,7 +306,7 @@ MU_TEST(test_basic_qp_inner_maxiter) {
     settings->inner_max_iter = 2;
     settings->max_iter = 10;
 
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -320,7 +320,7 @@ MU_TEST(test_basic_qp_dual_objective) {
     settings->eps_rel = 1e-6;
     settings->enable_dual_termination = TRUE;
 
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -341,7 +341,7 @@ MU_TEST(test_basic_qp_dual_early_termination) {
     settings->enable_dual_termination = TRUE;
     settings->dual_objective_limit = -1000000000.0;
 
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -354,7 +354,7 @@ MU_TEST(test_basic_qp_dual_early_termination) {
 MU_TEST(test_basic_qp_sigma_max) {
     // Setup workspace
     settings->sigma_max = 1e3;
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -369,7 +369,7 @@ MU_TEST(test_basic_qp_sigma_max) {
 MU_TEST(test_basic_qp_time_limit) {
     // Setup workspace
     settings->time_limit = 0.01*1e-3;
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 

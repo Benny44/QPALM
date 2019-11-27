@@ -48,12 +48,12 @@ char* convert_qps_to_new_format(const char* filename) {
     fp_in = fopen(filename, "r");
     if(fp_in == NULL) {
         fprintf(stderr, "Could not open file %s\n", filename);
-        return 1;
+        return NULL;
     }
     fp_out = fopen(new_filename, "w");
     if(fp_out == NULL) {
         fprintf(stderr, "Could not open file %s\n", filename);
-        return 1;
+        return NULL;
     }
 
     char line[100], command[20], name[50], buf1[9], buf1_copy[9], buf2[9], buf2_copy[9], buf3[9], buf3_copy[9], temp1[BUFFER_LEN+1], temp2[BUFFER_LEN+1];

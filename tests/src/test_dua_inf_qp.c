@@ -90,7 +90,7 @@ MU_TEST(test_dua_inf_qp) {
     settings->proximal = TRUE;
     settings->scaling = 2;
     // Setup workspace
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -100,7 +100,7 @@ MU_TEST(test_dua_inf_qp_unscaled) {
     settings->proximal = TRUE;
     settings->scaling = 0;
     // Setup workspace
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -114,7 +114,7 @@ MU_TEST(test_dua_inf_qp_noprox) {
     // settings->gamma_max = settings->gamma_init;
     settings->scaling = 2;
     // Setup workspace
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
@@ -128,7 +128,7 @@ MU_TEST(test_dua_inf_qp_noprox_unscaled) {
     // settings->gamma_max = settings->gamma_init;
     settings->scaling = 0;
     // Setup workspace
-    work = qpalm_setup(data, settings, c);
+    work = qpalm_setup(data, settings);
     // Solve Problem
     qpalm_solve(work);
 
