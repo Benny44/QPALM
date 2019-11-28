@@ -29,6 +29,15 @@ extern "C" {
 /**********************
 * Main API Functions *
 **********************/
+
+QPALMSettings *qpalm_malloc_settings(void) {
+  return (QPALMSettings *) c_malloc(sizeof(QPALMSettings));
+}
+
+QPALMData *qpalm_malloc_data(void) {
+  return (QPALMData *) c_malloc(sizeof(QPALMData));
+}
+
 void qpalm_set_default_settings(QPALMSettings *settings) {
 
   settings->max_iter                = MAX_ITER;                /* maximum iterations */

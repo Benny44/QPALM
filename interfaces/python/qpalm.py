@@ -5,7 +5,8 @@ import scipy as sc
 
 
 class QPALMSettings(Structure):
-    _fields_ = [("max_iter", c_int),
+    _fields_ = [("max_iter", c_long),
+                ("inner_max_iter", c_long),
                 ("eps_abs", c_double),
                 ("eps_rel", c_double),
                 ("eps_abs_in", c_double),
@@ -15,15 +16,19 @@ class QPALMSettings(Structure):
                 ("eps_dual_inf", c_double),
                 ("theta", c_double),
                 ("delta", c_double),
-                ("tau_init", c_double),
-                ("proximal", c_int),
+                ("sigma_max", c_double),
+                ("proximal", c_long),
                 ("gamma_init", c_double),
                 ("gamma_upd", c_double),
                 ("gamma_max", c_double),
-                ("scaling", c_int),
-                ("nonconvex", c_int),
-                ("verbose", c_int),
-                ("warm_start", c_int),
+                ("scaling", c_long),
+                ("nonconvex", c_long),
+                ("verbose", c_long),
+                ("print_iter", c_long),
+                ("warm_start", c_long),
+                ("reset_newton_iter", c_long),
+                ("enable_dual_termination", c_long),
+                ("dual_objective_limit", c_double),
                 ("time_limit", c_double)
                 ]
 
@@ -38,45 +43,15 @@ class cholmod_sparse(Structure):
                 ("nz", c_void_p),
                 ("x", c_void_p),
                 ("z", c_void_p),
-                ("stype", c_int),
-                ("itype", c_int),
-                ("xtype", c_int),
-                ("dtype", c_int),
-                ("sorted", c_int),
-                ("packed", c_int)
+                ("stype", c_long),
+                ("itype", c_long),
+                ("xtype", c_long),
+                ("dtype", c_long),
+                ("sorted", c_long),
+                ("packed", c_long)
                 ]
 
 cholmod_sparse_pointer = POINTER(cholmod_sparse)
-
-class cholmod_common(Structure):
-    _fields_ = [("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ("", ),
-                ]
-
 
 class QPALMData(Structure):
     _fields_ = [("n", c_uint),
@@ -89,6 +64,143 @@ class QPALMData(Structure):
                 ("bmax", POINTER(c_double))
                 ]
 QPALMData_pointer = POINTER(QPALMData)
+
+# /**
+#  * Solver return information
+#  */
+# typedef struct {
+#   c_long   iter;           ///< number of iterations taken
+#   c_long   iter_out;       ///< number of outer iterations (i.e. dual updates)
+#   char    status[32];     ///< status string, e.g. 'solved'
+#   c_long   status_val;     ///< status as c_long, defined in constants.h
+
+#   c_float pri_res_norm;   ///< norm of primal residual
+#   c_float dua_res_norm;   ///< norm of dual residual
+#   c_float dua2_res_norm;  ///< norm of intermediate dual residual (minus proximal term)
+
+#   c_float objective;      ///< objective function value
+#   c_float dual_objective; ///< dual objective function value (= NaN if enable_dual_termination is false)
+
+#   #ifdef PROFILING
+#   c_float setup_time;    ///< time taken for setup phase (seconds)
+#   c_float solve_time;    ///< time taken for solve phase (seconds)
+#   c_float run_time;      ///< total time (seconds)
+#   #endif
+
+# } QPALMInfo;
+
+class QPALMInfo(Structure):
+    _fields_ = [("iter", c_long),
+                ("iter_out", c_long),
+                ("status", c_char*32),
+                ("status_val", c_long),
+                ("pri_res_norm", c_double),
+                ("dua_res_norm", c_double),
+                ("dua2_res_norm", c_double),
+                ("objective", c_double),
+                ("dual_objective", c_double),
+                ("setup_time", c_double),
+                ("solve_time", c_double),
+                ("run_time", c_double)
+                ]
+
+QPALMInfo_pointer = POINTER(QPALMInfo)
+
+
+# typedef struct array_element  {
+#   c_float x; ///< value of the element
+#   c_long   i; ///< index
+# } array_element;
+
+class array_element(Structure):
+    _fields_ = [("x", c_double),
+                ("i", c_long)]
+
+class QPALMSolution(Structure):
+    _fields_ = [("x", POINTER(c_double)),
+                ("y", POINTER(c_double))]
+
+
+class QPALMWork(Structure):
+    _fields_ = [("data", QPALMData_pointer),
+                ("x", POINTER(c_double)),
+                ("y", POINTER(c_double)),
+                ("Ax", POINTER(c_double)),
+                ("Qx", POINTER(c_double)),
+                ("Aty", POINTER(c_double)),
+                ("x_prev", POINTER(c_double)),
+                ("initialized", c_long),
+                ("temp_m", POINTER(c_double)),
+                ("temp_n", POINTER(c_double)),
+                ("sigma", POINTER(c_double)),
+                ("sqrt_sigma_max", c_double),
+                ("nb_sigma_changed", c_long),
+                ("gamma", c_double),
+                ("gamma_maxed", c_long),
+                ("Axys", POINTER(c_double)),
+                ("z", POINTER(c_double)),
+                ("pri_res", POINTER(c_double)),
+                ("pri_res_in", POINTER(c_double)),
+                ("yh", POINTER(c_double)),
+                ("Atyh", POINTER(c_double)),
+                ("df", POINTER(c_double)),
+                ("x0", POINTER(c_double)),
+                ("xx0", POINTER(c_double)),
+                ("dphi", POINTER(c_double)),
+                ("neg_dphi", POINTER(c_double)),
+                ("dphi_prev", POINTER(c_double)),
+                ("d", POINTER(c_double)),
+                ("tau", c_double),
+                ("Qd", POINTER(c_double)),
+                ("Ad", POINTER(c_double)),
+                ("sqrt_sigma", POINTER(c_double)),
+                ("sqrt_delta", c_double),
+                ("eta", c_double),
+                ("beta", c_double),
+                ("delta", POINTER(c_double)),
+                ("alpha", POINTER(c_double)),
+                ("temp_2m", POINTER(c_double)),
+                ("delta2", POINTER(c_double)),
+                ("delta_alpha", POINTER(c_double)),
+                ("s", POINTER(array_element)),
+                ("index_L", POINTER(c_long)),
+                ("index_P", POINTER(c_long)),
+                ("index_J", POINTER(c_long)),
+                ("eps_pri", c_double),
+                ("eps_dua", c_double),
+                ("eps_dua_in", c_double),
+                ("eps_abs_in", c_double),
+                ("eps_rel_in", c_double),
+                ("delta_y", POINTER(c_double)),
+                ("Atdelta_y", POINTER(c_double)),
+                ("delta_x", POINTER(c_double)),
+                ("Qdelta_x", POINTER(c_double)),
+                ("Adelta_x", POINTER(c_double)),
+                ("D_temp", POINTER(c_double)),
+                ("E_temp", POINTER(c_double)),
+                ("chol", c_void_p),
+                ("settings", QPALMSettings_pointer),
+                ("scaling", c_void_p),
+                ("solution", POINTER(QPALMSolution)),
+                ("info", QPALMInfo_pointer),
+                ("timer", c_void_p)
+                ]
+
+QPALMWork_pointer = POINTER(QPALMWork)
+
+#   /** @} */
+
+#   QPALMCholmod  *chol;     ///< cholmod variables
+#   QPALMSettings *settings; ///< problem settings
+#   QPALMScaling  *scaling;  ///< scaling vectors
+#   QPALMSolution *solution; ///< problem solution
+#   QPALMInfo     *info;     ///< solver information
+
+#   # ifdef PROFILING
+#   QPALMTimer *timer;       ///< timer object
+#   # endif // ifdef PROFILING
+
+# } QPALMWorkspace;
 
 
 
@@ -103,11 +215,11 @@ class Qpalm:
         self._load_library()
         self._set_restypes()
         self._settings = self.python_interface.qpalm_malloc_settings()
-
+        self.python_interface.qpalm_set_default_settings(self._settings)
     #def __del__(self):
         #self.python_interface.qpalm_cleanup(work)
-    def set_default_settings(self):
-        self.python_interface.qpalm_set_default_settings(self._settings)
+    # def set_default_settings(self):
+    #     self.python_interface.qpalm_set_default_settings(self._settings)
         
     def set_data(self, Q, A, q, bmin, bmax):
         """
@@ -137,7 +249,7 @@ class Qpalm:
             print("ERROR: bmax is not the right length")            
 
         c_double_p = POINTER(c_double)
-        c_int_p = POINTER(c_int)
+        c_long_p = POINTER(c_long)
 
         self._data[0].n = n
         self._data[0].m = m
@@ -149,8 +261,8 @@ class Qpalm:
         self._data[0].A[0].ncol = n
         Ap = A.indptr
         Ai = A.indices
-        self._data[0].A[0].p = Ap.ctypes.as_data(c_int_p)
-        self._data[0].A[0].i = Ai.ctypes.as_data(c_int_p)
+        self._data[0].A[0].p = Ap.ctypes.as_data(c_long_p)
+        self._data[0].A[0].i = Ai.ctypes.as_data(c_long_p)
         self._data[0].A[0].nzmax = Ap[n]
         self._data[0].A[0].packed = 1
         self._data[0].A[0].sorted = 1
@@ -166,8 +278,8 @@ class Qpalm:
         self._data[0].Q[0].ncol = n
         Qp = Q.indptr
         Qi = Q.indices
-        self._data[0].Q[0].p = Qp.ctypes.as_data(c_int_p)
-        self._data[0].Q[0].i = Qi.ctypes.as_data(c_int_p)
+        self._data[0].Q[0].p = Qp.ctypes.as_data(c_long_p)
+        self._data[0].Q[0].i = Qi.ctypes.as_data(c_long_p)
         self._data[0].Q[0].nzmax = Qp[n]
         self._data[0].Q[0].packed = 1
         self._data[0].Q[0].sorted = 1
@@ -179,9 +291,9 @@ class Qpalm:
         self._data[0].Q[0].x = Qx.ctypes.as_data(c_double_p)
         self._data[0].Q[0].xtype = 1 #CHOLMOD_REAL
 
-    def _allocate_work(self):
+    # def _allocate_work(self):
 
-        work = self.python_interface.qpalm_setup()
+        # work = self.python_interface.qpalm_setup()
 
 
     def _load_library(self):
@@ -191,7 +303,7 @@ class Qpalm:
         try:
             if (platform.system() == 'Linux'):
                 print("OS is Linux")      
-                self.python_interface = CDLL("../build/lib/" + "libqpalm.so")
+                self.python_interface = CDLL("../../build/lib/" + "libqpalm.so")
             elif (platform.system() == 'Windows'):
                 print("OS is Windows")
             elif (platform.system() == 'Darwin'):
@@ -211,6 +323,28 @@ class Qpalm:
 
 if __name__== '__main__':
     qpalm = Qpalm()
-    qpalm.set_default_settings()
-    qpalm._settings[0].max_iter = 4
-    print(qpalm._settings[0].max_iter)
+    # print("Default settings")
+    # print("max_iter " + str(qpalm._settings.contents.max_iter))
+    # print("inner_max_iter " + str(qpalm._settings.contents.inner_max_iter))
+    # print("eps_abs " + str(qpalm._settings.contents.eps_abs))
+    # print("eps_rel " + str(qpalm._settings.contents.eps_rel))
+    # print("eps_abs_in " + str(qpalm._settings.contents.eps_abs_in))
+    # print("eps_rel_in " + str(qpalm._settings.contents.eps_rel_in))
+    # print("rho " + str(qpalm._settings.contents.rho))
+    # print("eps_prim_inf " + str(qpalm._settings.contents.eps_prim_inf))
+    # print("eps_dual_inf " + str(qpalm._settings.contents.eps_dual_inf))
+    # print("theta " + str(qpalm._settings.contents.theta))
+    # print("delta " + str(qpalm._settings.contents.delta))
+    # print("sigma_max " + str(qpalm._settings.contents.sigma_max))
+    # print("proximal " + str(qpalm._settings.contents.proximal))
+    # print("gamma_init " + str(qpalm._settings.contents.gamma_init))
+    # print("gamma_upd " + str(qpalm._settings.contents.gamma_upd))
+    # print("gamma_max " + str(qpalm._settings.contents.gamma_max))
+    # print("scaling " + str(qpalm._settings.contents.scaling))
+    # print("nonconvex " + str(qpalm._settings.contents.nonconvex))
+    # print("verbose " + str(qpalm._settings.contents.verbose))
+    # print("print_iter " + str(qpalm._settings.contents.print_iter))
+    # print("warm_start " + str(qpalm._settings.contents.warm_start))
+    # print("reset_newton_iter " + str(qpalm._settings.contents.reset_newton_iter))
+    # print("enable_dual_termination " + str(qpalm._settings.contents.enable_dual_termination))
+    # print("time_limit " + str(qpalm._settings.contents.time_limit))
