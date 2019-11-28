@@ -30,6 +30,16 @@ extern "C" {
 * Main API Functions *
 **********************/
 
+cholmod_sparse *python_allocate_cholmod_sparse(size_t m, size_t n, size_t nzmax) {
+  cholmod_common common, *c;
+  c = &common;
+  CHOLMOD(start)(c);
+  cholmod_set_settings(c);
+  cholmod_sparse *M = CHOLMOD(allocate_sparse)(m, n, nzmax, TRUE, TRUE, 0, CHOLMOD_REAL, c);
+  CHOLMOD(finish)(c);
+  return M;
+}
+
 QPALMSettings *qpalm_malloc_settings(void) {
   return (QPALMSettings *) c_malloc(sizeof(QPALMSettings));
 }
@@ -69,7 +79,10 @@ void qpalm_set_default_settings(QPALMSettings *settings) {
 
 
 QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings) {
+
   QPALMWorkspace *work; // Workspace
+
+
 
   // Validate data
   if (!validate_data(data)) {

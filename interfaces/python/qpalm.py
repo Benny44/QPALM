@@ -2,7 +2,7 @@ from ctypes import *
 import platform
 import numpy as np
 import scipy as sc
-
+import scipy.sparse as sp
 
 class QPALMSettings(Structure):
     _fields_ = [("max_iter", c_long),
@@ -34,28 +34,31 @@ class QPALMSettings(Structure):
 
 QPALMSettings_pointer = POINTER(QPALMSettings)
 
+c_long_p = POINTER(c_long)
+c_double_p = POINTER(c_double)
+
 class cholmod_sparse(Structure):
-    _fields_ = [("nrow", c_uint),
-                ("ncol", c_uint),
-                ("nzmax", c_uint),
+    _fields_ = [("nrow", c_ulong),
+                ("ncol", c_ulong),
+                ("nzmax", c_ulong),
                 ("p", c_void_p),
                 ("i", c_void_p),
                 ("nz", c_void_p),
                 ("x", c_void_p),
                 ("z", c_void_p),
-                ("stype", c_long),
-                ("itype", c_long),
-                ("xtype", c_long),
-                ("dtype", c_long),
-                ("sorted", c_long),
-                ("packed", c_long)
+                ("stype", c_int),
+                ("itype", c_int),
+                ("xtype", c_int),
+                ("dtype", c_int),
+                ("sorted", c_int),
+                ("packed", c_int)
                 ]
 
 cholmod_sparse_pointer = POINTER(cholmod_sparse)
 
 class QPALMData(Structure):
-    _fields_ = [("n", c_uint),
-                ("m", c_uint),
+    _fields_ = [("n", c_ulong),
+                ("m", c_ulong),
                 ("Q", cholmod_sparse_pointer),
                 ("A", cholmod_sparse_pointer),
                 ("q", POINTER(c_double)),
@@ -212,12 +215,15 @@ class Qpalm:
         """
         Construct the wrapper class and load the dynamic library.
         """
+        self._work = None
         self._load_library()
         self._set_restypes()
         self._settings = self.python_interface.qpalm_malloc_settings()
         self.python_interface.qpalm_set_default_settings(self._settings)
-    #def __del__(self):
-        #self.python_interface.qpalm_cleanup(work)
+    
+    def __del__(self): #TODO free the data and settings
+        self.python_interface.qpalm_cleanup(self._work)
+
     # def set_default_settings(self):
     #     self.python_interface.qpalm_set_default_settings(self._settings)
         
@@ -234,12 +240,15 @@ class Qpalm:
         """
         self._data = self.python_interface.qpalm_malloc_data()
         
+        self._data.contents.c = 0
+
         (n,m) = Q.shape
         if n != m :
             print("ERROR: Q is not a square matrix")
         if len(q) != n :
             print("ERROR: q is not the right length")
 
+        
         (m,nA) = A.shape 
         if m != 0 and n != nA :
             print("ERROR: A is not the right size")
@@ -248,53 +257,92 @@ class Qpalm:
         if len(bmax) != m :
             print("ERROR: bmax is not the right length")            
 
-        c_double_p = POINTER(c_double)
-        c_long_p = POINTER(c_long)
+        # c_double_p = POINTER(c_double)
+        # c_long_p = POINTER(c_long)
 
         self._data[0].n = n
         self._data[0].m = m
-        self._data[0].q = q.ctypes.as_data(c_double_p)
-        self._data[0].bmin = bmin.ctypes.as_data(c_double_p)
-        self._data[0].bmax = bmax.ctypes.as_data(c_double_p)
+        q = q.astype(np.float64)
+        self._data[0].q = q.ctypes.data_as(c_double_p)
+        bmin = bmin.astype(np.float64)
+        self._data[0].bmin = bmin.ctypes.data_as(c_double_p)
+        bmax = bmax.astype(np.float64)
+        self._data[0].bmax = bmax.ctypes.data_as(c_double_p)
 
-        self._data[0].A[0].nrow = m
-        self._data[0].A[0].ncol = n
+        #Make Q symmetric
+        Q = (Q+Q.transpose())/2
+        # print(m)
+        # print(n)
+        # print(A.nnz)
+        # print(m)
+        # print(n)
+        # print(Q.nnz)
+        self._data[0].A = self.python_interface.python_allocate_cholmod_sparse(m, n, A.nnz)
+        self._data[0].Q = self.python_interface.python_allocate_cholmod_sparse(n, n, Q.nnz)
+        # print(self._data.contents.A.contents.nrow)
+        # print(self._data.contents.A.contents.ncol)
+        # print(self._data.contents.A.contents.nzmax)
+
+        
+
+        # self._data[0].A[0].nrow = m
+        # self._data[0].A[0].ncol = n
         Ap = A.indptr
+        Ap = Ap.astype(np.int64)
         Ai = A.indices
-        self._data[0].A[0].p = Ap.ctypes.as_data(c_long_p)
-        self._data[0].A[0].i = Ai.ctypes.as_data(c_long_p)
-        self._data[0].A[0].nzmax = Ap[n]
-        self._data[0].A[0].packed = 1
-        self._data[0].A[0].sorted = 1
-        self._data[0].A[0].nz = 0 #NULL
-        self._data[0].A[0].itype = 2 #CHOLMOD_LONG 
-        self._data[0].A[0].dtype = 0 #CHOLMOD_DOUBLE
+        Ai = Ai.astype(np.int64)
+
+        self._data[0].A[0].p = Ap.ctypes.data_as(c_void_p)
+        self._data[0].A[0].i = Ai.ctypes.data_as(c_void_p)
+        # print(self._data[0].A[0].p.contents)
+
+        # self._data[0].A[0].nzmax = Ap[n]
+        # self._data[0].A[0].packed = 1
+        # self._data[0].A[0].sorted = 1
+        # self._data[0].A[0].nz = 0 #NULL
+        # self._data[0].A[0].itype = 2 #CHOLMOD_LONG 
+        # self._data[0].A[0].dtype = 0 #CHOLMOD_DOUBLE
         self._data[0].A[0].stype = 0 #Unsymmetric
         Ax = A.data
-        self._data[0].A[0].x = Ax.ctypes.as_data(c_double_p)
-        self._data[0].A[0].xtype = 1 #CHOLMOD_REAL
-
-        self._data[0].Q[0].nrow = n
-        self._data[0].Q[0].ncol = n
+        Ax = Ax.astype(np.float64)
+        self._data[0].A[0].x = Ax.ctypes.data_as(c_void_p)
+        # self._data[0].A[0].xtype = 1 #CHOLMOD_REAL
+        # print("A")
+        
+        # self._data[0].Q[0].nrow = n
+        # self._data[0].Q[0].ncol = n
         Qp = Q.indptr
+        Qp = Qp.astype(np.int64)
         Qi = Q.indices
-        self._data[0].Q[0].p = Qp.ctypes.as_data(c_long_p)
-        self._data[0].Q[0].i = Qi.ctypes.as_data(c_long_p)
-        self._data[0].Q[0].nzmax = Qp[n]
-        self._data[0].Q[0].packed = 1
-        self._data[0].Q[0].sorted = 1
-        self._data[0].Q[0].nz = 0 #NULL
-        self._data[0].Q[0].itype = 2 #CHOLMOD_LONG 
-        self._data[0].Q[0].dtype = 0 #CHOLMOD_DOUBLE
+        Qi = Qi.astype(np.int64)
+        self._data[0].Q[0].p = Qp.ctypes.data_as(c_void_p)
+        self._data[0].Q[0].i = Qi.ctypes.data_as(c_void_p)
+        # self._data[0].Q[0].nzmax = Qp[n]
+        # self._data[0].Q[0].packed = 1
+        # self._data[0].Q[0].sorted = 1
+        # self._data[0].Q[0].nz = 0 #NULL
+        # self._data[0].Q[0].itype = 2 #CHOLMOD_LONG 
+        # self._data[0].Q[0].dtype = 0 #CHOLMOD_DOUBLE
         self._data[0].Q[0].stype = -1 #Lower symmetric
         Qx = Q.data
-        self._data[0].Q[0].x = Qx.ctypes.as_data(c_double_p)
-        self._data[0].Q[0].xtype = 1 #CHOLMOD_REAL
+        Qx = Qx.astype(np.float64)
+        self._data[0].Q[0].x = Qx.ctypes.data_as(c_void_p)
+        # self._data[0].Q[0].xtype = 1 #CHOLMOD_REAL
 
-    # def _allocate_work(self):
+        # print("Q")
+        # print(self._data.contents.Q.contents.nrow)
+        # print(self._data.contents.Q.contents.ncol)
+        # print(self._data.contents.Q.contents.nzmax)
+        # print(self._data.contents.Q.contents.stype)
+        # print(self._data.contents.Q.contents.itype)
+        # print(self._data.contents.Q.contents.xtype)
+        # print(self._data.contents.Q.contents.dtype)
+        # print(self._data.contents.Q.contents.sorted)
+        # print(self._data.contents.Q.contents.packed)
 
-        # work = self.python_interface.qpalm_setup()
+    def _allocate_work(self):
 
+        self._work = self.python_interface.qpalm_setup(self._data, self._settings)
 
     def _load_library(self):
         """
@@ -320,9 +368,36 @@ class Qpalm:
         self.python_interface.qpalm_malloc_settings.restype = QPALMSettings_pointer
         self.python_interface.qpalm_malloc_data.restype = QPALMData_pointer
         self.python_interface.qpalm_setup.restype = QPALMWork_pointer
+        self.python_interface.qpalm_solve.restype = None
+        self.python_interface.qpalm_cleanup.restype = None
+        self.python_interface.python_allocate_cholmod_sparse.restype = cholmod_sparse_pointer
+
 
 if __name__== '__main__':
     qpalm = Qpalm()
+
+    row = np.array([0, 0, 1, 1])
+    col = np.array([0, 1, 0, 1])
+    data = np.array([1, -1, -1, 2])
+    Q = sp.csc_matrix((data, (row, col)), shape=(3, 3))
+    # Q_sym = (Q+Q.transpose())/2
+    # Q_array = Q.toarray()
+    q = np.array([-2, -6, 1])
+    bmin = np.array([0.5, -10, -10, -10])
+    bmax = np.array([0.5, 10, 10, 10])
+
+    row = np.array([0, 1, 0, 2, 0, 3])
+    col = np.array([0, 0, 1, 1, 2, 2])
+    data = np.array([1, 1, 1, 1, 1, 1])
+    A = sp.csc_matrix((data, (row, col)), shape=(4, 3))
+
+    print(A.nnz)
+    print(A.indptr)
+    print(A.indices)
+    print(A.data)
+
+    qpalm.set_data(Q=Q, A=A, q=q, bmin=bmin, bmax=bmax)
+    qpalm._allocate_work()
     # print("Default settings")
     # print("max_iter " + str(qpalm._settings.contents.max_iter))
     # print("inner_max_iter " + str(qpalm._settings.contents.inner_max_iter))
