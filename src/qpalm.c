@@ -82,8 +82,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
 
   QPALMWorkspace *work; // Workspace
 
-
-
   // Validate data
   if (!validate_data(data)) {
 # ifdef PRINTING

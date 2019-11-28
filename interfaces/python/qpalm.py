@@ -344,6 +344,10 @@ class Qpalm:
 
         self._work = self.python_interface.qpalm_setup(self._data, self._settings)
 
+    def _solve(self):
+
+        self.python_interface.qpalm_solve(self._work)
+
     def _load_library(self):
         """
         Load the dynamic QPALM library.
@@ -391,35 +395,12 @@ if __name__== '__main__':
     data = np.array([1, 1, 1, 1, 1, 1])
     A = sp.csc_matrix((data, (row, col)), shape=(4, 3))
 
-    print(A.nnz)
-    print(A.indptr)
-    print(A.indices)
-    print(A.data)
-
     qpalm.set_data(Q=Q, A=A, q=q, bmin=bmin, bmax=bmax)
     qpalm._allocate_work()
-    # print("Default settings")
-    # print("max_iter " + str(qpalm._settings.contents.max_iter))
-    # print("inner_max_iter " + str(qpalm._settings.contents.inner_max_iter))
-    # print("eps_abs " + str(qpalm._settings.contents.eps_abs))
-    # print("eps_rel " + str(qpalm._settings.contents.eps_rel))
-    # print("eps_abs_in " + str(qpalm._settings.contents.eps_abs_in))
-    # print("eps_rel_in " + str(qpalm._settings.contents.eps_rel_in))
-    # print("rho " + str(qpalm._settings.contents.rho))
-    # print("eps_prim_inf " + str(qpalm._settings.contents.eps_prim_inf))
-    # print("eps_dual_inf " + str(qpalm._settings.contents.eps_dual_inf))
-    # print("theta " + str(qpalm._settings.contents.theta))
-    # print("delta " + str(qpalm._settings.contents.delta))
-    # print("sigma_max " + str(qpalm._settings.contents.sigma_max))
-    # print("proximal " + str(qpalm._settings.contents.proximal))
-    # print("gamma_init " + str(qpalm._settings.contents.gamma_init))
-    # print("gamma_upd " + str(qpalm._settings.contents.gamma_upd))
-    # print("gamma_max " + str(qpalm._settings.contents.gamma_max))
-    # print("scaling " + str(qpalm._settings.contents.scaling))
-    # print("nonconvex " + str(qpalm._settings.contents.nonconvex))
-    # print("verbose " + str(qpalm._settings.contents.verbose))
-    # print("print_iter " + str(qpalm._settings.contents.print_iter))
-    # print("warm_start " + str(qpalm._settings.contents.warm_start))
-    # print("reset_newton_iter " + str(qpalm._settings.contents.reset_newton_iter))
-    # print("enable_dual_termination " + str(qpalm._settings.contents.enable_dual_termination))
-    # print("time_limit " + str(qpalm._settings.contents.time_limit))
+    qpalm._solve()
+    sol_x = qpalm._work.contents.solution.contents.x
+    tol = 1e-5
+    assert(abs(sol_x[0] - 5.5) < tol)
+    assert(abs(sol_x[1] - 5.0) < tol)
+    assert(abs(sol_x[2] - (-10)) < tol)
+    
