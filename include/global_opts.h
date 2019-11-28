@@ -143,9 +143,9 @@ static void* c_calloc(size_t num, size_t size) {
 #  ifdef MATLAB
 #   define c_print mexPrintf
 
-#  elif defined PYTHON
-#   include <Python.h>
-#   define c_print PySys_WriteStdout
+// #  elif defined PYTHON
+// #   include <Python.h>
+// #   define c_print PySys_WriteStdout
 #  elif defined R_LANG
 #   include <R_ext/Print.h>
 #   define c_print Rprintf
