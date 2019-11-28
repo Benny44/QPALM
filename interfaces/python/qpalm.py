@@ -69,29 +69,6 @@ class QPALMData(Structure):
                 ]
 QPALMData_pointer = POINTER(QPALMData)
 
-# /**
-#  * Solver return information
-#  */
-# typedef struct {
-#   c_long   iter;           ///< number of iterations taken
-#   c_long   iter_out;       ///< number of outer iterations (i.e. dual updates)
-#   char    status[32];     ///< status string, e.g. 'solved'
-#   c_long   status_val;     ///< status as c_long, defined in constants.h
-
-#   c_float pri_res_norm;   ///< norm of primal residual
-#   c_float dua_res_norm;   ///< norm of dual residual
-#   c_float dua2_res_norm;  ///< norm of intermediate dual residual (minus proximal term)
-
-#   c_float objective;      ///< objective function value
-#   c_float dual_objective; ///< dual objective function value (= NaN if enable_dual_termination is false)
-
-#   #ifdef PROFILING
-#   c_float setup_time;    ///< time taken for setup phase (seconds)
-#   c_float solve_time;    ///< time taken for solve phase (seconds)
-#   c_float run_time;      ///< total time (seconds)
-#   #endif
-
-# } QPALMInfo;
 
 class QPALMInfo(Structure):
     _fields_ = [("iter", c_long),
@@ -109,12 +86,6 @@ class QPALMInfo(Structure):
                 ]
 
 QPALMInfo_pointer = POINTER(QPALMInfo)
-
-
-# typedef struct array_element  {
-#   c_float x; ///< value of the element
-#   c_long   i; ///< index
-# } array_element;
 
 class array_element(Structure):
     _fields_ = [("x", c_double),
@@ -192,21 +163,6 @@ class QPALMWork(Structure):
 
 QPALMWork_pointer = POINTER(QPALMWork)
 
-#   /** @} */
-
-#   QPALMCholmod  *chol;     ///< cholmod variables
-#   QPALMSettings *settings; ///< problem settings
-#   QPALMScaling  *scaling;  ///< scaling vectors
-#   QPALMSolution *solution; ///< problem solution
-#   QPALMInfo     *info;     ///< solver information
-
-#   # ifdef PROFILING
-#   QPALMTimer *timer;       ///< timer object
-#   # endif // ifdef PROFILING
-
-# } QPALMWorkspace;
-
-
 
 class Qpalm:
     """
@@ -247,9 +203,7 @@ class Qpalm:
         if n != m :
             print("ERROR: Q is not a square matrix")
         if len(q) != n :
-            print("ERROR: q is not the right length")
-
-        
+            print("ERROR: q is not the right length")  
         (m,nA) = A.shape 
         if m != 0 and n != nA :
             print("ERROR: A is not the right size")
@@ -257,9 +211,6 @@ class Qpalm:
             print("ERROR: bmin is not the right length")
         if len(bmax) != m :
             print("ERROR: bmax is not the right length")            
-
-        # c_double_p = POINTER(c_double)
-        # c_long_p = POINTER(c_long)
 
         self._data[0].n = n
         self._data[0].m = m
@@ -272,22 +223,10 @@ class Qpalm:
 
         #Make Q symmetric
         Q = (Q+Q.transpose())/2
-        # print(m)
-        # print(n)
-        # print(A.nnz)
-        # print(m)
-        # print(n)
-        # print(Q.nnz)
+
         self._data[0].A = self.python_interface.python_allocate_cholmod_sparse(m, n, A.nnz)
         self._data[0].Q = self.python_interface.python_allocate_cholmod_sparse(n, n, Q.nnz)
-        # print(self._data.contents.A.contents.nrow)
-        # print(self._data.contents.A.contents.ncol)
-        # print(self._data.contents.A.contents.nzmax)
 
-        
-
-        # self._data[0].A[0].nrow = m
-        # self._data[0].A[0].ncol = n
         Ap = A.indptr
         Ap = Ap.astype(np.int64)
         Ai = A.indices
@@ -295,51 +234,24 @@ class Qpalm:
 
         self._data[0].A[0].p = Ap.ctypes.data_as(c_void_p)
         self._data[0].A[0].i = Ai.ctypes.data_as(c_void_p)
-        # print(self._data[0].A[0].p.contents)
 
-        # self._data[0].A[0].nzmax = Ap[n]
-        # self._data[0].A[0].packed = 1
-        # self._data[0].A[0].sorted = 1
-        # self._data[0].A[0].nz = 0 #NULL
-        # self._data[0].A[0].itype = 2 #CHOLMOD_LONG 
-        # self._data[0].A[0].dtype = 0 #CHOLMOD_DOUBLE
         self._data[0].A[0].stype = 0 #Unsymmetric
         Ax = A.data
         Ax = Ax.astype(np.float64)
         self._data[0].A[0].x = Ax.ctypes.data_as(c_void_p)
-        # self._data[0].A[0].xtype = 1 #CHOLMOD_REAL
-        # print("A")
-        
-        # self._data[0].Q[0].nrow = n
-        # self._data[0].Q[0].ncol = n
+
         Qp = Q.indptr
         Qp = Qp.astype(np.int64)
         Qi = Q.indices
         Qi = Qi.astype(np.int64)
         self._data[0].Q[0].p = Qp.ctypes.data_as(c_void_p)
         self._data[0].Q[0].i = Qi.ctypes.data_as(c_void_p)
-        # self._data[0].Q[0].nzmax = Qp[n]
-        # self._data[0].Q[0].packed = 1
-        # self._data[0].Q[0].sorted = 1
-        # self._data[0].Q[0].nz = 0 #NULL
-        # self._data[0].Q[0].itype = 2 #CHOLMOD_LONG 
-        # self._data[0].Q[0].dtype = 0 #CHOLMOD_DOUBLE
+
         self._data[0].Q[0].stype = -1 #Lower symmetric
         Qx = Q.data
         Qx = Qx.astype(np.float64)
         self._data[0].Q[0].x = Qx.ctypes.data_as(c_void_p)
-        # self._data[0].Q[0].xtype = 1 #CHOLMOD_REAL
 
-        # print("Q")
-        # print(self._data.contents.Q.contents.nrow)
-        # print(self._data.contents.Q.contents.ncol)
-        # print(self._data.contents.Q.contents.nzmax)
-        # print(self._data.contents.Q.contents.stype)
-        # print(self._data.contents.Q.contents.itype)
-        # print(self._data.contents.Q.contents.xtype)
-        # print(self._data.contents.Q.contents.dtype)
-        # print(self._data.contents.Q.contents.sorted)
-        # print(self._data.contents.Q.contents.packed)
 
     def _allocate_work(self):
 
@@ -387,8 +299,7 @@ if __name__== '__main__':
     col = np.array([0, 1, 0, 1])
     data = np.array([1, -1, -1, 2])
     Q = sp.csc_matrix((data, (row, col)), shape=(3, 3))
-    # Q_sym = (Q+Q.transpose())/2
-    # Q_array = Q.toarray()
+
     q = np.array([-2, -6, 1])
     bmin = np.array([0.5, -10, -10, -10])
     bmax = np.array([0.5, 10, 10, 10])
