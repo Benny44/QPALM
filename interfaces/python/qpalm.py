@@ -3,6 +3,7 @@ import platform
 import numpy as np
 import scipy as sc
 import scipy.sparse as sp
+import os
 
 class QPALMSettings(Structure):
     _fields_ = [("max_iter", c_long),
@@ -352,10 +353,12 @@ class Qpalm:
         """
         Load the dynamic QPALM library.
         """
+        lib_dir = os.path.dirname(os.path.abspath(__file__)) 
         try:
             if (platform.system() == 'Linux'):
                 print("OS is Linux")      
-                self.python_interface = CDLL("../../build/lib/" + "libqpalm.so")
+                lib_dir = lib_dir + "/../../build/lib/"
+                self.python_interface = CDLL(lib_dir + "libqpalm.so")
             elif (platform.system() == 'Windows'):
                 print("OS is Windows")
             elif (platform.system() == 'Darwin'):

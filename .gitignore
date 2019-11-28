@@ -35,3 +35,4 @@ buildQPS.sh
 /simulations/maros_meszaros/out.tex
 /interfaces/qps/out.tex
 /interfaces/qps/BPMPD.txt
+*.pyc
