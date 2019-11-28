@@ -24,6 +24,9 @@
  */
 
 
+QPALMSettings *qpalm_malloc_settings(void);
+QPALMData *qpalm_malloc_data(void);
+
 /**
  * Set default settings from constants.h file.
  * Assumes settings are already allocated in memory.
