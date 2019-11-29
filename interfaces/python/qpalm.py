@@ -275,8 +275,11 @@ class Qpalm:
                 self.python_interface = CDLL(lib_dir + "libqpalm.so")
             elif (platform.system() == 'Windows'):
                 print("OS is Windows")
+                print("Windows is currently not supported")
+                raise NotImplementedError
             elif (platform.system() == 'Darwin'):
                 print("OS is MacOS")
+                self.python_interface = CDLL(lib_dir + "libqpalm.dylib")
             else:
                 print("ERROR: could not detect OS, using Linux")
         except:
