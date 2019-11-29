@@ -28,3 +28,9 @@ tol = 1e-5
 assert(abs(sol_x[0] - 5.5) < tol)
 assert(abs(sol_x[1] - 5.0) < tol)
 assert(abs(sol_x[2] - (-10)) < tol)
+
+# Warm start with solution to check whether the solver exits immediately
+solver._warm_start(solver._work.contents.solution.contents.x, solver._work.contents.solution.contents.y)
+solver._solve()
+assert(solver._work.contents.info.contents.iter == 0)
+

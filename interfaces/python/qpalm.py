@@ -263,6 +263,10 @@ class Qpalm:
 
         self.python_interface.qpalm_solve(self._work)
 
+    def _warm_start(self, x, y):
+
+        self.python_interface.qpalm_warm_start(self._work, x, y)
+
     def _load_library(self):
         """
         Load the dynamic QPALM library.
@@ -297,6 +301,7 @@ class Qpalm:
         self.python_interface.python_allocate_cholmod_sparse.restype = cholmod_sparse_pointer
         self.python_interface.qpalm_free_settings.restype = None
         self.python_interface.qpalm_free_data.restype = None
+        self.python_interface.qpalm_warm_start.restype = None
 
 
 if __name__== '__main__':
