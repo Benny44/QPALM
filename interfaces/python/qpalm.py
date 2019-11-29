@@ -5,6 +5,31 @@ import scipy as sc
 import scipy.sparse as sp
 import os
 
+#Cholmod matrix structure
+class cholmod_sparse(Structure):
+    _fields_ = [("nrow", c_ulong),
+                ("ncol", c_ulong),
+                ("nzmax", c_ulong),
+                ("p", c_void_p),
+                ("i", c_void_p),
+                ("nz", c_void_p),
+                ("x", c_void_p),
+                ("z", c_void_p),
+                ("stype", c_int),
+                ("itype", c_int),
+                ("xtype", c_int),
+                ("dtype", c_int),
+                ("sorted", c_int),
+                ("packed", c_int)
+                ]
+
+cholmod_sparse_pointer = POINTER(cholmod_sparse)
+
+
+c_long_p = POINTER(c_long)
+c_double_p = POINTER(c_double)
+
+#QPALM structures
 class QPALMSettings(Structure):
     _fields_ = [("max_iter", c_long),
                 ("inner_max_iter", c_long),
@@ -34,28 +59,6 @@ class QPALMSettings(Structure):
                 ]
 
 QPALMSettings_pointer = POINTER(QPALMSettings)
-
-c_long_p = POINTER(c_long)
-c_double_p = POINTER(c_double)
-
-class cholmod_sparse(Structure):
-    _fields_ = [("nrow", c_ulong),
-                ("ncol", c_ulong),
-                ("nzmax", c_ulong),
-                ("p", c_void_p),
-                ("i", c_void_p),
-                ("nz", c_void_p),
-                ("x", c_void_p),
-                ("z", c_void_p),
-                ("stype", c_int),
-                ("itype", c_int),
-                ("xtype", c_int),
-                ("dtype", c_int),
-                ("sorted", c_int),
-                ("packed", c_int)
-                ]
-
-cholmod_sparse_pointer = POINTER(cholmod_sparse)
 
 class QPALMData(Structure):
     _fields_ = [("n", c_ulong),
@@ -170,7 +173,7 @@ class Qpalm:
     """
     def __init__(self):
         """
-        Construct the wrapper class and load the dynamic library.
+        Construct the wrapper class, load the dynamic library and set the settings to their default values.
         """
         self._work = None
         self._data = None
@@ -179,13 +182,13 @@ class Qpalm:
         self._settings = self.python_interface.qpalm_malloc_settings()
         self.python_interface.qpalm_set_default_settings(self._settings)
     
-    def __del__(self): #TODO free the data and settings
+    def __del__(self): 
+        """
+        Destruct the wrapper class, freeing all the dynamically allocated memory
+        """
         self.python_interface.qpalm_cleanup(self._work)
         self.python_interface.qpalm_free_settings(self._settings)
         self.python_interface.qpalm_free_data(self._data)
-
-    # def set_default_settings(self):
-    #     self.python_interface.qpalm_set_default_settings(self._settings)
         
     def set_data(self, Q, A, q, bmin, bmax):
         """
@@ -255,9 +258,10 @@ class Qpalm:
         Qx = Qx.astype(np.float64)
         self._data[0].Q[0].x = Qx.ctypes.data_as(c_void_p)
 
-
     def _allocate_work(self):
-
+        """
+        Allocate the solver workspace given the data and the settings
+        """
         self._work = self.python_interface.qpalm_setup(self._data, self._settings)
 
     def _solve(self):
@@ -273,19 +277,34 @@ class Qpalm:
         self.python_interface.qpalm_solve(self._work)
 
     def _warm_start(self, x=None, y=None):
-
+        """
+        Warm start the next solve call at the given point (x,y).
+        Parameters
+        ---------
+        x : Initial guess for the primal variables (POINTER(c_double))
+        y : Initial guess for the dual variables (POINTER(c_double))
+        """
         self.python_interface.qpalm_warm_start(self._work, x, y)
 
     def _update_bounds(self):
-
+        """
+        Update the bounds for the constraints. The user should modify self._data.contents.bmin
+        and self._data.contents.bmax to the wanted values and then call this function.
+        """
         self.python_interface.qpalm_update_bounds(self._work, self._data.contents.bmin, self._data.contents.bmax)
     
     def _update_q(self):
-
+        """
+        Update the linear part of the cost. The user should modify self._data.contents.q
+        to the wanted values and then call this function.
+        """
         self.python_interface.qpalm_update_q(self._work, self._data.contents.q)
 
     def _update_settings(self):
-
+        """
+        Update the settings. The user should modify self._settings to the wanted 
+        values and then call this function.
+        """
         self.python_interface.qpalm_update_settings(self._work, self._settings)
 
     def _load_library(self):
