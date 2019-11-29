@@ -14,19 +14,19 @@ cholmod_sparse *python_allocate_cholmod_sparse(size_t m, size_t n, size_t nzmax)
   return M;
 }
 
-QPALMSettings *qpalm_malloc_settings(void) {
+QPALMSettings *python_allocate_settings(void) {
   return (QPALMSettings *) c_malloc(sizeof(QPALMSettings));
 }
 
-QPALMData *qpalm_malloc_data(void) {
+QPALMData *python_allocate_data(void) {
   return (QPALMData *) c_malloc(sizeof(QPALMData));
 }
 
-void qpalm_free_settings(QPALMSettings *settings) {
+void python_free_settings(QPALMSettings *settings) {
   if (settings) c_free(settings);
 }
 
-void qpalm_free_data(QPALMData *data) {
+void python_free_data(QPALMData *data) {
     cholmod_common common, *c;
     c = &common;
     if (data) {

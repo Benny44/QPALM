@@ -179,7 +179,7 @@ class Qpalm:
         self._data = None
         self._load_library()
         self._set_restypes()
-        self._settings = self.python_interface.qpalm_malloc_settings()
+        self._settings = self.python_interface.python_allocate_settings()
         self.python_interface.qpalm_set_default_settings(self._settings)
     
     def __del__(self): 
@@ -187,8 +187,8 @@ class Qpalm:
         Destruct the wrapper class, freeing all the dynamically allocated memory
         """
         self.python_interface.qpalm_cleanup(self._work)
-        self.python_interface.qpalm_free_settings(self._settings)
-        self.python_interface.qpalm_free_data(self._data)
+        self.python_interface.python_free_settings(self._settings)
+        self.python_interface.python_free_data(self._data)
         
     def set_data(self, Q, A, q, bmin, bmax):
         """
@@ -201,7 +201,7 @@ class Qpalm:
         bmin : Lower bounds of the constraints (numpy.array)
         bmax : Upper bounds of the constraints (numpy.array)
         """
-        self._data = self.python_interface.qpalm_malloc_data()
+        self._data = self.python_interface.python_allocate_data()
         
         self._data.contents.c = 0
 
@@ -333,14 +333,14 @@ class Qpalm:
         """
         Set the return types for the relavent interface functions.
         """
-        self.python_interface.qpalm_malloc_settings.restype = QPALMSettings_pointer
-        self.python_interface.qpalm_malloc_data.restype = QPALMData_pointer
+        self.python_interface.python_allocate_settings.restype = QPALMSettings_pointer
+        self.python_interface.python_allocate_data.restype = QPALMData_pointer
         self.python_interface.qpalm_setup.restype = QPALMWork_pointer
         self.python_interface.qpalm_solve.restype = None
         self.python_interface.qpalm_cleanup.restype = None
         self.python_interface.python_allocate_cholmod_sparse.restype = cholmod_sparse_pointer
-        self.python_interface.qpalm_free_settings.restype = None
-        self.python_interface.qpalm_free_data.restype = None
+        self.python_interface.python_free_settings.restype = None
+        self.python_interface.python_free_data.restype = None
         self.python_interface.qpalm_warm_start.restype = None
         self.python_interface.qpalm_update_settings.restype = None
         self.python_interface.qpalm_update_bounds.restype = None
