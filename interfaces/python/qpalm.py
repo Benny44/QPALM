@@ -180,6 +180,8 @@ class Qpalm:
     
     def __del__(self): #TODO free the data and settings
         self.python_interface.qpalm_cleanup(self._work)
+        self.python_interface.qpalm_free_settings(self._settings)
+        self.python_interface.qpalm_free_data(self._data)
 
     # def set_default_settings(self):
     #     self.python_interface.qpalm_set_default_settings(self._settings)
@@ -290,6 +292,8 @@ class Qpalm:
         self.python_interface.qpalm_solve.restype = None
         self.python_interface.qpalm_cleanup.restype = None
         self.python_interface.python_allocate_cholmod_sparse.restype = cholmod_sparse_pointer
+        self.python_interface.qpalm_free_settings.restype = None
+        self.python_interface.qpalm_free_data.restype = None
 
 
 if __name__== '__main__':
