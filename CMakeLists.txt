@@ -175,7 +175,12 @@ else()
 endif()
 # target_link_libraries(qpalm blas lapack cholmod_new ${LAPACK_LIB})
 
-
+if (PYTHON)
+    find_package(PythonInterp REQUIRED)
+    # We don't really need the libs, but the headers.
+    find_package(PythonLibs 3 REQUIRED)
+    target_include_directories(qpalm PUBLIC ${PYTHON_INCLUDE_PATH} interfaces/python/include)
+endif()
 
 option (PPROF "Create executable demo for profiling with cpuprofile" OFF)
 if (PPROF)
