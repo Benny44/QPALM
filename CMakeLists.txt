@@ -14,7 +14,7 @@ make_directory(${INCLUDE_DIR})
 message("Include dir is ${INCLUDE_DIR}")
 
 if (NOT WIN32)
-    execute_process(COMMAND bash -c "cp ${CMAKE_SOURCE_DIR}/include/* ${INCLUDE_DIR}")
+    execute_process(COMMAND bash -c "cp ${CMAKE_CURRENT_LIST_DIR}/include/* ${INCLUDE_DIR}")
 endif()
 #${CMAKE_SOURCE_DIR}/
 # find_library(BLAS names openblas
@@ -103,6 +103,12 @@ message(STATUS "Code coverage is ${COVERAGE}")
 
 
 add_compile_options("-DDLONG")
+option(PYTHON OFF)
+if (PYTHON)
+    message("Compiling for the PYTHON interface")
+    add_compile_options("-DPYTHON")
+endif()
+
 option (PRINTING "Allow printing" ON)
 if (PRINTING)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPRINTING")
@@ -125,34 +131,24 @@ if (NOT WIN32)
     add_subdirectory(cmakeSuitesparse)
 endif()
 
-add_library(qpalm 
-                src/newton.c
-                src/util.c
-                src/qpalm.c
-                src/scaling.c
-                src/linesearch.c
-                src/lin_alg.c
-                src/termination.c
-                src/cholmod_interface.c
-                src/nonconvex.c
-                src/validate.c
-                src/iteration.c
-                include/cholmod_interface.h
-                include/global_opts.h
-                include/constants.h
-                include/nonconvex.h
-                include/qpalm.h
-                include/util.h
-                include/scaling.h
-                include/validate.h
-                include/lin_alg.h
-                include/linesearch.h
-                include/types.h
-                include/termination.h
-                include/newton.h
-                include/iteration.h
-                )
+SET(SRC 
+        src/newton.c
+        src/util.c
+        src/qpalm.c
+        src/scaling.c
+        src/linesearch.c
+        src/lin_alg.c
+        src/termination.c
+        src/cholmod_interface.c
+        src/nonconvex.c
+        src/validate.c
+        src/iteration.c)
 
+if (PYTHON)
+    SET(SRC ${SRC} interfaces/python/qpalm_python.c)
+endif()
+
+add_library(qpalm ${SRC})
 
                 # ${SUITESPARSE_INCLUDE})
         
