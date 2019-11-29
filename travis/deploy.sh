@@ -60,6 +60,9 @@ mkdir $QPALM_DEPLOY_DIR/info
 mkdir $QPALM_DEPLOY_DIR/lib
 mkdir $QPALM_DEPLOY_DIR/include
 mkdir $QPALM_DEPLOY_DIR/interfaces
+mkdir $QPALM_DEPLOY_DIR/interfaces/python
+mkdir $QPALM_DEPLOY_DIR/interfaces/python/build
+mkdir $QPALM_DEPLOY_DIR/interfaces/python/build/lib
 
 # Copy license
 cp ../../LICENSE $QPALM_DEPLOY_DIR/info
@@ -73,6 +76,55 @@ cp ../lib/*.$OS_SHARED_LIB_EXT $QPALM_DEPLOY_DIR/lib
 # Copy compiled interfaces
 cp bin/qpalm_mtx $QPALM_DEPLOY_DIR/interfaces
 cp bin/qpalm_qps $QPALM_DEPLOY_DIR/interfaces
+
+
+# Compile the python interface
+$pythondir=$curdir/interfaces/python
+cd $pythondir
+#Build direcetories
+# rm -r build
+if [ ! -d "build" ]; then
+  mkdir build
+fi
+
+if [ ! -d "build/debug" ]; then
+  mkdir build/debug
+fi
+
+if [ ! -d "build/lib" ]; then
+  mkdir build/lib
+fi
+
+if [ ! -d "build/metis" ]; then
+  mkdir build/metis
+fi
+
+metisdir=$pythondir/build/metis
+cd $metisdir
+
+cmake $curdir/suitesparse/metis-5.1.0 -DGKLIB_PATH=$curdir/suitesparse/metis-5.1.0/GKlib -DSHARED=1 && make 
+cd $pythondir
+cp build/metis/libmetis/libmetis.so build/lib/
+
+#Build QPALM and tests
+
+builddir=$pythondir/build/debug
+
+cd $builddir
+
+cmake $curdir -DCMAKE_BUILD_TYPE=release -DINTERFACES=OFF -DUNITTESTS=OFF -DPYTHON=ON
+make
+
+# Copy includes
+cp $pythondir/include/*.h  $QPALM_DEPLOY_DIR/include
+# Copy static library
+#cp libqpalm.a $QPALM_DEPLOY_DIR/lib
+# Copy shared library
+cp $pythondir/build/lib/*.$OS_SHARED_LIB_EXT $QPALM_DEPLOY_DIR/interfaces/python/build/lib
+
+# Copy interface wrapper and demo
+cp $pythondir/qpalm.py $QPALM_DEPLOY_DIR/interfaces/python
+cp $pythondir/qpalm_python_demo.py $QPALM_DEPLOY_DIR/interfaces/python
 
 # Compress package
 tar -czvf $QPALM_DEPLOY_DIR.tar.gz  $QPALM_DEPLOY_DIR

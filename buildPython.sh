@@ -43,7 +43,7 @@ builddir=$pythondir/build/debug
 
 cd $builddir
 
-cmake ../../../.. -DCMAKE_BUILD_TYPE=debug -DINTERFACES=OFF -DUNITTESTS=OFF -DPYTHON=ON
+cmake $curdir -DCMAKE_BUILD_TYPE=debug -DINTERFACES=OFF -DUNITTESTS=OFF -DPYTHON=ON
 make
 #ctest -VV
 
