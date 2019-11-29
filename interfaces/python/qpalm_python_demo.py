@@ -21,7 +21,6 @@ data = np.array([1, 1, 1, 1, 1, 1])
 A = sp.csc_matrix((data, (row, col)), shape=(4, 3))
 
 solver.set_data(Q=Q, A=A, q=q, bmin=bmin, bmax=bmax)
-solver._allocate_work()
 solver._solve()
 sol_x = solver._work.contents.solution.contents.x
 tol = 1e-5

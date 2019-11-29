@@ -173,6 +173,7 @@ class Qpalm:
         Construct the wrapper class and load the dynamic library.
         """
         self._work = None
+        self._data = None
         self._load_library()
         self._set_restypes()
         self._settings = self.python_interface.qpalm_malloc_settings()
@@ -260,6 +261,14 @@ class Qpalm:
         self._work = self.python_interface.qpalm_setup(self._data, self._settings)
 
     def _solve(self):
+        """
+        Solve the current problem 
+        """
+        if self._data == None:
+            print("No data given")
+            raise RuntimeError
+        if self._work == None:
+            self._allocate_work()
 
         self.python_interface.qpalm_solve(self._work)
 
