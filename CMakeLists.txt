@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
-
-set(LIB_DIR ${CMAKE_CURRENT_LIST_DIR}/build/lib)
-set(INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/build/include)
+set(LIB_DIR ${CMAKE_CURRENT_BINARY_DIR}/../lib)
+set(INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/../include)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
 
 
@@ -202,8 +201,6 @@ endif()
 option (INTERFACES "Compile interfaces" ON)
 if (INTERFACES)
     add_subdirectory(interfaces)
-    # add_subdirectory(mtx)
-    # add_subdirectory(qps)
 endif()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

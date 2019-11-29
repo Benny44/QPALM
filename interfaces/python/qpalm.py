@@ -4,6 +4,7 @@ import numpy as np
 import scipy as sc
 import scipy.sparse as sp
 import os
+import sys
 
 #Cholmod matrix structure
 class cholmod_sparse(Structure):
@@ -315,7 +316,7 @@ class Qpalm:
         try:
             if (platform.system() == 'Linux'):
                 print("OS is Linux")      
-                lib_dir = lib_dir + "/../../build/lib/"
+                lib_dir = lib_dir + "/build/lib/"
                 self.python_interface = CDLL(lib_dir + "libqpalm.so")
             elif (platform.system() == 'Windows'):
                 print("OS is Windows")
@@ -323,11 +324,14 @@ class Qpalm:
                 raise NotImplementedError
             elif (platform.system() == 'Darwin'):
                 print("OS is MacOS")
+                lib_dir = lib_dir + "/build/lib/"
                 self.python_interface = CDLL(lib_dir + "libqpalm.dylib")
             else:
                 print("ERROR: could not detect OS, using Linux")
         except:
             print("Failed to load dynamic library")
+            sys.exit()
+            
 
     def _set_restypes(self):
         """
