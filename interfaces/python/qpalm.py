@@ -263,9 +263,21 @@ class Qpalm:
 
         self.python_interface.qpalm_solve(self._work)
 
-    def _warm_start(self, x, y):
+    def _warm_start(self, x=None, y=None):
 
         self.python_interface.qpalm_warm_start(self._work, x, y)
+
+    def _update_bounds(self):
+
+        self.python_interface.qpalm_update_bounds(self._work, self._data.contents.bmin, self._data.contents.bmax)
+    
+    def _update_q(self):
+
+        self.python_interface.qpalm_update_q(self._work, self._data.contents.q)
+
+    def _update_settings(self):
+
+        self.python_interface.qpalm_update_settings(self._work, self._settings)
 
     def _load_library(self):
         """
@@ -302,6 +314,9 @@ class Qpalm:
         self.python_interface.qpalm_free_settings.restype = None
         self.python_interface.qpalm_free_data.restype = None
         self.python_interface.qpalm_warm_start.restype = None
+        self.python_interface.qpalm_update_settings.restype = None
+        self.python_interface.qpalm_update_bounds.restype = None
+        self.python_interface.qpalm_update_q.restype = None
 
 
 if __name__== '__main__':
