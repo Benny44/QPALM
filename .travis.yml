@@ -30,8 +30,6 @@ env:
   global:
   - DEPS_DIR="${HOME}/deps"
   - QPALM_VERSION="1.0"
-  - PYTHONPATH=/usr/local/python
-  - TRAVIS_PYTHON_VERSION=3.7
 install:
 - gem install coveralls-lcov
 - chmod 755 travis/install.sh
