@@ -553,6 +553,7 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
     }
 }
 
+#ifdef PRINT_LATEX
 void print_out_latex(QPALMData *data, QPALMInfo *info, char* file){
     char line[100], name[20];
     strcpy(line, file);
@@ -621,6 +622,7 @@ void print_out_bpmpd(QPALMData *data, QPALMInfo *info, char* file){
     fclose(fp);
     fclose(fp_bpmpd);
 }
+#endif /*PRINT_LATEX*/
 
 void read_settings(QPALMSettings *settings, FILE* fp) {
     qpalm_set_default_settings(settings);
@@ -687,9 +689,7 @@ void read_settings(QPALMSettings *settings, FILE* fp) {
         else {
             printf("Unrecognised setting: %s\n", setting);
             return;
-        } 
-              
-        
+        }     
     }
     return; 
 }
@@ -796,17 +796,12 @@ int main(int argc, char*argv[]){
         if (fp==NULL) {
             printf("Could not open file %s\n", argv[2]);
             printf("Using default settings instead\n");
+            qpalm_set_default_settings(settings);
         } else {
             read_settings(settings, fp);
         }
     } else {
        qpalm_set_default_settings(settings);
-        settings->eps_abs = 1e-6;
-        settings->eps_rel = 1e-6;
-        settings->eps_dual_inf = 1e-6;
-        settings->eps_prim_inf = 1e-6;
-        settings->max_iter = 10000;
-        settings->verbose = TRUE; 
     }
 
     cholmod_common c;
@@ -822,8 +817,10 @@ int main(int argc, char*argv[]){
     printf("Runtime: %f seconds\n", work->info->run_time);
     // printf("Runtime: %f seconds\n", work->info->setup_time);
     #endif
-    // print_out_latex(data, work->info, argv[1]);
+
+    #ifdef PRINT_LATEX
     print_out_bpmpd(data, work->info, argv[1]);
+    #endif
 
     // // Clean workspace
     CHOLMOD(start)(&c);

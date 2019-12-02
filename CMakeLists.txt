@@ -200,6 +200,10 @@ endif()
 # Add interfaces
 option (INTERFACES "Compile interfaces" ON)
 if (INTERFACES)
+    option(PRINT_LATEX "Printout latex for qps" OFF)
+    if (PRINT_LATEX)
+        add_compile_options("-DPRINT_LATEX")
+    endif()
     add_subdirectory(interfaces)
 endif()
 
