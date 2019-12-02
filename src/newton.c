@@ -57,11 +57,11 @@ void set_entering_leaving_constraints(QPALMWorkspace *work) {
     int nb_leave = 0;
     for (size_t i = 0; i < work->data->m; i++) {
         if (work->chol->active_constraints[i] && !work->chol->active_constraints_old[i]) {
-            work->chol->enter[nb_enter] = i;
+            work->chol->enter[nb_enter] = (c_int)i;
             nb_enter++;
         }
         if (!work->chol->active_constraints[i] && work->chol->active_constraints_old[i]) {
-            work->chol->leave[nb_leave] = i;
+            work->chol->leave[nb_leave] = (c_int)i;
             nb_leave++;
         }
     }

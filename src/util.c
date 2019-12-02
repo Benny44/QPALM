@@ -114,7 +114,7 @@ void print_iteration(c_int iter, QPALMWorkspace *work) {
 
 void print_final_message(QPALMWorkspace *work) {
     c_print("\n\n=============================================================\n");
-    int characters_box;
+    size_t characters_box;
     char buf[80];
     switch (work->info->status_val) {
       case QPALM_SOLVED:
@@ -177,7 +177,7 @@ void print_final_message(QPALMWorkspace *work) {
         return;
     }
     #ifdef PROFILING
-    int characters_runtime;
+    size_t characters_runtime;
     if (work->info->run_time > 1.0) {
       snprintf(buf, 80,"| runtime:         %4.2f seconds", work->info->run_time);
       characters_runtime = strlen(buf);
@@ -288,7 +288,7 @@ c_float qpalm_toc(QPALMTimer *t)
 
   if ((t->toc.tv_nsec - t->tic.tv_nsec) < 0) {
     temp.tv_sec  = t->toc.tv_sec - t->tic.tv_sec - 1;
-    temp.tv_nsec = 1e9 + t->toc.tv_nsec - t->tic.tv_nsec;
+    temp.tv_nsec = 1000000000 + t->toc.tv_nsec - t->tic.tv_nsec;
   } else {
     temp.tv_sec  = t->toc.tv_sec - t->tic.tv_sec;
     temp.tv_nsec = t->toc.tv_nsec - t->tic.tv_nsec;

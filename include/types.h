@@ -20,7 +20,7 @@ extern "C" {
  */
 typedef struct array_element  {
   c_float x; ///< value of the element
-  c_int   i; ///< index
+  size_t  i; ///< index
 } array_element;
 
 

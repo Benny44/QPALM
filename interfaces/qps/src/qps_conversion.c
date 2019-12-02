@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <ctype.h>
 
 #define BUFFER_LEN 9 
 
@@ -56,18 +57,18 @@ char* convert_qps_to_new_format(const char* filename) {
         return NULL;
     }
 
-    char line[100], command[20], name[50], buf1[9], buf1_copy[9], buf2[9], buf2_copy[9], buf3[9], buf3_copy[9], temp1[BUFFER_LEN+1], temp2[BUFFER_LEN+1];
-    size_t len, k;
+    char line[100], command[20], buf1[9], buf1_copy[9], buf2[9], buf2_copy[9], buf3[9], buf3_copy[9], temp1[BUFFER_LEN+1], temp2[BUFFER_LEN+1];
+    size_t len;
 
     fgets(line, 100, fp_in);
     fputs(line, fp_out);
     char next_char;
-    next_char = fgetc(fp_in);
+    next_char = (char)fgetc(fp_in);
 
     while (get_next_command(command, next_char, fp_in)) {
       fputs(command, fp_out);
       fputs("\n", fp_out);
-      next_char = fgetc(fp_in);
+      next_char = (char)fgetc(fp_in);
       if (!strcmp(command, "ROWS")) {
         while (next_char == ' ') {
             fgets(line, 100, fp_in);
@@ -78,7 +79,7 @@ char* convert_qps_to_new_format(const char* filename) {
             fputs(" ", fp_out); /*compensate for next_char*/
             fputs(line, fp_out);
             fputs("\n", fp_out);
-            next_char = fgetc(fp_in);
+            next_char = (char)fgetc(fp_in);
         }
       } else if (!strcmp(command, "COLUMNS") || !strcmp(command, "RHS") || !strcmp(command, "RANGES")) {
           while (next_char == ' ') {
@@ -110,7 +111,7 @@ char* convert_qps_to_new_format(const char* filename) {
             fputs(" ", fp_out); /*compensate for next_char*/
             fputs(line, fp_out);
             fputs("\n", fp_out);
-            next_char = fgetc(fp_in);
+            next_char = (char)fgetc(fp_in);
         }
       } else if (!strcmp(command, "BOUNDS") || !strcmp(command, "QUADOBJ")) {
         while (next_char == ' ') {
@@ -132,7 +133,7 @@ char* convert_qps_to_new_format(const char* filename) {
             fputs(" ", fp_out); /*compensate for next_char*/
             fputs(line, fp_out);
             fputs("\n", fp_out);
-            next_char = fgetc(fp_in);
+            next_char = (char)fgetc(fp_in);
         }
       } else {
         printf("Unrecognized command: %s\n", command); 

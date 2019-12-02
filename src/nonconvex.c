@@ -85,15 +85,16 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x, cholmod_common *c) {
     c_float lambda_init[2];
 
     /* Lapack variables */
-    long int info = 0, dim = 2, lwork = 10, itype = 1;
-    double lapack_work[10];
     char jobz = 'V';
     char uplo = 'L';
 
     /* Solve eigenvalue problem */
     #ifdef MATLAB
+        double lapack_work[10];
+        long int info = 0, dim = 2, lwork = 10, itype = 1;
         dsyev(&jobz, &uplo, &dim, *B_init, &dim, lambda_init, lapack_work, &lwork, &info);
     #else
+        int info = 0, dim = 2, itype = 1;
         info = LAPACKE_dsyev(LAPACK_COL_MAJOR, jobz, uplo, dim, *B_init, dim, lambda_init);
     #endif
     lambda = lambda_init[0];
@@ -180,9 +181,9 @@ c_float gershgorin_max(cholmod_sparse* M, c_float *center, c_float *radius){
     /* NB: Assume M is symmetric, so Gershgorin may be performed along the columns as well. */
     c_float ub_eig;
     c_float *Mx = M->x; c_int *Mi = M->i; c_int *Mp = M->p;
-    c_int row, i, j;
-
-    for (i=0; i < M->ncol; i++) {
+    c_int row, i, j, ncol = (c_int)M->ncol;
+    
+    for (i=0; i < ncol; i++) {
         center[i] = 0.0;
         radius[i] = 0.0;
         for (j = Mp[i]; j < Mp[i+1]; j++) {

@@ -18,7 +18,8 @@ typedef struct {
 /* Print a cholmod matrix so the output can be entered into matlab */
 void print_cholmod_matlab(cholmod_sparse *M) {
     printf("M = sparse(%ld, %ld);", M->nrow, M->ncol);
-    size_t col, index = 0, row;
+    size_t col, index = 0; 
+    long int row;
     double *Mx = M->x;
     long int *Mi = M->i;
     long int *Mp = M->p;
@@ -64,21 +65,6 @@ int get_next_command(char* command, char next_char, FILE* fp) {
     return strcmp(command, "ENDATA");
 }
 
-long convert_to_long(char *s) {
-    char c;
-    long i, digit, number = 0;
-    for(i=0;i<strlen(s);i++)
-    {
-    	c = s[i];
-    	if(c>='0' && c<='9') //to confirm it's a digit
-    	{
-    		digit = c - '0';
-    		number = number*10 + digit;
-    	}
-    }
-    return number;
-}
-
 int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **free_bounds,
                                  struct list* free_bounds_list,read_options *opts) {
 
@@ -100,17 +86,14 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
     size_t k;
     
     char bound_type[20];
-    char prev_rowchar[20];
-    prev_rowchar[0] = '\0';
-    long row;
     
     // int no_name_bounds_rhs = FALSE;
     int temp_int;
 
-    next_char = fgetc(fp);
+    next_char = (char)fgetc(fp);
     /*First pass through the file to get the sizes*/
     while(get_next_command(command, next_char, fp)){
-        next_char = fgetc(fp);
+        next_char = (char)fgetc(fp);
         if (!strcmp(command, "ROWS")) {
     
             while(next_char == ' ') {
@@ -127,7 +110,7 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
                     m++;
                 }
                 
-                next_char = fgetc(fp);
+                next_char = (char)fgetc(fp);
             }
             if (old_format_detected) {
                 break;
@@ -155,12 +138,12 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
                     Annz++;
                 }
                 second_rowchar[0] = '\0';
-                next_char = fgetc(fp);
+                next_char = (char)fgetc(fp);
             }
             n_bounds = n;
             Annz += n_bounds;
             m += n_bounds;
-            *free_bounds = create_index_table(c_max(n/5,1));
+            *free_bounds = create_index_table(c_max((c_int) n/5,1));
 
         } else if (!strcmp(command, "RHS") || !strcmp(command, "RANGES")) {
             c_float temp1, temp2;
@@ -168,7 +151,7 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
                 fgets(line, 100, fp);
                 temp_int = sscanf(line, "%s %s %le %s %le", buf, rowchar, &temp1, second_rowchar, &temp2);
                 if (temp_int == 2 || temp_int == 4) opts->no_name_rhs = TRUE;
-                next_char = fgetc(fp);
+                next_char = (char)fgetc(fp);
             }
 
         } else if (!strcmp(command, "BOUNDS")) {
@@ -198,14 +181,14 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
                     Annz--;
                 } 
 
-                next_char = fgetc(fp);
+                next_char = (char)fgetc(fp);
             }
             
 
         } else if (!strcmp(command, "QUADOBJ")) {
             while(next_char == ' ') {
                 fgets(line, 100, fp);
-                next_char = fgetc(fp);
+                next_char = (char)fgetc(fp);
                 Qnnz++;
             }
         }
@@ -238,8 +221,7 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                 struct list* free_bounds_list, read_options *opts) {
 
     char next_char;
-    char NLGE[1], buf[20], buf2[20], objective[20];
-    buf2[0] = '\0';
+    char NLGE[1], buf[20], objective[20];
     objective[0] = '\0';
     c_float temp, temp2;
     char colchar[20], rowchar[20], prev_colchar[20], second_rowchar[20];
@@ -249,15 +231,13 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
     size_t k;
     
     char bound_type[20];
-    char prev_rowchar[20];
-    prev_rowchar[0] = '\0';
     c_int row;
 
-    char line[100], command[20], name[50];
+    char line[100], command[20];
     size_t n, m, n_bounds;
     m = data->m;
     n = data->n;
-    n_bounds = n - length_table(free_bounds, c_max(n/5,1));
+    n_bounds = n - length_table(free_bounds, (size_t)c_max((c_int)n/5,1));
 
     c_float *Ax = data->A->x;
     c_int *Ai = data->A->i;
@@ -268,16 +248,16 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
     c_int *Qp = data->Q->p;
 
     size_t index = 0;
-    long bounds_row = m-n_bounds, col, prev_col = 1;
+    long bounds_row = (c_int)(m-n_bounds), col, prev_col = 1;
 
     char constraint_sign;
     struct node *row_node;
     struct node *col_node;
 
     fgets(line, 100, fp);
-    next_char = fgetc(fp);
+    next_char = (char)fgetc(fp);
     while (get_next_command(command, next_char, fp)) {
-        next_char = fgetc(fp);
+        next_char = (char)fgetc(fp);
         if (!strcmp(command, "ROWS")) {
             index = 0;
             while(next_char == ' ') {
@@ -287,7 +267,7 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                 if (constraint_sign == 'N') {
                     strcpy(objective, buf);
                 } else {
-                    insert(row_index_table, buf, index, constraint_sign);
+                    insert(row_index_table, buf, (c_int)index, constraint_sign);
                     switch (constraint_sign) {
                         case 'L':
                             data->bmax[index] = 0;
@@ -305,7 +285,7 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                     }
                     index++;
                 } 
-                next_char = fgetc(fp);
+                next_char = (char)fgetc(fp);
             }
 
             for (k = m-n_bounds; k < m; k++) {
@@ -381,7 +361,7 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                 }
                 second_rowchar[0] = '\0';
                 
-                next_char = fgetc(fp);
+                next_char = (char)fgetc(fp);
             }
             if ((col == prev_col) && lookup(free_bounds, prev_colchar) == NULL) { //take into account identity matrix for bounds
                 Ai[Ap[prev_col]] = bounds_row;
@@ -447,7 +427,7 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                 }
                 second_rowchar[0] = '\0';
 
-                next_char = fgetc(fp);
+                next_char = (char)fgetc(fp);
             }
         } else if (!strcmp(command, "RANGES")) {
                         // printf("RANGES\n");
@@ -480,7 +460,7 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                     }
                 }
 
-                next_char = fgetc(fp);
+                next_char = (char)fgetc(fp);
             }
         } else if (!strcmp(command, "BOUNDS")) {
 
@@ -493,23 +473,18 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                 } else {
                     sscanf(line, "%s %*s %s %le", bound_type, colchar, &temp);
                 }
-                // col = convert_to_long(colchar)-1;
                 col_node = lookup(col_index_table, colchar);
-                // printf("Colchar: %s\n", colchar);
                 col = col_node->index - 1;
                 col += calculate_index_offset(free_bounds_list, col);
-                // printf("Found %s with index %ld\n", colchar, col_node->index);
-
                 if (!strcmp(bound_type, "UP")) {
-                    data->bmax[index+col] = temp;
+                    data->bmax[index+(size_t)col] = temp;
                 } else if (!strcmp(bound_type, "LO")) {
-                    // printf("Inserting in bmin at %ld + %ld\n", index, col);
-                    data->bmin[index+col] = temp;
+                    data->bmin[index+(size_t)col] = temp;
                 } else if (!strcmp(bound_type, "FX")) {
-                    data->bmin[index+col] = temp;
-                    data->bmax[index+col] = temp;
+                    data->bmin[index+(size_t)col] = temp;
+                    data->bmax[index+(size_t)col] = temp;
                 }
-                next_char = fgetc(fp);
+                next_char = (char)fgetc(fp);
             }
         } else if (!strcmp(command, "QUADOBJ")) {
             prev_col = 1;
@@ -541,9 +516,9 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                 Qx[elemQ] = temp;
 
                 elemQ++;
-                next_char = fgetc(fp);
+                next_char = (char)fgetc(fp);
             }
-            col = n;
+            col = (c_int)n;
             if (col > prev_col) {
                     for (; prev_col < col; prev_col++) {
                         Qp[prev_col+1] = Qp[prev_col];
@@ -722,7 +697,6 @@ int main(int argc, char*argv[]){
 
     printf("Reading problem %s\n", name);
 
-    char next_char;
     char *file_copy = NULL;    
     struct index_table * free_bounds;
     struct list* free_bounds_list = list_create();
@@ -766,10 +740,10 @@ int main(int argc, char*argv[]){
     size_t m, n, n_bounds;
     m = data->m;
     n = data->n;
-    n_bounds = n - length_table(free_bounds, c_max(n/5,1));
+    n_bounds = n - length_table(free_bounds, (size_t)c_max((c_int)n/5,1));
 
-    struct index_table* row_index_table = create_index_table(c_max((m-n_bounds)/5, 1));
-    struct index_table* col_index_table = create_index_table(c_max(n/5, 1));
+    struct index_table* row_index_table = create_index_table(c_max((c_int)(m-n_bounds)/5, 1));
+    struct index_table* col_index_table = create_index_table(c_max((c_int)n/5, 1));
     read_data(fp, data, row_index_table, col_index_table, free_bounds, free_bounds_list, &opts);
 
     fclose(fp);
@@ -836,9 +810,9 @@ int main(int argc, char*argv[]){
     c_free(settings);
 
     // c_free(bounds);
-    free_index_table(row_index_table, c_max((m-n_bounds)/5,1));
-    free_index_table(col_index_table, c_max((n)/5,1));
-    free_index_table(free_bounds, c_max((n)/5,1));
+    free_index_table(row_index_table, c_max((c_int)(m-n_bounds)/5,1));
+    free_index_table(col_index_table, c_max((c_int)(n)/5,1));
+    free_index_table(free_bounds, c_max((c_int)(n)/5,1));
     free_list(free_bounds_list);
 
     return 0;

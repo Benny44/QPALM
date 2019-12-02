@@ -28,7 +28,8 @@ cholmod_sparse* mtx_load_A(FILE *fp, size_t *n, size_t *m){
     Ax = A->x; Ap = A->p; Ai = A->i;
     Ap[0] = 0;
 
-    size_t elem = 0, row, col = 1, prev_col = 1;
+    size_t elem = 0, col = 1, prev_col = 1;
+    c_int row;
     c_float temp;
 
     while (fscanf(fp, "%lu %lu %le", &row, &col, &temp) != EOF) {
@@ -82,7 +83,8 @@ cholmod_sparse* mtx_load_Q(FILE *fp, size_t n_check){
     Qx = Q->x; Qp = Q->p; Qi = Q->i;
     Qp[0] = 0;
 
-    size_t elem = 0, row, col = 1, prev_col = 1;
+    size_t elem = 0, col = 1, prev_col = 1;
+    c_int row;
     c_float temp;
 
     while (fscanf(fp, "%lu %lu %le", &row, &col, &temp) != EOF) {

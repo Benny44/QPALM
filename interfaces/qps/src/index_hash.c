@@ -69,9 +69,9 @@ void print_list(struct list* list) {
 }
 
 struct index_table *create_index_table(c_int size){
-    struct index_table *t = (struct table*)malloc(sizeof(struct index_table));
+    struct index_table *t = (struct index_table*)malloc(sizeof(struct index_table));
     t->size = size;
-    t->list = (struct node**)malloc(sizeof(struct node*)*size);
+    t->list = (struct node**)malloc(sizeof(struct node*)*(size_t)size);
     c_int i;
     for(i=0; i<size; i++)
         t->list[i] = NULL;

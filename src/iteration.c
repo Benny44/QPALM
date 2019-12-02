@@ -80,7 +80,7 @@ void update_sigma(QPALMWorkspace* work, cholmod_common *c) {
             sigma_temp = mult_factor * work->sigma[k];
             if (sigma_temp <= work->settings->sigma_max) { 
                 if (work->sigma[k] != sigma_temp) {
-                    sigma_changed[work->nb_sigma_changed] = k;
+                    sigma_changed[work->nb_sigma_changed] = (c_int)k;
                     work->nb_sigma_changed++;
                 }               
                 work->sigma[k] = sigma_temp;
@@ -89,7 +89,7 @@ void update_sigma(QPALMWorkspace* work, cholmod_common *c) {
                 At_scalex[k] = mult_factor;
             } else {
                 if (work->sigma[k] != work->settings->sigma_max) {
-                    sigma_changed[work->nb_sigma_changed] = k;
+                    sigma_changed[work->nb_sigma_changed] = (c_int)k;
                     work->nb_sigma_changed++;
                 } 
                 work->sigma[k] = work->settings->sigma_max;
@@ -133,7 +133,7 @@ void boost_gamma(QPALMWorkspace *work, cholmod_common *c) {
         size_t nb_active = 0;
         for (size_t i = 0; i < work->data->m; i++){
             if (work->chol->active_constraints[i]){
-                work->chol->enter[nb_active] = i;
+                work->chol->enter[nb_active] = (c_int)i;
                 nb_active++;
             }      
         }

@@ -109,7 +109,7 @@ void ldlcholQAtsigmaA(QPALMWorkspace *work, cholmod_common *c) {
   size_t nb_active = 0;
   for (size_t i = 0; i < work->data->m; i++) {
       if (work->chol->active_constraints[i]){
-          work->chol->enter[nb_active] = i;
+          work->chol->enter[nb_active] = (c_int)i;
           nb_active++;
       }      
   }
@@ -147,8 +147,8 @@ void ldlupdate_sigma_changed(QPALMWorkspace *work, cholmod_common *c) {
   c_float *At_scalex = work->chol->At_scale->x;
   c_int *sigma_changed = work->chol->enter;
 
-  size_t k;
-  for (k=0; k < work->nb_sigma_changed; k++) {
+  size_t k, nb_sigma_changed = (size_t) work->nb_sigma_changed;
+  for (k=0; k < nb_sigma_changed; k++) {
     At_scalex[sigma_changed[k]]= c_sqrt(1-1/(At_scalex[sigma_changed[k]]*At_scalex[sigma_changed[k]])); 
   }
 
