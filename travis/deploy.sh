@@ -79,7 +79,6 @@ cp bin/qpalm_qps $QPALM_DEPLOY_DIR/interfaces
 
 
 cd $curdir
-ls interfaces -R
 # Compile the python interface
 pythondir=$curdir/interfaces/python
 cd $pythondir
