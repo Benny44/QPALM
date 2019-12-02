@@ -12,8 +12,7 @@ matrix:
     env: BADGE=linux
     dist: xenial
     compiler: gcc
-    python:
-      - "3.7"
+    python: 3.7
     addons:
       apt:
         sources:
@@ -22,6 +21,7 @@ matrix:
         - lcov
         - valgrind
   - os: osx
+    osx_image: xcode11.2
     env: BADGE=osx
     addons:
       homebrew:
