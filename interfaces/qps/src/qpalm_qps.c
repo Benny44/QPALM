@@ -615,17 +615,89 @@ void print_out_bpmpd(QPALMData *data, QPALMInfo *info, char* file){
         fprintf(fp, "%s & %lu & %lu & %lu & %lu & %lu & %le & %le \\\\ \n", name, data->n, data->m, data->A->nzmax, data->Q->nzmax, info->iter, info->objective, temp);
         // fprintf(fp, "%s & %le \\\\ \n", name, temp);
     } else
-        printf("Name not found in BPMPD file: %s\n");
+        printf("Name not found in BPMPD file: %s\n", name);
 
     // fprintf(fp, "%s & %lu & %lu & %lu & %lu & %lu & %le \\\\ \n", name, data->n, data->m, data->A->nzmax, data->Q->nzmax, info->iter, info->objective);
     fclose(fp);
     fclose(fp_bpmpd);
 }
 
+void read_settings(QPALMSettings *settings, FILE* fp) {
+    qpalm_set_default_settings(settings);
+    
+    char setting[100];
+    c_float temp;
+
+    int i;
+    for(i = 0; i < 5; i++) {
+        fgets(setting, 100, fp);
+    }
+
+    while(fscanf(fp, "%s %le", setting, &temp) != EOF) {
+        if (!strcmp(setting, "max_iter"))
+            settings->max_iter = (c_int)temp;
+        else if (!strcmp(setting, "inner_max_iter"))
+            settings->inner_max_iter = (c_int)temp;
+        else if (!strcmp(setting, "eps_abs"))
+            settings->eps_abs = temp;
+        else if (!strcmp(setting, "eps_rel"))
+            settings->eps_rel = temp;
+        else if (!strcmp(setting, "eps_abs_in"))
+            settings->eps_abs_in = temp;
+        else if (!strcmp(setting, "eps_rel_in"))
+            settings->eps_rel_in = temp;
+        else if (!strcmp(setting, "rho"))
+            settings->rho = temp;
+        else if (!strcmp(setting, "eps_prim_inf"))
+            settings->eps_prim_inf = temp;
+        else if (!strcmp(setting, "eps_dual_inf"))
+            settings->eps_dual_inf = temp;
+        else if (!strcmp(setting, "theta"))
+            settings->theta = temp;
+        else if (!strcmp(setting, "delta"))
+            settings->delta = temp;
+        else if (!strcmp(setting, "sigma_max"))
+            settings->sigma_max = temp;
+        else if (!strcmp(setting, "proximal"))
+            settings->proximal = (c_int)temp;
+        else if (!strcmp(setting, "gamma_init"))
+            settings->gamma_init = temp;
+        else if (!strcmp(setting, "gamma_upd"))
+            settings->gamma_upd = temp;
+        else if (!strcmp(setting, "gamma_max"))
+            settings->gamma_max = temp;
+        else if (!strcmp(setting, "scaling"))
+            settings->scaling = (c_int)temp;
+        else if (!strcmp(setting, "nonconvex"))
+            settings->nonconvex = (c_int)temp;
+        else if (!strcmp(setting, "verbose"))
+            settings->verbose = (c_int)temp;
+        else if (!strcmp(setting, "print_iter"))
+            settings->print_iter = (c_int)temp;
+        else if (!strcmp(setting, "warm_start"))
+            settings->warm_start = (c_int)temp;
+        else if (!strcmp(setting, "reset_newton_iter"))
+            settings->reset_newton_iter = (c_int)temp;
+        else if (!strcmp(setting, "enable_dual_termination"))
+            settings->enable_dual_termination = (c_int)temp;
+        else if (!strcmp(setting, "dual_objective_limit"))
+            settings->dual_objective_limit = temp;
+        else if (!strcmp(setting, "time_limit"))
+            settings->time_limit = temp;
+        else {
+            printf("Unrecognised setting: %s\n", setting);
+            return;
+        } 
+              
+        
+    }
+    return; 
+}
+
 int main(int argc, char*argv[]){
 
-    if (argc != 2) {
-        fprintf(stderr, "Wrong number of arguments. Correct usage is qpalm_qps problem.qps\n");
+    if (argc != 2 && argc != 3) {
+        fprintf(stderr, "Wrong number of arguments. Correct usage is qpalm_qps problem.qps or qpalm_qps problem.qps settings.txt.\n");
     }
 
 
@@ -719,15 +791,23 @@ int main(int argc, char*argv[]){
 
     /* Setup problem */
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
-    qpalm_set_default_settings(settings);
-    settings->eps_abs = 1e-6;
-    settings->eps_rel = 1e-6;
-    settings->eps_dual_inf = 1e-6;
-    settings->eps_prim_inf = 1e-6;
-    settings->max_iter = 10000;
-    settings->verbose = TRUE;
-    // settings->scaling = 2;
-    // settings->proximal = TRUE;
+    if (argc==3) {
+        fp = fopen(argv[2], "r");
+        if (fp==NULL) {
+            printf("Could not open file %s\n", argv[2]);
+            printf("Using default settings instead\n");
+        } else {
+            read_settings(settings, fp);
+        }
+    } else {
+       qpalm_set_default_settings(settings);
+        settings->eps_abs = 1e-6;
+        settings->eps_rel = 1e-6;
+        settings->eps_dual_inf = 1e-6;
+        settings->eps_prim_inf = 1e-6;
+        settings->max_iter = 10000;
+        settings->verbose = TRUE; 
+    }
 
     cholmod_common c;
     QPALMWorkspace *work = qpalm_setup(data, settings);
