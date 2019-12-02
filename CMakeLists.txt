@@ -1,45 +1,33 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(QPALM VERSION 0.1.0)
 
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+include(CPack)
+
+# Windows-specific options
+set(CMAKE_VERBOSE_MAKEFILE OFF)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+############################################################
+################## Configure directories ###################
+############################################################
 set(LIB_DIR ${CMAKE_CURRENT_BINARY_DIR}/../lib)
 set(INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/../include)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
-
-
-# find_package(BLAS REQUIRED)
-# find_package(LAPACK REQUIRED)
-
 make_directory(${INCLUDE_DIR})
-message("Include dir is ${INCLUDE_DIR}")
-
 if (NOT WIN32)
     execute_process(COMMAND bash -c "cp ${CMAKE_CURRENT_LIST_DIR}/include/* ${INCLUDE_DIR}")
 endif()
-#${CMAKE_SOURCE_DIR}/
-# find_library(BLAS names openblas
-#     HINTS /home/ben/miniconda3/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-message("Miniconda lib is $ENV{MINICONDA_LIB}")
-message("Miniconda include is $ENV{MINICONDA_INCLUDE}")
-
-find_library(MKL_INTEL_LP64 names mkl_intel_lp64 
-    HINTS $ENV{MINICONDA_LIB})
-find_library(MKL_CORE names mkl_core 
-    HINTS $ENV{MINICONDA_LIB})
-find_library(MKL_INTEL_THREAD names mkl_intel_thread 
-    HINTS $ENV{MINICONDA_LIB})
-find_library(IOMP5 names iomp5 
-    HINTS $ENV{MINICONDA_LIB})
-find_library(PTHREAD names pthread
-    HINTS $ENV{MINICONDA_LIB})
-
-
+############################################################
+###################### Find libraries ######################
+############################################################
 find_library(LAPACK names lapack
     HINTS $ENV{MINICONDA_LIB})
-
-set(CMAKE_VERBOSE_MAKEFILE OFF)
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+find_library(LAPACKE names lapacke
+	HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
 
 if (WIN32)
     find_library(CHOLMOD_LIB names cholmod 
@@ -52,83 +40,71 @@ if (WIN32)
         HINTS ${CMAKE_INCLUDE_PATH} $ENV{MINICONDA_INCLUDE}\\suitesparse)
 
 	find_library(BLAS names openblas
-		HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
+        HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
+else()
+    find_library(MKL_INTEL_LP64 names mkl_intel_lp64 
+        HINTS $ENV{MINICONDA_LIB})
+    find_library(MKL_CORE names mkl_core 
+        HINTS $ENV{MINICONDA_LIB})
+    find_library(MKL_INTEL_THREAD names mkl_intel_thread 
+        HINTS $ENV{MINICONDA_LIB})
+    find_library(IOMP5 names iomp5 
+        HINTS $ENV{MINICONDA_LIB})
+    find_library(PTHREAD names pthread
+        HINTS $ENV{MINICONDA_LIB})
 endif()
-# find_library(CHOLMOD_LIB names cholmod 
-#     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
-
-# find_library(SUITESPARSE_LIB names suitesparseconfig
-#     HINTS ${CMAKE_LIBRARY_PATH} $ENV{SUITESPARSE_ROOT_LIB})
-
-# find_path(SUITESPARSE_INCLUDE names cholmod.h 
-#     HINTS ${CMAKE_INCLUDE_PATH} $ENV{MINICONDA_INCLUDE})
-
-# message("Suitesparse_include is ${SUITESPARSE_INCLUDE}")
-
-find_library(LAPACKE names lapacke
-	HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
 
 
-    #LAPACKE_INCLUDE assumed to be = to SUITESPARSE_INCLUDE
-# find_path(LAPACK_INCLUDE names lapacke.h
-#     HINTS ${CMAKE_INCLUDE_PATH} $ENV{SUITESPARSE_ROOT_INCLUDE})
-
-
-# message(STATUS "Root lib is set to: $ENV{SUITESPARSE_ROOT_LIB}")
-# message(STATUS "Root include is set to: $ENV{SUITESPARSE_ROOT_INCLUDE}")
-# message(STATUS ${CHOLMOD_LIB})
-# message(STATUS ${SUITESPARSE_INCLUDE})
-# message(STATUS ${SUITESPARSE_LIB})
-
-
-# Add code coverage
+############################################################
+################### Compilation options ####################
+############################################################
 option (COVERAGE "Perform code coverage" OFF)
-if (COVERAGE)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
-endif()
-
-if (UNIX)
-    #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wconversion")
-endif (UNIX)
-
+option (PYTHON "Compile for the python interface" OFF)
+option (INTERFACES "Compile interfaces" ON)
+option (PRINTING "Allow printing" ON)
+option (PROF "Create executable demo for profiling with gprof" OFF)
+option (PPROF "Create executable demo for profiling with cpuprofile" OFF)
+option (TIMING "Enable timing" ON)
+option (BUILD_SHARED_LIBS "Shared if on, static if off" ON)
 # Add unit tests (if coverage is on, unit tests should also be on)
 include(CMakeDependentOption)
 CMAKE_DEPENDENT_OPTION(UNITTESTS "Perform unit testing" OFF
                        "NOT COVERAGE" ON)
 
-message(STATUS "Unit testing is ${UNITTESTS}")
-message(STATUS "Code coverage is ${COVERAGE}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDLONG")
 
-
-
-add_compile_options("-DDLONG")
-option(PYTHON OFF)
-if (PYTHON)
-    message("Compiling for the PYTHON interface")
-    add_compile_options("-DPYTHON")
+# Add code coverage
+if (COVERAGE)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
 endif()
 
-option (PRINTING "Allow printing" ON)
+if (PYTHON)
+    message("Compiling for the PYTHON interface")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPYTHON")
+endif()
+
 if (PRINTING)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPRINTING")
 endif()
 
-option (PROF "Create executable demo for profiling with gprof" OFF)
 if (PROF)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pg")
 endif()
 
-
-option (TIMING "Enable timing" ON)
 if (TIMING)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPROFILING")
 endif()
 
-option (BUILD_SHARED_LIBS "Shared if on, static if off" ON)
-
+############################################################
+################### Build the libraries ####################
+############################################################
 if (NOT WIN32)
     add_subdirectory(cmakeSuitesparse)
 endif()
+
+if (UNIX)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wconversion")
+endif (UNIX)
 
 SET(SRC 
         src/newton.c
@@ -149,14 +125,9 @@ endif()
 
 add_library(qpalm ${SRC})
 
-                # ${SUITESPARSE_INCLUDE})
-        
-# find_package(OpenMP)
-# if (OPENMP_FOUND)
-#         target_link_libraries(qpalm ${OpenMP_C_LIBRARIES})
-# endif()
-# target_link_libraries(qpalm ${BLAS} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACK_LIB})
-# target_link_libraries(qpalm ${BLAS} ${LAPACK} cholmod_new ${LAPACK_LIB})
+############################################################
+#################### Link the libraries ####################
+############################################################
 if (NOT WIN32)
 	target_include_directories(qpalm
         PUBLIC
@@ -172,7 +143,6 @@ else()
 				${SUITESPARSE_INCLUDE})
     target_link_libraries(qpalm ${BLAS} ${LAPACK} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACKE})
 endif()
-# target_link_libraries(qpalm blas lapack cholmod_new ${LAPACK_LIB})
 
 if (PYTHON)
     find_package(PythonInterp REQUIRED)
@@ -181,13 +151,9 @@ if (PYTHON)
     target_include_directories(qpalm PUBLIC ${PYTHON_INCLUDE_PATH} interfaces/python/include)
 endif()
 
-option (PPROF "Create executable demo for profiling with cpuprofile" OFF)
-if (PPROF)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,--no-as-needed -lprofiler -Wl,--as-needed")
-    # target_link_libraries(qpalm profiler)
-    add_subdirectory(profiling)
-endif()
-
+############################################################
+#################### Build executables #####################
+############################################################
 # Add unittests
 if (UNITTESTS)
     add_subdirectory(tests)
@@ -198,7 +164,6 @@ if (UNITTESTS)
 endif()
 
 # Add interfaces
-option (INTERFACES "Compile interfaces" ON)
 if (INTERFACES)
     option(PRINT_LATEX "Printout latex for qps" OFF)
     if (PRINT_LATEX)
@@ -207,10 +172,9 @@ if (INTERFACES)
     add_subdirectory(interfaces)
 endif()
 
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
+#Add profiling demo
+if (PPROF)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,--no-as-needed -lprofiler -Wl,--as-needed")
+    add_subdirectory(profiling)
+endif()
 
-
-#execute_process(COMMAND bash -c "ls ${INCLUDE_DIR}")
-#execute_process(COMMAND bash -c "ls ${LIB_DIR}")
