@@ -34,6 +34,7 @@ env:
   - DEPS_DIR="${HOME}/deps"
   - QPALM_VERSION="1.0"
 install:
+- pip3 install --upgrade pip
 - gem install coveralls-lcov
 - chmod 755 travis/install.sh
 - chmod 755 travis/buildTest.sh
