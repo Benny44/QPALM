@@ -54,6 +54,8 @@ else
     OS_NAME="linux"
     OS_SHARED_LIB_EXT="so"
 fi
+cd $curdir
+
 QPALM_DEPLOY_DIR=qpalm-${QPALM_VERSION}-${OS_NAME}64
 mkdir $QPALM_DEPLOY_DIR/
 mkdir $QPALM_DEPLOY_DIR/info
@@ -65,17 +67,17 @@ mkdir $QPALM_DEPLOY_DIR/interfaces/python/build
 mkdir $QPALM_DEPLOY_DIR/interfaces/python/build/lib
 
 # Copy license
-cp ../../LICENSE $QPALM_DEPLOY_DIR/info
-cp ../../suitesparse/LICENSE.txt $QPALM_DEPLOY_DIR/info/LICENSEsuitesparse.txt
+cp LICENSE $QPALM_DEPLOY_DIR/info
+cp suitesparse/LICENSE.txt $QPALM_DEPLOY_DIR/info/LICENSEsuitesparse.txt
 # Copy includes
-cp ../include/*.h  $QPALM_DEPLOY_DIR/include
+cp build/include/*.h  $QPALM_DEPLOY_DIR/include
 # Copy static library
 #cp libqpalm.a $QPALM_DEPLOY_DIR/lib
 # Copy shared library
-cp ../lib/*.$OS_SHARED_LIB_EXT $QPALM_DEPLOY_DIR/lib
+cp build/lib/*.$OS_SHARED_LIB_EXT $QPALM_DEPLOY_DIR/lib
 # Copy compiled interfaces
-cp bin/qpalm_mtx $QPALM_DEPLOY_DIR/interfaces
-cp bin/qpalm_qps $QPALM_DEPLOY_DIR/interfaces
+cp $builddir/bin/qpalm_mtx $QPALM_DEPLOY_DIR/interfaces
+cp $builddir/bin/qpalm_qps $QPALM_DEPLOY_DIR/interfaces
 
 
 cd $curdir
@@ -115,6 +117,8 @@ cd $builddir
 
 cmake $curdir -DCMAKE_BUILD_TYPE=release -DINTERFACES=OFF -DUNITTESTS=OFF -DPYTHON=ON
 make
+
+cd $curdir
 
 # Copy includes
 cp $pythondir/include/*.h  $QPALM_DEPLOY_DIR/include
