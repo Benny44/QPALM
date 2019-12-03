@@ -148,7 +148,8 @@ if (PYTHON)
     find_package(PythonInterp REQUIRED)
     # We don't really need the libs, but the headers.
     find_package(PythonLibs 3 REQUIRED)
-    target_include_directories(qpalm PUBLIC ${PYTHON_INCLUDE_PATH} interfaces/python/include)
+    target_include_directories(qpalm PUBLIC ${PYTHON_INCLUDE_DIRS} interfaces/python/include)
+    target_link_libraries(qpalm ${PYTHON_LIBRARIES})
 endif()
 
 ############################################################
