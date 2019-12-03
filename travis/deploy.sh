@@ -13,9 +13,10 @@ fi
 echo "Creating Bintray package..."
 
 # Compile QPALM
+source activate condaenv_build
 
-export MINICONDA_LIB=${DEPS_DIR}/miniconda/lib
-export MINICONDA_INCLUDE=${DEPS_DIR}/miniconda/include
+export MINICONDA_LIB=${DEPS_DIR}/miniconda/envs/condaenv_build/lib
+export MINICONDA_INCLUDE=${DEPS_DIR}/miniconda/envs/condaenv_build/include
 
 curdir=`pwd`
 

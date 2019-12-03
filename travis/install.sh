@@ -11,7 +11,15 @@ else
     wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
 fi
 chmod +x miniconda.sh && ./miniconda.sh -b -p ${DEPS_DIR}/miniconda
-export PATH=${DEPS_DIR}/miniconda/bin:$PATH
+
+
+conda config --set always_yes yes --set changeps1 no
+conda update --yes -q conda
+
+conda create --quiet --yes -n condaenv_build python=3.7
+source activate condaenv_build
+
+export PATH=${DEPS_DIR}/miniconda/envs/condaenv_build/bin:$PATH
 hash -r
 conda config --set always_yes yes --set changeps1 no
 conda update --yes -q conda

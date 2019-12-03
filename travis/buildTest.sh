@@ -3,8 +3,10 @@
 # export SUITESPARSE_ROOT_LIB=${DEPS_DIR}/miniconda/lib
 # export SUITESPARSE_ROOT_INCLUDE=${DEPS_DIR}/miniconda/include
 
-export MINICONDA_LIB=${DEPS_DIR}/miniconda/lib
-export MINICONDA_INCLUDE=${DEPS_DIR}/miniconda/include
+source activate condaenv_build
+
+export MINICONDA_LIB=${DEPS_DIR}/miniconda/envs/condaenv_build/lib
+export MINICONDA_INCLUDE=${DEPS_DIR}/miniconda/envs/condaenv_build/include
 
 # ls ${SUITESPARSE_ROOT_LIB}
 # ls ${SUITESPARSE_ROOT_INCLUDE}
