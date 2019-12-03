@@ -16,6 +16,8 @@ hash -r
 conda config --set always_yes yes --set changeps1 no
 conda update --yes -q conda
 
+conda create --quiet --yes -n condaenv_build python=3.7
+
 #conda install -c conda-forge suitesparse
 conda install -c conda-forge lapack
 conda install -c intel mkl
