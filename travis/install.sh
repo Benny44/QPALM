@@ -20,4 +20,5 @@ conda update --yes -q conda
 conda install -c conda-forge lapack
 conda install -c intel mkl
 conda install -c anaconda python
+conda init
 conda activate base
