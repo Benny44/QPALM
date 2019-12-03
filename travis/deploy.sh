@@ -1,5 +1,5 @@
 #!/bin/bash
-
+conda activate base
 # Update variables from install
 # CMake
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
