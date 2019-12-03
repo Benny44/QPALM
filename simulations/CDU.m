@@ -6,20 +6,21 @@ cd(current);
 
 loadBenchmarkCDU
 
-nQP = 1;
+nQP = 7201;
 
 options.qpalm_matlab = false;
-options.qpalm_c = false;
-options.osqp = false;
+options.qpalm_c = true;
+options.osqp = true;
 options.qpoases = false;
-options.gurobi = true;
+options.gurobi = false;
 
 options.VERBOSE = false;
-options.SCALING_ITER = 10;
+options.SCALING_ITER = 2;
 options.MAXITER = 10000;
 options.EPS_ABS = 1e-6;
 options.EPS_REL = 1e-6;
 options.MAX_TIME = 100;
+options.TIME_LIMIT = options.MAX_TIME;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
@@ -35,6 +36,28 @@ osqp_settings.max_iter = options.MAXITER;
 osqp_settings.eps_abs = options.EPS_ABS;
 osqp_settings.eps_rel = options.EPS_REL;
 osqp_settings.verbose = options.VERBOSE;
+
+qpalm_solver = qpalm;
+qpalm_settings = qpalm_solver.default_settings();
+
+qpalm_settings.verbose = options.VERBOSE;
+qpalm_settings.scaling = options.SCALING_ITER;
+qpalm_settings.max_iter = 50000;
+qpalm_settings.eps_abs_in = min(options.EPS_ABS*1e6, 1);
+qpalm_settings.eps_rel_in = min(options.EPS_REL*1e6, 1);
+qpalm_settings.eps_abs = options.EPS_ABS;
+qpalm_settings.eps_rel = options.EPS_REL;
+qpalm_settings.eps_prim_inf = options.EPS_ABS;
+qpalm_settings.eps_dual_inf = options.EPS_ABS;
+qpalm_settings.time_limit = options.TIME_LIMIT;
+qpalm_settings.proximal = false;
+% qpalm_settings.sigma_max = 20;
+
+
+lbA = lbA+1e-3*randn(nC, 7201)';
+ubA = ubA+1e-3*randn(nC, 7201)';
+lb = lb+1e-3*randn(nC, 7201)';
+ub = ub+1e-3*randn(nC, 7201)';
 
 %% qpoases (can deal directly with a sequence of QPs)
 if options.qpoases
@@ -60,13 +83,14 @@ if options.qpoases
 
 end
 
+prob.Q = sparse(H);
+prob.A = sparse(A);
+prob.A_combined = sparse([A; eye(nV)]); 
 %% other solvers
-for i = 1:nQP
-    options.i = i;
+i_init = nQP-10;
+for i = i_init:nQP
+    options.i = i-i_init+1;
     
-    prob.Q = sparse(H);
-    prob.A = sparse(A);
-    prob.A_combined = sparse([A; eye(nV)]); 
     prob.lbA_combined = [lbA(i,:)'; lb(i,:)'];
     prob.ubA_combined = [ubA(i,:)'; ub(i,:)'];
     prob.lbA = lbA(i,:)';
@@ -75,8 +99,13 @@ for i = 1:nQP
     prob.ub = ub(i,:)';
     prob.q = g(i,:)';
     
-    if i==1
-        osqp_solver.setup(prob.Q, prob.q, prob.A_combined,prob.lbA_combined,prob.ubA_combined, osqp_settings);
+    if options.i==1
+        if options.osqp
+            osqp_solver.setup(prob.Q, prob.q, prob.A_combined, prob.lbA_combined, prob.ubA_combined, osqp_settings);
+        end
+        if options.qpalm_c
+            qpalm_solver.setup(prob.Q, prob.q, prob.A_combined, prob.lbA_combined, prob.ubA_combined, qpalm_settings);
+        end
     end 
     
     qpalm_matlab_time = 0;
@@ -86,7 +115,7 @@ for i = 1:nQP
     gurobi_time = 0;
       
     
-    [X, timings, iter, status, options] = compare_QP_solvers_sequential(prob, options, osqp_solver);
+    [X, timings, iter, status, options] = compare_QP_solvers_sequential(prob, options, qpalm_solver, osqp_solver);
     
     %Shift solution for warm_starting
 %     options.x = [options.x(33:end); zeros(32,1)];

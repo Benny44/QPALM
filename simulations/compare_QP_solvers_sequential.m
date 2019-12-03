@@ -1,4 +1,4 @@
-function [ x, timings, iter, status, options, osqp_solver] = compare_QP_solvers_sequential( prob, options, osqp_solver )
+function [ x, timings, iter, status, options, osqp_solver] = compare_QP_solvers_sequential( prob, options, qpalm_solver, osqp_solver )
 %Run QPALM (Matlab), QPALM (C), OSQP, qpoases, and GUROBI on the given problem 
 % as one problem in a sequence of problems
 
@@ -114,6 +114,27 @@ end
 %     end
 %     
 % end
+%% QPALM C
+if options.qpalm_c
+    if options.i ~= 1
+%         qpalm_solver.update('q', prob.q, 'l', prob.lbA_combined, 'u', prob.ubA_combined);
+        qpalm_solver.update_q(prob.q);
+        qpalm_solver.update_bounds(prob.lbA_combined, prob.ubA_combined);
+        qpalm_solver.warm_start(x_warm_start, y_warm_start);
+    end
+    
+    res_qpalm = qpalm_solver.solve();
+    status.qpalm_c = res_qpalm.info.status;
+    iter.qpalm_c = res_qpalm.info.iter;
+    timings.qpalm_c = res_qpalm.info.run_time;
+    x.qpalm_c = res_qpalm.x;
+    
+    options.x = res_qpalm.x;
+    options.y = res_qpalm.y;
+    
+    res_qpalm.info
+end
+
 %% OSQP
 % 
 if options.osqp
