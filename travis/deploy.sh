@@ -1,5 +1,5 @@
 #!/bin/bash
-
+source activate condaenv_build
 # Update variables from install
 # CMake
 if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then

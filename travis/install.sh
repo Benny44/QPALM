@@ -25,4 +25,3 @@ conda install -c anaconda python
 # conda init
 #conda activate base
 conda install --quiet --yes -n condaenv_build pip
-source activate condaenv_build
