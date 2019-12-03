@@ -13,6 +13,8 @@ fi
 echo "Creating Bintray package..."
 
 # Compile QPALM
+export PATH=${DEPS_DIR}/miniconda/bin:$PATH
+hash -r
 source activate condaenv_build
 
 export MINICONDA_LIB=${DEPS_DIR}/miniconda/envs/condaenv_build/lib
