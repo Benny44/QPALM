@@ -40,8 +40,6 @@ install:
 - chmod 755 travis/buildTest.sh
 - chmod 755 travis/deploy.sh
 - "travis/install.sh"
-- conda init
-- conda activate base
 script:
 - "travis/buildTest.sh"
 cache:

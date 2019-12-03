@@ -2,6 +2,7 @@
 
 # export SUITESPARSE_ROOT_LIB=${DEPS_DIR}/miniconda/lib
 # export SUITESPARSE_ROOT_INCLUDE=${DEPS_DIR}/miniconda/include
+conda activate base
 
 export MINICONDA_LIB=${DEPS_DIR}/miniconda/lib
 export MINICONDA_INCLUDE=${DEPS_DIR}/miniconda/include
