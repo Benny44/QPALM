@@ -6,18 +6,19 @@ cd(current);
 
 loadBenchmarkChain80w
 
-options.qpalm_matlab = true;
-options.qpalm_c = false;
+options.qpalm_matlab = false;
+options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = true;
-options.gurobi = false;
+options.gurobi = true;
 
 options.VERBOSE = false;
-options.SCALING_ITER = 10;
+options.SCALING_ITER = 2;
 options.MAXITER = 10000;
 options.EPS_ABS = 1e-6;
 options.EPS_REL = 1e-6;
 options.MAX_TIME = 100;
+options.TIME_LIMIT = options.MAX_TIME;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
@@ -33,6 +34,27 @@ osqp_settings.max_iter = options.MAXITER;
 osqp_settings.eps_abs = options.EPS_ABS;
 osqp_settings.eps_rel = options.EPS_REL;
 osqp_settings.verbose = options.VERBOSE;
+
+qpalm_solver = qpalm;
+qpalm_settings = qpalm_solver.default_settings();
+
+qpalm_settings.verbose = options.VERBOSE;
+qpalm_settings.scaling = options.SCALING_ITER;
+qpalm_settings.max_iter = 50000;
+qpalm_settings.eps_abs_in = min(options.EPS_ABS*1e6, 1);
+qpalm_settings.eps_rel_in = min(options.EPS_REL*1e6, 1);
+qpalm_settings.eps_abs = options.EPS_ABS;
+qpalm_settings.eps_rel = options.EPS_REL;
+qpalm_settings.eps_prim_inf = options.EPS_ABS;
+qpalm_settings.eps_dual_inf = options.EPS_ABS;
+qpalm_settings.time_limit = options.TIME_LIMIT;
+qpalm_settings.proximal = false;
+
+
+lbA = lbA+1e-3*randn(nC, 7201)'.*lbA;
+ubA = ubA+1e-3*randn(nC, 7201)'.*ubA;
+lb = lb+1e-3*randn(nC, 7201)'.*lb;
+ub = ub+1e-3*randn(nC, 7201)'.*ub;
 
 %% qpoases (can deal directly with a sequence of QPs)
 if options.qpoases
@@ -59,8 +81,9 @@ if options.qpoases
 end
 
 %% other solvers
-for i = 1:nQP
-    options.i = i;
+i_init = 1;
+for i = i_init:nQP
+    options.i = i-i_init+1;
     
     prob.Q = sparse(H);
     prob.A = sparse(A);
@@ -73,8 +96,13 @@ for i = 1:nQP
     prob.ub = ub(i,:)';
     prob.q = g(i,:)';
     
-    if i==1
-        osqp_solver.setup(prob.Q, prob.q, prob.A_combined,prob.lbA_combined,prob.ubA_combined, osqp_settings);
+    if options.i==1
+        if options.osqp
+            osqp_solver.setup(prob.Q, prob.q, prob.A_combined, prob.lbA_combined, prob.ubA_combined, osqp_settings);
+        end
+        if options.qpalm_c
+            qpalm_solver.setup(prob.Q, prob.q, prob.A_combined, prob.lbA_combined, prob.ubA_combined, qpalm_settings);
+        end
     end 
     
     qpalm_matlab_time = 0;
@@ -84,7 +112,7 @@ for i = 1:nQP
     gurobi_time = 0;
       
     
-    [X, timings, iter, status, options] = compare_QP_solvers_sequential(prob, options, osqp_solver);
+    [X, timings, iter, status, options] = compare_QP_solvers_sequential(prob, options, qpalm_solver, osqp_solver);
     if options.qpalm_matlab , qpalm_matlab_time = qpalm_matlab_time + timings.qpalm_matlab; end
     if options.qpalm_c , qpalm_c_time = qpalm_c_time + timings.qpalm_c; end
     if options.osqp, osqp_time = osqp_time + timings.osqp; end
@@ -117,11 +145,12 @@ for i = 1:nQP
     
 end
 
-osqp_solver.delete();
+osqp_solver.delete;
+qpalm_solver.delete;
 
 save('output/chain80w');
 
 %% Plot results
 
-Iter_qpalm_matlab
+% Iter_qpalm_matlab
     

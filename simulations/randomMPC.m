@@ -1,14 +1,15 @@
-%Sparse regressor selection
+%Random MPC
 clear; close all;
 
 current = fileparts(mfilename('fullpath'));
 cd(current);
 
-options.qpalm_matlab = true;
-options.qpalm_c = false;
+options.qpalm_matlab = false;
+options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = true;
 options.gurobi = true;
+options.VERBOSE = false;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
@@ -30,23 +31,23 @@ rng(1)
 for i = 1:nb_n
     T = T_values(i);
     
-    delta = randn(nx, 1)*0.01;
+%     delta = randn(nx, 1)*0.01;
 %     A = eye(nx)+diag(delta);
-    A = randn(nx,nx);
+    A = sprandsym(nx,1,1e-4,1);
     %stabilize A
-    A = A/(max(abs(eig(A)))*2);
+    A = A/(max(abs(eig(full(A))))*2);
 %     lambda_max = max(eig(A))-1;
 %     if lambda_max > 0
 %         A = A - diag(ones(nx,1)*lambda_max + 1e-6);
 %     end
     B = randn(nx, nu);
 %     Q = diag(sprand(nx,1,7e-1)*10);
-    M = sprandn(nx, nx, 5e-1);
+    M = sprandn(nx, nx, 5e-1, 1e-4);
     Q = M*M';
 %     Q = diag(rand(nx,1)*10);
 
     R = 0.1*eye(nu);
-    QT = dare(A,B,full(Q),R);
+    QT = dare(full(A),B,full(Q),R);
     x_upper = rand(1,1)+1; x_upper = x_upper*ones(nx,1);
     u_upper = rand(1,1)*0.1; u_upper = u_upper*ones(nu,1);
     

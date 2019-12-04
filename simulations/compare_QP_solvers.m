@@ -21,7 +21,7 @@ else
     VERBOSE = options.VERBOSE;
 end
 if ~isfield(options, 'SCALING_ITER')
-    SCALING_ITER = 10;
+    SCALING_ITER = 2;
 else
     SCALING_ITER = options.SCALING_ITER;
 end
@@ -130,6 +130,9 @@ if options.qpalm_c
         settings.eps_prim_inf = EPS_ABS;
         settings.eps_dual_inf = EPS_ABS;
         settings.time_limit = TIME_LIMIT;
+%         settings.proximal = true;
+%         settings.gamma_init = 1e6;
+%         settings.gamma_max = 1e6;
 
         solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
         try

@@ -2,11 +2,13 @@
 %Sparse regressor selection
 clear; close all;
 
-options.qpalm_matlab = true;
+options.qpalm_matlab = false;
 options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = true;
 options.gurobi = true;
+options.VERBOSE = true;
+options.SCALING_ITER = 0;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
@@ -15,8 +17,8 @@ Tqpoases = [];
 Tgurobi = [];
 
 
-nb_gamma = 11;
-n_values = 400:401;
+nb_gamma = 2;
+n_values = 400:20:421;
 nb_n = length(n_values);
 
 for i = 1:nb_n
@@ -24,17 +26,26 @@ for i = 1:nb_n
     m = n+1;
     
     k = ceil(n/10);
-    F = sprandn(n,k,5e-1);
+    F = sprandn(n,k,5e-1,1e-4);
     D = diag(rand(n,1)*sqrt(k));
     mu = randn(n,1);
+%     mu(1:2:end) = mu(1:2:end)/1000;
     Q = blkdiag(D, eye(k));
     Q = sparse(Q);
+    
+%     m = m-1;
+%     A = [F' -eye(k);
+%         eye(n) zeros(n,k)];
+%     A = sparse(A);
+%     lb = [zeros(k+n,1)];
+%     ub = [zeros(k,1); ones(n,1)];
     A = [ones(1,n) zeros(1,k); 
         F' -eye(k);
         eye(n) zeros(n,k)];
     A = sparse(A);
     lb = [1; zeros(k+n,1)];
-    ub = [1; zeros(k,1); ones(n,1)];
+    ub = [1; zeros(k,1); inf*ones(n,1)];
+
     
     prob.Q = Q; prob.A = A; prob.lb = lb; prob.ub = ub;
     
@@ -47,7 +58,8 @@ for i = 1:nb_n
     for gamma = logspace(-2,2,nb_gamma);
         q = [-1/2/gamma*mu; zeros(k,1)];
         prob.q = q;
-        [X, timings, options] = compare_QP_solvers(prob, options);
+        [ X, timings, iter, status, options, stats ] = compare_QP_solvers(prob, options);
+%         [X, timings, options] = compare_QP_solvers(prob, options);
         if options.qpalm_matlab , qpalm_matlab_time = qpalm_matlab_time + timings.qpalm_matlab; end
         if options.qpalm_c , qpalm_c_time = qpalm_c_time + timings.qpalm_c; end
         if options.osqp, osqp_time = osqp_time + timings.osqp; end

@@ -132,7 +132,7 @@ if options.qpalm_c
     options.x = res_qpalm.x;
     options.y = res_qpalm.y;
     
-    res_qpalm.info
+%     res_qpalm.info;
 end
 
 %% OSQP
