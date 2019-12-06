@@ -6,11 +6,11 @@ cd(current);
 
 loadBenchmarkChain80w
 
-options.qpalm_matlab = false;
-options.qpalm_c = true;
-options.osqp = true;
-options.qpoases = true;
-options.gurobi = true;
+options.qpalm_matlab = true;
+options.qpalm_c = false;
+options.osqp = false;
+options.qpoases = false;
+options.gurobi = false;
 
 options.VERBOSE = false;
 options.SCALING_ITER = 2;
@@ -51,10 +51,10 @@ qpalm_settings.time_limit = options.TIME_LIMIT;
 qpalm_settings.proximal = false;
 
 
-lbA = lbA+1e-3*randn(nC, 7201)'.*lbA;
-ubA = ubA+1e-3*randn(nC, 7201)'.*ubA;
-lb = lb+1e-3*randn(nC, 7201)'.*lb;
-ub = ub+1e-3*randn(nC, 7201)'.*ub;
+% lbA = lbA+1e-3*randn(nC, 7201)'.*lbA;
+% ubA = ubA+1e-3*randn(nC, 7201)'.*ubA;
+% lb = lb+1e-3*randn(nC, 7201)'.*lb;
+% ub = ub+1e-3*randn(nC, 7201)'.*ub;
 
 %% qpoases (can deal directly with a sequence of QPs)
 if options.qpoases

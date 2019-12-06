@@ -36,3 +36,5 @@ buildQPS.sh
 /interfaces/qps/out.tex
 /interfaces/qps/BPMPD.txt
 *.pyc
+/simulations/install_mpt.m
+/simulations/tbxmanager/*

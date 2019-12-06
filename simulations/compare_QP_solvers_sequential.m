@@ -49,10 +49,11 @@ if options.qpalm_matlab
     opts.gamma    = 1e4;
     opts.gammaUpd = 10;
     opts.gammaMax = 1e6;
-    opts.Delta   = 10;
+    opts.Delta   = 100;
 %     opts.scaling = 'simple';
     if isfield(options, 'sig')
 %         opts.sig = options.sig;
+%         opts.gamma = options.gamma;
 %         opts.LD = options.LD;
 %         opts.active_cnstrs = options.active_cnstrs;
     end
@@ -65,6 +66,7 @@ if options.qpalm_matlab
     options.LD = stats_qpalm.LD;
     options.active_cnstrs = stats_qpalm.active_cnstrs;
     options.sig = stats_qpalm.sig;
+    options.gamma = stats_qpalm.gamma(end);
     
     status.qpalm_matlab = stats_qpalm.status;
     iter.qpalm_matlab = stats_qpalm.iter;

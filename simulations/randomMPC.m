@@ -7,8 +7,8 @@ cd(current);
 options.qpalm_matlab = false;
 options.qpalm_c = true;
 options.osqp = true;
-options.qpoases = true;
-options.gurobi = true;
+options.qpoases = false;
+options.gurobi = false;
 options.VERBOSE = false;
 
 Tqpalm_matlab = [];
@@ -26,43 +26,74 @@ n_values = (T_values+1)*nx+T_values*nu;
 
 nb_n = length(n_values);
 
-rng(1)
+% rng(1)
 
 for i = 1:nb_n
     T = T_values(i);
     
 %     delta = randn(nx, 1)*0.01;
 %     A = eye(nx)+diag(delta);
-    A = sprandsym(nx,1,1e-4,1);
+    A = 2*sprandsym(nx,1,1e-2);
     %stabilize A
-    A = A/(max(abs(eig(full(A))))*2);
+%     A = A/(max(abs(eig(full(A))))*2);
 %     lambda_max = max(eig(A))-1;
 %     if lambda_max > 0
 %         A = A - diag(ones(nx,1)*lambda_max + 1e-6);
 %     end
-    B = randn(nx, nu);
+    B = 1*randn(nx, nu);
 %     Q = diag(sprand(nx,1,7e-1)*10);
-    M = sprandn(nx, nx, 5e-1, 1e-4);
+    M = 5*sprandn(nx, nx, 5e-1, 1e-4);
     Q = M*M';
 %     Q = diag(rand(nx,1)*10);
 
     R = 0.1*eye(nu);
     QT = dare(full(A),B,full(Q),R);
-    x_upper = rand(1,1)+1; x_upper = x_upper*ones(nx,1);
-    u_upper = rand(1,1)*0.1; u_upper = u_upper*ones(nu,1);
+    K = dlqr(full(A),B,full(Q),R);
+    K = -K; % Note that matlab defines K as -K
+    Ak = A+B*K; % Closed-loop dynamics
+    x_upper = 2*rand(1,1)+10; x_upper = x_upper*ones(nx,1);
+    u_upper = 2*rand(1,1)+10; u_upper = u_upper*ones(nu,1);
+    
+    H = [eye(nx); -eye(nx)];
+    h = [x_upper; x_upper];
+    X = polytope(H,h);
+ 
+% Define the input constraints: u <= umax, -u <= -umin 
+    Hu = [eye(nu); -eye(nu)];
+    hu = [u_upper; u_upper];
+    U = polytope(Hu,hu);
+
+    HH = [H;Hu*K]; hh = [h;hu]; % State and input constraints
+    
+    % Compute the maximal invariant set
+    O = polytope(HH,hh);
+    while 1
+        Oprev = O;
+        [F,f] = double(O);  
+        % Compute the pre-set
+        O = polytope([F;F*Ak],[f;f]);
+        if O == Oprev, break; end
+    end
+%     termSet = O;
+    [F,f] = double(O);
+    [nf, nx] = size(F); 
     
     x_init = rand(nx,1).*x_upper*0.5 - x_upper;
     
-    M = zeros(nx*(T+1) + nx*T + nu*T, nx*(T+1)+nu*T);
-    lb = zeros(nx*(T+1) + nx*T + nu*T, 1);
-    ub = zeros(nx*(T+1) + nx*T + nu*T, 1);
+    M = zeros(nx*T+nx+nu*T+nx*T+nf, nx*(T+1)+nu*T);
+    
+%     M = zeros(nx*(T+1) + nx*(T+1) + nu*T + nxF, );
+    lb = zeros(nx*T+nx+nu*T+nx*T+nf, 1);
+    ub = zeros(nx*T+nx+nu*T+nx*T+nf, 1);
     
     for k = 0:T-1
         M(k*nx+1:(k+1)*nx,k*(nx+nu)+1:k*(nx+nu)+nx) = A;
         M(k*nx+1:(k+1)*nx,(k+1)*nx+k*nu+1:(k+1)*(nx+nu)) = B;
         M(k*nx+1:(k+1)*nx,(k+1)*(nx+nu)+1:(k+1)*(nx+nu)+nx) = -eye(nx);
     end
-    M(T*nx+1:end, :) = eye(nx*(T+1)+nu*T);
+    M(T*nx+1:T*nx+nx*(T+1)+nu*T, 1:nx*(T+1)+nu*T) = eye(nx*(T+1)+nu*T); %state and input constraints
+    M(T*nx+nx*(T+1)+nu*T+1:end, nx*T+nu*T+1:end) = F; %terminal constraints
+    
     
     lb(T*nx+1:(T+1)*nx) = x_init;
     ub(T*nx+1:(T+1)*nx) = x_init;
@@ -73,6 +104,10 @@ for i = 1:nb_n
         lb((T+1)*nx+k*(nx+nu)+nu+1: (T+1)*nx+(k+1)*(nx+nu)) = -x_upper;
         ub((T+1)*nx+k*(nx+nu)+nu+1: (T+1)*nx+(k+1)*(nx+nu)) = x_upper;
     end
+    
+    %Terminal constraints
+    ub((T+1)*nx+T*(nx+nu)+1:end) = f;
+    lb((T+1)*nx+T*(nx+nu)+1:end) = -inf;
            
     q = zeros(nx*(T+1)+nu*T,1);
     Q = cell_blkdiag(blkdiag(Q, R), T, QT);
