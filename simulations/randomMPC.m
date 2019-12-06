@@ -7,9 +7,10 @@ cd(current);
 options.qpalm_matlab = false;
 options.qpalm_c = true;
 options.osqp = true;
-options.qpoases = false;
-options.gurobi = false;
+options.qpoases = true;
+options.gurobi = true;
 options.VERBOSE = false;
+options.TIME_LIMIT = 10;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
@@ -78,7 +79,8 @@ for i = 1:nb_n
     [F,f] = double(O);
     [nf, nx] = size(F); 
     
-    x_init = rand(nx,1).*x_upper*0.5 - x_upper;
+%     x_init = rand(nx,1).*x_upper*0.5 - x_upper;
+    x_init = findInitialState(A, B, T, x_upper, u_upper, F, f);
     
     M = zeros(nx*T+nx+nu*T+nx*T+nf, nx*(T+1)+nu*T);
     

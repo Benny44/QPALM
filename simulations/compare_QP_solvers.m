@@ -31,7 +31,11 @@ else
     MAXITER = options.MAXITER;
 end
 
-TIME_LIMIT = 3600;
+if ~isfield(options, 'TIME_LIMIT')
+    TIME_LIMIT = 3600;
+else
+    TIME_LIMIT = options.TIME_LIMIT;
+end
 
 if ~isfield(options, 'EPS_ABS')
     EPS_ABS = 1e-6;
