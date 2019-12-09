@@ -185,8 +185,7 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         }
         
         // Setup workspace
-        cholmod_common c;
-        qpalm_work = qpalm_setup(data, settings, &c);
+        qpalm_work = qpalm_setup(data, settings);
 
         if(qpalm_work == NULL){
             mexErrMsgTxt("Invalid problem setup");
