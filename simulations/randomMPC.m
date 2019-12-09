@@ -8,7 +8,7 @@ options.qpalm_matlab = false;
 options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = true;
-options.gurobi = true;
+options.gurobi = false;
 options.VERBOSE = false;
 options.TIME_LIMIT = 10;
 
@@ -19,7 +19,7 @@ Tqpoases = [];
 Tgurobi = [];
 
 % nb_gamma = 21;
-T_values = 10:60;
+T_values = 10:30;
 nx = 10;
 nu = 5;
 
@@ -47,7 +47,7 @@ for i = 1:nb_n
     Q = M*M';
 %     Q = diag(rand(nx,1)*10);
 
-    R = 0.1*eye(nu);
+    R = 0.01*eye(nu);
     QT = dare(full(A),B,full(Q),R);
     K = dlqr(full(A),B,full(Q),R);
     K = -K; % Note that matlab defines K as -K
@@ -156,6 +156,8 @@ for i = 1:nb_n
     if options.gurobi, X_gurobi{i} = X.gurobi; end
     
 end
+
+Tosqp(strcmp(Status_osqp, 'run time limit reached')) = options.TIME_LIMIT;
 
 save('output/MPC');
 

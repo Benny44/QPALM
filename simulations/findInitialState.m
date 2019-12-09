@@ -27,15 +27,20 @@ beq = zeros(nx*T,1);
 lb = zeros(nx*(T+1)+nu*T,1);
 ub = zeros(nx*(T+1)+nu*T,1);
 
+e = 0.000;
+
 for k=0:T-1
-   lb(k*(nx+nu)+1:k*(nx+nu)+nx) = -x_upper*0.999;
-   ub(k*(nx+nu)+1:k*(nx+nu)+nx) = x_upper*0.999;
-   lb(k*(nx+nu)+nx+1:k*(nx+nu)+nx+nu) = -u_upper*0.999;
-   ub(k*(nx+nu)+nx+1:k*(nx+nu)+nx+nu) = u_upper*0.999;
+   lb(k*(nx+nu)+1:k*(nx+nu)+nx) = -x_upper*(1-e);
+   ub(k*(nx+nu)+1:k*(nx+nu)+nx) = x_upper*(1-e);
+   lb(k*(nx+nu)+nx+1:k*(nx+nu)+nx+nu) = -u_upper*(1-e);
+   ub(k*(nx+nu)+nx+1:k*(nx+nu)+nx+nu) = u_upper*(1-e);
 end
 
-X = linprog(c, Aineq, bineq, Aeq, beq, lb, ub);
+[X,~,EXITFLAG] = linprog(c, Aineq, bineq, Aeq, beq, lb, ub);
+fprintf('Exitflag: %d\n', EXITFLAG);
+
 x0 = X(1:nx);
+
 
 % M = zeros(nx*T+nx+nu*T+nx*T+nf, nx*(T+1)+nu*T);
 %     
