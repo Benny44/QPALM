@@ -1,4 +1,4 @@
-function [gs, fail_rate] = compute_geometric_mean(T, Status, success, max_time)
+function [gs, fail_rate, T] = compute_geometric_mean(T, Status, success, max_time)
 gs = 0;
 fail_rate = 0;
 
