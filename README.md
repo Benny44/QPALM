@@ -11,16 +11,64 @@ A proximal augmented Lagrangian method for (possibly **nonconvex**) QPs using se
 
 ## Installation
 
-* To install the mex interface of QPALM, add QPALM and its subfolders to the matlab path. Then run qpalm_make.m
-* To install a C-callable library, check [Bintray](https://bintray.com/benny44/generic/QPALM) for the binaries. These were compiled against [suitesparse](https://anaconda.org/conda-forge/suitesparse) and [lapack](https://anaconda.org/conda-forge/lapack) from conda.
-* To use the Matlab version of QPALM, compile the CHOLMOD mex functions (suitesparse/CHOLMOD/MATLAB/cholmod_make.m), and run QPALM/matlab/mex/PWAlinesearch_setup.m. (The Matlab version is now also automatically setup when you run qpalm_make.m)
+### **Matlab**
+* To install the mex interface of QPALM, add QPALM and its subfolders to the matlab path. Then run qpalm_make.m. You can test whether QPALM is working using 
+the examples/qpalm_mex_demo.m and examples/qpalm_mex_nonconvex_demo.m.
+### **C**
+* To install a C-callable library, check [Bintray](https://bintray.com/benny44/generic/QPALM) for the binaries. These were compiled against [intel mkl](https://anaconda.org/intel/mkl) and [lapack](https://anaconda.org/conda-forge/lapack) from conda. So install miniconda and run the following commands
+```
+conda install -c conda-forge lapack
+conda install -c intel mkl
+export LD_LIBRARY_PATH=path-to-miniconda/lib/:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=path-to-qpalm-binaries/lib/:$LD_LIBRARY_PATH
+```
+### **Python**
+The python interface has been compiled for python version 3.7. If you want to use a different version, do your own install with the instructions on custom compilation below.
 
-## Code Example
+Follow the instructions for installing the C-library above. Then in an open terminal, do
+```
+export LD_LIBRARY_PATH=path-to-qpalm-binaries/interfaces/python/build/lib/:$LD_LIBRARY_PATH
+python3 path-to-qpalm-binaries/interfaces/python/qpalm_python_demo.py
+```
+
+### **Julia**
+See [QPALM.jl](https://github.com/kul-forbes/QPALM.jl/tree/856c70d2be99a24e5d9a6391be45cf40c48947d4) for the instructions on installing the Julia interface.
+
+## Custom Compilation
+If you wish to do a custom compilation of the shared libraries, take a look at buildCustom.sh. First install the dependencies
+```
+conda install -c conda-forge lapack
+conda install -c intel mkl
+```
+
+Then change the following lines near the top of the script
+```
+export MINICONDA_LIB=path-to-miniconda/lib
+export MINICONDA_INCLUDE=path-to-miniconda/include
+
+```
+
+Furthermore, change the cmake line to have whatever flags you want. To build the release version (with tests), use
+```
+cmake $curdir -DCMAKE_BUILD_TYPE=release -DCOVERAGE=ON
+```
+To build the python interface, use instead
+```
+cmake path-to-QPALM -DCMAKE_BUILD_TYPE=release -DINTERFACES=OFF -DUNITTESTS=OFF -DPYTHON=ON
+```
+
+Finally, run the buildCustom.sh script
+```
+chmod 755 buildCustom.sh
+./buildCustom.sh
+```
+
+## Code Examples
 
 Basic demos are available for the different ways to call the solver.
 * For the mex interface of QPALM, check out examples/qpalm_mex_demo.m and examples/qpalm_mex_nonconvex_demo.m.
 * For the C-version of QPALM, check out examples/qpalm_demo.c.
-* For the matlab version of QPALM, check out examples/qpalm_matlab_demo.m.
+* For the python interface of QPALM, check out interfaces/python/qpalm_python_demo.py.
 
 ## Documentation
 
@@ -28,16 +76,7 @@ You can now find the the documentation [online](https://benny44.github.io/QPALM/
 
 ## Tests
 
-The QPALM library is tested extensively. The tests currently have [![Coverage Status](https://coveralls.io/repos/github/Benny44/QPALM/badge.svg?branch=master)](https://coveralls.io/github/Benny44/QPALM?branch=master). To build the debug version and run the automated tests yourself, in <span>buildTest.sh</span> change 
-```
-export SUITESPARSE_ROOT_LIB=path/to/suitesparse_libs
-export SUITESPARSE_ROOT_INCLUDE=path/to/suitespare_include
-```
-and then do
-```
-chmod 755 buildTest.sh
-./buildTest.sh
-```
+The QPALM library is tested extensively. The tests currently have [![Coverage Status](https://coveralls.io/repos/github/Benny44/QPALM/badge.svg?branch=master)](https://coveralls.io/github/Benny44/QPALM?branch=master). To build the debug version and run the automated tests yourself, check out the custom compilation section above.
 
 ## Benchmarks (random QPs)
 
@@ -71,6 +110,7 @@ If you use QPALM in your research, please cite the following paper
 
 QPALM is licensed under GPL v3.0. Some modules are used in this software: 
 * Suitesparse: authored by Tim Davis. Each of its modules is licensed separately, see [suitesparse/LICENSE.txt](https://github.com/jluttine/suitesparse/blob/e409f9fb39181ea86718dbf91ce39c2c7e6c3dcd/LICENSE.txt). The main module used in QPALM is CHOLMOD.
+* Intel MKL: authored by the Intel Corporation and licensed under the Intel Simplified Software License.
 * LOBPCG: the version of LOBPCG used here was written by Ben Hermans and licensed under the GNU Lesser General Public License v3.0, see [LOBPCG/LICENSE](https://github.com/Benny44/LOBPCG/blob/master/LICENSE).
 * LAPACK: authored by The University of Tennessee and The University of Tennessee Research Foundation, The University of California Berkeley, and The University of Colorado Denver, and licensed under BSD-3, see [here](https://github.com/Reference-LAPACK/lapack/blob/master/LICENSE).
 * Minunit: a minimal unit testing framework for C, originally authored by David Siñuela Pastor and licensed under MIT, see [here](https://github.com/siu/minunit/blob/master/MIT-LICENSE.txt). 

@@ -1,16 +1,12 @@
 #!/bin/bash
 
-export PATH=${DEPS_DIR}/miniconda/bin:$PATH
-hash -r
-source activate condaenv_build
-
-export MINICONDA_LIB=${DEPS_DIR}/miniconda/envs/condaenv_build/lib
-export MINICONDA_INCLUDE=${DEPS_DIR}/miniconda/envs/condaenv_build/include
-
+export MINICONDA_LIB=${HOME}/miniconda3/lib
+export MINICONDA_INCLUDE=${HOME}/miniconda3/include
 
 curdir=`pwd`
 
 #Build direcetories
+# rm -r build
 if [ ! -d "build" ]; then
   mkdir build
 fi
@@ -32,11 +28,7 @@ cd $metisdir
 
 cmake $curdir/suitesparse/metis-5.1.0 -DGKLIB_PATH=$curdir/suitesparse/metis-5.1.0/GKlib -DSHARED=1 && make 
 cd $curdir
-if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
-    cp build/metis/libmetis/libmetis.dylib build/lib/
-else
-    cp build/metis/libmetis/libmetis.so build/lib/
-fi
+cp build/metis/libmetis/libmetis.so build/lib/
 
 #Build QPALM and tests
 cd $curdir
@@ -45,13 +37,16 @@ builddir=$curdir/build/debug
 
 cd $builddir
 
-cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DINTERFACES=OFF
+cmake $curdir -DCMAKE_BUILD_TYPE=release -DCOVERAGE=ON 
 make
 
-#Run the tests
-#cd $builddir
-#./bin/run_all_tests
+#Run the tests with this line enabled
 ctest -VV
+
+
+
+
+
 
 
 

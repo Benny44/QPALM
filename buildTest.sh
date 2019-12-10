@@ -43,7 +43,7 @@ builddir=$curdir/build/debug
 
 cd $builddir
 
-cmake ../.. -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON 
+cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON 
 make
 ctest -VV
 
