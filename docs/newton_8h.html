@@ -82,9 +82,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2a3cf6a5a9f0b22f35386149aa1e4252"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="newton_8h.html#a2a3cf6a5a9f0b22f35386149aa1e4252">newton_set_direction</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:a2a3cf6a5a9f0b22f35386149aa1e4252"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets work-&gt;d to the direction calculated by the semismooth Newton method.  <a href="#a2a3cf6a5a9f0b22f35386149aa1e4252">More...</a><br /></td></tr>
-<tr class="separator:a2a3cf6a5a9f0b22f35386149aa1e4252"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a592090ac6dbd1f0bf59a5ec0eaa0173a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="newton_8h.html#a592090ac6dbd1f0bf59a5ec0eaa0173a">newton_set_direction</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, cholmod_common *c)</td></tr>
+<tr class="memdesc:a592090ac6dbd1f0bf59a5ec0eaa0173a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets work-&gt;d to the direction calculated by the semismooth Newton method.  <a href="#a592090ac6dbd1f0bf59a5ec0eaa0173a">More...</a><br /></td></tr>
+<tr class="separator:a592090ac6dbd1f0bf59a5ec0eaa0173a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae27a99e2b3249e8455b72c2e2a977dd8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="newton_8h.html#ae27a99e2b3249e8455b72c2e2a977dd8">set_active_constraints</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
 <tr class="memdesc:ae27a99e2b3249e8455b72c2e2a977dd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the set of active constraints and stores it in work-&gt;chol-&gt;active_constraints.  <a href="#ae27a99e2b3249e8455b72c2e2a977dd8">More...</a><br /></td></tr>
 <tr class="separator:ae27a99e2b3249e8455b72c2e2a977dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -97,8 +97,8 @@ Functions</h2></td></tr>
 <dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
 <p>The functions in this file concern the calculation of the semismooth Newton direction. Factorizing, updating the factorization and solving the linear system are performed by functions in <a class="el" href="cholmod__interface_8c.html" title="Interface and wrapper to cholmod functions.">cholmod_interface.c</a>. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a2a3cf6a5a9f0b22f35386149aa1e4252"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a3cf6a5a9f0b22f35386149aa1e4252">&#9670;&nbsp;</a></span>newton_set_direction()</h2>
+<a id="a592090ac6dbd1f0bf59a5ec0eaa0173a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a592090ac6dbd1f0bf59a5ec0eaa0173a">&#9670;&nbsp;</a></span>newton_set_direction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -107,8 +107,18 @@ Functions</h2></td></tr>
           <td class="memname">void newton_set_direction </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em></td><td>)</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">cholmod_common *&#160;</td>
+          <td class="paramname"><em>c</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

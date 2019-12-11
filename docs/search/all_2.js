@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['c',['c',['../structQPALMScaling.html#a4f98c16d0423437efedba58fcf266114',1,'QPALMScaling::c()'],['../structQPALMCholmod.html#ae0b17902eab7e85f15ec7bcbcc555a89',1,'QPALMCholmod::c()']]],
+  ['c',['c',['../structQPALMScaling.html#a4f98c16d0423437efedba58fcf266114',1,'QPALMScaling::c()'],['../structQPALMData.html#a6f2238e0f5b99f02cbc9e243f9045c51',1,'QPALMData::c()']]],
   ['c_5fabsval',['c_absval',['../global__opts_8h.html#acde65b798fcd87e08c1f337b0b9d7c9b',1,'global_opts.h']]],
   ['c_5fcalloc',['c_calloc',['../global__opts_8h.html#a6f3db26db28ecca250635aeeed9061df',1,'global_opts.h']]],
   ['c_5ffloat',['c_float',['../global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15',1,'global_opts.h']]],
@@ -26,9 +26,9 @@ var searchData=
   ['cholmod_5fset_5fsettings',['cholmod_set_settings',['../cholmod__interface_8c.html#a554be628f3c65ca260876d465dfacf0e',1,'cholmod_set_settings(cholmod_common *c):&#160;cholmod_interface.c'],['../cholmod__interface_8h.html#a554be628f3c65ca260876d465dfacf0e',1,'cholmod_set_settings(cholmod_common *c):&#160;cholmod_interface.c']]],
   ['cinv',['cinv',['../structQPALMScaling.html#aaea7f6c4b7a75e588c98f37f3f20a0d7',1,'QPALMScaling']]],
   ['compare',['compare',['../linesearch_8c.html#ac70138609ef6aa6fabca57aca8681e83',1,'compare(const void *a, const void *b):&#160;linesearch.c'],['../linesearch_8h.html#ac70138609ef6aa6fabca57aca8681e83',1,'compare(const void *a, const void *b):&#160;linesearch.c']]],
-  ['compute_5fdual_5fobjective',['compute_dual_objective',['../iteration_8c.html#a34b3622f347ef66f861e51832266968a',1,'compute_dual_objective(QPALMWorkspace *work):&#160;iteration.c'],['../iteration_8h.html#a34b3622f347ef66f861e51832266968a',1,'compute_dual_objective(QPALMWorkspace *work):&#160;iteration.c']]],
+  ['compute_5fdual_5fobjective',['compute_dual_objective',['../iteration_8c.html#ab1fbcefe3e784f73aa202c78a349e3b7',1,'compute_dual_objective(QPALMWorkspace *work, cholmod_common *c):&#160;iteration.c'],['../iteration_8h.html#ab1fbcefe3e784f73aa202c78a349e3b7',1,'compute_dual_objective(QPALMWorkspace *work, cholmod_common *c):&#160;iteration.c']]],
   ['compute_5fobjective',['compute_objective',['../iteration_8c.html#ad071efc96075a8506c9c45448b9d48e6',1,'compute_objective(QPALMWorkspace *work):&#160;iteration.c'],['../iteration_8h.html#ad071efc96075a8506c9c45448b9d48e6',1,'compute_objective(QPALMWorkspace *work):&#160;iteration.c']]],
-  ['compute_5fresiduals',['compute_residuals',['../iteration_8c.html#ae6161a9d4e4a8d45c05e24a9824ed5fa',1,'compute_residuals(QPALMWorkspace *work):&#160;iteration.c'],['../iteration_8h.html#ae6161a9d4e4a8d45c05e24a9824ed5fa',1,'compute_residuals(QPALMWorkspace *work):&#160;iteration.c']]],
+  ['compute_5fresiduals',['compute_residuals',['../iteration_8c.html#a8786d7aaf1a17a30e9f503b1be0fd510',1,'compute_residuals(QPALMWorkspace *work, cholmod_common *c):&#160;iteration.c'],['../iteration_8h.html#a8786d7aaf1a17a30e9f503b1be0fd510',1,'compute_residuals(QPALMWorkspace *work, cholmod_common *c):&#160;iteration.c']]],
   ['constants_2eh',['constants.h',['../constants_8h.html',1,'']]],
   ['copy_5fsettings',['copy_settings',['../util_8c.html#a59c8e0cefe0eb9a61da6d50ade8a15f3',1,'copy_settings(const QPALMSettings *settings):&#160;util.c'],['../util_8h.html#a59c8e0cefe0eb9a61da6d50ade8a15f3',1,'copy_settings(const QPALMSettings *settings):&#160;util.c']]]
 ];

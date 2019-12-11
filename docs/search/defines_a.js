@@ -9,5 +9,6 @@ var searchData=
   ['qpalm_5fnull',['QPALM_NULL',['../constants_8h.html#ac0a2840bf4b0b7115794565a2c364ebd',1,'constants.h']]],
   ['qpalm_5fprimal_5finfeasible',['QPALM_PRIMAL_INFEASIBLE',['../constants_8h.html#a8abdbac2eedeb387b25657e81b0b70a0',1,'constants.h']]],
   ['qpalm_5fsolved',['QPALM_SOLVED',['../constants_8h.html#aa07d9d4ae8714d3f166813ccee23a428',1,'constants.h']]],
+  ['qpalm_5ftime_5flimit_5freached',['QPALM_TIME_LIMIT_REACHED',['../constants_8h.html#a72ec57b24480c36944b8d777aee91d0e',1,'constants.h']]],
   ['qpalm_5funsolved',['QPALM_UNSOLVED',['../constants_8h.html#acbec0c523d324f1ae556a7fde7b83633',1,'constants.h']]]
 ];

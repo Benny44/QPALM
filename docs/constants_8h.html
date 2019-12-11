@@ -100,6 +100,9 @@ Macros</h2></td></tr>
 <tr class="memitem:a4f078b18254fbab55eb0dbe11a44e6f4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a4f078b18254fbab55eb0dbe11a44e6f4">QPALM_DUAL_INFEASIBLE</a>&#160;&#160;&#160;(-4)</td></tr>
 <tr class="memdesc:a4f078b18254fbab55eb0dbe11a44e6f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">status to indicate the problem is dual infeasible  <a href="#a4f078b18254fbab55eb0dbe11a44e6f4">More...</a><br /></td></tr>
 <tr class="separator:a4f078b18254fbab55eb0dbe11a44e6f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72ec57b24480c36944b8d777aee91d0e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a72ec57b24480c36944b8d777aee91d0e">QPALM_TIME_LIMIT_REACHED</a>&#160;&#160;&#160;(-5)</td></tr>
+<tr class="memdesc:a72ec57b24480c36944b8d777aee91d0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">status to indicate the problem's runtime has exceeded the specified time limit  <a href="#a72ec57b24480c36944b8d777aee91d0e">More...</a><br /></td></tr>
+<tr class="separator:a72ec57b24480c36944b8d777aee91d0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbec0c523d324f1ae556a7fde7b83633"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#acbec0c523d324f1ae556a7fde7b83633">QPALM_UNSOLVED</a>&#160;&#160;&#160;(-10)</td></tr>
 <tr class="memdesc:acbec0c523d324f1ae556a7fde7b83633"><td class="mdescLeft">&#160;</td><td class="mdescRight">status to indicate the problem is unsolved.  <a href="#acbec0c523d324f1ae556a7fde7b83633">More...</a><br /></td></tr>
 <tr class="separator:acbec0c523d324f1ae556a7fde7b83633"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,6 +197,9 @@ Macros</h2></td></tr>
 <tr class="memitem:afd51848290692034137a7585462bbf17"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#afd51848290692034137a7585462bbf17">DUAL_OBJECTIVE_LIMIT</a>&#160;&#160;&#160;(<a class="el" href="constants_8h.html#af6915f24c5ded08d422cf326004cbcb0">QPALM_INFTY</a>)</td></tr>
 <tr class="memdesc:afd51848290692034137a7585462bbf17"><td class="mdescLeft">&#160;</td><td class="mdescRight">termination value for the dual objective (useful in branch and bound)  <a href="#afd51848290692034137a7585462bbf17">More...</a><br /></td></tr>
 <tr class="separator:afd51848290692034137a7585462bbf17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb7e51d1df3047c08c50ae6682a6cd70"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#acb7e51d1df3047c08c50ae6682a6cd70">TIME_LIMIT</a>&#160;&#160;&#160;(<a class="el" href="constants_8h.html#af6915f24c5ded08d422cf326004cbcb0">QPALM_INFTY</a>)</td></tr>
+<tr class="memdesc:acb7e51d1df3047c08c50ae6682a6cd70"><td class="mdescLeft">&#160;</td><td class="mdescRight">time limit after which the solver aborts  <a href="#acb7e51d1df3047c08c50ae6682a6cd70">More...</a><br /></td></tr>
+<tr class="separator:acb7e51d1df3047c08c50ae6682a6cd70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66a3dfe072d9b388807cbddc899c0d79"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a66a3dfe072d9b388807cbddc899c0d79">MAX_RANK_UPDATE</a>&#160;&#160;&#160;160</td></tr>
 <tr class="memdesc:a66a3dfe072d9b388807cbddc899c0d79"><td class="mdescLeft">&#160;</td><td class="mdescRight">maximum rank for the sparse factorization update  <a href="#a66a3dfe072d9b388807cbddc899c0d79">More...</a><br /></td></tr>
 <tr class="separator:a66a3dfe072d9b388807cbddc899c0d79"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -681,6 +687,22 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="a72ec57b24480c36944b8d777aee91d0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72ec57b24480c36944b8d777aee91d0e">&#9670;&nbsp;</a></span>QPALM_TIME_LIMIT_REACHED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define QPALM_TIME_LIMIT_REACHED&#160;&#160;&#160;(-5)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>status to indicate the problem's runtime has exceeded the specified time limit </p>
+
+</div>
+</div>
 <a id="acbec0c523d324f1ae556a7fde7b83633"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acbec0c523d324f1ae556a7fde7b83633">&#9670;&nbsp;</a></span>QPALM_UNSOLVED</h2>
 
@@ -775,6 +797,22 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 
 <p>default penalty update criterion parameter </p>
+
+</div>
+</div>
+<a id="acb7e51d1df3047c08c50ae6682a6cd70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb7e51d1df3047c08c50ae6682a6cd70">&#9670;&nbsp;</a></span>TIME_LIMIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TIME_LIMIT&#160;&#160;&#160;(<a class="el" href="constants_8h.html#af6915f24c5ded08d422cf326004cbcb0">QPALM_INFTY</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>time limit after which the solver aborts </p>
 
 </div>
 </div>

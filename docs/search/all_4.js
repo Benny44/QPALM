@@ -15,5 +15,5 @@ var searchData=
   ['eps_5frel',['eps_rel',['../structQPALMSettings.html#a9b84087d61f10c22632bd6924e33691c',1,'QPALMSettings::eps_rel()'],['../constants_8h.html#a62c40728b469a0a6e1f696793569835a',1,'EPS_REL():&#160;constants.h']]],
   ['eps_5frel_5fin',['eps_rel_in',['../structQPALMSettings.html#a3772b3f15b95f5d913f9a7e892e070dd',1,'QPALMSettings::eps_rel_in()'],['../structQPALMWorkspace.html#a9d62b486fbd42ece483963949547107c',1,'QPALMWorkspace::eps_rel_in()'],['../constants_8h.html#a0771de8aebffeee6adee8b9fea107548',1,'EPS_REL_IN():&#160;constants.h']]],
   ['eta',['eta',['../structQPALMWorkspace.html#a04c63ad7652fa2b21cd7bfcbfed38b18',1,'QPALMWorkspace']]],
-  ['exact_5flinesearch',['exact_linesearch',['../linesearch_8c.html#a29a679672665aebe2f64094fba65160f',1,'exact_linesearch(QPALMWorkspace *work):&#160;linesearch.c'],['../linesearch_8h.html#a29a679672665aebe2f64094fba65160f',1,'exact_linesearch(QPALMWorkspace *work):&#160;linesearch.c']]]
+  ['exact_5flinesearch',['exact_linesearch',['../linesearch_8c.html#a60893ef8f4e2f05af49868c797fe5620',1,'exact_linesearch(QPALMWorkspace *work, cholmod_common *c):&#160;linesearch.c'],['../linesearch_8h.html#a60893ef8f4e2f05af49868c797fe5620',1,'exact_linesearch(QPALMWorkspace *work, cholmod_common *c):&#160;linesearch.c']]]
 ];

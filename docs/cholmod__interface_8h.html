@@ -97,27 +97,24 @@ Functions</h2></td></tr>
 <tr class="memitem:a9a875648b3a1beed9a6ee638bc79f2c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#a9a875648b3a1beed9a6ee638bc79f2c0">mat_inf_norm_rows</a> (cholmod_sparse *M, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *E)</td></tr>
 <tr class="memdesc:a9a875648b3a1beed9a6ee638bc79f2c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Infinity norm of each matrix row, <img class="formulaInl" alt="$E_i = \|M{(i,:)}\|_\infty$" src="form_3.png"/>.  <a href="#a9a875648b3a1beed9a6ee638bc79f2c0">More...</a><br /></td></tr>
 <tr class="separator:a9a875648b3a1beed9a6ee638bc79f2c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabcf6fd94369ab46e830695da0a96128"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#aabcf6fd94369ab46e830695da0a96128">ldlchol</a> (cholmod_sparse *M, <a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:aabcf6fd94369ab46e830695da0a96128"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of a matrix <img class="formulaInl" alt="$M$" src="form_5.png"/>.  <a href="#aabcf6fd94369ab46e830695da0a96128">More...</a><br /></td></tr>
-<tr class="separator:aabcf6fd94369ab46e830695da0a96128"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fe1e838ac3f89a1772058904338a849"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#a7fe1e838ac3f89a1772058904338a849">ldlcholQ</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:a7fe1e838ac3f89a1772058904338a849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of <img class="formulaInl" alt="$Q$" src="form_7.png"/>.  <a href="#a7fe1e838ac3f89a1772058904338a849">More...</a><br /></td></tr>
-<tr class="separator:a7fe1e838ac3f89a1772058904338a849"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef86b2766eb92f6550e1b6bbc6019fcc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#aef86b2766eb92f6550e1b6bbc6019fcc">ldlcholQAtsigmaA</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:aef86b2766eb92f6550e1b6bbc6019fcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of <img class="formulaInl" alt="$Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$" src="form_9.png"/>, with <img class="formulaInl" alt="$\Sigma=diag(\sigma)$" src="form_10.png"/> and <img class="formulaInl" alt="$a$" src="form_11.png"/> the set of active constraints.  <a href="#aef86b2766eb92f6550e1b6bbc6019fcc">More...</a><br /></td></tr>
-<tr class="separator:aef86b2766eb92f6550e1b6bbc6019fcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb3c7409417adc5657d4c67f13bf7a26"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#afb3c7409417adc5657d4c67f13bf7a26">ldlupdate_entering_constraints</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:afb3c7409417adc5657d4c67f13bf7a26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of entering constraints.  <a href="#afb3c7409417adc5657d4c67f13bf7a26">More...</a><br /></td></tr>
-<tr class="separator:afb3c7409417adc5657d4c67f13bf7a26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2b40552827ed1501207124cb067331b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#ad2b40552827ed1501207124cb067331b">ldldowndate_leaving_constraints</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:ad2b40552827ed1501207124cb067331b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downdate the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of leaving constraints.  <a href="#ad2b40552827ed1501207124cb067331b">More...</a><br /></td></tr>
-<tr class="separator:ad2b40552827ed1501207124cb067331b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff4997274201c446ae764fee64999953"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#aff4997274201c446ae764fee64999953">ldlupdate_sigma_changed</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:aff4997274201c446ae764fee64999953"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of indexes where <img class="formulaInl" alt="$sigma$" src="form_93.png"/> has been updated.  <a href="#aff4997274201c446ae764fee64999953">More...</a><br /></td></tr>
-<tr class="separator:aff4997274201c446ae764fee64999953"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a600375b897e61294eabebe282fa236e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#a600375b897e61294eabebe282fa236e3">ldlsolveLD_neg_dphi</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:a600375b897e61294eabebe282fa236e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system <img class="formulaInl" alt="$LDL^T*d = -\nabla \varphi$" src="form_13.png"/>.  <a href="#a600375b897e61294eabebe282fa236e3">More...</a><br /></td></tr>
-<tr class="separator:a600375b897e61294eabebe282fa236e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b85b2c70d34313e69db469b7dee187d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#a4b85b2c70d34313e69db469b7dee187d">ldlchol</a> (cholmod_sparse *M, <a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, cholmod_common *c)</td></tr>
+<tr class="memdesc:a4b85b2c70d34313e69db469b7dee187d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of a matrix <img class="formulaInl" alt="$M$" src="form_5.png"/>.  <a href="#a4b85b2c70d34313e69db469b7dee187d">More...</a><br /></td></tr>
+<tr class="separator:a4b85b2c70d34313e69db469b7dee187d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80b517a61585c49fdaf0767d6c9c4ce7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#a80b517a61585c49fdaf0767d6c9c4ce7">ldlcholQAtsigmaA</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, cholmod_common *c)</td></tr>
+<tr class="memdesc:a80b517a61585c49fdaf0767d6c9c4ce7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of <img class="formulaInl" alt="$Q$" src="form_7.png"/>.  <a href="#a80b517a61585c49fdaf0767d6c9c4ce7">More...</a><br /></td></tr>
+<tr class="separator:a80b517a61585c49fdaf0767d6c9c4ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71f5679ed9e0146fe85f0f39abc0525f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#a71f5679ed9e0146fe85f0f39abc0525f">ldlupdate_entering_constraints</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, cholmod_common *c)</td></tr>
+<tr class="memdesc:a71f5679ed9e0146fe85f0f39abc0525f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of entering constraints.  <a href="#a71f5679ed9e0146fe85f0f39abc0525f">More...</a><br /></td></tr>
+<tr class="separator:a71f5679ed9e0146fe85f0f39abc0525f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a747af94ff555e9d42a36dcb57f6785d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#a747af94ff555e9d42a36dcb57f6785d4">ldldowndate_leaving_constraints</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, cholmod_common *c)</td></tr>
+<tr class="memdesc:a747af94ff555e9d42a36dcb57f6785d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Downdate the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of leaving constraints.  <a href="#a747af94ff555e9d42a36dcb57f6785d4">More...</a><br /></td></tr>
+<tr class="separator:a747af94ff555e9d42a36dcb57f6785d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7dd68fb79af1235ae097ee2e1f6e1c0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#ac7dd68fb79af1235ae097ee2e1f6e1c0">ldlupdate_sigma_changed</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, cholmod_common *c)</td></tr>
+<tr class="memdesc:ac7dd68fb79af1235ae097ee2e1f6e1c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization given a set of indexes where <img class="formulaInl" alt="$sigma$" src="form_93.png"/> has been updated.  <a href="#ac7dd68fb79af1235ae097ee2e1f6e1c0">More...</a><br /></td></tr>
+<tr class="separator:ac7dd68fb79af1235ae097ee2e1f6e1c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c0824c495af3bcda063af5e60ac5d08"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#a6c0824c495af3bcda063af5e60ac5d08">ldlsolveLD_neg_dphi</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, cholmod_common *c)</td></tr>
+<tr class="memdesc:a6c0824c495af3bcda063af5e60ac5d08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system <img class="formulaInl" alt="$LDL^T*d = -\nabla \varphi$" src="form_13.png"/>.  <a href="#a6c0824c495af3bcda063af5e60ac5d08">More...</a><br /></td></tr>
+<tr class="separator:a6c0824c495af3bcda063af5e60ac5d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a554be628f3c65ca260876d465dfacf0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cholmod__interface_8h.html#a554be628f3c65ca260876d465dfacf0e">cholmod_set_settings</a> (cholmod_common *c)</td></tr>
 <tr class="memdesc:a554be628f3c65ca260876d465dfacf0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cholmod settings to indicate that we use an <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization.  <a href="#a554be628f3c65ca260876d465dfacf0e">More...</a><br /></td></tr>
 <tr class="separator:a554be628f3c65ca260876d465dfacf0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,8 +151,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aabcf6fd94369ab46e830695da0a96128"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aabcf6fd94369ab46e830695da0a96128">&#9670;&nbsp;</a></span>ldlchol()</h2>
+<a id="a4b85b2c70d34313e69db469b7dee187d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b85b2c70d34313e69db469b7dee187d">&#9670;&nbsp;</a></span>ldlchol()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -170,7 +167,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em>&#160;</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cholmod_common *&#160;</td>
+          <td class="paramname"><em>c</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -192,18 +195,28 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7fe1e838ac3f89a1772058904338a849"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7fe1e838ac3f89a1772058904338a849">&#9670;&nbsp;</a></span>ldlcholQ()</h2>
+<a id="a80b517a61585c49fdaf0767d6c9c4ce7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80b517a61585c49fdaf0767d6c9c4ce7">&#9670;&nbsp;</a></span>ldlcholQAtsigmaA()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void ldlcholQ </td>
+          <td class="memname">void ldlcholQAtsigmaA </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em></td><td>)</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">cholmod_common *&#160;</td>
+          <td class="paramname"><em>c</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -213,31 +226,11 @@ Functions</h2></td></tr>
 <p class="">If work-&gt;settings-&gt;proximal = true, use <img class="formulaInl" alt="$Q+\frac{1}{\gamma}*I$" src="form_8.png"/> instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+    <tr><td class="paramname">work</td><td>WorkspaceCalculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of <img class="formulaInl" alt="$Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$" src="form_9.png"/>, with <img class="formulaInl" alt="$\Sigma=diag(\sigma)$" src="form_10.png"/> and <img class="formulaInl" alt="$a$" src="form_11.png"/> the set of active constraints.</td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="aef86b2766eb92f6550e1b6bbc6019fcc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef86b2766eb92f6550e1b6bbc6019fcc">&#9670;&nbsp;</a></span>ldlcholQAtsigmaA()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ldlcholQAtsigmaA </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Calculate <img class="formulaInl" alt="$LDL^T$" src="form_4.png"/> factorization of <img class="formulaInl" alt="$Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$" src="form_9.png"/>, with <img class="formulaInl" alt="$\Sigma=diag(\sigma)$" src="form_10.png"/> and <img class="formulaInl" alt="$a$" src="form_11.png"/> the set of active constraints. </p>
-<p class="">If work-&gt;settings-&gt;proximal = true, use <img class="formulaInl" alt="$Q+\frac{1}{\gamma}*I+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$" src="form_12.png"/> instead.</p>
+<p>If work-&gt;settings-&gt;proximal = true, use <img class="formulaInl" alt="$Q+\frac{1}{\gamma}*I+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}$" src="form_12.png"/> instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
@@ -247,8 +240,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad2b40552827ed1501207124cb067331b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2b40552827ed1501207124cb067331b">&#9670;&nbsp;</a></span>ldldowndate_leaving_constraints()</h2>
+<a id="a747af94ff555e9d42a36dcb57f6785d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a747af94ff555e9d42a36dcb57f6785d4">&#9670;&nbsp;</a></span>ldldowndate_leaving_constraints()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -257,8 +250,18 @@ Functions</h2></td></tr>
           <td class="memname">void ldldowndate_leaving_constraints </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em></td><td>)</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">cholmod_common *&#160;</td>
+          <td class="paramname"><em>c</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -274,8 +277,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a600375b897e61294eabebe282fa236e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a600375b897e61294eabebe282fa236e3">&#9670;&nbsp;</a></span>ldlsolveLD_neg_dphi()</h2>
+<a id="a6c0824c495af3bcda063af5e60ac5d08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c0824c495af3bcda063af5e60ac5d08">&#9670;&nbsp;</a></span>ldlsolveLD_neg_dphi()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -284,8 +287,18 @@ Functions</h2></td></tr>
           <td class="memname">void ldlsolveLD_neg_dphi </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em></td><td>)</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">cholmod_common *&#160;</td>
+          <td class="paramname"><em>c</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -300,8 +313,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="afb3c7409417adc5657d4c67f13bf7a26"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb3c7409417adc5657d4c67f13bf7a26">&#9670;&nbsp;</a></span>ldlupdate_entering_constraints()</h2>
+<a id="a71f5679ed9e0146fe85f0f39abc0525f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71f5679ed9e0146fe85f0f39abc0525f">&#9670;&nbsp;</a></span>ldlupdate_entering_constraints()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -310,8 +323,18 @@ Functions</h2></td></tr>
           <td class="memname">void ldlupdate_entering_constraints </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em></td><td>)</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">cholmod_common *&#160;</td>
+          <td class="paramname"><em>c</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -327,8 +350,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aff4997274201c446ae764fee64999953"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff4997274201c446ae764fee64999953">&#9670;&nbsp;</a></span>ldlupdate_sigma_changed()</h2>
+<a id="ac7dd68fb79af1235ae097ee2e1f6e1c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7dd68fb79af1235ae097ee2e1f6e1c0">&#9670;&nbsp;</a></span>ldlupdate_sigma_changed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -337,8 +360,18 @@ Functions</h2></td></tr>
           <td class="memname">void ldlupdate_sigma_changed </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em></td><td>)</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">cholmod_common *&#160;</td>
+          <td class="paramname"><em>c</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

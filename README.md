@@ -45,7 +45,6 @@ Then change the following lines near the top of the script
 ```
 export MINICONDA_LIB=path-to-miniconda/lib
 export MINICONDA_INCLUDE=path-to-miniconda/include
-
 ```
 
 Furthermore, change the cmake line to have whatever flags you want. To build the release version (with tests), use
@@ -93,16 +92,16 @@ The QPALM library is tested extensively. The tests currently have [![Coverage St
 If you use QPALM in your research, please cite the following paper
 ```
 @inproceedings{hermans2019qpalm,
-	author		= {Hermans, B. and Themelis, A. and Patrinos, P.},
-	booktitle	= {58th IEEE Conference on Decision and Control},
-	title		= {{QPALM}: {A} {N}ewton-type {P}roximal {A}ugmented {L}agrangian {M}ethod for {Q}uadratic {P}rograms},
-	year		= {2019},
-	volume		= {},
-	number		= {},
-	pages		= {},
-	doi			= {},
-	issn		= {},
-	month		= {Dec.},
+	author      = {Hermans, B. and Themelis, A. and Patrinos, P.},
+	booktitle   = {58th IEEE Conference on Decision and Control},
+	title       = {{QPALM}: {A} {N}ewton-type {P}roximal {A}ugmented {L}agrangian {M}ethod for {Q}uadratic {P}rograms},
+	year        = {2019},
+	volume      = {},
+	number      = {},
+	pages       = {},
+	doi         = {},
+	issn        = {},
+	month       = {Dec.},
 }
 ```
 

@@ -85,9 +85,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ae8d8f2961242a1367cab7c1957a3006c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8h.html#ae8d8f2961242a1367cab7c1957a3006c">gershgorin_max</a> (cholmod_sparse *M, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *center, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *radius)</td></tr>
 <tr class="memdesc:ae8d8f2961242a1367cab7c1957a3006c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the Gershgorin upper bound for the eigenvalues of a symmetric matrix.  <a href="#ae8d8f2961242a1367cab7c1957a3006c">More...</a><br /></td></tr>
 <tr class="separator:ae8d8f2961242a1367cab7c1957a3006c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57137c07fad57ec45a2e4ff37ec69d72"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8h.html#a57137c07fad57ec45a2e4ff37ec69d72">set_settings_nonconvex</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
-<tr class="memdesc:a57137c07fad57ec45a2e4ff37ec69d72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the proximal parameters for nonconvex QPs.  <a href="#a57137c07fad57ec45a2e4ff37ec69d72">More...</a><br /></td></tr>
-<tr class="separator:a57137c07fad57ec45a2e4ff37ec69d72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5af0ff8dd6794af60484c4fdca873fd5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8h.html#a5af0ff8dd6794af60484c4fdca873fd5">set_settings_nonconvex</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, cholmod_common *c)</td></tr>
+<tr class="memdesc:a5af0ff8dd6794af60484c4fdca873fd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the proximal parameters for nonconvex QPs.  <a href="#a5af0ff8dd6794af60484c4fdca873fd5">More...</a><br /></td></tr>
+<tr class="separator:a5af0ff8dd6794af60484c4fdca873fd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Routines to deal with nonconvex QPs. </p>
@@ -140,8 +140,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a57137c07fad57ec45a2e4ff37ec69d72"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57137c07fad57ec45a2e4ff37ec69d72">&#9670;&nbsp;</a></span>set_settings_nonconvex()</h2>
+<a id="a5af0ff8dd6794af60484c4fdca873fd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5af0ff8dd6794af60484c4fdca873fd5">&#9670;&nbsp;</a></span>set_settings_nonconvex()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -150,8 +150,18 @@ Functions</h2></td></tr>
           <td class="memname">void set_settings_nonconvex </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
-          <td class="paramname"><em>work</em></td><td>)</td>
+          <td class="paramname"><em>work</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">cholmod_common *&#160;</td>
+          <td class="paramname"><em>c</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

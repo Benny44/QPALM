@@ -85,9 +85,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a4aa4b201790332b345faf7ca36f54be5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a4aa4b201790332b345faf7ca36f54be5">qpalm_set_default_settings</a> (<a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings)</td></tr>
 <tr class="memdesc:a4aa4b201790332b345faf7ca36f54be5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set default settings from <a class="el" href="constants_8h.html" title="Macros used in QPALM.">constants.h</a> file.  <a href="#a4aa4b201790332b345faf7ca36f54be5">More...</a><br /></td></tr>
 <tr class="separator:a4aa4b201790332b345faf7ca36f54be5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae42559ed7e48a9a814083b4e5681e737"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#ae42559ed7e48a9a814083b4e5681e737">qpalm_setup</a> (const <a class="el" href="structQPALMData.html">QPALMData</a> *data, const <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings, cholmod_common *c)</td></tr>
-<tr class="memdesc:ae42559ed7e48a9a814083b4e5681e737"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize QPALM solver allocating memory.  <a href="#ae42559ed7e48a9a814083b4e5681e737">More...</a><br /></td></tr>
-<tr class="separator:ae42559ed7e48a9a814083b4e5681e737"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2cb9bd7b22941e8fb298c517797c594"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#ac2cb9bd7b22941e8fb298c517797c594">qpalm_setup</a> (const <a class="el" href="structQPALMData.html">QPALMData</a> *data, const <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings)</td></tr>
+<tr class="memdesc:ac2cb9bd7b22941e8fb298c517797c594"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize QPALM solver allocating memory.  <a href="#ac2cb9bd7b22941e8fb298c517797c594">More...</a><br /></td></tr>
+<tr class="separator:ac2cb9bd7b22941e8fb298c517797c594"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40dba45b28017437a74e31d43dcb8933"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a40dba45b28017437a74e31d43dcb8933">qpalm_warm_start</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *x_warm_start, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *y_warm_start)</td></tr>
 <tr class="memdesc:a40dba45b28017437a74e31d43dcb8933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Warm start workspace variables x, x_0, x_prev, Ax, Qx, y and sigma.  <a href="#a40dba45b28017437a74e31d43dcb8933">More...</a><br /></td></tr>
 <tr class="separator:a40dba45b28017437a74e31d43dcb8933"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,8 +164,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ae42559ed7e48a9a814083b4e5681e737"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae42559ed7e48a9a814083b4e5681e737">&#9670;&nbsp;</a></span>qpalm_setup()</h2>
+<a id="ac2cb9bd7b22941e8fb298c517797c594"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2cb9bd7b22941e8fb298c517797c594">&#9670;&nbsp;</a></span>qpalm_setup()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -180,13 +180,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *&#160;</td>
-          <td class="paramname"><em>settings</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">cholmod_common *&#160;</td>
-          <td class="paramname"><em>c</em>&#160;</td>
+          <td class="paramname"><em>settings</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -206,7 +200,6 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">data</td><td>Problem data </td></tr>
     <tr><td class="paramname">settings</td><td>Solver settings </td></tr>
-    <tr><td class="paramname">c</td><td>Cholmod environment </td></tr>
   </table>
   </dd>
 </dl>

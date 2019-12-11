@@ -12,19 +12,9 @@
  * @f}
  * 
  * \section install_sec Installation
- * \subsection c Compiling the C library
- * Binaries for Linux and MacOS can be obtained from <a href="https://bintray.com/benny44/generic/QPALM/1.0">bintray</a>. 
- * These were compiled against suitesparse and lapack from conda, see https://anaconda.org/conda-forge/suitesparse and https://anaconda.org/conda-forge/lapack. 
+ * See the instructions on the <a href=https://github.com/Benny44/QPALM>Readme</a>.
  * 
- * \subsection mex Compiling the Mex interface
- * Add QPALM/mexInterface to your Matlab path and run \c qpalm_make.m. With this command, you compile the cholmod and qpalm source files, and finally the qpalm Mex 
- * interface. This might take a little bit of time (less than one minute).
- * 
- * \subsection julia Julia interface
- * 
- * See https://github.com/kul-forbes/QPALM.jl
- * 
- * \section example Using QPALM
+ * \section example Using QPALM (in matlab)
  * 
  * Using QPALM from Matlab is extremely simple. Here is an example
  * \code{.unparsed}
@@ -63,16 +53,16 @@
  * If you use QPALM in your research, please cite the following paper
  * \code{.unparsed}
  * @inproceedings{hermans2019qpalm,
- * author		= {Hermans, B. and Themelis, A. and Patrinos, P.},
- * booktitle	= {58th IEEE Conference on Decision and Control},
- * title		= {{QPALM}: {A} {N}ewton-type {P}roximal {A}ugmented {L}agrangian {M}ethod for {Q}uadratic {P}rograms},
- * year		    = {2019},
- * volume		= {},
- * number		= {},
- * pages		= {},
- * doi			= {},
- * issn		    = {},
- * month		= {Dec.},
+ * author       = {Hermans, B. and Themelis, A. and Patrinos, P.},
+ * booktitle    = {58th IEEE Conference on Decision and Control},
+ * title        = {{QPALM}: {A} {N}ewton-type {P}roximal {A}ugmented {L}agrangian {M}ethod for {Q}uadratic {P}rograms},
+ * year         = {2019},
+ * volume       = {},
+ * number       = {},
+ * pages        = {},
+ * doi          = {},
+ * issn         = {},
+ * month        = {Dec.},
  * }
  * \endcode
  * 

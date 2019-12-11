@@ -1,7 +1,7 @@
 var searchData=
 [
   ['qpalm_3a_20proximal_20augmented_20lagrangian_20solver_20for_20_28nonconvex_29_20quadratic_20programs',['QPALM: Proximal Augmented Lagrangian Solver for (Nonconvex) Quadratic Programs',['../index.html',1,'']]],
-  ['q',['Q',['../structQPALMData.html#a9b440bae03198195823e1e3f5154a611',1,'QPALMData::Q()'],['../structQPALMData.html#aa6775bd0b50250223ddd66115da68a12',1,'QPALMData::q()']]],
+  ['q',['q',['../structQPALMData.html#aa6775bd0b50250223ddd66115da68a12',1,'QPALMData::q()'],['../structQPALMData.html#a9b440bae03198195823e1e3f5154a611',1,'QPALMData::Q()']]],
   ['qd',['Qd',['../structQPALMCholmod.html#abaedb802a939e9ee04577c87bb9f25cc',1,'QPALMCholmod::Qd()'],['../structQPALMWorkspace.html#af3614a39bf75c0331f89447caa3d1217',1,'QPALMWorkspace::Qd()']]],
   ['qdelta_5fx',['Qdelta_x',['../structQPALMWorkspace.html#a7a10abcbd6a5e3cb44b7dca2cf679c7a',1,'QPALMWorkspace']]],
   ['qpalm_2ec',['qpalm.c',['../qpalm_8c.html',1,'']]],
@@ -16,10 +16,11 @@ var searchData=
   ['qpalm_5fnull',['QPALM_NULL',['../constants_8h.html#ac0a2840bf4b0b7115794565a2c364ebd',1,'constants.h']]],
   ['qpalm_5fprimal_5finfeasible',['QPALM_PRIMAL_INFEASIBLE',['../constants_8h.html#a8abdbac2eedeb387b25657e81b0b70a0',1,'constants.h']]],
   ['qpalm_5fset_5fdefault_5fsettings',['qpalm_set_default_settings',['../qpalm_8c.html#a4aa4b201790332b345faf7ca36f54be5',1,'qpalm_set_default_settings(QPALMSettings *settings):&#160;qpalm.c'],['../qpalm_8h.html#a4aa4b201790332b345faf7ca36f54be5',1,'qpalm_set_default_settings(QPALMSettings *settings):&#160;qpalm.c']]],
-  ['qpalm_5fsetup',['qpalm_setup',['../qpalm_8c.html#ae42559ed7e48a9a814083b4e5681e737',1,'qpalm_setup(const QPALMData *data, const QPALMSettings *settings, cholmod_common *c):&#160;qpalm.c'],['../qpalm_8h.html#ae42559ed7e48a9a814083b4e5681e737',1,'qpalm_setup(const QPALMData *data, const QPALMSettings *settings, cholmod_common *c):&#160;qpalm.c']]],
+  ['qpalm_5fsetup',['qpalm_setup',['../qpalm_8c.html#ac2cb9bd7b22941e8fb298c517797c594',1,'qpalm_setup(const QPALMData *data, const QPALMSettings *settings):&#160;qpalm.c'],['../qpalm_8h.html#ac2cb9bd7b22941e8fb298c517797c594',1,'qpalm_setup(const QPALMData *data, const QPALMSettings *settings):&#160;qpalm.c']]],
   ['qpalm_5fsolve',['qpalm_solve',['../qpalm_8c.html#a17fcba910c32b8518df93617591b1cf1',1,'qpalm_solve(QPALMWorkspace *work):&#160;qpalm.c'],['../qpalm_8h.html#a17fcba910c32b8518df93617591b1cf1',1,'qpalm_solve(QPALMWorkspace *work):&#160;qpalm.c']]],
   ['qpalm_5fsolved',['QPALM_SOLVED',['../constants_8h.html#aa07d9d4ae8714d3f166813ccee23a428',1,'constants.h']]],
   ['qpalm_5ftic',['qpalm_tic',['../util_8h.html#aae57226ec767e15f27d88e97df093b41',1,'util.h']]],
+  ['qpalm_5ftime_5flimit_5freached',['QPALM_TIME_LIMIT_REACHED',['../constants_8h.html#a72ec57b24480c36944b8d777aee91d0e',1,'constants.h']]],
   ['qpalm_5ftoc',['qpalm_toc',['../util_8h.html#a6eecdaf6f3f1c4bf0ab1067a5e7e69da',1,'util.h']]],
   ['qpalm_5funsolved',['QPALM_UNSOLVED',['../constants_8h.html#acbec0c523d324f1ae556a7fde7b83633',1,'constants.h']]],
   ['qpalm_5fupdate_5fbounds',['qpalm_update_bounds',['../qpalm_8c.html#a586e7a22d9ed41fb2d477490fdabc875',1,'qpalm_update_bounds(QPALMWorkspace *work, const c_float *bmin, const c_float *bmax):&#160;qpalm.c'],['../qpalm_8h.html#a586e7a22d9ed41fb2d477490fdabc875',1,'qpalm_update_bounds(QPALMWorkspace *work, const c_float *bmin, const c_float *bmax):&#160;qpalm.c']]],
