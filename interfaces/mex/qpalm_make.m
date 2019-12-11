@@ -18,16 +18,16 @@ cd(this_path);
 
 !git submodule update --init
 
-PWAlinesearch_setup;
+% PWAlinesearch_setup;
 
 
-cholmod_path = fullfile(this_path, '../../suitesparse/CHOLMOD/MATLAB');
-addpath(cholmod_path);
+% cholmod_path = fullfile(this_path, '../../suitesparse/CHOLMOD/MATLAB');
+% addpath(cholmod_path);
 % cholmod_path = fileparts(which('cholmod_make.m'));
-cd(cholmod_path);
-cholmod_make;
+% cd(cholmod_path);
+% cholmod_make;
 
-cd(this_path);
+% cd(this_path);
 
 fprintf ('Compiling QPALM mex function\n')
 

@@ -6,7 +6,7 @@ export SUITESPARSE_ROOT_INCLUDE=${HOME}/miniconda3/include
 #ls ${SUITESPARSE_ROOT_LIB}
 #ls ${SUITESPARSE_ROOT_INCLUDE}
 
-curdir=`pwd`
+curdir=`pwd`/..
 
 #Build direcetories
 rm -r build

@@ -9,7 +9,7 @@ export MINICONDA_INCLUDE=${HOME}/miniconda3/include
 #ls ${SUITESPARSE_ROOT_LIB}
 #ls ${SUITESPARSE_ROOT_INCLUDE}
 
-curdir=`pwd`
+curdir=`pwd`/..
 pythondir=$curdir/interfaces/python
 cd $pythondir
 #Build direcetories

@@ -12,7 +12,7 @@ q = 10*randn(n,1);
 %% Solve with qpalm
 solver = qpalm;
 settings = solver.default_settings();
-settings.delta = 10;
+settings.delta = 100;
 settings.proximal = true;
 settings.scaling = 2;
 settings.max_iter = 1000;
@@ -24,6 +24,8 @@ res = solver.solve();
 
 fprintf('Elapsed time: %f seconds\n', res.info.run_time);
 fprintf('Status: %s\n', res.info.status);
+
+solver.delete();
 
 
 
