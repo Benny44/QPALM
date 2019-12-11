@@ -64,10 +64,11 @@ chmod 755 buildCustom.sh
 
 ## Code Examples
 
-Basic demos are available for the different ways to call the solver.
+Basic demos are available for the different ways to call the solver:
 * For the mex interface of QPALM, check out examples/qpalm_mex_demo.m and examples/qpalm_mex_nonconvex_demo.m.
 * For the C-version of QPALM, check out examples/qpalm_demo.c.
 * For the python interface of QPALM, check out interfaces/python/qpalm_python_demo.py.
+* For the Julia interface of QPALM, check out any of the files in interfaces/QPALM.jl/test/.
 
 ## Documentation
 
