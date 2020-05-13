@@ -146,12 +146,17 @@ minunit_suite_teardown = NULL;\
 #define MU_REPORT() MU__SAFE_BLOCK(\
 	double minunit_end_real_timer;\
 	double minunit_end_proc_timer;\
-	printf("\n\n%d tests, %d assertions, %d failures\n", minunit_run, minunit_assert, minunit_fail);\
+	if (minunit_fail == 0){\
+	printf("\n\n\033[1;32m%d tests, %d assertions, %d failures\033[0m\n", minunit_run, minunit_assert, minunit_fail);\
+	} else {\
+	printf("\n\033[1;31m%d tests, %d assertions, %d failures\033[0m\n", minunit_run, minunit_assert, minunit_fail);\
+	}\
 	minunit_end_real_timer = mu_timer_real();\
 	minunit_end_proc_timer = mu_timer_cpu();\
-	printf("\nFinished in %.8f seconds (real) %.8f seconds (proc)\n\n",\
+	snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "\nFinished in %.8f seconds (real) %.8f seconds (proc)\n\n",\
 		minunit_end_real_timer - minunit_real_timer,\
 		minunit_end_proc_timer - minunit_proc_timer);\
+	printf("%s", minunit_last_message);\
 )
 
 /*  Assertions */
@@ -199,7 +204,7 @@ minunit_suite_teardown = NULL;\
 	minunit_tmp_e = (expected);\
 	minunit_tmp_r = (result);\
 	if (minunit_tmp_e != minunit_tmp_r) {\
-		snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "%s failed:\n\t%s:%d: %d expected but was %d", __func__, __FILE__, __LINE__, minunit_tmp_e, minunit_tmp_r);\
+		snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "%s failed:\n\t%s:%d: \033[0;31m%d expected but was %d\033[0m", __func__, __FILE__, __LINE__, minunit_tmp_e, minunit_tmp_r);\
 		minunit_status = 1;\
 		return;\
 	} else {\
@@ -214,7 +219,7 @@ minunit_suite_teardown = NULL;\
 	minunit_tmp_e = (expected);\
 	minunit_tmp_r = (result);\
 	if (minunit_tmp_e != minunit_tmp_r) {\
-		snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "%s failed:\n\t%s:%d: %ld expected but was %ld", __func__, __FILE__, __LINE__, minunit_tmp_e, minunit_tmp_r);\
+		snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "%s failed:\n\t%s:%d: \033[0;31m%ld expected but was %ld\033[0m", __func__, __FILE__, __LINE__, minunit_tmp_e, minunit_tmp_r);\
 		minunit_status = 1;\
 		return;\
 	} else {\
@@ -230,7 +235,7 @@ minunit_suite_teardown = NULL;\
 	minunit_tmp_r = (result);\
 	if (fabs(minunit_tmp_e-minunit_tmp_r) > tol) {\
 		int minunit_significant_figures = (int) (1 - log10(tol));\
-		snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "%s failed:\n\t%s:%d: %.*g expected but was %.*g", __func__, __FILE__, __LINE__, minunit_significant_figures, minunit_tmp_e, minunit_significant_figures, minunit_tmp_r);\
+		snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "%s failed:\n\t%s:%d: \033[0;31m%.*g expected but was %.*g\033[0m", __func__, __FILE__, __LINE__, minunit_significant_figures, minunit_tmp_e, minunit_significant_figures, minunit_tmp_r);\
 		minunit_status = 1;\
 		return;\
 	} else {\
@@ -249,7 +254,7 @@ minunit_suite_teardown = NULL;\
 		minunit_tmp_r = "<null pointer>";\
 	}\
 	if(strcmp(minunit_tmp_e, minunit_tmp_r)) {\
-		snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "%s failed:\n\t%s:%d: '%s' expected but was '%s'", __func__, __FILE__, __LINE__, minunit_tmp_e, minunit_tmp_r);\
+		snprintf(minunit_last_message, MINUNIT_MESSAGE_LEN, "%s failed:\n\t%s:%d: \033[0;31m'%s' expected but was '%s'", __func__, __FILE__, __LINE__, minunit_tmp_e, minunit_tmp_r);\
 		minunit_status = 1;\
 		return;\
 	} else {\
