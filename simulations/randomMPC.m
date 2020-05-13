@@ -4,12 +4,13 @@ clear; close all;
 current = fileparts(mfilename('fullpath'));
 cd(current);
 
-options.qpalm_matlab = false;
-options.qpalm_c = true;
-options.osqp = true;
-options.qpoases = true;
+options.qpalm_matlab = true;
+options.qpalm_c = false;
+options.osqp = false;
+options.qpoases = false;
 options.gurobi = false;
-options.VERBOSE = false;
+options.VERBOSE = true;
+options.MAXITER = 500;
 options.TIME_LIMIT = 10;
 
 Tqpalm_matlab = [];
@@ -19,7 +20,8 @@ Tqpoases = [];
 Tgurobi = [];
 
 % nb_gamma = 21;
-T_values = 10:30;
+rng(1)
+T_values = 29:30;
 nx = 10;
 nu = 5;
 
@@ -157,7 +159,7 @@ for i = 1:nb_n
     
 end
 
-Tosqp(strcmp(Status_osqp, 'run time limit reached')) = options.TIME_LIMIT;
+if options.osqp, Tosqp(strcmp(Status_osqp, 'run time limit reached')) = options.TIME_LIMIT; end
 
 save('output/MPC');
 

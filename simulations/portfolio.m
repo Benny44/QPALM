@@ -2,20 +2,21 @@
 %Sparse regressor selection
 clear; close all;
 
-options.qpalm_matlab = false;
-options.qpalm_c = true;
-options.osqp = true;
-options.qpoases = true;
-options.gurobi = true;
+options.qpalm_matlab = true;
+options.qpalm_c = false;
+options.osqp = false;
+options.qpoases = false;
+options.gurobi = false;
 options.VERBOSE = true;
 options.SCALING_ITER = 0;
+% options.EPS_ABS = 1e-4;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
 Tosqp = [];
 Tqpoases = [];
 Tgurobi = [];
-
+rng(1)
 
 nb_gamma = 2;
 n_values = 400:20:421;
@@ -44,7 +45,7 @@ for i = 1:nb_n
         eye(n) zeros(n,k)];
     A = sparse(A);
     lb = [1; zeros(k+n,1)];
-    ub = [1; zeros(k,1); inf*ones(n,1)];
+    ub = [1; zeros(k,1); 1e20*ones(n,1)];
 
     
     prob.Q = Q; prob.A = A; prob.lb = lb; prob.ub = ub;
@@ -73,11 +74,17 @@ for i = 1:nb_n
     if options.qpoases, Tqpoases(i) = qpoases_time/nb_gamma; end
     if options.gurobi, Tgurobi(i) = gurobi_time/nb_gamma; end
     
+    if options.qpalm_matlab, Iter_qpalm_matlab(i) = iter.qpalm_matlab; end
+    if options.qpalm_c, Iter_qpalm_c(i) = iter.qpalm_c; end
+    if options.osqp, Iter_osqp(i) = iter.osqp; end
+    if options.qpoases, Iter_qpoases(i) = iter.qpoases; end
+    if options.gurobi, Iter_gurobi(i) = iter.gurobi; end
+    
 end
 
-save('output/Portfolio', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases','Tgurobi');
+% save('output/Portfolio', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases','Tgurobi');
 
 %% Plot results
 
-plot_QP_comparison('output/Portfolio')
+% plot_QP_comparison('output/Portfolio')
     
