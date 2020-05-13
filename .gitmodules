@@ -6,3 +6,7 @@
 	path = interfaces/QPALM.jl
 	url = https://github.com/kul-forbes/QPALM.jl
 	branch = master
+[submodule "LADEL"]
+	path = LADEL
+	url = https://github.com/Benny44/LADEL
+	branch = master
