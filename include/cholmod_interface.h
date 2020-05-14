@@ -16,7 +16,9 @@
 extern "C" {
 # endif // ifdef __cplusplus
 
+#ifdef USE_CHOLMOD
 #include "cholmod.h"
+#endif
 #include "global_opts.h"
 #include "constants.h"
 #include "types.h"
@@ -32,9 +34,9 @@ extern "C" {
  * @param y Dense output vector
  * @param c Cholmod environment 
  */
-void mat_vec(cholmod_sparse *A,
-             cholmod_dense  *x,
-             cholmod_dense  *y,
+void mat_vec(solver_sparse *A,
+             solver_dense  *x,
+             solver_dense  *y,
              solver_common *c);
 /** 
  * Matrix-transpose-vector multiplication.
@@ -46,9 +48,9 @@ void mat_vec(cholmod_sparse *A,
  * @param y Dense output vector
  * @param c Cholmod environment 
  */
-void mat_tpose_vec(cholmod_sparse *A,
-                   cholmod_dense  *x,
-                   cholmod_dense  *y,
+void mat_tpose_vec(solver_sparse *A,
+                   solver_dense  *x,
+                   solver_dense  *y,
                    solver_common *c);
 /**
  * Infinity norm of each matrix column, @f$E_i = \|M{(:,i)}\|_\infty@f$.
@@ -57,7 +59,7 @@ void mat_tpose_vec(cholmod_sparse *A,
  * @param E Vector of infinity norms
  *
  */
-void mat_inf_norm_cols(cholmod_sparse *M,
+void mat_inf_norm_cols(solver_sparse *M,
                        c_float   *E);
 
 /**
@@ -67,8 +69,11 @@ void mat_inf_norm_cols(cholmod_sparse *M,
  * @param E Vector of infinity norms
  *
  */
-void mat_inf_norm_rows(cholmod_sparse *M,
+void mat_inf_norm_rows(solver_sparse *M,
                        c_float   *E);
+
+
+#ifdef USE_CHOLMOD
 
 /**
  * Calculate @f$LDL^T@f$ factorization of a matrix @f$M@f$.
@@ -78,7 +83,7 @@ void mat_inf_norm_rows(cholmod_sparse *M,
  * @param M Matrix to be factorized
  * @param work Workspace
  */
-void ldlchol(cholmod_sparse *M, 
+void ldlchol(solver_sparse *M, 
              QPALMWorkspace *work,
              solver_common *c);
 
@@ -150,6 +155,8 @@ void ldlsolveLD_neg_dphi(QPALMWorkspace *work,
  * @param c Cholmod environment
  */
 void cholmod_set_settings(solver_common *c);
+
+#endif /* USE_CHOLMOD */
 
 # ifdef __cplusplus
 }

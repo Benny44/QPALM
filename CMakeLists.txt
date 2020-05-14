@@ -123,6 +123,10 @@ if (USE_CHOLMOD AND NOT WIN32)
     add_subdirectory(cmakeSuitesparse)
 endif()
 
+if (USE_LADEL)
+    add_subdirectory(LADEL)
+endif()
+
 if (UNIX)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wconversion")
 endif (UNIX)
@@ -166,6 +170,15 @@ if (USE_CHOLMOD)
         target_link_libraries(qpalm ${BLAS} ${LAPACK} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACKE})
     endif()
 endif()
+
+if (USE_LADEL)
+    target_include_directories(qpalm
+            PUBLIC
+                    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+                    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/LADEL/include>)
+    target_link_libraries(qpalm ladel ${LAPACK} ${LAPACKE})
+endif()
+
 
 if (PYTHON)
     find_package(PythonInterp REQUIRED)

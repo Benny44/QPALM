@@ -15,6 +15,13 @@
 extern "C" {
 # endif /* ifdef __cplusplus */
 
+
+#ifdef USE_LADEL
+#include "ladel_types.h"
+typedef ladel_double  c_float;
+typedef ladel_int     c_int;
+
+#elif defined USE_CHOLMOD
 #include "cholmod.h"
 
 /**
@@ -26,12 +33,10 @@ extern "C" {
 #define Int SuiteSparse_long
 #define Int_max SuiteSparse_long_max
 #define CHOLMOD(name) cholmod_l_ ## name
-//#define LONG
-//#define DOUBLE
+
 #define ITYPE CHOLMOD_LONG
 #define DTYPE CHOLMOD_DOUBLE
 #define ID SuiteSparse_long_id
-
 #else
 
 #ifndef DINT
@@ -53,6 +58,11 @@ extern "C" {
 
 #endif
 
+typedef Real c_float; /**< doubles for numerical values  */
+typedef Int c_int; /**< long or int for indices */
+
+#endif /* USE_CHOLMOD */
+
 /**
  * @}
  */
@@ -62,9 +72,6 @@ extern "C" {
  * @{
  */
 #  include <stdlib.h>
-
-typedef Real c_float; /**< doubles for numerical values  */
-typedef Int c_int; /**< long or int for indices */
 
 /**
  * @}

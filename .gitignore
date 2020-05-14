@@ -38,3 +38,4 @@ buildQPS.sh
 *.pyc
 /simulations/install_mpt.m
 /simulations/tbxmanager/*
+Testing

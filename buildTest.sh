@@ -28,22 +28,26 @@ fi
 if [ ! -d "build/metis" ]; then
   mkdir build/metis
 fi
-
-metisdir=$curdir/build/metis
-cd $metisdir
-
-cmake $curdir/suitesparse/metis-5.1.0 -DGKLIB_PATH=$curdir/suitesparse/metis-5.1.0/GKlib -DSHARED=1 && make 
-cd $curdir
-cp build/metis/libmetis/libmetis.so build/lib/
-
-#Build QPALM and tests
-cd $curdir
-
 builddir=$curdir/build/debug
 
-cd $builddir
 
-cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_CHOLMOD=ON
+solver="cholmod"
+
+if [ $solver = "cholmod" ]; then
+  metisdir=$curdir/build/metis
+  cd $metisdir
+
+  cmake $curdir/suitesparse/metis-5.1.0 -DGKLIB_PATH=$curdir/suitesparse/metis-5.1.0/GKlib -DSHARED=1 && make 
+  cd $curdir
+  cp build/metis/libmetis/libmetis.so build/lib/
+
+  #Build QPALM and tests
+  cd $builddir
+  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_CHOLMOD=ON
+elif [ $solver = "ladel" ]; then
+  cd $builddir
+  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_LADEL=ON
+fi
 make
 ctest -VV
 

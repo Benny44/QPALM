@@ -9,13 +9,34 @@
  * in this file as well.
  */
 
-#ifdef USE_CHOLMOD
-
-#include "cholmod_interface.h"
 #include "lin_alg.h"
+#include "cholmod_interface.h"
 #include <stdio.h>
 
-void mat_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, solver_common *c) {
+#ifdef USE_LADEL
+void mat_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c) 
+{
+
+}
+
+void mat_tpose_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c)
+{
+
+}
+
+void mat_inf_norm_cols(solver_sparse *M, c_float *E)
+{
+
+}
+
+void mat_inf_norm_rows(solver_sparse *M, c_float *E) 
+{
+
+}
+
+#elif defined USE_CHOLMOD
+
+void mat_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c) {
     double one [2] = {1,0};
     double zero [2] = {0,0};
     if (x!=y) {
@@ -27,7 +48,7 @@ void mat_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, solver_commo
     }
 }
 
-void mat_tpose_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, solver_common *c) {
+void mat_tpose_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c) {
     double one [2] = {1,0};
     double zero [2] = {0,0};
     if (x!=y) {
@@ -39,7 +60,7 @@ void mat_tpose_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, solver
     }
 }
 
-void mat_inf_norm_cols(cholmod_sparse *M, c_float *E) {
+void mat_inf_norm_cols(solver_sparse *M, c_float *E) {
   size_t j;
   c_int k;
   c_float *Mx = M->x;
@@ -58,7 +79,7 @@ void mat_inf_norm_cols(cholmod_sparse *M, c_float *E) {
   }
 }
 
-void mat_inf_norm_rows(cholmod_sparse *M, c_float *E) {
+void mat_inf_norm_rows(solver_sparse *M, c_float *E) {
   size_t j;
   c_int i, k;
   c_int *Mp = M->p;

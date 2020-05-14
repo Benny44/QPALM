@@ -14,12 +14,20 @@ extern "C" {
 
 #include "global_opts.h"
 
-#ifdef USE_CHOLMOD
+#ifdef USE_LADEL
+#include "ladel_types.h"
+typedef ladel_work            solver_common;
+typedef ladel_sparse_matrix   solver_sparse;
+typedef ladel_double          solver_dense;
+typedef ladel_factor          solver_factor;
+#elif defined(USE_CHOLMOD)
 #include "cholmod.h"
 typedef cholmod_common solver_common;
 typedef cholmod_sparse solver_sparse;
 typedef cholmod_dense  solver_dense;
 typedef cholmod_factor solver_factor;
+#elif defined(USE_LADEL)
+
 #endif /* USE_CHOLMOD */
 
 /**
