@@ -41,8 +41,12 @@ void prim_inf_qp_suite_setup(void) {
     data->bmax[0] = 5; data->bmax[1] = 10; data->bmax[2] = 20; 
 
     c = &common;
+    #ifdef USE_CHOLMOD
     CHOLMOD(start)(c);
     cholmod_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
+    cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
+    CHOLMOD(finish)(c);
+    #endif /* USE_CHOLMOD */
     c_float *Ax;
     c_int *Ai, *Ap;
     Ax = A->x;
@@ -52,7 +56,6 @@ void prim_inf_qp_suite_setup(void) {
     Ap[0] = 0; Ap[1] = 2; Ap[2] = 4;
     Ai[0] = 0; Ai[1] = 2; Ai[2] = 1; Ai[3] = 2;
 
-    cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
     c_float *Qx;
     c_int *Qi, *Qp;
     Qx = Q->x;
@@ -64,17 +67,17 @@ void prim_inf_qp_suite_setup(void) {
 
     data->A = A;
     data->Q = Q;
-    CHOLMOD(finish)(c);
-
 }
 
 void prim_inf_qp_suite_teardown(void) {
     c_free(settings);
     // Clean setup
+    #ifdef USE_CHOLMOD
     CHOLMOD(start)(c);
     CHOLMOD(free_sparse)(&data->Q, c);
     CHOLMOD(free_sparse)(&data->A, c);
     CHOLMOD(finish)(c);
+    #endif /* USE_CHOLMOD */
     c_free(data->q);
     c_free(data->bmin);
     c_free(data->bmax);

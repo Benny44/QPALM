@@ -26,11 +26,13 @@ void nonconvex_qp_suite_setup(void) {
 
     solver_common common, *c;
     c = &common;
+    #ifdef USE_CHOLMOD
     CHOLMOD(start)(c);
     data->A = CHOLMOD(allocate_sparse)(data->m, data->n, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
     data->Q = CHOLMOD(allocate_sparse)(data->n, data->n, QNZMAX , TRUE, TRUE, -1, CHOLMOD_REAL, c);
     CHOLMOD(finish)(c);
-    
+    #endif /* USE_CHOLMOD */
+
     c_float *Ax = data->A->x;
     c_int *Ai = data->A->i;
     c_int *Ap = data->A->p;
@@ -90,10 +92,13 @@ void nonconvex_qp_suite_setup(void) {
 
     // Cleanup temporary structures
     c_free(settings);
+    #ifdef USE_CHOLMOD
     CHOLMOD(start)(c);
     CHOLMOD(free_sparse)(&data->Q, c);
     CHOLMOD(free_sparse)(&data->A, c);
     CHOLMOD(finish)(c);
+    #endif /* USE_CHOLMOD */
+
     c_free(data->q);
     c_free(data->bmin);
     c_free(data->bmax);

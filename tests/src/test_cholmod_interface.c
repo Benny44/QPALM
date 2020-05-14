@@ -34,8 +34,12 @@ void cholmod_suite_setup(void) {
     data->bmax = bmax;
 
     c = &common;
+    #ifdef USE_CHOLMOD
     CHOLMOD(start)(c);
     A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
+    Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
+    CHOLMOD(finish)(c);
+    #endif /* USE_CHOLMOD */
     c_float *Ax;
     c_int *Ai, *Ap;
     Ax = A->x;
@@ -44,8 +48,7 @@ void cholmod_suite_setup(void) {
     Ax[0] = 1.0; Ax[1] = 3.0; Ax[2] = 5.0; Ax[3] = 2.0; Ax[4] = 4.0;  
     Ap[0] = 0; Ap[1] = 3; Ap[2] = 5;
     Ai[0] = 0; Ai[1] = 1; Ai[2] = 2; Ai[3] = 0; Ai[4] = 1;
-
-    Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
+ 
     c_float *Qx;
     c_int *Qi, *Qp;
     Qx = Q->x;
@@ -61,8 +64,6 @@ void cholmod_suite_setup(void) {
     // Setup workspace
     work = qpalm_setup(data, settings);
 
-    CHOLMOD(finish)(c);
-
     c_free(data);
     c_free(settings);
 }
@@ -70,10 +71,12 @@ void cholmod_suite_setup(void) {
 void cholmod_suite_teardown(void) {
     qpalm_cleanup(work);
 
+    #ifdef USE_CHOLMOD
     CHOLMOD(start)(c);
     CHOLMOD(free_sparse)(&Q, c);
     CHOLMOD(free_sparse)(&A, c);
     CHOLMOD(finish)(c);
+    #endif /* USE_CHOLMOD */
 
 }
 
