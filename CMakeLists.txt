@@ -22,42 +22,20 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 ############################################################
-###################### Find libraries ######################
-############################################################
-find_library(LAPACK names lapack
-    HINTS $ENV{MINICONDA_LIB})
-find_library(LAPACKE names lapacke
-	HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
-
-if (WIN32)
-    find_library(CHOLMOD_LIB names cholmod 
-        HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
-
-    find_library(SUITESPARSE_LIB names suitesparseconfig
-        HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
-
-    find_path(SUITESPARSE_INCLUDE names cholmod.h 
-        HINTS ${CMAKE_INCLUDE_PATH} $ENV{MINICONDA_INCLUDE}\\suitesparse)
-
-	find_library(BLAS names openblas
-        HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
-else()
-    find_library(MKL_INTEL_LP64 names mkl_intel_lp64 
-        HINTS $ENV{MINICONDA_LIB})
-    find_library(MKL_CORE names mkl_core 
-        HINTS $ENV{MINICONDA_LIB})
-    find_library(MKL_INTEL_THREAD names mkl_intel_thread 
-        HINTS $ENV{MINICONDA_LIB})
-    find_library(IOMP5 names iomp5 
-        HINTS $ENV{MINICONDA_LIB})
-    find_library(PTHREAD names pthread
-        HINTS $ENV{MINICONDA_LIB})
-endif()
-
-
-############################################################
 ################### Compilation options ####################
 ############################################################
+option (USE_CHOLMOD "Use CHOLMOD as the factorization package" OFF)
+option (USE_LADEL "Use LADEL as the factorization package" OFF)
+if (NOT USE_CHOLMOD AND NOT USE_LADEL)
+    set (USE_LADEL ON)
+    message (WARNING "No factorization package was selected. Using LADEL as the default.")
+endif()
+
+if (USE_CHOLMOD AND USE_LADEL)
+    set (USE_CHOLMOD OFF)
+    message (WARNING "Both CHOLMOD and LADEL selected. Using LADEL as the default.")
+endif()
+
 option (COVERAGE "Perform code coverage" OFF)
 option (PYTHON "Compile for the python interface" OFF)
 option (INTERFACES "Compile interfaces" ON)
@@ -72,6 +50,14 @@ CMAKE_DEPENDENT_OPTION(UNITTESTS "Perform unit testing" OFF
                        "NOT COVERAGE" ON)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DDLONG")
+
+if (USE_CHOLMOD)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_CHOLMOD")
+endif()
+
+if (USE_LADEL)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_LADEL")
+endif()
 
 # Add code coverage
 if (COVERAGE)
@@ -96,9 +82,44 @@ if (TIMING)
 endif()
 
 ############################################################
+###################### Find libraries ######################
+############################################################
+find_library(LAPACK names lapack
+    HINTS $ENV{MINICONDA_LIB})
+find_library(LAPACKE names lapacke
+	HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
+
+if (USE_CHOLMOD)
+    if (WIN32)
+        find_library(CHOLMOD_LIB names cholmod 
+            HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
+
+        find_library(SUITESPARSE_LIB names suitesparseconfig
+            HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
+
+        find_path(SUITESPARSE_INCLUDE names cholmod.h 
+            HINTS ${CMAKE_INCLUDE_PATH} $ENV{MINICONDA_INCLUDE}\\suitesparse)
+
+        find_library(BLAS names openblas
+            HINTS ${CMAKE_LIBRARY_PATH} $ENV{MINICONDA_LIB})
+    else()
+        find_library(MKL_INTEL_LP64 names mkl_intel_lp64 
+            HINTS $ENV{MINICONDA_LIB})
+        find_library(MKL_CORE names mkl_core 
+            HINTS $ENV{MINICONDA_LIB})
+        find_library(MKL_INTEL_THREAD names mkl_intel_thread 
+            HINTS $ENV{MINICONDA_LIB})
+        find_library(IOMP5 names iomp5 
+            HINTS $ENV{MINICONDA_LIB})
+        find_library(PTHREAD names pthread
+            HINTS $ENV{MINICONDA_LIB})
+    endif()
+endif()
+
+############################################################
 ################### Build the libraries ####################
 ############################################################
-if (NOT WIN32)
+if (USE_CHOLMOD AND NOT WIN32)
     add_subdirectory(cmakeSuitesparse)
 endif()
 
@@ -128,20 +149,22 @@ add_library(qpalm ${SRC})
 ############################################################
 #################### Link the libraries ####################
 ############################################################
-if (NOT WIN32)
-	target_include_directories(qpalm
-        PUBLIC
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-                $ENV{MINICONDA_INCLUDE})
-    target_link_libraries(qpalm ${MKL_INTEL_LP64} ${MKL_CORE} ${MKL_INTEL_THREAD} ${IOMP5} ${PTHREAD}
-                         ${LAPACK} cholmod_new suitesparseconfig_new ${LAPACKE})
-else()
-	target_include_directories(qpalm
-        PUBLIC
-                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-                $ENV{MINICONDA_INCLUDE}
-				${SUITESPARSE_INCLUDE})
-    target_link_libraries(qpalm ${BLAS} ${LAPACK} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACKE})
+if (USE_CHOLMOD)
+    if (NOT WIN32)
+        target_include_directories(qpalm
+            PUBLIC
+                    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+                    $ENV{MINICONDA_INCLUDE})
+        target_link_libraries(qpalm ${MKL_INTEL_LP64} ${MKL_CORE} ${MKL_INTEL_THREAD} ${IOMP5} ${PTHREAD}
+                            ${LAPACK} cholmod_new suitesparseconfig_new ${LAPACKE})
+    else()
+        target_include_directories(qpalm
+            PUBLIC
+                    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+                    $ENV{MINICONDA_INCLUDE}
+                    ${SUITESPARSE_INCLUDE})
+        target_link_libraries(qpalm ${BLAS} ${LAPACK} ${CHOLMOD_LIB} ${SUITESPARSE_LIB} ${LAPACKE})
+    endif()
 endif()
 
 if (PYTHON)

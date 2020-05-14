@@ -99,10 +99,10 @@ int main() {
   #endif
 
   // Clean workspace
-  CHOLMOD(start)(&work->chol->c);
+  CHOLMOD(start)(&work->solver->c);
   CHOLMOD(free_sparse)(&data->Q, &c);
   CHOLMOD(free_sparse)(&data->A, &c);
-  CHOLMOD(finish)(&work->chol->c);
+  CHOLMOD(finish)(&work->solver->c);
 
   qpalm_cleanup(work);
   c_free(data->q);

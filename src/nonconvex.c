@@ -25,7 +25,7 @@
 
 
 
-static c_float lobpcg(QPALMWorkspace *work, c_float *x, cholmod_common *c) {
+static c_float lobpcg(QPALMWorkspace *work, c_float *x, solver_common *c) {
     c_float lambda, norm_w;
     size_t i;
 
@@ -46,19 +46,19 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x, cholmod_common *c) {
         prea_vec_copy(x, work->d, n);
         x = work->d;
     }
-    cholmod_dense *x_chol = work->chol->d;
+    cholmod_dense *x_chol = work->solver->d;
 
     
     c_float *Ax = work->Qd;
-    cholmod_dense * Ax_chol = work->chol->Qd;
+    cholmod_dense * Ax_chol = work->solver->Qd;
     mat_vec(A, x_chol , Ax_chol, c);
     lambda = vec_prod(x, Ax, n);
 
     /*Current residual, Ax - lambda*x */
     c_float *w = work->neg_dphi; 
-    cholmod_dense * w_chol = work->chol->neg_dphi;
+    cholmod_dense * w_chol = work->solver->neg_dphi;
     c_float *Aw = work->Atyh;
-    cholmod_dense * Aw_chol = work->chol->Atyh;
+    cholmod_dense * Aw_chol = work->solver->Atyh;
 
     /* Conjugate gradient direction */
     c_float *p = work->temp_n; 
@@ -167,7 +167,7 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x, cholmod_common *c) {
 }
 
 
-void set_settings_nonconvex(QPALMWorkspace *work, cholmod_common *c){
+void set_settings_nonconvex(QPALMWorkspace *work, solver_common *c){
     c_float lambda;
     lambda = lobpcg(work, NULL, c);
     if (lambda < 0) {

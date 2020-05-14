@@ -28,7 +28,7 @@ void limit_scaling(c_float *D, size_t n) {
 }
 
 void scale_data(QPALMWorkspace *work) {
-    cholmod_common c;
+    solver_common c;
     CHOLMOD(start)(&c);
     cholmod_set_settings(&c);
 
@@ -59,8 +59,8 @@ void scale_data(QPALMWorkspace *work) {
 
         // Equilibrate matrix A
         // A <- EAD
-        CHOLMOD(scale)(work->chol->E_temp, CHOLMOD_ROW, work->data->A, &c);
-        CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_COL, work->data->A, &c);
+        CHOLMOD(scale)(work->solver->E_temp, CHOLMOD_ROW, work->data->A, &c);
+        CHOLMOD(scale)(work->solver->D_temp, CHOLMOD_COL, work->data->A, &c);
 
         // Update equilibration matrices D and E
         vec_ew_prod(work->scaling->D, work->D_temp, work->scaling->D, n);
@@ -71,7 +71,7 @@ void scale_data(QPALMWorkspace *work) {
     // Equilibrate matrix Q and vector q
     // Q <- DQD, q <- Dq
     prea_vec_copy(work->scaling->D, work->D_temp, n);
-    CHOLMOD(scale)(work->chol->D_temp, CHOLMOD_SYM, work->data->Q, &c);
+    CHOLMOD(scale)(work->solver->D_temp, CHOLMOD_SYM, work->data->Q, &c);
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, n);
 
     // Cost scaling

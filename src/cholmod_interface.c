@@ -9,11 +9,13 @@
  * in this file as well.
  */
 
+#ifdef USE_CHOLMOD
+
 #include "cholmod_interface.h"
 #include "lin_alg.h"
 #include <stdio.h>
 
-void mat_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, cholmod_common *c) {
+void mat_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, solver_common *c) {
     double one [2] = {1,0};
     double zero [2] = {0,0};
     if (x!=y) {
@@ -25,7 +27,7 @@ void mat_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, cholmod_comm
     }
 }
 
-void mat_tpose_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, cholmod_common *c) {
+void mat_tpose_vec(cholmod_sparse *A, cholmod_dense *x, cholmod_dense *y, solver_common *c) {
     double one [2] = {1,0};
     double zero [2] = {0,0};
     if (x!=y) {
@@ -77,16 +79,16 @@ void mat_inf_norm_rows(cholmod_sparse *M, c_float *E) {
   }
 }
 
-void ldlchol(cholmod_sparse *M, QPALMWorkspace *work, cholmod_common *c) {
-  if (work->chol->LD) {
-      CHOLMOD(free_factor)(&work->chol->LD, c);
+void ldlchol(cholmod_sparse *M, QPALMWorkspace *work, solver_common *c) {
+  if (work->solver->LD) {
+      CHOLMOD(free_factor)(&work->solver->LD, c);
   }
-  work->chol->LD = CHOLMOD(analyze) (M, c) ;
+  work->solver->LD = CHOLMOD(analyze) (M, c) ;
   if (work->settings->proximal) {
     double beta [2] = {1.0/work->gamma,0};
-    CHOLMOD(factorize_p) (M, beta, NULL, 0, work->chol->LD, c);
+    CHOLMOD(factorize_p) (M, beta, NULL, 0, work->solver->LD, c);
   } else {
-    CHOLMOD(factorize) (M, work->chol->LD, c);
+    CHOLMOD(factorize) (M, work->solver->LD, c);
   }
   /* If integers are used, supernodal might fail, so check for this and switch to simplicial if necessary. */
   #ifndef DLONG
@@ -94,26 +96,26 @@ void ldlchol(cholmod_sparse *M, QPALMWorkspace *work, cholmod_common *c) {
       (c)->supernodal = CHOLMOD_SIMPLICIAL;
       if (work->settings->proximal) {
         double beta [2] = {1.0/work->gamma,0};
-        CHOLMOD(factorize_p) (M, beta, NULL, 0, work->chol->LD, c);
+        CHOLMOD(factorize_p) (M, beta, NULL, 0, work->solver->LD, c);
       } else {
-        CHOLMOD(factorize) (M, work->chol->LD, c);
+        CHOLMOD(factorize) (M, work->solver->LD, c);
       }
   }
   #endif /* DLONG */
 
 }
 
-void ldlcholQAtsigmaA(QPALMWorkspace *work, cholmod_common *c) {
+void ldlcholQAtsigmaA(QPALMWorkspace *work, solver_common *c) {
   cholmod_sparse *AtsigmaA;
   cholmod_sparse *QAtsigmaA;
   size_t nb_active = 0;
   for (size_t i = 0; i < work->data->m; i++) {
-      if (work->chol->active_constraints[i]){
-          work->chol->enter[nb_active] = (c_int)i;
+      if (work->solver->active_constraints[i]){
+          work->solver->enter[nb_active] = (c_int)i;
           nb_active++;
       }      
   }
-  AtsigmaA = CHOLMOD(aat)(work->chol->At_sqrt_sigma, work->chol->enter, nb_active, TRUE, c);
+  AtsigmaA = CHOLMOD(aat)(work->solver->At_sqrt_sigma, work->solver->enter, nb_active, TRUE, c);
   double one [2] = {1,0};
   QAtsigmaA = CHOLMOD(add)(work->data->Q, AtsigmaA, one, one, TRUE, FALSE, c);
   QAtsigmaA->stype = work->data->Q->stype;
@@ -124,60 +126,60 @@ void ldlcholQAtsigmaA(QPALMWorkspace *work, cholmod_common *c) {
   CHOLMOD(free_sparse)(&QAtsigmaA, c);
 }
 
-void ldlupdate_entering_constraints(QPALMWorkspace *work, cholmod_common *c) {
+void ldlupdate_entering_constraints(QPALMWorkspace *work, solver_common *c) {
   cholmod_sparse *Ae;
-  Ae = CHOLMOD(submatrix)(work->chol->At_sqrt_sigma, NULL, -1, 
-                      work->chol->enter, work->chol->nb_enter, TRUE, TRUE, c);
+  Ae = CHOLMOD(submatrix)(work->solver->At_sqrt_sigma, NULL, -1, 
+                      work->solver->enter, work->solver->nb_enter, TRUE, TRUE, c);
   //LD = ldlupdate(LD,Ae,'+');
-  CHOLMOD(updown)(TRUE, Ae, work->chol->LD, c);
+  CHOLMOD(updown)(TRUE, Ae, work->solver->LD, c);
   CHOLMOD(free_sparse)(&Ae, c);
 }
 
-void ldldowndate_leaving_constraints(QPALMWorkspace *work, cholmod_common *c) {
+void ldldowndate_leaving_constraints(QPALMWorkspace *work, solver_common *c) {
   cholmod_sparse *Al;
-  Al = CHOLMOD(submatrix)(work->chol->At_sqrt_sigma, NULL, -1, 
-                      work->chol->leave, work->chol->nb_leave, TRUE, TRUE, c);
+  Al = CHOLMOD(submatrix)(work->solver->At_sqrt_sigma, NULL, -1, 
+                      work->solver->leave, work->solver->nb_leave, TRUE, TRUE, c);
   //LD = ldlupdate(LD,Ae,'+');
-  CHOLMOD(updown)(FALSE, Al, work->chol->LD, c);
+  CHOLMOD(updown)(FALSE, Al, work->solver->LD, c);
   CHOLMOD(free_sparse)(&Al, c);
 }
 
-void ldlupdate_sigma_changed(QPALMWorkspace *work, cholmod_common *c) {
+void ldlupdate_sigma_changed(QPALMWorkspace *work, solver_common *c) {
   cholmod_sparse *Ae;
-  c_float *At_scalex = work->chol->At_scale->x;
-  c_int *sigma_changed = work->chol->enter;
+  c_float *At_scalex = work->solver->At_scale->x;
+  c_int *sigma_changed = work->solver->enter;
 
   size_t k, nb_sigma_changed = (size_t) work->nb_sigma_changed;
   for (k=0; k < nb_sigma_changed; k++) {
     At_scalex[sigma_changed[k]]= c_sqrt(1-1/(At_scalex[sigma_changed[k]]*At_scalex[sigma_changed[k]])); 
   }
 
-  CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, c);
-  Ae = CHOLMOD(submatrix)(work->chol->At_sqrt_sigma, NULL, -1, 
+  CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
+  Ae = CHOLMOD(submatrix)(work->solver->At_sqrt_sigma, NULL, -1, 
                       sigma_changed, work->nb_sigma_changed, TRUE, TRUE, c);
   for (k=0; k < work->data->m; k++) {
     At_scalex[k]=1.0/At_scalex[k]; 
   }
-  CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, c);
+  CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
   //LD = ldlupdate(LD,Ae,'+');
-  CHOLMOD(updown)(TRUE, Ae, work->chol->LD, c);
+  CHOLMOD(updown)(TRUE, Ae, work->solver->LD, c);
   CHOLMOD(free_sparse)(&Ae, c);
 }
 
-void ldlsolveLD_neg_dphi(QPALMWorkspace *work, cholmod_common *c) {
+void ldlsolveLD_neg_dphi(QPALMWorkspace *work, solver_common *c) {
   //set -dphi
   prea_vec_copy(work->dphi, work->neg_dphi, work->data->n);
   vec_self_mult_scalar(work->neg_dphi, -1, work->data->n);
   //d = ldlsolve(LD, -dphi)
-  if (work->chol->d) {
-      CHOLMOD(free_dense)(&work->chol->d, c);
+  if (work->solver->d) {
+      CHOLMOD(free_dense)(&work->solver->d, c);
   }
-  work->chol->d = CHOLMOD(solve) (CHOLMOD_LDLt, work->chol->LD, work->chol->neg_dphi, c);
-  work->d = work->chol->d->x;
+  work->solver->d = CHOLMOD(solve) (CHOLMOD_LDLt, work->solver->LD, work->solver->neg_dphi, c);
+  work->d = work->solver->d->x;
 }
 
 
-void cholmod_set_settings(cholmod_common *c) {
+void cholmod_set_settings(solver_common *c) {
   //Suitesparse memory allocation functions
   SuiteSparse_config.malloc_func = c_malloc;
   SuiteSparse_config.calloc_func = c_calloc;
@@ -196,3 +198,5 @@ void cholmod_set_settings(cholmod_common *c) {
 	c->postorder = FALSE ;
   c->useGPU = FALSE ;
 }
+
+#endif /* USE_CHOLMOD */

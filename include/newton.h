@@ -17,23 +17,25 @@ extern "C" {
 #include "types.h"
 
 
+#ifdef USE_CHOLMOD
 /**
  * Sets work->d to the direction calculated by the semismooth Newton method
  * 
  * @param work Workspace
  */
-void newton_set_direction(QPALMWorkspace *work, cholmod_common *c);
+void newton_set_direction(QPALMWorkspace *work, solver_common *c);
 
+#endif /* USE_CHOLMOD */
 
 /**
- * Computes the set of active constraints and stores it in work->chol->active_constraints.
+ * Computes the set of active constraints and stores it in work->solver->active_constraints.
  * 
  * @param work Workspace
  */
 void set_active_constraints(QPALMWorkspace *work);
 
 /**
- * Determines the entering and leaving constraints and stores them in work->chol->enter and work->chol->leave respectively.
+ * Determines the entering and leaving constraints and stores them in work->solver->enter and work->solver->leave respectively.
  * 
  * Entering constraints are constraints that are in the new but not in the previous set of active constraints.
  * Leaving constraints are constraints that are in the previous but not in the new set of active constraints.

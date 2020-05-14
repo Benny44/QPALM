@@ -12,7 +12,7 @@ export MINICONDA_INCLUDE=${HOME}/miniconda3/include
 curdir=`pwd`
 
 #Build direcetories
-# rm -r build
+rm -r build
 if [ ! -d "build" ]; then
   mkdir build
 fi
@@ -43,7 +43,7 @@ builddir=$curdir/build/debug
 
 cd $builddir
 
-cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON 
+cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_CHOLMOD=ON
 make
 ctest -VV
 

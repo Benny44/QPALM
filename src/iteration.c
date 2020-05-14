@@ -16,7 +16,7 @@
 #include "linesearch.h"
 #include "nonconvex.h"
 
-void compute_residuals(QPALMWorkspace *work, cholmod_common *c) {
+void compute_residuals(QPALMWorkspace *work, solver_common *c) {
 
     //Axys = Ax + y./sigma
     vec_ew_div(work->y, work->sigma, work->temp_m, work->data->m);
@@ -37,12 +37,12 @@ void compute_residuals(QPALMWorkspace *work, cholmod_common *c) {
       vec_add_scaled(work->df, work->x0, work->df, -1/work->gamma, work->data->n);
     }
     // Atyh = A'*yh
-    mat_tpose_vec(work->data->A, work->chol->yh, work->chol->Atyh, c);
+    mat_tpose_vec(work->data->A, work->solver->yh, work->solver->Atyh, c);
     //dphi = df+Atyh
     vec_add_scaled(work->df, work->Atyh, work->dphi, 1, work->data->n);
 }
 
-void initialize_sigma(QPALMWorkspace *work, cholmod_common *c) {
+void initialize_sigma(QPALMWorkspace *work, solver_common *c) {
 
     // Compute initial sigma
     size_t n = work->data->n;
@@ -55,27 +55,27 @@ void initialize_sigma(QPALMWorkspace *work, cholmod_common *c) {
 
     // Set fields related to sigma
     vec_ew_sqrt(work->sigma, work->sqrt_sigma, m);
-    c_float *At_scalex = work->chol->At_scale->x;
+    c_float *At_scalex = work->solver->At_scale->x;
     prea_vec_copy(work->sqrt_sigma, At_scalex, m);
-    if (work->chol->At_sqrt_sigma) 
-      CHOLMOD(free_sparse)(&work->chol->At_sqrt_sigma, c);
-    work->chol->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, c);
-    CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, c);
+    if (work->solver->At_sqrt_sigma) 
+      CHOLMOD(free_sparse)(&work->solver->At_sqrt_sigma, c);
+    work->solver->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, c);
+    CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
 
     work->sqrt_sigma_max = c_sqrt(work->settings->sigma_max);
 
 }
 
-void update_sigma(QPALMWorkspace* work, cholmod_common *c) {
+void update_sigma(QPALMWorkspace* work, solver_common *c) {
     
     work->nb_sigma_changed = 0;
-    c_float *At_scalex = work->chol->At_scale->x;
+    c_float *At_scalex = work->solver->At_scale->x;
     c_float pri_res_unscaled_norm = vec_norm_inf(work->pri_res, work->data->m);
     c_float sigma_temp, mult_factor;
-    c_int *sigma_changed = work->chol->enter;
+    c_int *sigma_changed = work->solver->enter;
     size_t k;
     for (k = 0; k < work->data->m; k++) {
-        if ((c_absval(work->pri_res[k]) > work->settings->theta*c_absval(work->pri_res_in[k])) && work->chol->active_constraints[k]) {
+        if ((c_absval(work->pri_res[k]) > work->settings->theta*c_absval(work->pri_res_in[k])) && work->solver->active_constraints[k]) {
             mult_factor = c_max(1.0, work->settings->delta * c_absval(work->pri_res[k]) / (pri_res_unscaled_norm + 1e-6));
             sigma_temp = mult_factor * work->sigma[k];
             if (sigma_temp <= work->settings->sigma_max) { 
@@ -101,10 +101,10 @@ void update_sigma(QPALMWorkspace* work, cholmod_common *c) {
         }
     }
 
-    CHOLMOD(scale)(work->chol->At_scale, CHOLMOD_COL, work->chol->At_sqrt_sigma, c);
+    CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
     
     if ((work->settings->proximal && work->gamma < work->settings->gamma_max) || (work->nb_sigma_changed > 0.25*MAX_RANK_UPDATE)) {
-        work->chol->reset_newton = TRUE;
+        work->solver->reset_newton = TRUE;
       } else if (work->nb_sigma_changed == 0){
         /* do nothing */
       } else {  
@@ -119,25 +119,25 @@ void update_gamma(QPALMWorkspace *work) {
     if (work->gamma < work->settings->gamma_max) {
         c_float prev_gamma = work->gamma;
         work->gamma = c_min(work->gamma*work->settings->gamma_upd, work->settings->gamma_max);
-        work->chol->reset_newton = TRUE;
+        work->solver->reset_newton = TRUE;
         vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->gamma - 1/prev_gamma, work->data->n);
     }
     
 }
 
-void boost_gamma(QPALMWorkspace *work, cholmod_common *c) {
+void boost_gamma(QPALMWorkspace *work, solver_common *c) {
 
     c_float prev_gamma = work->gamma;
-    if (work->chol->nb_active_constraints) {
+    if (work->solver->nb_active_constraints) {
         cholmod_sparse *AtsigmaA;
         size_t nb_active = 0;
         for (size_t i = 0; i < work->data->m; i++){
-            if (work->chol->active_constraints[i]){
-                work->chol->enter[nb_active] = (c_int)i;
+            if (work->solver->active_constraints[i]){
+                work->solver->enter[nb_active] = (c_int)i;
                 nb_active++;
             }      
         }
-        AtsigmaA = CHOLMOD(aat)(work->chol->At_sqrt_sigma, work->chol->enter, nb_active, TRUE, c);
+        AtsigmaA = CHOLMOD(aat)(work->solver->At_sqrt_sigma, work->solver->enter, nb_active, TRUE, c);
         work->gamma = c_max(work->settings->gamma_max, 1e14/gershgorin_max(AtsigmaA, work->temp_n, work->neg_dphi));
 
         work->gamma_maxed = TRUE;
@@ -148,13 +148,15 @@ void boost_gamma(QPALMWorkspace *work, cholmod_common *c) {
     if (prev_gamma != work->gamma) {
         vec_add_scaled(work->Qx, work->x, work->Qx, 1.0/work->gamma - 1.0/prev_gamma, work->data->n);
         vec_add_scaled(work->Qd, work->d, work->Qd, work->tau/work->gamma - work->tau/prev_gamma, work->data->n);
-        work->chol->reset_newton = TRUE;
+        work->solver->reset_newton = TRUE;
     }
 }
 
-void update_primal_iterate(QPALMWorkspace *work, cholmod_common *c) {
+void update_primal_iterate(QPALMWorkspace *work, solver_common *c) {
     
+    #ifdef USE_CHOLMOD
     newton_set_direction(work, c);
+    #endif /* USE_CHOLMOD */
 
     work->tau = exact_linesearch(work, c);
 
@@ -211,16 +213,16 @@ c_float compute_objective(QPALMWorkspace *work) {
     return objective;
 }
 
-c_float compute_dual_objective(QPALMWorkspace *work, cholmod_common *c) {
+c_float compute_dual_objective(QPALMWorkspace *work, solver_common *c) {
 
     c_float dual_objective = 0;
 
     vec_add_scaled(work->Aty, work->data->q, work->neg_dphi, 1.0, work->data->n);
-    if (work->chol->D_temp) {
-      CHOLMOD(free_dense)(&work->chol->D_temp, c);
+    if (work->solver->D_temp) {
+      CHOLMOD(free_dense)(&work->solver->D_temp, c);
     }
-    work->chol->D_temp = CHOLMOD(solve) (CHOLMOD_LDLt, work->chol->LD_Q, work->chol->neg_dphi, c);
-    work->D_temp = work->chol->D_temp->x;
+    work->solver->D_temp = CHOLMOD(solve) (CHOLMOD_LDLt, work->solver->LD_Q, work->solver->neg_dphi, c);
+    work->D_temp = work->solver->D_temp->x;
 
     dual_objective -= 0.5*vec_prod(work->neg_dphi, work->D_temp, work->data->n);
     for (size_t i = 0; i < work->data->m; i++) {

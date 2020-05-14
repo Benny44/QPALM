@@ -13,7 +13,14 @@ extern "C" {
 # endif // ifdef __cplusplus
 
 #include "global_opts.h"
+
+#ifdef USE_CHOLMOD
 #include "cholmod.h"
+typedef cholmod_common solver_common;
+typedef cholmod_sparse solver_sparse;
+typedef cholmod_dense  solver_dense;
+typedef cholmod_factor solver_factor;
+#endif /* USE_CHOLMOD */
 
 /**
  * Array to sort in linesearch
@@ -88,8 +95,8 @@ typedef struct {
 typedef struct {
   size_t          n;    ///< number of variables n
   size_t          m;    ///< number of constraints m
-  cholmod_sparse *Q;    ///< sparse quadratic part of the cost Q (size n x n)           
-  cholmod_sparse *A;    ///< sparse linear constraints matrix A (size m x n)
+  solver_sparse  *Q;    ///< sparse quadratic part of the cost Q (size n x n)           
+  solver_sparse  *A;    ///< sparse linear constraints matrix A (size m x n)
   c_float        *q;    ///< dense array for linear part of cost function (size n)
   c_float         c;    ///< constant part of cost 
   c_float        *bmin; ///< dense array for lower bounds (size m)
@@ -128,6 +135,7 @@ typedef struct {
   c_float time_limit;               ///< time limit @details @note Assumption: @f$>0@f$
 } QPALMSettings;
 
+#ifdef USE_CHOLMOD
 /**
  * Variables for linear system solving (cholmod)
  */
@@ -153,6 +161,10 @@ typedef struct {
   cholmod_dense *At_scale;        ///< running vector of sqrt(sigma), used to scale At_sqrt_sigma
   cholmod_sparse *At_sqrt_sigma;  ///< A' * sqrt(sigma)
 } QPALMCholmod;
+
+#endif /* USE_CHOLMOD */
+
+
 
 /**
  * QPALM Workspace
@@ -267,8 +279,9 @@ typedef struct {
 
 
   /** @} */
-
-  QPALMCholmod  *chol;     ///< cholmod variables
+  #ifdef USE_CHOLMOD
+  QPALMCholmod  *solver;   ///< cholmod variables
+  #endif /* USE_CHOLMOD */
   QPALMSettings *settings; ///< problem settings
   QPALMScaling  *scaling;  ///< scaling vectors
   QPALMSolution *solution; ///< problem solution

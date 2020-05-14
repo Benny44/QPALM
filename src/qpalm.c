@@ -105,9 +105,9 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   size_t m = data->m;
 
   //Initialize CHOLMOD and its settings
-  work->chol = c_calloc(1, sizeof(QPALMCholmod));
-  // work->chol->c = *c;
-  cholmod_common common, *c;
+  work->solver = c_calloc(1, sizeof(QPALMCholmod));
+  // work->solver->c = *c;
+  solver_common common, *c;
   c = &common;
   CHOLMOD(start)(c);
   cholmod_set_settings(c);
@@ -184,10 +184,10 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
     work->scaling->Einv = c_calloc(m, sizeof(c_float));
 
     // Allocate cholmod_dense pointers to E_temp and D_temp
-    work->chol->E_temp = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, c);
-    work->E_temp = work->chol->E_temp->x;
-    work->chol->D_temp = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
-    work->D_temp = work->chol->D_temp->x;
+    work->solver->E_temp = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, c);
+    work->E_temp = work->solver->E_temp->x;
+    work->solver->D_temp = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
+    work->D_temp = work->solver->D_temp->x;
 
     // Scale data
     scale_data(work);
@@ -198,25 +198,25 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   }
 
   // CHOLMOD variables
-  work->chol->neg_dphi = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
-  work->neg_dphi = work->chol->neg_dphi->x; 
-  work->chol->d = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
-  work->d = work->chol->d->x;
-  work->chol->Qd = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
-  work->Qd = work->chol->Qd->x;
-  work->chol->Ad = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, c);
-  work->Ad = work->chol->Ad->x;
-  work->chol->yh = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, c);
-  work->yh = work->chol->yh->x;
-  work->chol->Atyh = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
-  work->Atyh = work->chol->Atyh->x;
-  work->chol->active_constraints = c_calloc(m, sizeof(c_int));
-  work->chol->active_constraints_old = c_calloc(m, sizeof(c_int));
-  vec_set_scalar_int(work->chol->active_constraints_old, FALSE, m);
-  work->chol->reset_newton = TRUE;
-  work->chol->enter = c_calloc(m, sizeof(c_int));
-  work->chol->leave = c_calloc(m, sizeof(c_int));
-  work->chol->At_scale = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, c);
+  work->solver->neg_dphi = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
+  work->neg_dphi = work->solver->neg_dphi->x; 
+  work->solver->d = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
+  work->d = work->solver->d->x;
+  work->solver->Qd = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
+  work->Qd = work->solver->Qd->x;
+  work->solver->Ad = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, c);
+  work->Ad = work->solver->Ad->x;
+  work->solver->yh = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, c);
+  work->yh = work->solver->yh->x;
+  work->solver->Atyh = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
+  work->Atyh = work->solver->Atyh->x;
+  work->solver->active_constraints = c_calloc(m, sizeof(c_int));
+  work->solver->active_constraints_old = c_calloc(m, sizeof(c_int));
+  vec_set_scalar_int(work->solver->active_constraints_old, FALSE, m);
+  work->solver->reset_newton = TRUE;
+  work->solver->enter = c_calloc(m, sizeof(c_int));
+  work->solver->leave = c_calloc(m, sizeof(c_int));
+  work->solver->At_scale = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, c);
 
   // Set parameters in case the QP is nonconvex
   if (work->settings->nonconvex) {
@@ -257,7 +257,7 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
 
     size_t n = work->data->n;
     size_t m = work->data->m;
-    cholmod_common common, *c;
+    solver_common common, *c;
     c = &common;
     CHOLMOD(start)(c);
     cholmod_set_settings(c);
@@ -272,16 +272,16 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
       prea_vec_copy(work->x, work->x_prev, n);
       
       //NB to link to cholmod here neg_dphi and chol->neg_dphi are used as x
-      // work->d = work->chol->neg_dphi->x;
+      // work->d = work->solver->neg_dphi->x;
       prea_vec_copy(work->x, work->neg_dphi, n);
 
-      mat_vec(work->data->Q, work->chol->neg_dphi, work->chol->Qd, c);
+      mat_vec(work->data->Q, work->solver->neg_dphi, work->solver->Qd, c);
       if (work->settings->proximal) {
         vec_add_scaled(work->Qd, work->x, work->Qx, 1/work->settings->gamma_init, n);
       } else {
         prea_vec_copy(work->Qd, work->Qx, n);
       }
-      mat_vec(work->data->A, work->chol->neg_dphi, work->chol->Ad, c);
+      mat_vec(work->data->A, work->solver->neg_dphi, work->solver->Ad, c);
       prea_vec_copy(work->Ad, work->Ax, m);
 
       work->info->objective = compute_objective(work);
@@ -328,10 +328,10 @@ void qpalm_solve(QPALMWorkspace *work) {
   //Set initial workspace variables
   work->eps_abs_in = work->settings->eps_abs_in;
   work->eps_rel_in = work->settings->eps_rel_in;
-  work->chol->reset_newton = TRUE;
+  work->solver->reset_newton = TRUE;
   work->gamma = work->settings->gamma_init;
   work->gamma_maxed = (FALSE || work->settings->nonconvex);
-  vec_set_scalar_int(work->chol->active_constraints_old, FALSE, work->data->m);
+  vec_set_scalar_int(work->solver->active_constraints_old, FALSE, work->data->m);
 
   //Check if the internal variables were correctly initialized. A path that leads to
   //incorrect initialization (and subsequent program crash) is that the user forgets
@@ -348,7 +348,7 @@ void qpalm_solve(QPALMWorkspace *work) {
   #endif /* ifdef PROFILING */
 
   //Initialize CHOLMOD and its settings
-  cholmod_common common, *c;
+  solver_common common, *c;
   c = &common;
   CHOLMOD(start)(c);
   cholmod_set_settings(c);
@@ -360,9 +360,9 @@ void qpalm_solve(QPALMWorkspace *work) {
   //NB use neg_dphi = Aty+q and D_temp = Q^-1(Aty+q) to link with cholmod
   //NB assume Q is positive definite
   if (work->settings->enable_dual_termination) {
-    if (work->chol->LD_Q) CHOLMOD(free_factor)(&work->chol->LD_Q, c);
-    work->chol->LD_Q = CHOLMOD(analyze) (work->data->Q, c);
-    CHOLMOD(factorize) (work->data->Q, work->chol->LD_Q, c);
+    if (work->solver->LD_Q) CHOLMOD(free_factor)(&work->solver->LD_Q, c);
+    work->solver->LD_Q = CHOLMOD(analyze) (work->data->Q, c);
+    CHOLMOD(factorize) (work->data->Q, work->solver->LD_Q, c);
     work->info->dual_objective = compute_dual_objective(work, c);    
   } else {
     work->info->dual_objective = QPALM_NULL;
@@ -441,13 +441,13 @@ void qpalm_solve(QPALMWorkspace *work) {
       } 
 
       if(work->settings->proximal) {
-        if (!work->gamma_maxed && iter_out > 0 && work->chol->nb_enter == 0 && work->chol->nb_leave == 0 && work->info->pri_res_norm < work->eps_pri) {
+        if (!work->gamma_maxed && iter_out > 0 && work->solver->nb_enter == 0 && work->solver->nb_leave == 0 && work->info->pri_res_norm < work->eps_pri) {
           //Axys = Ax + y./sigma
             vec_ew_div(work->y, work->sigma, work->temp_m, work->data->m);
             vec_add_scaled(work->Ax, work->temp_m, work->Axys, 1, work->data->m);
             set_active_constraints(work);
             set_entering_leaving_constraints(work);
-            if (work->chol->nb_enter == 0 && work->chol->nb_leave == 0) {
+            if (work->solver->nb_enter == 0 && work->solver->nb_leave == 0) {
               // c_print("Boosting gamma on iter: %d\n", iter);
               boost_gamma(work, c);
             } else {
@@ -488,7 +488,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
     } else {
 
-      if (mod(iter, work->settings->reset_newton_iter) == 0) work->chol->reset_newton = TRUE; 
+      if (mod(iter, work->settings->reset_newton_iter) == 0) work->solver->reset_newton = TRUE; 
       update_primal_iterate(work, c);
 
       #ifdef PRINTING
@@ -636,7 +636,7 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
     work->scaling->cinv = 1/work->scaling->c;
     vec_self_mult_scalar(work->data->q, work->scaling->c, n);
 
-    cholmod_common common, *c;
+    solver_common common, *c;
     c = &common;
     CHOLMOD(start)(c);
     cholmod_dense *scalar = CHOLMOD(ones)(1,1,CHOLMOD_REAL, c);
@@ -659,7 +659,7 @@ void qpalm_cleanup(QPALMWorkspace *work) {
   
   if (work) { // If workspace has been allocated
     // Free Data
-    cholmod_common common, *c;
+    solver_common common, *c;
     c = &common;
     if (work->data) {
       CHOLMOD(start)(c);
@@ -762,44 +762,44 @@ void qpalm_cleanup(QPALMWorkspace *work) {
     if (work->settings) c_free(work->settings);
 
     //Free chol struct
-    if (work->chol) {
+    if (work->solver) {
       CHOLMOD(start)(c);
 
-      if (work->chol->D_temp) CHOLMOD(free_dense)(&work->chol->D_temp, c);
+      if (work->solver->D_temp) CHOLMOD(free_dense)(&work->solver->D_temp, c);
 
-      if (work->chol->E_temp) CHOLMOD(free_dense)(&work->chol->E_temp, c);
+      if (work->solver->E_temp) CHOLMOD(free_dense)(&work->solver->E_temp, c);
 
-      if (work->chol->neg_dphi) CHOLMOD(free_dense)(&work->chol->neg_dphi, c);
+      if (work->solver->neg_dphi) CHOLMOD(free_dense)(&work->solver->neg_dphi, c);
 
-      if (work->chol->d) CHOLMOD(free_dense)(&work->chol->d, c);
+      if (work->solver->d) CHOLMOD(free_dense)(&work->solver->d, c);
 
-      if (work->chol->Qd) CHOLMOD(free_dense)(&work->chol->Qd, c);
+      if (work->solver->Qd) CHOLMOD(free_dense)(&work->solver->Qd, c);
 
-      if (work->chol->Ad) CHOLMOD(free_dense)(&work->chol->Ad, c);
+      if (work->solver->Ad) CHOLMOD(free_dense)(&work->solver->Ad, c);
 
-      if (work->chol->yh) CHOLMOD(free_dense)(&work->chol->yh, c);
+      if (work->solver->yh) CHOLMOD(free_dense)(&work->solver->yh, c);
 
-      if (work->chol->Atyh) CHOLMOD(free_dense)(&work->chol->Atyh, c);
+      if (work->solver->Atyh) CHOLMOD(free_dense)(&work->solver->Atyh, c);
 
-      if (work->chol->LD) CHOLMOD(free_factor)(&work->chol->LD, c);
+      if (work->solver->LD) CHOLMOD(free_factor)(&work->solver->LD, c);
 
-      if (work->chol->LD_Q) CHOLMOD(free_factor)(&work->chol->LD_Q, c);
+      if (work->solver->LD_Q) CHOLMOD(free_factor)(&work->solver->LD_Q, c);
 
-      if (work->chol->active_constraints) c_free(work->chol->active_constraints);
+      if (work->solver->active_constraints) c_free(work->solver->active_constraints);
 
-      if (work->chol->active_constraints_old) c_free(work->chol->active_constraints_old);
+      if (work->solver->active_constraints_old) c_free(work->solver->active_constraints_old);
 
-      if (work->chol->enter) c_free(work->chol->enter);
+      if (work->solver->enter) c_free(work->solver->enter);
 
-      if (work->chol->leave) c_free(work->chol->leave);
+      if (work->solver->leave) c_free(work->solver->leave);
 
-      if (work->chol->At_scale) CHOLMOD(free_dense)(&work->chol->At_scale, c);
+      if (work->solver->At_scale) CHOLMOD(free_dense)(&work->solver->At_scale, c);
 
-      if (work->chol->At_sqrt_sigma) CHOLMOD(free_sparse)(&work->chol->At_sqrt_sigma, c);
+      if (work->solver->At_sqrt_sigma) CHOLMOD(free_sparse)(&work->solver->At_sqrt_sigma, c);
 
       CHOLMOD(finish)(c);
 
-      c_free(work->chol);      
+      c_free(work->solver);      
     }
     
     // Free solution

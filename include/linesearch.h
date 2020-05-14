@@ -19,7 +19,7 @@
  * @param work Workspace
  * @return tau Step size
  */
-c_float exact_linesearch(QPALMWorkspace *work, cholmod_common *c);
+c_float exact_linesearch(QPALMWorkspace *work, solver_common *c);
 
 /**
  * Helper function to copy vector a in array b (with indices)

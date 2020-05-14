@@ -40,7 +40,7 @@ c_float gershgorin_max(cholmod_sparse* M, c_float *center, c_float *radius);
  * 
  * @param work Workspace
  */
-void set_settings_nonconvex(QPALMWorkspace *work, cholmod_common *c);
+void set_settings_nonconvex(QPALMWorkspace *work, solver_common *c);
 
 
 # ifdef __cplusplus

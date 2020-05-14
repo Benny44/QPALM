@@ -88,24 +88,24 @@ void cholmod_test_teardown(void) {
 }
 
 MU_TEST(test_mat_vec){
-    mat_vec(A, work->chol->Qd, work->chol->Ad, c);
+    mat_vec(A, work->solver->Qd, work->solver->Ad, c);
     mu_assert_double_eq(work->Ad[0], 0.1, TOL);
     mu_assert_double_eq(work->Ad[1], 1.3, TOL);
     mu_assert_double_eq(work->Ad[2], 5.5, TOL);
 
-    mat_vec(Q, work->chol->Qd, work->chol->Qd, c);
+    mat_vec(Q, work->solver->Qd, work->solver->Qd, c);
     mu_assert_double_eq(work->Qd[0], 1.6, TOL);
     mu_assert_double_eq(work->Qd[1], -2.1, TOL);
     work->Qd[0] = 1.1; work->Qd[1] = -0.5;
 
-    mat_tpose_vec(Q, work->chol->Qd, work->chol->Qd, c);
+    mat_tpose_vec(Q, work->solver->Qd, work->solver->Qd, c);
     mu_assert_double_eq(work->Qd[0], 1.6, TOL);
     mu_assert_double_eq(work->Qd[1], -2.1, TOL);
 
 }
 
 MU_TEST(test_mat_tpose_vec){
-    mat_tpose_vec(A, work->chol->Ad, work->chol->Qd, c);
+    mat_tpose_vec(A, work->solver->Ad, work->solver->Qd, c);
     mu_assert_double_eq(work->Qd[0], 99.6, TOL);
     mu_assert_double_eq(work->Qd[1], 0.2, TOL);
 }
