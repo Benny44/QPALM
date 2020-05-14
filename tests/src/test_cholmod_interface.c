@@ -11,8 +11,8 @@
 #define TOL 1e-8
 
 QPALMWorkspace *work; // Workspace
-cholmod_sparse *A; // MxN matrix
-cholmod_sparse *Q; //NxN symmetric matrix
+solver_sparse *A; // MxN matrix
+solver_sparse *Q; // NxN symmetric matrix
 solver_common common, *c;
 
 
@@ -33,8 +33,8 @@ void cholmod_suite_setup(void) {
     data->bmin = bmin;
     data->bmax = bmax;
 
-    c = &common;
     #ifdef USE_CHOLMOD
+    c = &common;
     CHOLMOD(start)(c);
     A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
     Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
@@ -83,11 +83,15 @@ void cholmod_suite_teardown(void) {
 void cholmod_test_setup(void) {
     work->Qd[0] = 1.1; work->Qd[1] = -0.5;
     work->Ad[0] = 1.1; work->Ad[1] = -0.5; work->Ad[2] = 20;
+    #ifdef USE_CHOLMOD
     CHOLMOD(start)(&common);
+    #endif /* USE_CHOLMOD */
 }
 
 void cholmod_test_teardown(void) {
+    #ifdef USE_CHOLMOD
     CHOLMOD(finish)(&common);
+    #endif /* USE_CHOLMOD */
 }
 
 MU_TEST(test_mat_vec){
