@@ -12,8 +12,8 @@
 QPALMWorkspace *work; // Workspace
 QPALMSettings *settings;
 QPALMData *data;
-cholmod_common *c;
-cholmod_common common;
+solver_common *c;
+solver_common common;
 
 
 void prim_inf_qp_suite_setup(void) {

@@ -12,8 +12,8 @@
 QPALMWorkspace *work; // Workspace
 QPALMSettings *settings;
 QPALMData *data;
-cholmod_common *c;
-cholmod_common common;
+solver_common *c;
+solver_common common;
 static c_float solution[N] = {2.0000000e+00, -6.3801365e+01, -3.3821109e+03, -6.0483288e+00};
 
 void basic_qp_suite_setup(void) {

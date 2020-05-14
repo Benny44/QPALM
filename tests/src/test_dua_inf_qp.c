@@ -12,8 +12,8 @@
 QPALMWorkspace *work; // Workspace
 QPALMSettings *settings;
 QPALMData *data;
-cholmod_common *c;
-cholmod_common common;
+solver_common *c;
+solver_common common;
 
 void dua_inf_qp_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));

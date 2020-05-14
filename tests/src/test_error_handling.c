@@ -13,8 +13,8 @@
 QPALMWorkspace *work; // Workspace
 QPALMSettings *settings;
 QPALMData *data;
-cholmod_common *c;
-cholmod_common common;
+solver_common *c;
+solver_common common;
 
 void error_handling_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
@@ -31,7 +31,7 @@ void error_handling_suite_setup(void) {
     data->bmax = c_calloc(M,sizeof(c_float));
     data->bmax[0] = 0.1; data->bmax[1] = 0.3; data->bmax[2] = 0.2; 
 
-    // cholmod_common common;
+    // solver_common common;
     c = &common;
     CHOLMOD(start)(c);
     cholmod_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);

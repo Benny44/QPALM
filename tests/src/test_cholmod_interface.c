@@ -13,7 +13,7 @@
 QPALMWorkspace *work; // Workspace
 cholmod_sparse *A; // MxN matrix
 cholmod_sparse *Q; //NxN symmetric matrix
-cholmod_common common, *c;
+solver_common common, *c;
 
 
 void cholmod_suite_setup(void) {

@@ -24,7 +24,7 @@ void nonconvex_qp_suite_setup(void) {
     data->m = M;
     data->c = 0;
 
-    cholmod_common common, *c;
+    solver_common common, *c;
     c = &common;
     CHOLMOD(start)(c);
     data->A = CHOLMOD(allocate_sparse)(data->m, data->n, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);

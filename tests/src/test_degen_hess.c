@@ -12,8 +12,8 @@
 QPALMWorkspace *work; // Workspace
 QPALMSettings *settings;
 QPALMData *data;
-cholmod_common *c;
-cholmod_common common;
+solver_common *c;
+solver_common common;
 
 
 void degen_hess_suite_setup(void) {
@@ -33,7 +33,7 @@ void degen_hess_suite_setup(void) {
     data->bmax = c_calloc(M,sizeof(c_float));
     data->bmax[0] = 0.5; data->bmax[1] = 10; data->bmax[2] = 10; data->bmax[3] = 10;
 
-    // cholmod_common common;
+    // solver_common common;
     c = &common;
     CHOLMOD(start)(c);
     cholmod_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);

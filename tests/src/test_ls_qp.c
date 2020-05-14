@@ -14,8 +14,8 @@
 QPALMWorkspace *work; // Workspace
 QPALMSettings *settings;
 QPALMData *data;
-cholmod_common *c;
-cholmod_common common;
+solver_common *c;
+solver_common common;
 
 /* Problem to exercise the linesearch when all breakpoints are traversed. */
 
