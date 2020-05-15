@@ -16,6 +16,10 @@
 #include "linesearch.h"
 #include "nonconvex.h"
 
+#ifdef USE_LADEL
+#include "ladel.h"
+#endif
+
 void compute_residuals(QPALMWorkspace *work, solver_common *c) {
 
     //Axys = Ax + y./sigma
@@ -53,6 +57,8 @@ void initialize_sigma(QPALMWorkspace *work, solver_common *c) {
     c_float dist2 = vec_prod(work->temp_m, work->temp_m, m);
     vec_set_scalar(work->sigma, c_max(1e-4, c_min(2e1*c_max(1,c_absval(f))/c_max(1,0.5*dist2),1e4)), m);
 
+    #ifdef USE_LADEL
+    #elif defined USE_CHOLMOD
     // Set fields related to sigma
     vec_ew_sqrt(work->sigma, work->sqrt_sigma, m);
     c_float *At_scalex = work->solver->At_scale->x;
@@ -63,13 +69,16 @@ void initialize_sigma(QPALMWorkspace *work, solver_common *c) {
     CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
 
     work->sqrt_sigma_max = c_sqrt(work->settings->sigma_max);
-
+    #endif
 }
 
 void update_sigma(QPALMWorkspace* work, solver_common *c) {
     
     work->nb_sigma_changed = 0;
+    #ifdef USE_LADEL
+    #elif defined USE_CHOLMOD
     c_float *At_scalex = work->solver->At_scale->x;
+    #endif
     c_float pri_res_unscaled_norm = vec_norm_inf(work->pri_res, work->data->m);
     c_float sigma_temp, mult_factor;
     c_int *sigma_changed = work->solver->enter;
@@ -84,25 +93,37 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
                     work->nb_sigma_changed++;
                 }               
                 work->sigma[k] = sigma_temp;
+                #ifdef USE_LADEL
+                #elif defined USE_CHOLMOD
                 mult_factor = c_sqrt(mult_factor);
                 work->sqrt_sigma[k] = mult_factor * work->sqrt_sigma[k];
                 At_scalex[k] = mult_factor;
+                #endif
             } else {
                 if (work->sigma[k] != work->settings->sigma_max) {
                     sigma_changed[work->nb_sigma_changed] = (c_int)k;
                     work->nb_sigma_changed++;
                 } 
                 work->sigma[k] = work->settings->sigma_max;
+                #ifdef USE_LADEL
+                #elif defined USE_CHOLMOD
                 At_scalex[k] = work->sqrt_sigma_max / work->sqrt_sigma[k];
                 work->sqrt_sigma[k] = work->sqrt_sigma_max;
+                #endif
             }
         } else {
+            #ifdef USE_LADEL
+            #elif defined USE_CHOLMOD
             At_scalex[k] = 1.0;
+            #endif
         }
     }
 
+    #ifdef USE_LADEL
+    #elif defined USE_CHOLMOD
     CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
-    
+    #endif
+
     if ((work->settings->proximal && work->gamma < work->settings->gamma_max) || (work->nb_sigma_changed > 0.25*MAX_RANK_UPDATE)) {
         work->solver->reset_newton = TRUE;
       } else if (work->nb_sigma_changed == 0){
@@ -128,6 +149,10 @@ void update_gamma(QPALMWorkspace *work) {
 void boost_gamma(QPALMWorkspace *work, solver_common *c) {
 
     c_float prev_gamma = work->gamma;
+    #ifdef USE_LADEL
+    work->gamma = 1e12;
+    work->gamma_maxed = TRUE;
+    #elif defined USE_CHOLMOD
     if (work->solver->nb_active_constraints) {
         cholmod_sparse *AtsigmaA;
         size_t nb_active = 0;
@@ -145,6 +170,7 @@ void boost_gamma(QPALMWorkspace *work, solver_common *c) {
     } else {
         work->gamma = 1e12;
     }
+    #endif
     if (prev_gamma != work->gamma) {
         vec_add_scaled(work->Qx, work->x, work->Qx, 1.0/work->gamma - 1.0/prev_gamma, work->data->n);
         vec_add_scaled(work->Qd, work->d, work->Qd, work->tau/work->gamma - work->tau/prev_gamma, work->data->n);
@@ -218,11 +244,15 @@ c_float compute_dual_objective(QPALMWorkspace *work, solver_common *c) {
     c_float dual_objective = 0;
 
     vec_add_scaled(work->Aty, work->data->q, work->neg_dphi, 1.0, work->data->n);
+    #ifdef USE_LADEL
+    ladel_dense_solve(work->solver->LD_Q, work->neg_dphi, work->D_temp, c);
+    #elif defined USE_CHOLMOD
     if (work->solver->D_temp) {
       CHOLMOD(free_dense)(&work->solver->D_temp, c);
     }
     work->solver->D_temp = CHOLMOD(solve) (CHOLMOD_LDLt, work->solver->LD_Q, work->solver->neg_dphi, c);
     work->D_temp = work->solver->D_temp->x;
+    #endif
 
     dual_objective -= 0.5*vec_prod(work->neg_dphi, work->D_temp, work->data->n);
     for (size_t i = 0; i < work->data->m; i++) {
