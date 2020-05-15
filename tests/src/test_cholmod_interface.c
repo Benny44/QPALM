@@ -3,6 +3,9 @@
 #include "global_opts.h"
 #include "qpalm.h"
 #include "constants.h"
+#ifdef USE_LADEL
+#include "ladel_global.h"
+#endif
 
 #define N 2
 #define M 3
@@ -33,7 +36,10 @@ void cholmod_suite_setup(void) {
     data->bmin = bmin;
     data->bmax = bmax;
 
-    #ifdef USE_CHOLMOD
+    #ifdef USE_LADEL
+    A = ladel_sparse_alloc(M, N, ANZMAX, UNSYMMETRIC, TRUE);
+    Q = ladel_sparse_alloc(N, N, QNZMAX, UPPER, TRUE);
+    #elif defined USE_CHOLMOD
     c = &common;
     CHOLMOD(start)(c);
     A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
@@ -71,7 +77,10 @@ void cholmod_suite_setup(void) {
 void cholmod_suite_teardown(void) {
     qpalm_cleanup(work);
 
-    #ifdef USE_CHOLMOD
+    #ifdef USE_LADEL
+    Q = ladel_sparse_free(Q);
+    A = ladel_sparse_free(A);
+    #elif defined USE_CHOLMOD
     CHOLMOD(start)(c);
     CHOLMOD(free_sparse)(&Q, c);
     CHOLMOD(free_sparse)(&A, c);
@@ -83,13 +92,15 @@ void cholmod_suite_teardown(void) {
 void cholmod_test_setup(void) {
     work->Qd[0] = 1.1; work->Qd[1] = -0.5;
     work->Ad[0] = 1.1; work->Ad[1] = -0.5; work->Ad[2] = 20;
-    #ifdef USE_CHOLMOD
+    #ifdef USE_LADEL
+    #elif defined USE_CHOLMOD
     CHOLMOD(start)(&common);
     #endif /* USE_CHOLMOD */
 }
 
 void cholmod_test_teardown(void) {
-    #ifdef USE_CHOLMOD
+    #ifdef USE_LADEL
+    #elif defined USE_CHOLMOD
     CHOLMOD(finish)(&common);
     #endif /* USE_CHOLMOD */
 }
@@ -129,6 +140,9 @@ MU_TEST(test_mat_inf_norm_rows){
     mu_assert_double_eq(work->E_temp[1], 4.0, TOL);
     mu_assert_double_eq(work->E_temp[2], 5.0, TOL);
 }
+
+#ifdef USE_LADEL
+#elif defined USE_CHOLMOD
 MU_TEST(test_ldlchol){
     // without proximal
     work->settings->proximal = FALSE;
@@ -146,6 +160,7 @@ MU_TEST(test_ldlchol){
     mu_assert_double_eq(work->d[0], 3.989028924198480, TOL);
     mu_assert_double_eq(work->d[1], 2.993017953122679, TOL);
 }
+#endif
 
 MU_TEST_SUITE(suite_cholmod) {
     MU_SUITE_CONFIGURE(cholmod_suite_setup, cholmod_suite_teardown, cholmod_test_setup, cholmod_test_teardown);
@@ -154,6 +169,8 @@ MU_TEST_SUITE(suite_cholmod) {
     MU_RUN_TEST(test_mat_tpose_vec);
     MU_RUN_TEST(test_mat_inf_norm_cols);
     MU_RUN_TEST(test_mat_inf_norm_rows);
+    #ifdef USE_LADEL
+    #elif defined USE_CHOLMOD
     MU_RUN_TEST(test_ldlchol);
-    
+    #endif
 }

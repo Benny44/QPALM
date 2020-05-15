@@ -49,6 +49,7 @@ QPALMSettings* copy_settings(const QPALMSettings *settings) {
     new->enable_dual_termination  = settings->enable_dual_termination;
     new->dual_objective_limit     = settings->dual_objective_limit;
     new->time_limit               = settings->time_limit;
+    new->ordering                 = settings->ordering;
     return new;
 }
 

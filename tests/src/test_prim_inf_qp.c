@@ -2,6 +2,9 @@
 #include "qpalm.h"
 #include "global_opts.h"
 #include "constants.h"
+#ifdef USE_LADEL
+#include "ladel_global.h"
+#endif
 
 #define N 2
 #define M 3
@@ -41,10 +44,13 @@ void prim_inf_qp_suite_setup(void) {
     data->bmax[0] = 5; data->bmax[1] = 10; data->bmax[2] = 20; 
 
     c = &common;
-    #ifdef USE_CHOLMOD
+    #ifdef USE_LADEL
+    solver_sparse *A = ladel_sparse_alloc(M, N, ANZMAX, UNSYMMETRIC, TRUE);
+    solver_sparse *Q = ladel_sparse_alloc(N, N, QNZMAX, UPPER, TRUE);
+    #elif defined USE_CHOLMOD
     CHOLMOD(start)(c);
-    cholmod_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
-    cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
+    solver_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
+    solver_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
     CHOLMOD(finish)(c);
     #endif /* USE_CHOLMOD */
     c_float *Ax;
@@ -72,7 +78,10 @@ void prim_inf_qp_suite_setup(void) {
 void prim_inf_qp_suite_teardown(void) {
     c_free(settings);
     // Clean setup
-    #ifdef USE_CHOLMOD
+    #ifdef USE_LADEL
+    data->Q = ladel_sparse_free(data->Q);
+    data->A = ladel_sparse_free(data->A);
+    #elif defined USE_CHOLMOD
     CHOLMOD(start)(c);
     CHOLMOD(free_sparse)(&data->Q, c);
     CHOLMOD(free_sparse)(&data->A, c);

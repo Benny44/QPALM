@@ -120,9 +120,9 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
     }
 
     #ifdef USE_LADEL
+    // TODO implement updating sigma in KKT system
     #elif defined USE_CHOLMOD
     CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
-    #endif
 
     if ((work->settings->proximal && work->gamma < work->settings->gamma_max) || (work->nb_sigma_changed > 0.25*MAX_RANK_UPDATE)) {
         work->solver->reset_newton = TRUE;
@@ -132,6 +132,7 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
           ldlupdate_sigma_changed(work, c);
     }
 
+    #endif
 
 }
 

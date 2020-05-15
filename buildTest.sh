@@ -46,17 +46,13 @@ if [ $solver = "cholmod" ]; then
   cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_CHOLMOD=ON
 elif [ $solver = "ladel" ]; then
   cd $builddir
-  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_LADEL=ON
+  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_LADEL=ON -DINTERFACES=OFF
 fi
 make
-ctest -VV
-
-#Run the tests
-#cd $builddir
-#../test/run_all_tests
+# ctest -VV
 
 cd $builddir
-#valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=$curdir/valgrind/dl_open.supp --verbose bin/run_all_tests
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=$curdir/valgrind/dl_open.supp --verbose bin/run_all_tests
 #build/debug/bin/run_all_tests
 
 cd $builddir/CMakeFiles/qpalm.dir/src

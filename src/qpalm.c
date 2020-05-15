@@ -134,8 +134,8 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->data->c    = data->c;
 
   #ifdef USE_LADEL
-  ladel_sparse_copy(data->A, work->data->A); 
-  ladel_sparse_copy(data->Q, work->data->Q); 
+  work->data->A = ladel_sparse_allocate_and_copy(data->A); 
+  work->data->Q = ladel_sparse_allocate_and_copy(data->Q); 
   #elif defined USE_CHOLMOD
   work->data->A    = CHOLMOD(copy_sparse)(data->A, c); 
   work->data->A->stype = 0;   
@@ -425,6 +425,7 @@ void qpalm_solve(QPALMWorkspace *work) {
     ladel_symbolics *sym2 = ladel_symbolics_alloc(n);
     if (work->solver->LD_Q) ladel_factor_free(work->solver->LD_Q);
     ladel_factorize(work->data->Q, sym2, work->settings->ordering, &work->solver->LD_Q, c2);
+    sym2 = ladel_symbolics_free(sym2);
     work->info->dual_objective = compute_dual_objective(work, c2);    
     #elif defined USE_CHOLMOD
     if (work->solver->LD_Q) CHOLMOD(free_factor)(&work->solver->LD_Q, c);
@@ -456,7 +457,9 @@ void qpalm_solve(QPALMWorkspace *work) {
       work->initialized = FALSE;
 
       #ifdef USE_LADEL
-      ladel_workspace_free(c);
+      c = ladel_workspace_free(c);
+      if (work->settings->enable_dual_termination) 
+        c2 = ladel_workspace_free(c2);
       #elif defined USE_CHOLMOD
       CHOLMOD(finish)(c);
       #endif
@@ -494,6 +497,8 @@ void qpalm_solve(QPALMWorkspace *work) {
 
           #ifdef USE_LADEL
           ladel_workspace_free(c);
+          if (work->settings->enable_dual_termination) 
+            c2 = ladel_workspace_free(c2);
           #elif defined USE_CHOLMOD
           CHOLMOD(finish)(c);
           #endif
@@ -594,6 +599,8 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       #ifdef USE_LADEL
       ladel_workspace_free(c);
+      if (work->settings->enable_dual_termination) 
+        c2 = ladel_workspace_free(c2);
       #elif defined USE_CHOLMOD
       CHOLMOD(finish)(c);
       #endif
@@ -622,6 +629,8 @@ void qpalm_solve(QPALMWorkspace *work) {
 
   #ifdef USE_LADEL
   ladel_workspace_free(c);
+  if (work->settings->enable_dual_termination) 
+        c2 = ladel_workspace_free(c2);
   #elif defined USE_CHOLMOD
   CHOLMOD(finish)(c);
   #endif
