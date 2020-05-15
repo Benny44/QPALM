@@ -13,10 +13,14 @@
 extern "C" {
 # endif // ifdef __cplusplus
 
-
-#include "scaling.h"
-#include "cholmod.h"
 #include <stdio.h>
+#include "scaling.h"
+#include "lin_alg.h"
+#ifdef USE_LADEL
+#include "ladel_scale.h"
+#elif defined USE_CHOLMOD
+#include "cholmod.h"
+#endif
 
 // Set values lower than threshold MIN_SCALING to 1
 void limit_scaling(c_float *D, size_t n) {
@@ -29,8 +33,11 @@ void limit_scaling(c_float *D, size_t n) {
 
 void scale_data(QPALMWorkspace *work) {
     solver_common c;
+    #ifdef USE_LADEL
+    #elif defined USE_CHOLMOD
     CHOLMOD(start)(&c);
     cholmod_set_settings(&c);
+    #endif
 
     size_t n = work->data->n;
     size_t m = work->data->m;
@@ -59,30 +66,40 @@ void scale_data(QPALMWorkspace *work) {
 
         // Equilibrate matrix A
         // A <- EAD
+        
+        #ifdef USE_LADEL
+        ladel_scale_rows(work->data->A, work->solver->E_temp);
+        ladel_scale_columns(work->data->A, work->solver->D_temp);
+        #elif defined USE_CHOLMOD
         CHOLMOD(scale)(work->solver->E_temp, CHOLMOD_ROW, work->data->A, &c);
         CHOLMOD(scale)(work->solver->D_temp, CHOLMOD_COL, work->data->A, &c);
-
+        #endif
         // Update equilibration matrices D and E
         vec_ew_prod(work->scaling->D, work->D_temp, work->scaling->D, n);
         vec_ew_prod(work->scaling->E, work->E_temp, work->scaling->E, m);
-
     }
 
     // Equilibrate matrix Q and vector q
-    // Q <- DQD, q <- Dq
-    prea_vec_copy(work->scaling->D, work->D_temp, n);
-    CHOLMOD(scale)(work->solver->D_temp, CHOLMOD_SYM, work->data->Q, &c);
+    // Q <- cDQD, q <- cDq
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, n);
-
-    // Cost scaling
+    prea_vec_copy(work->scaling->D, work->D_temp, n);
     vec_add_scaled(work->Qx, work->data->q, work->dphi, 1, n);
     work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->dphi, n));
     vec_self_mult_scalar(work->data->q, work->scaling->c, n);
+    
+    #ifdef USE_LADEL
+    ladel_scale_columns(work->data->Q, work->solver->D_temp);
+    ladel_scale_rows(work->data->Q, work->solver->D_temp);
+    ladel_scale_scalar(work->data->Q, work->scaling->c);
+    #elif defined USE_CHOLMOD
+    CHOLMOD(scale)(work->solver->D_temp, CHOLMOD_SYM, work->data->Q, &c);
     cholmod_dense *scalar = CHOLMOD(ones)(1,1,CHOLMOD_REAL, &c);
     c_float *scalarx = scalar->x;
     scalarx[0] = work->scaling->c;
     CHOLMOD(scale)(scalar, CHOLMOD_SCALAR, work->data->Q, &c);
     CHOLMOD(free_dense)(&scalar, &c);
+    CHOLMOD(finish)(&c);
+    #endif
 
     // Store cinv, Dinv, Einv
     vec_ew_recipr(work->scaling->D, work->scaling->Dinv, n);
@@ -91,12 +108,7 @@ void scale_data(QPALMWorkspace *work) {
 
     // Scale problem vectors l, u
     vec_ew_prod(work->scaling->E, work->data->bmin, work->data->bmin, m);
-    vec_ew_prod(work->scaling->E, work->data->bmax, work->data->bmax, m);
-
-    // c_print("c: %6.16f\n ", work->scaling->c);
-    // c_print("E: %6.16f\n ", work->scaling->E[0]);
-    // c_print("D: %6.16f\n ", work->scaling->D[0]);
-    CHOLMOD(finish)(&c);
+    vec_ew_prod(work->scaling->E, work->data->bmax, work->data->bmax, m);    
 }
 
 

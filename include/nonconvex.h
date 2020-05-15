@@ -29,7 +29,7 @@ extern "C" {
  * @param radius Vector of size M->ncol to hold the values of the radii of the discs
  * @return Upper bound on the eigenvalues of M
  */
-c_float gershgorin_max(cholmod_sparse* M, c_float *center, c_float *radius);
+c_float gershgorin_max(solver_sparse* M, c_float *center, c_float *radius);
 
 /**
  * Set the proximal parameters for nonconvex QPs.

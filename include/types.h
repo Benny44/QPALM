@@ -141,23 +141,23 @@ typedef struct {
   c_int   enable_dual_termination;  ///< boolean, enable termination based on dual objective (useful in branch and bound) @details @note Assumption: @f$\in \{0,1\}@f$
   c_float dual_objective_limit;     ///< termination value for the dual objective (useful in branch and bound) @details @note Assumption: none
   c_float time_limit;               ///< time limit @details @note Assumption: @f$>0@f$
+  c_int   ordering;                 ///< ordering method for factorization
 } QPALMSettings;
 
-#ifdef USE_CHOLMOD
 /**
- * Variables for linear system solving (cholmod)
+ * Variables for linear system solving 
  */
 typedef struct {
-  cholmod_factor *LD;             ///< LD factor (part of LDL' factorization)
-  cholmod_factor *LD_Q;           ///< LD factor of Q (useful in computing dual objective)
-  cholmod_dense *E_temp;          ///< temporary constraints scaling vectors
-  cholmod_dense *D_temp;          ///< temporary primal variable scaling vectors
-  cholmod_dense *neg_dphi;        ///< -gradient of the Lagrangian
-  cholmod_dense *d;               ///< primal update step
-  cholmod_dense *Ad;              ///< A * d
-  cholmod_dense *Qd;              ///< Q * d
-  cholmod_dense *yh;              ///< candidate dual update
-  cholmod_dense *Atyh;            ///< A' * yh
+  solver_factor *LD;             ///< LD factor (part of LDL' factorization)
+  solver_factor *LD_Q;           ///< LD factor of Q (useful in computing dual objective)
+  solver_dense *E_temp;          ///< temporary constraints scaling vectors
+  solver_dense *D_temp;          ///< temporary primal variable scaling vectors
+  solver_dense *neg_dphi;        ///< -gradient of the Lagrangian
+  solver_dense *d;               ///< primal update step
+  solver_dense *Ad;              ///< A * d
+  solver_dense *Qd;              ///< Q * d
+  solver_dense *yh;              ///< candidate dual update
+  solver_dense *Atyh;            ///< A' * yh
   c_int reset_newton;             ///< boolean, after sigma is updated perform a new factorization
   c_int *active_constraints;      ///< index set of active constraints
   c_int *active_constraints_old;  ///< index set of active constraints in the previous iteration
@@ -166,12 +166,9 @@ typedef struct {
   c_int nb_enter;                 ///< number of entering constraints
   c_int *leave;                   ///< index set of leaving constraints
   c_int nb_leave;                 ///< number of leaving constraints
-  cholmod_dense *At_scale;        ///< running vector of sqrt(sigma), used to scale At_sqrt_sigma
-  cholmod_sparse *At_sqrt_sigma;  ///< A' * sqrt(sigma)
-} QPALMCholmod;
-
-#endif /* USE_CHOLMOD */
-
+  solver_dense *At_scale;        ///< running vector of sqrt(sigma), used to scale At_sqrt_sigma
+  solver_sparse *At_sqrt_sigma;  ///< A' * sqrt(sigma)
+} QPALMSolver;
 
 
 /**
@@ -287,9 +284,7 @@ typedef struct {
 
 
   /** @} */
-  #ifdef USE_CHOLMOD
-  QPALMCholmod  *solver;   ///< cholmod variables
-  #endif /* USE_CHOLMOD */
+  QPALMSolver   *solver;   ///< linsys variables
   QPALMSettings *settings; ///< problem settings
   QPALMScaling  *scaling;  ///< scaling vectors
   QPALMSolution *solution; ///< problem solution

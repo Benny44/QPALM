@@ -19,12 +19,20 @@ extern "C" {
 #include "scaling.h"
 #include "linesearch.h"
 #include "termination.h"
-#include "cholmod.h"
-#include "cholmod_function.h"
 #include "cholmod_interface.h"
 #include "newton.h"
 #include "nonconvex.h"
 #include "iteration.h"
+
+#ifdef USE_LADEL
+#include "ladel.h"
+#include "ladel_scale.h"
+#include "ladel_copy.h"
+#include "ladel_global.h"
+#elif defined USE_CHOLMOD
+#include "cholmod.h"
+#include "cholmod_function.h"
+#endif
 
 /**********************
 * Main API Functions *
@@ -57,6 +65,7 @@ void qpalm_set_default_settings(QPALMSettings *settings) {
   settings->enable_dual_termination = ENABLE_DUAL_TERMINATION; /* allow for dual termination (useful in branch and bound) */
   settings->dual_objective_limit    = DUAL_OBJECTIVE_LIMIT;    /* termination value for the dual objective (useful in branch and bound) */
   settings->time_limit              = TIME_LIMIT;              /* time limit */
+  settings->ordering                = ORDERING;                /* ordering */
 }
 
 
@@ -105,12 +114,15 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   size_t m = data->m;
 
   //Initialize CHOLMOD and its settings
-  work->solver = c_calloc(1, sizeof(QPALMCholmod));
+  work->solver = c_calloc(1, sizeof(QPALMSolver));
   // work->solver->c = *c;
   solver_common common, *c;
   c = &common;
+  #ifdef USE_LADEL
+  #elif defined USE_CHOLMOD
   CHOLMOD(start)(c);
   cholmod_set_settings(c);
+  #endif
 
   // Copy problem data into workspace
   work->data       = c_calloc(1, sizeof(QPALMData));
@@ -121,9 +133,14 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->data->q    = vec_copy(data->q, n);          
   work->data->c    = data->c;
 
+  #ifdef USE_LADEL
+  ladel_sparse_copy(data->A, work->data->A); 
+  ladel_sparse_copy(data->Q, work->data->Q); 
+  #elif defined USE_CHOLMOD
   work->data->A    = CHOLMOD(copy_sparse)(data->A, c); 
   work->data->A->stype = 0;   
   work->data->Q    = CHOLMOD(copy_sparse)(data->Q, c);     
+  #endif
 
   // Allocate internal solver variables 
   work->x        = c_calloc(n, sizeof(c_float));
@@ -183,11 +200,19 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
     work->scaling->E    = c_calloc(m, sizeof(c_float));
     work->scaling->Einv = c_calloc(m, sizeof(c_float));
 
+    #ifdef USE_LADEL
+    work->solver->E_temp = c_calloc(m, sizeof(c_float));
+    work->E_temp = work->solver->E_temp;
+    work->solver->D_temp = c_calloc(n, sizeof(c_float));
+    work->D_temp = work->solver->D_temp;
+    #elif defined USE_CHOLMOD
+   
     // Allocate cholmod_dense pointers to E_temp and D_temp
     work->solver->E_temp = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, c);
     work->E_temp = work->solver->E_temp->x;
     work->solver->D_temp = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
     work->D_temp = work->solver->D_temp->x;
+    #endif
 
     // Scale data
     scale_data(work);
@@ -197,7 +222,30 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
     work->scaling = QPALM_NULL;
   }
 
-  // CHOLMOD variables
+  // Solver variables
+  work->solver->active_constraints = c_calloc(m, sizeof(c_int));
+  work->solver->active_constraints_old = c_calloc(m, sizeof(c_int));
+  vec_set_scalar_int(work->solver->active_constraints_old, FALSE, m);
+  work->solver->reset_newton = TRUE;
+  work->solver->enter = c_calloc(m, sizeof(c_int));
+  work->solver->leave = c_calloc(m, sizeof(c_int));
+
+  #ifdef USE_LADEL
+  work->solver->neg_dphi = c_calloc(n, sizeof(c_float));
+  work->neg_dphi = work->solver->neg_dphi; 
+  work->solver->d = c_calloc(n, sizeof(c_float));
+  work->d = work->solver->d;
+  work->solver->Qd = c_calloc(n, sizeof(c_float));
+  work->Qd = work->solver->Qd;
+  work->solver->Ad = c_calloc(m, sizeof(c_float));
+  work->Ad = work->solver->Ad;
+  work->solver->yh = c_calloc(m, sizeof(c_float));
+  work->yh = work->solver->yh;
+  work->solver->Atyh = c_calloc(n, sizeof(c_float));
+  work->Atyh = work->solver->Atyh;
+  work->solver->At_scale = c_calloc(m, sizeof(c_float));
+
+  #elif defined USE_CHOLMOD
   work->solver->neg_dphi = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
   work->neg_dphi = work->solver->neg_dphi->x; 
   work->solver->d = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
@@ -210,14 +258,9 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->yh = work->solver->yh->x;
   work->solver->Atyh = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
   work->Atyh = work->solver->Atyh->x;
-  work->solver->active_constraints = c_calloc(m, sizeof(c_int));
-  work->solver->active_constraints_old = c_calloc(m, sizeof(c_int));
-  vec_set_scalar_int(work->solver->active_constraints_old, FALSE, m);
-  work->solver->reset_newton = TRUE;
-  work->solver->enter = c_calloc(m, sizeof(c_int));
-  work->solver->leave = c_calloc(m, sizeof(c_int));
   work->solver->At_scale = CHOLMOD(allocate_dense)(m, 1, m, CHOLMOD_REAL, c);
 
+  #endif
   // Set parameters in case the QP is nonconvex
   if (work->settings->nonconvex) {
     set_settings_nonconvex(work, c);
@@ -237,8 +280,10 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->info->setup_time  = qpalm_toc(work->timer); // Update timer information
   # endif /* ifdef PROFILING */
 
-  //Finish cholmod
+  #ifdef USE_LADEL
+  #elif defined USE_CHOLMOD
   CHOLMOD(finish)(c);
+  #endif
 
   // Return workspace structure
   return work;
@@ -259,8 +304,12 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
     size_t m = work->data->m;
     solver_common common, *c;
     c = &common;
+    
+    #ifdef USE_LADEL
+    #elif defined USE_CHOLMOD
     CHOLMOD(start)(c);
     cholmod_set_settings(c);
+    #endif
 
     if (x_warm_start != NULL) {
       prea_vec_copy(x_warm_start, work->x, n);
@@ -308,7 +357,11 @@ void qpalm_warm_start(QPALMWorkspace *work, c_float *x_warm_start, c_float *y_wa
     initialize_sigma(work, c);
 
     work->initialized = TRUE;
+    
+    #ifdef USE_LADEL
+    #elif defined USE_CHOLMOD
     CHOLMOD(finish)(c);
+    #endif
 
     #ifdef PROFILING
     work->info->setup_time += qpalm_toc(work->timer); // Start timer
@@ -346,24 +399,39 @@ void qpalm_solve(QPALMWorkspace *work) {
   qpalm_tic(work->timer); // Start timer
   c_float current_time;
   #endif /* ifdef PROFILING */
-
-  //Initialize CHOLMOD and its settings
-  solver_common common, *c;
-  c = &common;
-  CHOLMOD(start)(c);
-  cholmod_set_settings(c);
   
   size_t n = work->data->n;
   size_t m = work->data->m;
+  //Initialize CHOLMOD and its settings
+  solver_common common, *c;
+  c = &common;
+  #ifdef USE_LADEL
+  c = ladel_workspace_allocate(n+m);
+  ladel_work *c2;
+  if (work->settings->enable_dual_termination) 
+    c2 = ladel_workspace_allocate(n);
+  #elif defined USE_CHOLMOD
+  CHOLMOD(start)(c);
+  cholmod_set_settings(c);
+  #endif
+
+  
 
   //Provide LD factor of Q in case dual_termination is enabled
   //NB use neg_dphi = Aty+q and D_temp = Q^-1(Aty+q) to link with cholmod
   //NB assume Q is positive definite
   if (work->settings->enable_dual_termination) {
+    #ifdef USE_LADEL
+    ladel_symbolics *sym2 = ladel_symbolics_alloc(n);
+    if (work->solver->LD_Q) ladel_factor_free(work->solver->LD_Q);
+    ladel_factorize(work->data->Q, sym2, work->settings->ordering, &work->solver->LD_Q, c2);
+    work->info->dual_objective = compute_dual_objective(work, c2);    
+    #elif defined USE_CHOLMOD
     if (work->solver->LD_Q) CHOLMOD(free_factor)(&work->solver->LD_Q, c);
     work->solver->LD_Q = CHOLMOD(analyze) (work->data->Q, c);
     CHOLMOD(factorize) (work->data->Q, work->solver->LD_Q, c);
     work->info->dual_objective = compute_dual_objective(work, c);    
+    #endif
   } else {
     work->info->dual_objective = QPALM_NULL;
   }
@@ -385,8 +453,13 @@ void qpalm_solve(QPALMWorkspace *work) {
         work->info->run_time = work->info->setup_time +
                            work->info->solve_time;
       #endif /* ifdef PROFILING */
-      CHOLMOD(finish)(c);
       work->initialized = FALSE;
+
+      #ifdef USE_LADEL
+      ladel_workspace_free(c);
+      #elif defined USE_CHOLMOD
+      CHOLMOD(finish)(c);
+      #endif
 
       #ifdef PRINTING
       if (work->settings->verbose) {
@@ -417,9 +490,13 @@ void qpalm_solve(QPALMWorkspace *work) {
             work->info->run_time = work->info->setup_time +
                               work->info->solve_time;
           #endif /* ifdef PROFILING */
-
-          CHOLMOD(finish)(c);
           work->initialized = FALSE;
+
+          #ifdef USE_LADEL
+          ladel_workspace_free(c);
+          #elif defined USE_CHOLMOD
+          CHOLMOD(finish)(c);
+          #endif
 
           #ifdef PRINTING
           if (work->settings->verbose) {
@@ -513,8 +590,13 @@ void qpalm_solve(QPALMWorkspace *work) {
         work->info->run_time = work->info->setup_time +
                               work->info->solve_time;
       #endif /* ifdef PROFILING */
-      CHOLMOD(finish)(c);
       work->initialized = FALSE;
+
+      #ifdef USE_LADEL
+      ladel_workspace_free(c);
+      #elif defined USE_CHOLMOD
+      CHOLMOD(finish)(c);
+      #endif
 
       #ifdef PRINTING
         if (work->settings->verbose)
@@ -536,8 +618,13 @@ void qpalm_solve(QPALMWorkspace *work) {
     work->info->run_time = work->info->setup_time +
                            work->info->solve_time;
   #endif /* ifdef PROFILING */
-  CHOLMOD(finish)(c);
   work->initialized = FALSE;
+
+  #ifdef USE_LADEL
+  ladel_workspace_free(c);
+  #elif defined USE_CHOLMOD
+  CHOLMOD(finish)(c);
+  #endif
 
   #ifdef PRINTING
     if (work->settings->verbose)
@@ -638,6 +725,9 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
 
     solver_common common, *c;
     c = &common;
+    #ifdef USE_LADEL
+    ladel_scale_scalar(work->data->Q, work->scaling->c/c_old);
+    #elif defined USE_CHOLMOD
     CHOLMOD(start)(c);
     cholmod_dense *scalar = CHOLMOD(ones)(1,1,CHOLMOD_REAL, c);
     c_float *scalarx = scalar->x;
@@ -645,6 +735,7 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
     CHOLMOD(scale)(scalar, CHOLMOD_SCALAR, work->data->Q, c);
     CHOLMOD(free_dense)(&scalar, c);
     CHOLMOD(finish)(c);
+    #endif
 
     vec_self_mult_scalar(work->Qx, work->scaling->c/c_old, n);
     if (work->settings->proximal) {
@@ -662,6 +753,11 @@ void qpalm_cleanup(QPALMWorkspace *work) {
     solver_common common, *c;
     c = &common;
     if (work->data) {
+      #ifdef USE_LADEL
+      work->data->Q = ladel_sparse_free(work->data->Q);
+
+      work->data->A = ladel_sparse_free(work->data->A);
+      #elif defined USE_CHOLMOD
       CHOLMOD(start)(c);
 
       if (work->data->Q) CHOLMOD(free_sparse)(&work->data->Q, c);
@@ -669,6 +765,7 @@ void qpalm_cleanup(QPALMWorkspace *work) {
       if (work->data->A) CHOLMOD(free_sparse)(&work->data->A, c);
 
       CHOLMOD(finish)(c);
+      #endif
 
       if (work->data->q) c_free(work->data->q);
 
@@ -763,6 +860,42 @@ void qpalm_cleanup(QPALMWorkspace *work) {
 
     //Free chol struct
     if (work->solver) {
+      if (work->solver->active_constraints) c_free(work->solver->active_constraints);
+
+      if (work->solver->active_constraints_old) c_free(work->solver->active_constraints_old);
+
+      if (work->solver->enter) c_free(work->solver->enter);
+
+      if (work->solver->leave) c_free(work->solver->leave);
+
+      #ifdef USE_LADEL
+
+      work->solver->D_temp = ladel_free(work->solver->D_temp);
+
+      work->solver->E_temp = ladel_free(work->solver->E_temp);
+
+      work->solver->neg_dphi = ladel_free(work->solver->neg_dphi);
+
+      work->solver->d = ladel_free(work->solver->d);
+
+      work->solver->Qd = ladel_free(work->solver->Qd);
+
+      work->solver->Ad = ladel_free(work->solver->Ad);
+
+      work->solver->yh = ladel_free(work->solver->yh);
+
+      work->solver->Atyh = ladel_free(work->solver->Atyh);
+
+      work->solver->LD = ladel_factor_free(work->solver->LD);
+
+      work->solver->LD_Q = ladel_factor_free(work->solver->LD_Q);
+
+      work->solver->At_scale = ladel_free(work->solver->At_scale);
+
+      work->solver->At_sqrt_sigma = ladel_sparse_free(work->solver->At_sqrt_sigma);
+
+      #elif defined USE_CHOLMOD
+
       CHOLMOD(start)(c);
 
       if (work->solver->D_temp) CHOLMOD(free_dense)(&work->solver->D_temp, c);
@@ -785,19 +918,12 @@ void qpalm_cleanup(QPALMWorkspace *work) {
 
       if (work->solver->LD_Q) CHOLMOD(free_factor)(&work->solver->LD_Q, c);
 
-      if (work->solver->active_constraints) c_free(work->solver->active_constraints);
-
-      if (work->solver->active_constraints_old) c_free(work->solver->active_constraints_old);
-
-      if (work->solver->enter) c_free(work->solver->enter);
-
-      if (work->solver->leave) c_free(work->solver->leave);
-
       if (work->solver->At_scale) CHOLMOD(free_dense)(&work->solver->At_scale, c);
 
       if (work->solver->At_sqrt_sigma) CHOLMOD(free_sparse)(&work->solver->At_sqrt_sigma, c);
 
       CHOLMOD(finish)(c);
+      #endif
 
       c_free(work->solver);      
     }

@@ -73,7 +73,7 @@ extern "C" {
 # define EPS_PRIM_INF (1e-5)    /**< default primal infeasibility tolerance */
 # define EPS_DUAL_INF (1e-5)    /**< default dual infeasibility tolerance */
 # define THETA (0.25)           /**< default penalty update criterion parameter */
-# define DELTA (100)             /**< default penalty update factor */
+# define DELTA (100)            /**< default penalty update factor */
 # define SIGMA_MAX (1e9)        /**< defautl penalty cap */
 
 # define PROXIMAL (TRUE)        /**< default use of proximal method of multipliers */
@@ -97,6 +97,13 @@ extern "C" {
 # define TIME_LIMIT (QPALM_INFTY) /**< time limit after which the solver aborts */
 
 # define MAX_RANK_UPDATE 160 /**< maximum rank for the sparse factorization update */
+
+#ifdef USE_LADEL
+#include "ladel_constants.h"
+# define ORDERING AMD
+#elif defined USE_CHOLMOD
+# define ORDERING 0
+#endif
 
 
 

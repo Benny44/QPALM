@@ -52,6 +52,13 @@ void mat_tpose_vec(solver_sparse *A,
                    solver_dense  *x,
                    solver_dense  *y,
                    solver_common *c);
+
+#ifdef USE_LADEL
+#include "ladel_scale.h"
+#define mat_inf_norm_cols ladel_infinity_norm_columns
+#define mat_inf_norm_rows ladel_infinity_norm_rows
+#elif defined USE_CHOLMOD
+
 /**
  * Infinity norm of each matrix column, @f$E_i = \|M{(:,i)}\|_\infty@f$.
  * 
@@ -71,9 +78,6 @@ void mat_inf_norm_cols(solver_sparse *M,
  */
 void mat_inf_norm_rows(solver_sparse *M,
                        c_float   *E);
-
-
-#ifdef USE_CHOLMOD
 
 /**
  * Calculate @f$LDL^T@f$ factorization of a matrix @f$M@f$.
@@ -96,7 +100,6 @@ void ldlchol(solver_sparse *M,
  * 
  * @param work Workspace
  */
-// void ldlcholQ(QPALMWorkspace *work);
 
 /**
  * Calculate @f$LDL^T@f$ factorization of @f$Q+A{(a,:)}^T*\Sigma{(a,a)}*A{(a,:)}@f$, with @f$\Sigma=diag(\sigma)@f$ and @f$a@f$ the set of active constraints.

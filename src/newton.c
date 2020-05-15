@@ -12,11 +12,10 @@ extern "C" {
 
 #include "newton.h"
 #include "lin_alg.h"
-#include "cholmod.h"
 #include <stdio.h>
 
 #ifdef USE_CHOLMOD
-
+#include "cholmod.h"
 void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
 
     set_active_constraints(work);

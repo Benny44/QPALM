@@ -30,7 +30,7 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x, solver_common *c) {
     size_t i;
 
     size_t n = work->data->n;
-    cholmod_sparse* A = work->data->Q;
+    solver_sparse* A = work->data->Q;
     // size_t m = work->data->m;
 
     /*Current guess of the eigenvector */
@@ -46,19 +46,19 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x, solver_common *c) {
         prea_vec_copy(x, work->d, n);
         x = work->d;
     }
-    cholmod_dense *x_chol = work->solver->d;
+    solver_dense *x_chol = work->solver->d;
 
     
     c_float *Ax = work->Qd;
-    cholmod_dense * Ax_chol = work->solver->Qd;
+    solver_dense * Ax_chol = work->solver->Qd;
     mat_vec(A, x_chol , Ax_chol, c);
     lambda = vec_prod(x, Ax, n);
 
     /*Current residual, Ax - lambda*x */
     c_float *w = work->neg_dphi; 
-    cholmod_dense * w_chol = work->solver->neg_dphi;
+    solver_dense * w_chol = work->solver->neg_dphi;
     c_float *Aw = work->Atyh;
-    cholmod_dense * Aw_chol = work->solver->Atyh;
+    solver_dense * Aw_chol = work->solver->Atyh;
 
     /* Conjugate gradient direction */
     c_float *p = work->temp_n; 
@@ -177,7 +177,7 @@ void set_settings_nonconvex(QPALMWorkspace *work, solver_common *c){
     }
 }
 
-c_float gershgorin_max(cholmod_sparse* M, c_float *center, c_float *radius){
+c_float gershgorin_max(solver_sparse* M, c_float *center, c_float *radius){
     /* NB: Assume M is symmetric, so Gershgorin may be performed along the columns as well. */
     c_float ub_eig;
     c_float *Mx = M->x; c_int *Mi = M->i; c_int *Mp = M->p;

@@ -14,25 +14,45 @@
 #include <stdio.h>
 
 #ifdef USE_LADEL
+#include "ladel_matvec.h"
+#include "ladel_copy.h"
+#include "ladel_scale.h"
+
 void mat_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c) 
 {
-
+    ladel_int n = A->ncol;
+    if (x!=y) {
+      ladel_matvec(A, x, y, TRUE);
+    } else {
+      ladel_double* x2 = ladel_malloc(n, sizeof(c_float));
+      ladel_double_vector_copy(x, n, x2);
+      ladel_matvec(A, x2, y, TRUE);
+      ladel_free(x2);
+    }
 }
 
 void mat_tpose_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c)
 {
-
+    ladel_int m = A->nrow;
+    if (x!=y) {
+      ladel_tpose_matvec(A, x, y, TRUE);
+    } else {
+      ladel_double* x2 = ladel_malloc(m, sizeof(c_float));
+      ladel_double_vector_copy(x, m, x2);
+      ladel_tpose_matvec(A, x2, y, TRUE);
+      ladel_free(x2);
+    }
 }
 
-void mat_inf_norm_cols(solver_sparse *M, c_float *E)
-{
+// void mat_inf_norm_cols(solver_sparse *M, c_float *E)
+// {
+//     ladel_infinity_norm_columns(M, E);
+// }
 
-}
-
-void mat_inf_norm_rows(solver_sparse *M, c_float *E) 
-{
-
-}
+// void mat_inf_norm_rows(solver_sparse *M, c_float *E) 
+// {
+//     ladel_infinity_norm_rows(M, E);
+// }
 
 #elif defined USE_CHOLMOD
 
