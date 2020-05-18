@@ -23,7 +23,8 @@
 void compute_residuals(QPALMWorkspace *work, solver_common *c) {
 
     //Axys = Ax + y./sigma
-    vec_ew_div(work->y, work->sigma, work->temp_m, work->data->m);
+    vec_ew_prod(work->y, work->sigma_inv, work->temp_m, work->data->m);
+    // vec_ew_div(work->y, work->sigma, work->temp_m, work->data->m);
     vec_add_scaled(work->Ax, work->temp_m, work->Axys, 1, work->data->m);
     //z = min(max(Axys,bmin),bmax)
     vec_ew_mid_vec(work->Axys, work->data->bmin, work->data->bmax, work->z, work->data->m);
@@ -57,18 +58,19 @@ void initialize_sigma(QPALMWorkspace *work, solver_common *c) {
     c_float dist2 = vec_prod(work->temp_m, work->temp_m, m);
     vec_set_scalar(work->sigma, c_max(1e-4, c_min(2e1*c_max(1,c_absval(f))/c_max(1,0.5*dist2),1e4)), m);
 
+    // Set fields related to sigma
+    vec_ew_recipr(work->sigma, work->sigma_inv, m);
+    vec_ew_sqrt(work->sigma, work->sqrt_sigma, m);
+    work->sqrt_sigma_max = c_sqrt(work->settings->sigma_max);
+    
     #ifdef USE_LADEL
     #elif defined USE_CHOLMOD
-    // Set fields related to sigma
-    vec_ew_sqrt(work->sigma, work->sqrt_sigma, m);
     c_float *At_scalex = work->solver->At_scale->x;
     prea_vec_copy(work->sqrt_sigma, At_scalex, m);
     if (work->solver->At_sqrt_sigma) 
       CHOLMOD(free_sparse)(&work->solver->At_sqrt_sigma, c);
     work->solver->At_sqrt_sigma = CHOLMOD(transpose)(work->data->A, 1, c);
     CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
-
-    work->sqrt_sigma_max = c_sqrt(work->settings->sigma_max);
     #endif
 }
 
@@ -93,6 +95,7 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
                     work->nb_sigma_changed++;
                 }               
                 work->sigma[k] = sigma_temp;
+                work->sigma_inv[k] = 1.0/sigma_temp;
                 #ifdef USE_LADEL
                 #elif defined USE_CHOLMOD
                 mult_factor = c_sqrt(mult_factor);
@@ -105,6 +108,7 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
                     work->nb_sigma_changed++;
                 } 
                 work->sigma[k] = work->settings->sigma_max;
+                work->sigma_inv[k] = 1.0/work->settings->sigma_max;
                 #ifdef USE_LADEL
                 #elif defined USE_CHOLMOD
                 At_scalex[k] = work->sqrt_sigma_max / work->sqrt_sigma[k];
@@ -181,9 +185,7 @@ void boost_gamma(QPALMWorkspace *work, solver_common *c) {
 
 void update_primal_iterate(QPALMWorkspace *work, solver_common *c) {
     
-    #ifdef USE_CHOLMOD
     newton_set_direction(work, c);
-    #endif /* USE_CHOLMOD */
 
     work->tau = exact_linesearch(work, c);
 

@@ -158,6 +158,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->temp_m   = c_calloc(m, sizeof(c_float));
   work->temp_n   = c_calloc(n, sizeof(c_float));
   work->sigma = c_calloc(m, sizeof(c_float));
+  work->sigma_inv = c_calloc(m, sizeof(c_float));
   work->nb_sigma_changed = 0;
 
   work->z  = c_calloc(m, sizeof(c_float));
@@ -815,6 +816,8 @@ void qpalm_cleanup(QPALMWorkspace *work) {
     if (work->temp_n) c_free(work->temp_n);
 
     if (work->sigma) c_free(work->sigma);
+    
+    if (work->sigma_inv) c_free(work->sigma_inv);
 
     if (work->z) c_free(work->z);
 

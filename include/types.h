@@ -201,6 +201,7 @@ typedef struct {
   c_float *temp_m;        ///< placeholder for vector of size m
   c_float *temp_n;        ///< placeholder for vector of size n
   c_float *sigma;         ///< penalty vector
+  c_float *sigma_inv;     ///< 1./sigma
   c_float sqrt_sigma_max;  ///< sqrt(sigma_max)
   c_int nb_sigma_changed; ///< number of sigma-components that changed in an outer iteration (relevant for factorization update)
   c_float gamma;          ///< proximal penalty factor
