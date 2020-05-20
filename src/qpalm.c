@@ -29,6 +29,8 @@ extern "C" {
 #include "ladel_scale.h"
 #include "ladel_copy.h"
 #include "ladel_global.h"
+#include "ladel_transpose.h"
+#include "ladel_upper_diag.h"
 #elif defined USE_CHOLMOD
 #include "cholmod.h"
 #include "cholmod_function.h"
@@ -135,7 +137,8 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
 
   #ifdef USE_LADEL
   work->data->A = ladel_sparse_allocate_and_copy(data->A); 
-  work->data->Q = ladel_sparse_allocate_and_copy(data->Q); 
+  work->data->Q = ladel_sparse_allocate_and_copy(data->Q);
+  ladel_to_upper_diag(work->data->Q);
   #elif defined USE_CHOLMOD
   work->data->A    = CHOLMOD(copy_sparse)(data->A, c); 
   work->data->A->stype = 0;   
@@ -232,6 +235,8 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->solver->leave = c_calloc(m, sizeof(c_int));
 
   #ifdef USE_LADEL
+  work->solver->rhs_kkt = c_malloc((n+m)*sizeof(c_float));
+  work->solver->sol_kkt = c_malloc((n+m)*sizeof(c_float));
   work->solver->neg_dphi = c_calloc(n, sizeof(c_float));
   work->neg_dphi = work->solver->neg_dphi; 
   work->solver->d = c_calloc(n, sizeof(c_float));
@@ -245,6 +250,21 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->solver->Atyh = c_calloc(n, sizeof(c_float));
   work->Atyh = work->solver->Atyh;
   work->solver->At_scale = c_calloc(m, sizeof(c_float));
+
+  work->solver->first_factorization = TRUE;
+  c_int kkt_nzmax = work->data->Q->nzmax + work->data->A->nzmax + m;
+  work->solver->kkt_full = ladel_sparse_alloc(n+m, n+m, kkt_nzmax, UPPER, TRUE, FALSE);
+  work->solver->kkt = ladel_sparse_alloc(n+m, n+m, kkt_nzmax, UPPER, TRUE, TRUE);
+  work->solver->first_row_A = c_malloc(m*sizeof(c_int));
+  work->solver->first_elem_A = c_malloc(m*sizeof(c_float));
+
+  work->solver->sym = ladel_symbolics_alloc(m+n);
+  if (work->settings->enable_dual_termination)
+    work->solver->sym_Q = ladel_symbolics_alloc(n);
+
+  c->array_int_ncol1 = work->temp_m; /* Avoid allocating full workspace */
+  work->solver->At = ladel_transpose(work->data->A, TRUE, c);
+  c->array_int_ncol1 = NULL;
 
   #elif defined USE_CHOLMOD
   work->solver->neg_dphi = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
@@ -416,17 +436,14 @@ void qpalm_solve(QPALMWorkspace *work) {
   cholmod_set_settings(c);
   #endif
 
-  
 
   //Provide LD factor of Q in case dual_termination is enabled
   //NB use neg_dphi = Aty+q and D_temp = Q^-1(Aty+q) to link with cholmod
   //NB assume Q is positive definite
   if (work->settings->enable_dual_termination) {
     #ifdef USE_LADEL
-    ladel_symbolics *sym2 = ladel_symbolics_alloc(n);
     if (work->solver->LD_Q) ladel_factor_free(work->solver->LD_Q);
-    ladel_factorize(work->data->Q, sym2, work->settings->ordering, &work->solver->LD_Q, c2);
-    sym2 = ladel_symbolics_free(sym2);
+    ladel_factorize(work->data->Q, work->solver->sym_Q, work->settings->ordering, &work->solver->LD_Q, c2);
     work->info->dual_objective = compute_dual_objective(work, c2);    
     #elif defined USE_CHOLMOD
     if (work->solver->LD_Q) CHOLMOD(free_factor)(&work->solver->LD_Q, c);
@@ -882,6 +899,10 @@ void qpalm_cleanup(QPALMWorkspace *work) {
 
       #ifdef USE_LADEL
 
+      work->solver->sol_kkt = ladel_free(work->solver->sol_kkt);
+
+      work->solver->rhs_kkt = ladel_free(work->solver->rhs_kkt);
+
       work->solver->D_temp = ladel_free(work->solver->D_temp);
 
       work->solver->E_temp = ladel_free(work->solver->E_temp);
@@ -902,9 +923,23 @@ void qpalm_cleanup(QPALMWorkspace *work) {
 
       work->solver->LD_Q = ladel_factor_free(work->solver->LD_Q);
 
+      work->solver->sym = ladel_symbolics_free(work->solver->sym);
+
+      work->solver->sym_Q = ladel_symbolics_free(work->solver->sym_Q);
+
       work->solver->At_scale = ladel_free(work->solver->At_scale);
 
       work->solver->At_sqrt_sigma = ladel_sparse_free(work->solver->At_sqrt_sigma);
+
+      work->solver->At = ladel_sparse_free(work->solver->At);
+
+      work->solver->kkt = ladel_sparse_free(work->solver->kkt);
+
+      work->solver->kkt_full = ladel_sparse_free(work->solver->kkt_full);
+
+      work->solver->first_row_A = ladel_free(work->solver->first_row_A);
+
+      work->solver->first_elem_A = ladel_free(work->solver->first_elem_A);
 
       #elif defined USE_CHOLMOD
 

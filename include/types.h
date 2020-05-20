@@ -20,12 +20,14 @@ typedef ladel_work            solver_common;
 typedef ladel_sparse_matrix   solver_sparse;
 typedef ladel_double          solver_dense;
 typedef ladel_factor          solver_factor;
+typedef ladel_symbolics       solver_symbolics;
 #elif defined(USE_CHOLMOD)
 #include "cholmod.h"
 typedef cholmod_common solver_common;
 typedef cholmod_sparse solver_sparse;
 typedef cholmod_dense  solver_dense;
 typedef cholmod_factor solver_factor;
+typedef void           solver_symbolics;
 #elif defined(USE_LADEL)
 
 #endif /* USE_CHOLMOD */
@@ -148,16 +150,26 @@ typedef struct {
  * Variables for linear system solving 
  */
 typedef struct {
+  solver_sparse *kkt;           ///< KKT matrix
+  solver_sparse *kkt_full;      ///< KKT matrix if all constraints would be active
+  solver_sparse *At;            ///< A'
+  c_int *first_row_A;           ///< row index of the first element in each column of A'
+  c_float *first_elem_A;        ///< value of the first element in each column of A'
   solver_factor *LD;             ///< LD factor (part of LDL' factorization)
+  solver_symbolics *sym;         ///< symbolics for kkt (only used in LADEL)
   solver_factor *LD_Q;           ///< LD factor of Q (useful in computing dual objective)
+  solver_symbolics *sym_Q;       ///< symbolics for Q (only used in LADEL)
   solver_dense *E_temp;          ///< temporary constraints scaling vectors
   solver_dense *D_temp;          ///< temporary primal variable scaling vectors
   solver_dense *neg_dphi;        ///< -gradient of the Lagrangian
+  solver_dense *rhs_kkt;         ///< [-dphi; zeros(m,1)]
+  solver_dense *sol_kkt;         ///< sol_kkt = kkt\rhs_kkt
   solver_dense *d;               ///< primal update step
   solver_dense *Ad;              ///< A * d
   solver_dense *Qd;              ///< Q * d
   solver_dense *yh;              ///< candidate dual update
   solver_dense *Atyh;            ///< A' * yh
+  c_int first_factorization;      ///< boolean, indicate we have not factorized previously
   c_int reset_newton;             ///< boolean, after sigma is updated perform a new factorization
   c_int *active_constraints;      ///< index set of active constraints
   c_int *active_constraints_old;  ///< index set of active constraints in the previous iteration
