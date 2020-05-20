@@ -96,10 +96,10 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
                 }               
                 work->sigma[k] = sigma_temp;
                 work->sigma_inv[k] = 1.0/sigma_temp;
-                #ifdef USE_LADEL
-                #elif defined USE_CHOLMOD
                 mult_factor = c_sqrt(mult_factor);
                 work->sqrt_sigma[k] = mult_factor * work->sqrt_sigma[k];
+                #ifdef USE_LADEL
+                #elif defined USE_CHOLMOD
                 At_scalex[k] = mult_factor;
                 #endif
             } else {
@@ -112,8 +112,8 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
                 #ifdef USE_LADEL
                 #elif defined USE_CHOLMOD
                 At_scalex[k] = work->sqrt_sigma_max / work->sqrt_sigma[k];
-                work->sqrt_sigma[k] = work->sqrt_sigma_max;
                 #endif
+                work->sqrt_sigma[k] = work->sqrt_sigma_max;
             }
         } else {
             #ifdef USE_LADEL
@@ -124,6 +124,7 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
     }
 
     #ifdef USE_LADEL
+    work->solver->reset_newton = TRUE;
     // TODO implement updating sigma in KKT system
     #elif defined USE_CHOLMOD
     CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
