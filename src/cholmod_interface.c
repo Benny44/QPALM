@@ -22,11 +22,17 @@ void mat_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *
 {
     ladel_int n = A->ncol;
     if (x!=y) {
-      ladel_matvec(A, x, y, TRUE);
+      if (A->symmetry == UNSYMMETRIC)
+        ladel_matvec(A, x, y, TRUE);
+      else
+        ladel_symmetric_matvec(A, x, y, TRUE);
     } else {
       ladel_double* x2 = ladel_malloc(n, sizeof(c_float));
       ladel_double_vector_copy(x, n, x2);
-      ladel_matvec(A, x2, y, TRUE);
+      if (A->symmetry == UNSYMMETRIC)
+        ladel_matvec(A, x2, y, TRUE);
+      else
+        ladel_symmetric_matvec(A, x2, y, TRUE);
       ladel_free(x2);
     }
 }
@@ -35,11 +41,17 @@ void mat_tpose_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_co
 {
     ladel_int m = A->nrow;
     if (x!=y) {
-      ladel_tpose_matvec(A, x, y, TRUE);
+      if (A->symmetry == UNSYMMETRIC)
+        ladel_tpose_matvec(A, x, y, TRUE);
+      else
+        ladel_symmetric_matvec(A, x, y, TRUE);  
     } else {
       ladel_double* x2 = ladel_malloc(m, sizeof(c_float));
       ladel_double_vector_copy(x, m, x2);
-      ladel_tpose_matvec(A, x2, y, TRUE);
+      if (A->symmetry == UNSYMMETRIC)
+        ladel_tpose_matvec(A, x2, y, TRUE);
+      else
+        ladel_symmetric_matvec(A, x2, y, TRUE); 
       ladel_free(x2);
     }
 }
