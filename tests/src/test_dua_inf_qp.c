@@ -38,8 +38,8 @@ void dua_inf_qp_suite_setup(void) {
     
     c = &common;
     #ifdef USE_LADEL
-    solver_sparse *A = ladel_sparse_alloc(M, N, ANZMAX, UNSYMMETRIC, TRUE);
-    solver_sparse *Q = ladel_sparse_alloc(N, N, QNZMAX, UPPER, TRUE);
+    solver_sparse *A = ladel_sparse_alloc(M, N, ANZMAX, UNSYMMETRIC, TRUE, FALSE);
+    solver_sparse *Q = ladel_sparse_alloc(N, N, QNZMAX, UPPER, TRUE, FALSE);
     #elif defined USE_CHOLMOD
     CHOLMOD(start)(c);
     solver_sparse *A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);

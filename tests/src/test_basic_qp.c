@@ -32,8 +32,8 @@ void basic_qp_suite_setup(void) {
 
     c = &common;
     #ifdef USE_LADEL
-    data->A = ladel_sparse_alloc(M, N, ANZMAX, UNSYMMETRIC, TRUE);
-    data->Q = ladel_sparse_alloc(N, N, QNZMAX, UPPER, TRUE);
+    data->A = ladel_sparse_alloc(M, N, ANZMAX, UNSYMMETRIC, TRUE, FALSE);
+    data->Q = ladel_sparse_alloc(N, N, QNZMAX, UPPER, TRUE, FALSE);
     #elif defined USE_CHOLMOD
     CHOLMOD(start)(c);
     data->A = CHOLMOD(allocate_sparse)(M, N, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);

@@ -5,6 +5,7 @@
 #include "constants.h"
 #ifdef USE_LADEL
 #include "ladel_global.h"
+#include "ladel_upper_diag.h"
 #endif
 
 #define N 2
@@ -37,8 +38,8 @@ void cholmod_suite_setup(void) {
     data->bmax = bmax;
 
     #ifdef USE_LADEL
-    A = ladel_sparse_alloc(M, N, ANZMAX, UNSYMMETRIC, TRUE);
-    Q = ladel_sparse_alloc(N, N, QNZMAX, UPPER, TRUE);
+    A = ladel_sparse_alloc(M, N, ANZMAX, UNSYMMETRIC, TRUE, FALSE);
+    Q = ladel_sparse_alloc(N, N, QNZMAX, UPPER, TRUE, FALSE);
     #elif defined USE_CHOLMOD
     c = &common;
     CHOLMOD(start)(c);
@@ -63,6 +64,10 @@ void cholmod_suite_setup(void) {
     Qx[0] = 1.0; Qx[1] = -1.0; Qx[2] = -1.0; Qx[3] = 2.0; 
     Qp[0] = 0; Qp[1] = 2; Qp[2] = 4; 
     Qi[0] = 0; Qi[1] = 1; Qi[2] = 0; Qi[3] = 1; 
+
+    #ifdef USE_LADEL
+    ladel_to_upper_diag(Q);
+    #endif
 
     data->A = A;
     data->Q = Q;
