@@ -62,7 +62,7 @@ static void qpalm_form_kkt(QPALMWorkspace *work)
         {
             kkt->nz[col] = 1;
             kkt->i[index_kkt] = col;
-            kkt->x[index_kkt] = -sigma_inv[col-n];
+            kkt->x[index_kkt] = 1;
         }
 
         if (At->p[col-n+1]-At->p[col-n] != 0) index_kkt++;
@@ -76,6 +76,7 @@ static void qpalm_form_kkt(QPALMWorkspace *work)
 
         kkt->i[index_kkt] = kkt_full->i[index_kkt] = col;
         kkt->x[index_kkt] = kkt_full->x[index_kkt] = -sigma_inv[col-n];
+        if (At->p[col-n+1]-At->p[col-n] == 0) kkt->x[index_kkt] = 1;
         index_kkt++;
 
         kkt->p[col+1] = kkt_full->p[col+1] = Qnz + At->p[col+1-n] + 1 + col - n;
@@ -104,7 +105,7 @@ static void qpalm_reform_kkt(QPALMWorkspace *work)
         {
             kkt->nz[col] = 1;
             kkt->i[kkt->p[col]] = col;
-            kkt->x[kkt->p[col]] = -sigma_inv[col-n]; /* should not matter */
+            kkt->x[kkt->p[col]] = 1; 
         }
     }
 }
@@ -189,7 +190,7 @@ void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
 
     #elif defined USE_CHOLMOD
     if ((work->solver->reset_newton && work->solver->nb_active_constraints) || 
-        (work->solver->nb_enter + work->solver->nb_leave) > MAX_RANK_UPDATE) {s
+        (work->solver->nb_enter + work->solver->nb_leave) > MAX_RANK_UPDATE) {
         ldlcholQAtsigmaA(work, c);   
     } else if (work->solver->nb_active_constraints) {
         if(work->solver->nb_enter) {
