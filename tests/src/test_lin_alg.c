@@ -1,6 +1,5 @@
-#include "lin_alg.h"
-#include "global_opts.h"
 #include "minunit.h"
+#include "qpalm.h"
 
 #define DIM 3
 #define TOL 1e-8

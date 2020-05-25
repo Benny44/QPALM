@@ -1,8 +1,5 @@
 #include "minunit.h"
 #include "qpalm.h"
-#include "lin_alg.h"
-#include "global_opts.h"
-#include "constants.h"
 
 #define N 4
 #define M 5

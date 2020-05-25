@@ -11,8 +11,20 @@
 #ifndef QPALM_H
 #define QPALM_H
 
-#include "types.h"
+#include "constants.h"
 #include "global_opts.h"
+#include "iteration.h"
+#include "lin_alg.h"
+#include "linesearch.h"
+#include "newton.h"
+#include "nonconvex.h"
+#include "scaling.h"
+#include "solver_interface.h"
+#include "termination.h"
+#include "types.h"
+#include "util.h"
+#include "validate.h"
+
 
 /********************
 * Main Solver API  *

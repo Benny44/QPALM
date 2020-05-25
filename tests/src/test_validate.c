@@ -1,9 +1,4 @@
 #include "minunit.h"
-#include "validate.h"
-#include "global_opts.h"
-#include "constants.h"
-#include "types.h"
-#include "test_validate.h"
 #include "qpalm.h"
 #include <stdio.h>
 

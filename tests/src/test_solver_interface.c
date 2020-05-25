@@ -1,8 +1,5 @@
 #include "minunit.h"
-#include "solver_interface.h"
-#include "global_opts.h"
 #include "qpalm.h"
-#include "constants.h"
 
 #define N 2
 #define M 3
