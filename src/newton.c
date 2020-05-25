@@ -4,7 +4,7 @@
  * @brief Functions to calculate the semismooth Newton direction.
  * @details The functions in this file concern the calculation of the semismooth Newton direction. 
  * Factorizing, updating the factorization and solving the linear system are performed by functions in 
- * cholmod_interface.c. 
+ * solver_interface.c. 
  */
 # ifdef __cplusplus
 extern "C" {

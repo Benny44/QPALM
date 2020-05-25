@@ -11,7 +11,7 @@
 
 #include "iteration.h"
 #include "lin_alg.h"
-#include "cholmod_interface.h"
+#include "solver_interface.h"
 #include "newton.h"
 #include "linesearch.h"
 #include "nonconvex.h"

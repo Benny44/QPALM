@@ -11,7 +11,7 @@ add_executable(run_all_tests
             src/test_prim_inf_qp.c
             src/test_lin_alg.c
             src/test_basic_qp.c
-            src/test_cholmod_interface.c
+            src/test_solver_interface.c
             src/test_nonconvex_qp.c
             src/test_degen_hess.c
             src/test_error_handling.c

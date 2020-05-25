@@ -19,7 +19,7 @@ extern "C" {
 #include "scaling.h"
 #include "linesearch.h"
 #include "termination.h"
-#include "cholmod_interface.h"
+#include "solver_interface.h"
 #include "newton.h"
 #include "nonconvex.h"
 #include "iteration.h"

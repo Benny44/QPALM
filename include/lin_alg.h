@@ -15,7 +15,7 @@ extern "C" {
 # endif // ifdef __cplusplus
 
 # include "types.h"
-#include "cholmod_interface.h"
+#include "solver_interface.h"
 
 /**
  * @name Vector functions
@@ -255,7 +255,7 @@ void vec_ew_sqrt(const c_float *a,
 
 /* MATRIX FUNCTIONS ----------------------------------------------------------*/
 
-/* Moved to cholmod_interface.c*/
+/* Moved to solver_interface.c*/
 
 
 # ifdef __cplusplus

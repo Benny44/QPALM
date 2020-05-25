@@ -209,5 +209,5 @@ void vec_ew_sqrt(const c_float *a, c_float *b, size_t n) {
 
 /* MATRIX FUNCTIONS ----------------------------------------------------------*/
 
-/* Moved to cholmod_interface.c*/
+/* Moved to solver_interface.c*/
 

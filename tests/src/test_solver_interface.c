@@ -1,5 +1,5 @@
 #include "minunit.h"
-#include "cholmod_interface.h"
+#include "solver_interface.h"
 #include "global_opts.h"
 #include "qpalm.h"
 #include "constants.h"
@@ -20,7 +20,7 @@ solver_sparse *Q; // NxN symmetric matrix
 solver_common common, *c;
 
 
-void cholmod_suite_setup(void) {
+void solver_suite_setup(void) {
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
@@ -79,7 +79,7 @@ void cholmod_suite_setup(void) {
     c_free(settings);
 }
 
-void cholmod_suite_teardown(void) {
+void solver_suite_teardown(void) {
     qpalm_cleanup(work);
 
     #ifdef USE_LADEL
@@ -94,7 +94,7 @@ void cholmod_suite_teardown(void) {
 
 }
 
-void cholmod_test_setup(void) {
+void solver_test_setup(void) {
     work->Qd[0] = 1.1; work->Qd[1] = -0.5;
     work->Ad[0] = 1.1; work->Ad[1] = -0.5; work->Ad[2] = 20;
     #ifdef USE_LADEL
@@ -103,7 +103,7 @@ void cholmod_test_setup(void) {
     #endif /* USE_CHOLMOD */
 }
 
-void cholmod_test_teardown(void) {
+void solver_test_teardown(void) {
     #ifdef USE_LADEL
     #elif defined USE_CHOLMOD
     CHOLMOD(finish)(&common);
@@ -167,8 +167,8 @@ MU_TEST(test_ldlchol){
 }
 #endif
 
-MU_TEST_SUITE(suite_cholmod) {
-    MU_SUITE_CONFIGURE(cholmod_suite_setup, cholmod_suite_teardown, cholmod_test_setup, cholmod_test_teardown);
+MU_TEST_SUITE(suite_solver) {
+    MU_SUITE_CONFIGURE(solver_suite_setup, solver_suite_teardown, solver_test_setup, solver_test_teardown);
 
     MU_RUN_TEST(test_mat_vec);
     MU_RUN_TEST(test_mat_tpose_vec);

@@ -139,7 +139,7 @@ SET(SRC
         src/linesearch.c
         src/lin_alg.c
         src/termination.c
-        src/cholmod_interface.c
+        src/solver_interface.c
         src/nonconvex.c
         src/validate.c
         src/iteration.c)

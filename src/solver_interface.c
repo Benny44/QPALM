@@ -1,8 +1,8 @@
 /**
- * @file cholmod_interface.c
+ * @file solver_interface.c
  * @author Ben Hermans
- * @brief Interface and wrapper to cholmod functions
- * @details This file includes all calls to cholmod functions apart from scaling in scaling.c and memory
+ * @brief Interface and wrapper to matrix/factorization (ladel/cholmod) functions
+ * @details This file includes all calls to cholmod/ladel functions apart from scaling in scaling.c and memory
  * allocation/deallocation in the main functions in qpalm.c. It includes all matrix operations, such as
  * matrix vector products, row- and columnwise norms, cholesky factorizations, factorization updates and
  * solving the linear system. Finally, all the settings relevant to cholmod (and suitesparse) are included
@@ -10,7 +10,7 @@
  */
 
 #include "lin_alg.h"
-#include "cholmod_interface.h"
+#include "solver_interface.h"
 #include <stdio.h>
 
 #ifdef USE_LADEL
@@ -55,16 +55,6 @@ void mat_tpose_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_co
       ladel_free(x2);
     }
 }
-
-// void mat_inf_norm_cols(solver_sparse *M, c_float *E)
-// {
-//     ladel_infinity_norm_columns(M, E);
-// }
-
-// void mat_inf_norm_rows(solver_sparse *M, c_float *E) 
-// {
-//     ladel_infinity_norm_rows(M, E);
-// }
 
 #elif defined USE_CHOLMOD
 
