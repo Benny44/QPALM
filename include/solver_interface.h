@@ -53,6 +53,17 @@ void mat_tpose_vec(solver_sparse *A,
 #include "ladel_scale.h"
 #define mat_inf_norm_cols ladel_infinity_norm_columns
 #define mat_inf_norm_rows ladel_infinity_norm_rows
+
+void qpalm_form_kkt(QPALMWorkspace *work);
+
+void qpalm_reform_kkt(QPALMWorkspace *work);
+
+void kkt_update_entering_constraints(QPALMWorkspace *work, solver_common *c);
+
+void kkt_update_leaving_constraints(QPALMWorkspace *work, solver_common *c);
+
+void kkt_solve(QPALMWorkspace *work, solver_common *c);
+
 #elif defined USE_CHOLMOD
 #include "cholmod.h"
 
