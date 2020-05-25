@@ -91,7 +91,6 @@ static void qpalm_reform_kkt(QPALMWorkspace *work)
     ladel_int *first_row_A = work->solver->first_row_A;
     ladel_double *sigma_inv = work->sigma_inv, *first_elem_A = work->solver->first_elem_A;
 
-
     for (col = n; col < n+m; col++)
     {
         if (work->solver->active_constraints[col-n])
@@ -131,6 +130,7 @@ static void kkt_update_entering_constraints(QPALMWorkspace *work, solver_common 
 static void kkt_update_leaving_constraints(QPALMWorkspace *work, solver_common *c)
 {
     ladel_int col, index, n = work->data->n, m = work->data->m;
+
     for (index = 0; index < work->solver->nb_leave; index++)
     {
         col = work->solver->leave[index] + n;
@@ -154,8 +154,6 @@ static void kkt_solve(QPALMWorkspace *work, solver_common *c)
 
 void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
 
-    work->solver->reset_newton = TRUE;
-
     set_active_constraints(work);
     set_entering_leaving_constraints(work);
     #ifdef USE_LADEL
@@ -171,7 +169,7 @@ void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
         work->solver->first_factorization = FALSE;
     } 
     else if (work->solver->reset_newton || 
-            (work->solver->nb_enter + work->solver->nb_leave) > 1*(work->data->n+work->data->m)) 
+            (work->solver->nb_enter + work->solver->nb_leave) > 0.1*(work->data->n+work->data->m)) 
     {
         qpalm_reform_kkt(work);
         ladel_factorize_with_prior_basis_with_diag(work->solver->kkt, d, work->solver->sym, work->solver->LD, c);
