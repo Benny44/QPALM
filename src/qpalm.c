@@ -30,6 +30,7 @@ extern "C" {
 #include "ladel_copy.h"
 #include "ladel_global.h"
 #include "ladel_transpose.h"
+#include "ladel_debug_print.h"
 #include "ladel_upper_diag.h"
 #elif defined USE_CHOLMOD
 #include "cholmod.h"
@@ -262,7 +263,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   if (work->settings->enable_dual_termination)
     work->solver->sym_Q = ladel_symbolics_alloc(n);
 
-  c->array_int_ncol1 = work->temp_m; /* Avoid allocating full workspace */
+  c->array_int_ncol1 = work->index_L; /* Avoid allocating full workspace */
   work->solver->At = ladel_transpose(work->data->A, TRUE, c);
   c->array_int_ncol1 = NULL;
 
@@ -684,7 +685,7 @@ void qpalm_update_settings(QPALMWorkspace* work, const QPALMSettings *settings) 
     // Perform the remaining scaling iterations
     work->settings->scaling = settings->scaling - work->settings->scaling;
     scale_data(work);
-
+    
     // Compute the total scaling vectors
     vec_ew_prod(work->scaling->D, work->temp_n, work->scaling->D, work->data->n);
     vec_ew_prod(work->scaling->E, work->temp_m, work->scaling->E, work->data->m);
@@ -693,6 +694,16 @@ void qpalm_update_settings(QPALMWorkspace* work, const QPALMSettings *settings) 
     vec_ew_recipr(work->scaling->D, work->scaling->Dinv, work->data->n);
     vec_ew_recipr(work->scaling->E, work->scaling->Einv, work->data->m);
     work->scaling->cinv = 1/work->scaling->c;
+
+    #ifdef USE_LADEL
+    work->solver->first_factorization = TRUE;
+    solver_common common, *c;
+    c = &common;
+    c->array_int_ncol1 = work->index_L; 
+    work->solver->At = ladel_sparse_free(work->solver->At);
+    work->solver->At = ladel_transpose(work->data->A, TRUE, c);
+    c->array_int_ncol1 = NULL;
+    #endif
   }
  
   // Copy settings
@@ -741,7 +752,7 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
   if (work->settings->scaling) {
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, n);    
     // Update cost scaling scalar
-    c_float c_old = work->scaling->c;
+    c_float c_old = work->scaling->c, c_ratio;
     if (work->settings->proximal) {
       vec_add_scaled(work->Qx, work->x, work->Qx, -1/work->gamma, work->data->n);
     }
@@ -750,10 +761,16 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
     work->scaling->cinv = 1/work->scaling->c;
     vec_self_mult_scalar(work->data->q, work->scaling->c, n);
 
+    c_ratio = work->scaling->c/c_old;
+
     solver_common common, *c;
     c = &common;
     #ifdef USE_LADEL
-    ladel_scale_scalar(work->data->Q, work->scaling->c/c_old);
+    ladel_scale_scalar(work->data->Q, c_ratio);
+    ladel_int index;
+    for (index = 0; index < work->data->Q->nzmax; index++) 
+      work->solver->kkt->x[index] *= c_ratio;
+    work->solver->reset_newton = TRUE;
     #elif defined USE_CHOLMOD
     CHOLMOD(start)(c);
     cholmod_dense *scalar = CHOLMOD(ones)(1,1,CHOLMOD_REAL, c);
@@ -764,7 +781,7 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
     CHOLMOD(finish)(c);
     #endif
 
-    vec_self_mult_scalar(work->Qx, work->scaling->c/c_old, n);
+    vec_self_mult_scalar(work->Qx, c_ratio, n);
     if (work->settings->proximal) {
       work->gamma = work->settings->gamma_init;
       vec_add_scaled(work->Qx, work->x, work->Qx, 1/work->gamma, work->data->n);    
