@@ -45,21 +45,23 @@ if [ $solver = "cholmod" ]; then
   cd $builddir
   cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_CHOLMOD=ON
 elif [ $solver = "ladel" ]; then
+  LD_PRELOAD=""
   cd $builddir
   cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_LADEL=ON -DINTERFACES=OFF
 fi
 make
-# ctest -VV
+ctest -VV
 
 cd $builddir
-valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=$curdir/valgrind/dl_open.supp --verbose bin/run_all_tests
+# valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=$curdir/valgrind/dl_open.supp --verbose bin/run_all_tests
+# valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=$curdir/valgrind/dl_open.supp --verbose bin/ladel_run_all_tests
 #build/debug/bin/run_all_tests
 
 cd $builddir/CMakeFiles/qpalm.dir/src
 lcov --directory . --capture --o coverage.info -q
 lcov --list coverage.info
 genhtml coverage.info -q
-#google-chrome index.html
+# google-chrome index.html
 
 #matlab -nojvm -r 'try qpalm_mex_vs_matlab_test; catch; end; quit'
 
