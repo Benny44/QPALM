@@ -17,7 +17,7 @@ extern "C" {
 
 
 #ifdef USE_LADEL
-#include "ladel_types.h"
+#include "ladel.h"
 typedef ladel_double  c_float;
 typedef ladel_int     c_int;
 

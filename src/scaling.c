@@ -17,7 +17,7 @@ extern "C" {
 #include "scaling.h"
 #include "lin_alg.h"
 #ifdef USE_LADEL
-#include "ladel_scale.h"
+#include "ladel.h"
 #elif defined USE_CHOLMOD
 #include "cholmod.h"
 #endif

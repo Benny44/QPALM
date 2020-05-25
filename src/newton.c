@@ -14,17 +14,6 @@ extern "C" {
 #include "lin_alg.h"
 #include <stdio.h>
 
-#ifdef USE_LADEL
-#include "ladel.h"
-#include "ladel_copy.h"
-#include "ladel_global.h"
-#include "ladel_types.h"
-#include "ladel_row_mod.h"
-#include "ladel_debug_print.h"
-#elif defined USE_CHOLMOD
-#include "cholmod.h"
-#endif
-
 void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
 
     set_active_constraints(work);

@@ -4,9 +4,6 @@
 #include "global_opts.h"
 #include "constants.h"
 #include "util.h"
-#ifdef USE_LADEL
-#include "ladel_global.h"
-#endif
 
 #define N 2
 #define M 3

@@ -3,10 +3,6 @@
 #include "global_opts.h"
 #include "qpalm.h"
 #include "constants.h"
-#ifdef USE_LADEL
-#include "ladel_global.h"
-#include "ladel_upper_diag.h"
-#endif
 
 #define N 2
 #define M 3

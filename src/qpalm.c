@@ -26,12 +26,6 @@ extern "C" {
 
 #ifdef USE_LADEL
 #include "ladel.h"
-#include "ladel_scale.h"
-#include "ladel_copy.h"
-#include "ladel_global.h"
-#include "ladel_transpose.h"
-#include "ladel_debug_print.h"
-#include "ladel_upper_diag.h"
 #elif defined USE_CHOLMOD
 #include "cholmod.h"
 #include "cholmod_function.h"

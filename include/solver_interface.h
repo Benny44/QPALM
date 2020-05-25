@@ -50,7 +50,8 @@ void mat_tpose_vec(solver_sparse *A,
                    solver_common *c);
 
 #ifdef USE_LADEL
-#include "ladel_scale.h"
+#include "ladel.h"
+
 #define mat_inf_norm_cols ladel_infinity_norm_columns
 #define mat_inf_norm_rows ladel_infinity_norm_rows
 

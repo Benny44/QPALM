@@ -15,7 +15,7 @@ extern "C" {
 #include "global_opts.h"
 
 #ifdef USE_LADEL
-#include "ladel_types.h"
+#include "ladel.h"
 typedef ladel_work            solver_common;
 typedef ladel_sparse_matrix   solver_sparse;
 typedef ladel_double          solver_dense;

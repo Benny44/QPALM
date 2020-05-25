@@ -2,9 +2,6 @@
 #include "qpalm.h"
 #include "global_opts.h"
 #include "constants.h"
-#ifdef USE_LADEL
-#include "ladel_global.h"
-#endif
 
 #define N 3
 #define M 4

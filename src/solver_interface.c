@@ -14,9 +14,7 @@
 #include <stdio.h>
 
 #ifdef USE_LADEL
-#include "ladel_matvec.h"
-#include "ladel_copy.h"
-#include "ladel_scale.h"
+#include "ladel.h"
 
 void mat_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c) 
 {
@@ -181,6 +179,7 @@ void kkt_solve(QPALMWorkspace *work, solver_common *c)
 }
 
 #elif defined USE_CHOLMOD
+#include "cholmod.h"
 
 void mat_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c) {
     double one [2] = {1,0};

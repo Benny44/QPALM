@@ -99,7 +99,7 @@ extern "C" {
 # define MAX_RANK_UPDATE 160 /**< maximum rank for the sparse factorization update */
 
 #ifdef USE_LADEL
-#include "ladel_constants.h"
+#include "ladel.h"
 # define ORDERING AMD
 #elif defined USE_CHOLMOD
 # define ORDERING 0
