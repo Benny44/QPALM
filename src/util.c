@@ -50,6 +50,7 @@ QPALMSettings* copy_settings(const QPALMSettings *settings) {
     new->dual_objective_limit     = settings->dual_objective_limit;
     new->time_limit               = settings->time_limit;
     new->ordering                 = settings->ordering;
+    new->factorization_method     = settings->factorization_method;
     return new;
 }
 

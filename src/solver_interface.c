@@ -13,6 +13,18 @@
 #include "solver_interface.h"
 #include <stdio.h>
 
+void qpalm_set_factorization_method(QPALMWorkspace *work)
+{
+  if (work->settings->factorization_method == FACTORIZE_KKT_OR_SCHUR)
+  {
+    /* TODO: determine criterion to set the factorization method depending on Q and A */
+    work->solver->factorization_method = FACTORIZE_KKT;
+  } else
+  {
+    work->solver->factorization_method = work->settings->factorization_method;
+  }
+}
+
 #ifdef USE_LADEL
 #include "ladel.h"
 

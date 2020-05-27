@@ -63,6 +63,7 @@ void qpalm_set_default_settings(QPALMSettings *settings) {
   settings->dual_objective_limit    = DUAL_OBJECTIVE_LIMIT;    /* termination value for the dual objective (useful in branch and bound) */
   settings->time_limit              = TIME_LIMIT;              /* time limit */
   settings->ordering                = ORDERING;                /* ordering */
+  settings->factorization_method    = FACTORIZATION_METHOD;    /* factorization method (kkt or schur) */
 }
 
 
@@ -110,9 +111,8 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   size_t n = data->n;
   size_t m = data->m;
 
-  //Initialize CHOLMOD and its settings
+  //Initialize the solver for the linear system
   work->solver = c_calloc(1, sizeof(QPALMSolver));
-  // work->solver->c = *c;
   solver_common common, *c;
   c = &common;
   #ifdef USE_LADEL
@@ -139,6 +139,8 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->data->A->stype = 0;   
   work->data->Q    = CHOLMOD(copy_sparse)(data->Q, c);     
   #endif
+
+  qpalm_set_factorization_method(work);
 
   // Allocate internal solver variables 
   work->x        = c_calloc(n, sizeof(c_float));

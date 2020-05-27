@@ -144,12 +144,14 @@ typedef struct {
   c_float dual_objective_limit;     ///< termination value for the dual objective (useful in branch and bound) @details @note Assumption: none
   c_float time_limit;               ///< time limit @details @note Assumption: @f$>0@f$
   c_int   ordering;                 ///< ordering method for factorization
+  c_int   factorization_method;     ///< factorize KKT or Schur complement
 } QPALMSettings;
 
 /**
  * Variables for linear system solving 
  */
 typedef struct {
+  c_int factorization_method;   ///< factorize KKT or Schur complement
   solver_sparse *kkt;           ///< KKT matrix
   solver_sparse *kkt_full;      ///< KKT matrix if all constraints would be active
   solver_sparse *At;            ///< A'
