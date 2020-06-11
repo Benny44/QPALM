@@ -49,6 +49,8 @@ void mat_tpose_vec(solver_sparse *A,
                    solver_dense  *y,
                    solver_common *c);
 
+void qpalm_set_factorization_method(QPALMWorkspace *work);
+
 #ifdef USE_LADEL
 #include "ladel.h"
 

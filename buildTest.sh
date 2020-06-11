@@ -50,10 +50,10 @@ elif [ $solver = "ladel" ]; then
   cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_LADEL=ON -DINTERFACES=OFF
 fi
 make
-ctest -VV
+# ctest -VV
 
 cd $builddir
-# valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=$curdir/valgrind/dl_open.supp --verbose bin/run_all_tests
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=$curdir/valgrind/dl_open.supp --verbose bin/run_all_tests
 # valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=$curdir/valgrind/dl_open.supp --verbose bin/ladel_run_all_tests
 #build/debug/bin/run_all_tests
 

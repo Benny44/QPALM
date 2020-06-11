@@ -18,55 +18,59 @@ void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
 
     set_active_constraints(work);
     set_entering_leaving_constraints(work);
-    #ifdef USE_LADEL
-    ladel_diag d;
-    d.diag_elem = 1.0/work->gamma;
-    if (work->settings->proximal) d.diag_size = work->data->n;
-    else d.diag_size = 0;
-
-    if (work->solver->first_factorization)
+    if (work->solver->factorization_method == FACTORIZE_KKT)
     {
-        qpalm_form_kkt(work);
-        work->solver->LD = ladel_factor_free(work->solver->LD);
-        ladel_factorize_advanced_with_diag(work->solver->kkt, d, work->solver->sym, work->settings->ordering, &work->solver->LD, work->solver->kkt_full, c);
-        work->solver->first_factorization = FALSE;
+        #ifdef USE_LADEL 
+        // NB FACTORIZE_KKT only defined with LADEL for now
+        // TODO (optionally) extract the ladel functions and bury them, use cholmod also for kkt
+        ladel_diag d;
+        d.diag_elem = 1.0/work->gamma;
+        if (work->settings->proximal) d.diag_size = work->data->n;
+        else d.diag_size = 0;
+
+        if (work->solver->first_factorization)
+        {
+            qpalm_form_kkt(work);
+            work->solver->LD = ladel_factor_free(work->solver->LD);
+            ladel_factorize_advanced_with_diag(work->solver->kkt, d, work->solver->sym, work->settings->ordering, &work->solver->LD, work->solver->kkt_full, c);
+            work->solver->first_factorization = FALSE;
+        } 
+        else if (work->solver->reset_newton || 
+                (work->solver->nb_enter + work->solver->nb_leave) > 0.1*(work->data->n+work->data->m)) 
+        {
+            qpalm_reform_kkt(work);
+            ladel_factorize_with_prior_basis_with_diag(work->solver->kkt, d, work->solver->sym, work->solver->LD, c);
+        }
+        else 
+        {
+            if(work->solver->nb_enter) 
+                kkt_update_entering_constraints(work, c);
+
+            if (work->solver->nb_leave)
+                kkt_update_leaving_constraints(work, c);
+        }
+
+        kkt_solve(work, c);
+        #endif
+    } else if (work->solver->factorization_method == FACTORIZE_SCHUR)
+    {
+        // work->solver->reset_newton = TRUE;
+        if ((work->solver->reset_newton && work->solver->nb_active_constraints) || 
+            (work->solver->nb_enter + work->solver->nb_leave) > MAX_RANK_UPDATE) {
+            ldlcholQAtsigmaA(work, c);   
+        } else if (work->solver->nb_active_constraints) {
+            if(work->solver->nb_enter) {
+                ldlupdate_entering_constraints(work, c);
+            }
+            if(work->solver->nb_leave) {
+                ldldowndate_leaving_constraints(work, c); 
+            }
+        } else {
+            ldlchol(work->data->Q, work, c);
+        }
+        ldlsolveLD_neg_dphi(work, c);
     } 
-    else if (work->solver->reset_newton || 
-            (work->solver->nb_enter + work->solver->nb_leave) > 0.1*(work->data->n+work->data->m)) 
-    {
-        qpalm_reform_kkt(work);
-        ladel_factorize_with_prior_basis_with_diag(work->solver->kkt, d, work->solver->sym, work->solver->LD, c);
-        
-    }
-    else 
-    {
-        if(work->solver->nb_enter) 
-            kkt_update_entering_constraints(work, c);
-
-        if (work->solver->nb_leave)
-            kkt_update_leaving_constraints(work, c);
-    }
-
-    kkt_solve(work, c);
-
-    #elif defined USE_CHOLMOD
-    if ((work->solver->reset_newton && work->solver->nb_active_constraints) || 
-        (work->solver->nb_enter + work->solver->nb_leave) > MAX_RANK_UPDATE) {
-        ldlcholQAtsigmaA(work, c);   
-    } else if (work->solver->nb_active_constraints) {
-        if(work->solver->nb_enter) {
-            ldlupdate_entering_constraints(work, c);
-        }
-        if(work->solver->nb_leave) {
-            ldldowndate_leaving_constraints(work, c); 
-        }
-    } else {
-        ldlchol(work->data->Q, work, c);
-    }
-
-    ldlsolveLD_neg_dphi(work, c);
-    #endif /* USE_CHOLMOD */
-
+    
     //Store old active set
     prea_int_vec_copy(work->solver->active_constraints, work->solver->active_constraints_old, work->data->m);
 

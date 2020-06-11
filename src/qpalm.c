@@ -232,8 +232,25 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->solver->leave = c_calloc(m, sizeof(c_int));
 
   #ifdef USE_LADEL
-  work->solver->rhs_kkt = c_malloc((n+m)*sizeof(c_float));
-  work->solver->sol_kkt = c_malloc((n+m)*sizeof(c_float));
+  if (work->solver->factorization_method == FACTORIZE_KKT)
+  {
+    work->solver->rhs_kkt = c_malloc((n+m)*sizeof(c_float));
+    work->solver->sol_kkt = c_malloc((n+m)*sizeof(c_float));
+    c_int kkt_nzmax = work->data->Q->nzmax + work->data->A->nzmax + m;
+    work->solver->kkt_full = ladel_sparse_alloc(n+m, n+m, kkt_nzmax, UPPER, TRUE, FALSE);
+    work->solver->kkt = ladel_sparse_alloc(n+m, n+m, kkt_nzmax, UPPER, TRUE, TRUE);
+    work->solver->first_row_A = c_malloc(m*sizeof(c_int));
+    work->solver->first_elem_A = c_malloc(m*sizeof(c_float));
+    work->solver->sym = ladel_symbolics_alloc(m+n);
+
+    c->array_int_ncol1 = work->index_L; /* Avoid allocating full workspace */
+    work->solver->At = ladel_transpose(work->data->A, TRUE, c);
+    c->array_int_ncol1 = NULL;
+  } else if (work->solver->factorization_method == FACTORIZE_SCHUR)
+  {
+
+  }
+  
   work->solver->neg_dphi = c_calloc(n, sizeof(c_float));
   work->neg_dphi = work->solver->neg_dphi; 
   work->solver->d = c_calloc(n, sizeof(c_float));
@@ -249,19 +266,9 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->solver->At_scale = c_calloc(m, sizeof(c_float));
 
   work->solver->first_factorization = TRUE;
-  c_int kkt_nzmax = work->data->Q->nzmax + work->data->A->nzmax + m;
-  work->solver->kkt_full = ladel_sparse_alloc(n+m, n+m, kkt_nzmax, UPPER, TRUE, FALSE);
-  work->solver->kkt = ladel_sparse_alloc(n+m, n+m, kkt_nzmax, UPPER, TRUE, TRUE);
-  work->solver->first_row_A = c_malloc(m*sizeof(c_int));
-  work->solver->first_elem_A = c_malloc(m*sizeof(c_float));
-
-  work->solver->sym = ladel_symbolics_alloc(m+n);
+  
   if (work->settings->enable_dual_termination)
     work->solver->sym_Q = ladel_symbolics_alloc(n);
-
-  c->array_int_ncol1 = work->index_L; /* Avoid allocating full workspace */
-  work->solver->At = ladel_transpose(work->data->A, TRUE, c);
-  c->array_int_ncol1 = NULL;
 
   #elif defined USE_CHOLMOD
   work->solver->neg_dphi = CHOLMOD(allocate_dense)(n, 1, n, CHOLMOD_REAL, c);
@@ -424,10 +431,18 @@ void qpalm_solve(QPALMWorkspace *work) {
   solver_common common, *c;
   c = &common;
   #ifdef USE_LADEL
-  c = ladel_workspace_allocate(n+m);
+  if (work->solver->factorization_method == FACTORIZE_KKT)
+  {
+    c = ladel_workspace_allocate(n+m);
+  } else if (work->solver->factorization_method == FACTORIZE_SCHUR)
+  {
+    c = ladel_workspace_allocate(n);
+  }
   ladel_work *c2;
-  if (work->settings->enable_dual_termination) 
+  if (work->settings->enable_dual_termination && work->solver->factorization_method == FACTORIZE_KKT) 
     c2 = ladel_workspace_allocate(n);
+  else
+    c2 = c;
   #elif defined USE_CHOLMOD
   CHOLMOD(start)(c);
   cholmod_set_settings(c);
@@ -695,10 +710,13 @@ void qpalm_update_settings(QPALMWorkspace* work, const QPALMSettings *settings) 
     work->solver->first_factorization = TRUE;
     solver_common common, *c;
     c = &common;
-    c->array_int_ncol1 = work->index_L; 
-    work->solver->At = ladel_sparse_free(work->solver->At);
-    work->solver->At = ladel_transpose(work->data->A, TRUE, c);
-    c->array_int_ncol1 = NULL;
+    if (work->solver->factorization_method == FACTORIZE_KKT)
+    {
+      c->array_int_ncol1 = work->index_L; 
+      work->solver->At = ladel_sparse_free(work->solver->At);
+      work->solver->At = ladel_transpose(work->data->A, TRUE, c);
+      c->array_int_ncol1 = NULL;
+    }
     #endif
   }
  
@@ -763,9 +781,12 @@ void qpalm_update_q(QPALMWorkspace *work, const c_float *q) {
     c = &common;
     #ifdef USE_LADEL
     ladel_scale_scalar(work->data->Q, c_ratio);
-    ladel_int index;
-    for (index = 0; index < work->data->Q->nzmax; index++) 
-      work->solver->kkt->x[index] *= c_ratio;
+    if (work->solver->factorization_method == FACTORIZE_KKT)
+    {
+      ladel_int index;
+      for (index = 0; index < work->data->Q->nzmax; index++) 
+        work->solver->kkt->x[index] *= c_ratio;
+    }
     work->solver->reset_newton = TRUE;
     #elif defined USE_CHOLMOD
     CHOLMOD(start)(c);

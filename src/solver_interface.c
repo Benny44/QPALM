@@ -13,8 +13,13 @@
 #include "solver_interface.h"
 #include <stdio.h>
 
+#ifdef USE_LADEL
+#include "ladel.h"
+#endif
+
 void qpalm_set_factorization_method(QPALMWorkspace *work)
 {
+  #ifdef USE_LADEL
   if (work->settings->factorization_method == FACTORIZE_KKT_OR_SCHUR)
   {
     /* TODO: determine criterion to set the factorization method depending on Q and A */
@@ -23,10 +28,14 @@ void qpalm_set_factorization_method(QPALMWorkspace *work)
   {
     work->solver->factorization_method = work->settings->factorization_method;
   }
+
+  #elif defined USE_CHOLMOD
+  work->solver->factorization_method = FACTORIZE_SCHUR;
+  #endif
 }
 
+
 #ifdef USE_LADEL
-#include "ladel.h"
 
 void mat_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c) 
 {
@@ -66,6 +75,7 @@ void mat_tpose_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_co
     }
 }
 
+// TODO: incorporate the factorizations here also, and write a version of FACTORIZE_KKT using cholmod 
 void qpalm_form_kkt(QPALMWorkspace *work)
 {
     solver_sparse *Q = work->data->Q, *A = work->data->A, *kkt = work->solver->kkt, *kkt_full = work->solver->kkt_full, *At = work->solver->At;
@@ -256,8 +266,20 @@ void mat_inf_norm_rows(solver_sparse *M, c_float *E) {
     }
   }
 }
+#endif 
 
-void ldlchol(cholmod_sparse *M, QPALMWorkspace *work, solver_common *c) {
+
+void ldlchol(solver_sparse *M, QPALMWorkspace *work, solver_common *c) {
+  #ifdef USE_LADEL
+  work->solver->LD = ladel_factor_free(work->solver->LD);
+  ladel_diag d;
+  d.diag_elem = 1.0/work->gamma;
+  if (work->settings->proximal) d.diag_size = work->data->n;
+  else d.diag_size = 0;
+  // TODO: consider ordering for SCHUR complement
+  ladel_factorize_with_diag(M, d, work->solver->sym, NO_ORDERING, &work->solver->LD, c);
+
+  #elif defined USE_CHOLMOD
   if (work->solver->LD) {
       CHOLMOD(free_factor)(&work->solver->LD, c);
   }
@@ -280,12 +302,12 @@ void ldlchol(cholmod_sparse *M, QPALMWorkspace *work, solver_common *c) {
       }
   }
   #endif /* DLONG */
-
+  #endif /* USE_CHOLMOD */
 }
 
 void ldlcholQAtsigmaA(QPALMWorkspace *work, solver_common *c) {
-  cholmod_sparse *AtsigmaA;
-  cholmod_sparse *QAtsigmaA;
+  solver_sparse *AtsigmaA;
+  solver_sparse *QAtsigmaA;
   size_t nb_active = 0;
   for (size_t i = 0; i < work->data->m; i++) {
       if (work->solver->active_constraints[i]){
@@ -293,70 +315,121 @@ void ldlcholQAtsigmaA(QPALMWorkspace *work, solver_common *c) {
           nb_active++;
       }      
   }
+  #ifdef USE_LADEL
+  solver_sparse *At_sqrt_sigma = ladel_column_submatrix(work->solver->At_sqrt_sigma, work->solver->enter, nb_active);
+  solver_sparse *A_sqrt_sigma = ladel_transpose(At_sqrt_sigma, TRUE, c);
+  AtsigmaA = ladel_mat_mat_transpose(At_sqrt_sigma, A_sqrt_sigma, c);
+  QAtsigmaA = ladel_add_matrices(1.0, work->data->Q, 1.0, AtsigmaA, c);
+  QAtsigmaA->symmetry = UPPER;
+  #elif defined USE_CHOLMOD
   AtsigmaA = CHOLMOD(aat)(work->solver->At_sqrt_sigma, work->solver->enter, nb_active, TRUE, c);
   double one [2] = {1,0};
   QAtsigmaA = CHOLMOD(add)(work->data->Q, AtsigmaA, one, one, TRUE, FALSE, c);
   QAtsigmaA->stype = work->data->Q->stype;
-  
+  #endif
   ldlchol(QAtsigmaA, work, c);
 
+  #ifdef USE_LADEL
+  AtsigmaA = ladel_sparse_free(AtsigmaA);
+  QAtsigmaA = ladel_sparse_free(QAtsigmaA);
+  At_sqrt_sigma = ladel_sparse_free(At_sqrt_sigma);
+  A_sqrt_sigma = ladel_sparse_free(A_sqrt_sigma);
+  #elif defined USE_CHOLMOD
   CHOLMOD(free_sparse)(&AtsigmaA, c);
   CHOLMOD(free_sparse)(&QAtsigmaA, c);
+  #endif
 }
 
 void ldlupdate_entering_constraints(QPALMWorkspace *work, solver_common *c) {
-  cholmod_sparse *Ae;
+  #ifdef USE_LADEL
+  ladel_int index;
+  for (index = 0; index < work->solver->nb_enter; index++)
+  {
+    ladel_rank1_update(work->solver->LD, work->solver->sym, work->solver->At_sqrt_sigma, 
+                        work->solver->enter[index], 1.0, UPDATE, c);
+  }
+  #elif defined USE_CHOLMOD
+  solver_sparse *Ae;
   Ae = CHOLMOD(submatrix)(work->solver->At_sqrt_sigma, NULL, -1, 
                       work->solver->enter, work->solver->nb_enter, TRUE, TRUE, c);
   //LD = ldlupdate(LD,Ae,'+');
   CHOLMOD(updown)(TRUE, Ae, work->solver->LD, c);
   CHOLMOD(free_sparse)(&Ae, c);
+  #endif
 }
 
 void ldldowndate_leaving_constraints(QPALMWorkspace *work, solver_common *c) {
+  #ifdef USE_LADEL
+  ladel_int index;
+  for (index = 0; index < work->solver->nb_leave; index++)
+  {
+    ladel_rank1_update(work->solver->LD, work->solver->sym, work->solver->At_sqrt_sigma, 
+                        work->solver->leave[index], 1.0, DOWNDATE, c);
+  }
+  #elif defined USE_CHOLMOD
   cholmod_sparse *Al;
   Al = CHOLMOD(submatrix)(work->solver->At_sqrt_sigma, NULL, -1, 
                       work->solver->leave, work->solver->nb_leave, TRUE, TRUE, c);
   //LD = ldlupdate(LD,Ae,'+');
   CHOLMOD(updown)(FALSE, Al, work->solver->LD, c);
   CHOLMOD(free_sparse)(&Al, c);
+  #endif
 }
 
 void ldlupdate_sigma_changed(QPALMWorkspace *work, solver_common *c) {
-  cholmod_sparse *Ae;
-  c_float *At_scalex = work->solver->At_scale->x;
   c_int *sigma_changed = work->solver->enter;
-
   size_t k, nb_sigma_changed = (size_t) work->nb_sigma_changed;
-  for (k=0; k < nb_sigma_changed; k++) {
+  
+  #ifdef USE_LADEL
+  c_float *At_scalex = work->solver->At_scale;
+  #elif defined USE_CHOLMOD
+  solver_sparse *Ae;
+  c_float *At_scalex = work->solver->At_scale->x;
+  #endif
+  
+  for (k = 0; k < nb_sigma_changed; k++) {
     At_scalex[sigma_changed[k]]= c_sqrt(1-1/(At_scalex[sigma_changed[k]]*At_scalex[sigma_changed[k]])); 
   }
 
+  #ifdef USE_LADEL
+  for (k = 0; k < nb_sigma_changed; k++)
+  {
+    ladel_rank1_update(work->solver->LD, work->solver->sym, work->solver->At_sqrt_sigma, 
+                        sigma_changed[k], At_scalex[sigma_changed[k]], UPDATE, c);
+  }
+  #elif defined USE_CHOLMOD
   CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
   Ae = CHOLMOD(submatrix)(work->solver->At_sqrt_sigma, NULL, -1, 
                       sigma_changed, work->nb_sigma_changed, TRUE, TRUE, c);
-  for (k=0; k < work->data->m; k++) {
-    At_scalex[k]=1.0/At_scalex[k]; 
-  }
-  CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
   //LD = ldlupdate(LD,Ae,'+');
   CHOLMOD(updown)(TRUE, Ae, work->solver->LD, c);
   CHOLMOD(free_sparse)(&Ae, c);
+
+  for (k = 0; k < work->data->m; k++) {
+    At_scalex[sigma_changed[k]]= 1.0/At_scalex[sigma_changed[k]]; 
+  }
+  CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
+  #endif  
 }
 
 void ldlsolveLD_neg_dphi(QPALMWorkspace *work, solver_common *c) {
   //set -dphi
   prea_vec_copy(work->dphi, work->neg_dphi, work->data->n);
   vec_self_mult_scalar(work->neg_dphi, -1, work->data->n);
+  #ifdef USE_LADEL
+  ladel_dense_solve(work->solver->LD, work->neg_dphi, work->d, c);
+  #elif defined USE_CHOLMOD
   //d = ldlsolve(LD, -dphi)
   if (work->solver->d) {
       CHOLMOD(free_dense)(&work->solver->d, c);
   }
   work->solver->d = CHOLMOD(solve) (CHOLMOD_LDLt, work->solver->LD, work->solver->neg_dphi, c);
   work->d = work->solver->d->x;
+  #endif
 }
 
-
+#ifdef USE_LADEL
+#elif defined USE_CHOLMOD
 void cholmod_set_settings(solver_common *c) {
   //Suitesparse memory allocation functions
   SuiteSparse_config.malloc_func = c_malloc;

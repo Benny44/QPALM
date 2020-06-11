@@ -64,6 +64,13 @@ void initialize_sigma(QPALMWorkspace *work, solver_common *c) {
     work->sqrt_sigma_max = c_sqrt(work->settings->sigma_max);
     
     #ifdef USE_LADEL
+    if (work->settings->factorization_method == FACTORIZE_SCHUR)
+    {
+        work->solver->At_sqrt_sigma = ladel_sparse_free(work->solver->At_sqrt_sigma);
+        work->solver->At_sqrt_sigma = ladel_transpose(work->data->A, TRUE, c);
+        ladel_scale_columns(work->solver->At_sqrt_sigma, work->sqrt_sigma);
+    }
+
     #elif defined USE_CHOLMOD
     c_float *At_scalex = work->solver->At_scale->x;
     prea_vec_copy(work->sqrt_sigma, At_scalex, m);
@@ -78,6 +85,7 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
     
     work->nb_sigma_changed = 0;
     #ifdef USE_LADEL
+    c_float *At_scalex = work->solver->At_scale;
     #elif defined USE_CHOLMOD
     c_float *At_scalex = work->solver->At_scale->x;
     #endif
@@ -98,10 +106,8 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
                 work->sigma_inv[k] = 1.0/sigma_temp;
                 mult_factor = c_sqrt(mult_factor);
                 work->sqrt_sigma[k] = mult_factor * work->sqrt_sigma[k];
-                #ifdef USE_LADEL
-                #elif defined USE_CHOLMOD
-                At_scalex[k] = mult_factor;
-                #endif
+                if (work->solver->factorization_method == FACTORIZE_SCHUR) 
+                    At_scalex[k] = mult_factor;
             } else {
                 if (work->sigma[k] != work->settings->sigma_max) {
                     sigma_changed[work->nb_sigma_changed] = (c_int)k;
@@ -109,36 +115,34 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
                 } 
                 work->sigma[k] = work->settings->sigma_max;
                 work->sigma_inv[k] = 1.0/work->settings->sigma_max;
-                #ifdef USE_LADEL
-                #elif defined USE_CHOLMOD
-                At_scalex[k] = work->sqrt_sigma_max / work->sqrt_sigma[k];
-                #endif
+                if (work->solver->factorization_method == FACTORIZE_SCHUR) 
+                    At_scalex[k] = work->sqrt_sigma_max / work->sqrt_sigma[k];
                 work->sqrt_sigma[k] = work->sqrt_sigma_max;
             }
         } else {
-            #ifdef USE_LADEL
-            #elif defined USE_CHOLMOD
-            At_scalex[k] = 1.0;
-            #endif
+            if (work->solver->factorization_method == FACTORIZE_SCHUR)
+                At_scalex[k] = 1.0;
         }
     }
 
     #ifdef USE_LADEL
-    work->solver->reset_newton = TRUE;
     // TODO implement updating sigma in KKT system
+    if (work->solver->factorization_method == FACTORIZE_SCHUR)
+        ladel_scale_columns(work->solver->At_sqrt_sigma, work->solver->At_scale);
     #elif defined USE_CHOLMOD
     CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
-
-    if ((work->settings->proximal && work->gamma < work->settings->gamma_max) || (work->nb_sigma_changed > 0.25*MAX_RANK_UPDATE)) {
-        work->solver->reset_newton = TRUE;
-      } else if (work->nb_sigma_changed == 0){
-        /* do nothing */
-      } else {  
-          ldlupdate_sigma_changed(work, c);
-    }
-
     #endif
 
+    if (work->solver->factorization_method == FACTORIZE_KKT || 
+        (work->settings->proximal && work->gamma < work->settings->gamma_max) || 
+        (work->nb_sigma_changed > 0.25*MAX_RANK_UPDATE)) 
+    {
+        work->solver->reset_newton = TRUE;
+    } else if (work->nb_sigma_changed == 0){
+        /* do nothing */
+    } else {  
+          ldlupdate_sigma_changed(work, c);
+    }
 }
 
 void update_gamma(QPALMWorkspace *work) {
