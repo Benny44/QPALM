@@ -67,7 +67,9 @@ void initialize_sigma(QPALMWorkspace *work, solver_common *c) {
     if (work->settings->factorization_method == FACTORIZE_SCHUR)
     {
         work->solver->At_sqrt_sigma = ladel_sparse_free(work->solver->At_sqrt_sigma);
+        c->array_int_ncol1 = work->index_L; /* Avoid allocating full workspace */
         work->solver->At_sqrt_sigma = ladel_transpose(work->data->A, TRUE, c);
+        c->array_int_ncol1 = NULL;
         ladel_scale_columns(work->solver->At_sqrt_sigma, work->sqrt_sigma);
     }
 

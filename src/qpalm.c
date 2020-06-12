@@ -248,7 +248,7 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
     c->array_int_ncol1 = NULL;
   } else if (work->solver->factorization_method == FACTORIZE_SCHUR)
   {
-
+      work->solver->sym = ladel_symbolics_alloc(n);
   }
   
   work->solver->neg_dphi = c_calloc(n, sizeof(c_float));
@@ -488,7 +488,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       #ifdef USE_LADEL
       c = ladel_workspace_free(c);
-      if (work->settings->enable_dual_termination) 
+      if (work->settings->enable_dual_termination && work->solver->factorization_method == FACTORIZE_KKT) 
         c2 = ladel_workspace_free(c2);
       #elif defined USE_CHOLMOD
       CHOLMOD(finish)(c);
@@ -527,7 +527,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
           #ifdef USE_LADEL
           ladel_workspace_free(c);
-          if (work->settings->enable_dual_termination) 
+          if (work->settings->enable_dual_termination && work->solver->factorization_method == FACTORIZE_KKT) 
             c2 = ladel_workspace_free(c2);
           #elif defined USE_CHOLMOD
           CHOLMOD(finish)(c);
@@ -629,7 +629,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       #ifdef USE_LADEL
       ladel_workspace_free(c);
-      if (work->settings->enable_dual_termination) 
+      if (work->settings->enable_dual_termination && work->solver->factorization_method == FACTORIZE_KKT)
         c2 = ladel_workspace_free(c2);
       #elif defined USE_CHOLMOD
       CHOLMOD(finish)(c);
@@ -659,7 +659,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
   #ifdef USE_LADEL
   ladel_workspace_free(c);
-  if (work->settings->enable_dual_termination) 
+  if (work->settings->enable_dual_termination && work->solver->factorization_method == FACTORIZE_KKT) 
         c2 = ladel_workspace_free(c2);
   #elif defined USE_CHOLMOD
   CHOLMOD(finish)(c);
