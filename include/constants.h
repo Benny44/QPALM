@@ -63,7 +63,7 @@ extern "C" {
 #endif /* ifndef QPALM_INFTY */
 
 
-#define MAX_ITER (100)       /**< default maximum number of iterations */
+#define MAX_ITER (10000)       /**< default maximum number of iterations */
 #define INNER_MAX_ITER (100)   /**< default maximum number of iterations per subproblem */
 #define EPS_ABS (1e-4)         /**< default absolute convergence tolerance */
 #define EPS_REL (1e-4)         /**< default relative convergence tolerance */
@@ -102,7 +102,7 @@ extern "C" {
 #define FACTORIZE_SCHUR 1 /**< factorize the Schur complement */
 #define FACTORIZE_KKT_OR_SCHUR 2 /**< select automatically between kkt system and schur complement */
 
-#define FACTORIZATION_METHOD FACTORIZE_KKT_OR_SCHUR /**< default method for solving the linear system */
+#define FACTORIZATION_METHOD FACTORIZE_KKT /**< default method for solving the linear system */
 
 #ifdef USE_LADEL
 #include "ladel.h"

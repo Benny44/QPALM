@@ -39,3 +39,4 @@ buildQPS.sh
 /simulations/install_mpt.m
 /simulations/tbxmanager/*
 Testing
+private
