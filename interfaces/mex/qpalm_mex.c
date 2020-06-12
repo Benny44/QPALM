@@ -4,9 +4,14 @@
 #include "qpalm.h"
 #include "util.h"
 #include "constants.h"
+#ifdef USE_LADEL
+#include "ladel.h"
+#include "ladel_mex_util.h"
+#elif defined USE_CHOLMOD
 #include "cholmod.h"
 #include "cholmod_matlab.h"
 #include "cholmod_function.h"
+#endif
 
 //Modes of operation
 #define MODE_DEFAULT_SETTINGS "default_settings"
@@ -60,7 +65,9 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",                  //c_int
                                       "enable_dual_termination",    //c_int
                                       "dual_objective_limit",       //c_int
                                       "time_limit",                 //c_float
-                                      "verbose"};                   //c_int
+                                      "verbose",                    //c_int
+                                      "ordering",                   //c_int
+                                      "factorization_method"};      //c_int                   
 
 
 // internal utility functions
@@ -167,12 +174,17 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         data->bmin = mxGetPr(bmin);
         data->bmax = mxGetPr(bmax);
 
-        // Convert matrices from matlab to cholmod_sparse
-        double dummy = 0; 
-        cholmod_sparse Amatrix, Qmatrix;
-        
+        // Convert matrices from matlab to C structure (LADEL/CHOLMOD)
+        solver_sparse Amatrix, Qmatrix;
+        #ifdef USE_LADEL
+        data->A = ladel_get_sparse_from_matlab(A, &Amatrix, UNSYMMETRIC);
+        data->Q = ladel_get_sparse_from_matlab(Q, &Qmatrix, UPPER);
+        ladel_to_upper_diag(data->Q);
+        #elif defined USE_CHOLMOD
+        double dummy = 0;
         data->A = sputil_get_sparse(A, &Amatrix, &dummy, 0);
         data->Q = sputil_get_sparse(Q, &Qmatrix, &dummy, -1);//Q is symmetric, use only lower part
+        #endif
 
         // Create Settings
         const mxArray* mxSettings = prhs[8];
@@ -191,7 +203,7 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
             mexErrMsgTxt("Invalid problem setup");
         }
 
-         //cleanup temporary structures
+         // cleanup temporary structures
          // Don't free data->q, data->bmin, data->bmin because they are pointers to the mxArrays
          // Don't free data->A and data->Q because they are only a shallow copy
          mxFree(data);
@@ -462,7 +474,9 @@ mxArray* copySettingsToMxStruct(QPALMSettings* settings){
   mxSetField(mxPtr, 0, "reset_newton_iter",         mxCreateDoubleScalar(settings->reset_newton_iter));
   mxSetField(mxPtr, 0, "enable_dual_termination",   mxCreateDoubleScalar(settings->enable_dual_termination));
   mxSetField(mxPtr, 0, "dual_objective_limit",      mxCreateDoubleScalar(settings->dual_objective_limit));
-  mxSetField(mxPtr, 0, "time_limit",      mxCreateDoubleScalar(settings->time_limit));
+  mxSetField(mxPtr, 0, "time_limit",                mxCreateDoubleScalar(settings->time_limit));
+  mxSetField(mxPtr, 0, "ordering",                  mxCreateDoubleScalar(settings->ordering));
+  mxSetField(mxPtr, 0, "factorization_method",      mxCreateDoubleScalar(settings->factorization_method));
 
   return mxPtr;
 }
@@ -500,6 +514,7 @@ void copyMxStructToSettings(const mxArray* mxPtr, QPALMSettings* settings){
   settings->reset_newton_iter         = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "reset_newton_iter"));
   settings->enable_dual_termination   = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "enable_dual_termination"));
   settings->dual_objective_limit      = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "dual_objective_limit"));
-  settings->time_limit      = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "time_limit"));
-
+  settings->time_limit                = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "time_limit"));
+  settings->ordering                  = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "ordering"));
+  settings->factorization_method      = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "factorization_method"));
 }
