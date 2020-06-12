@@ -16,16 +16,12 @@ extern "C" {
 
 #include "types.h"
 
-
-#ifdef USE_CHOLMOD
 /**
  * Sets work->d to the direction calculated by the semismooth Newton method
  * 
  * @param work Workspace
  */
 void newton_set_direction(QPALMWorkspace *work, solver_common *c);
-
-#endif /* USE_CHOLMOD */
 
 /**
  * Computes the set of active constraints and stores it in work->solver->active_constraints.

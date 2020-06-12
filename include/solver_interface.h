@@ -91,6 +91,17 @@ void mat_inf_norm_rows(solver_sparse *M,
                        c_float   *E);
 
 /**
+ * Cholmod settings to indicate that we use an @f$LDL^T@f$ factorization.
+ * 
+ * In addition, this function sets the suitesparse memory allocation function to our custom functions.
+ * 
+ * @param c Solver environment
+ */
+void cholmod_set_settings(solver_common *c);
+
+#endif /* USE_CHOLMOD */
+
+/**
  * Calculate @f$LDL^T@f$ factorization of a matrix @f$M@f$.
  * 
  * If work->settings->proximal = true, use @f$M+\frac{1}{\gamma}*I@f$ instead.
@@ -158,16 +169,6 @@ void ldlupdate_sigma_changed(QPALMWorkspace *work,
 void ldlsolveLD_neg_dphi(QPALMWorkspace *work,
                          solver_common *c);
 
-/**
- * Cholmod settings to indicate that we use an @f$LDL^T@f$ factorization.
- * 
- * In addition, this function sets the suitesparse memory allocation function to our custom functions.
- * 
- * @param c Solver environment
- */
-void cholmod_set_settings(solver_common *c);
-
-#endif /* USE_CHOLMOD */
 
 # ifdef __cplusplus
 }
