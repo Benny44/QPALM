@@ -283,7 +283,7 @@ void ldlchol(solver_sparse *M, QPALMWorkspace *work, solver_common *c) {
     /* Compute the pattern of Q+A^T*A to allocate L */
     solver_sparse *AtA, *QAtA;
     AtA = ladel_mat_mat_transpose_pattern(work->solver->At_sqrt_sigma, work->data->A, c);
-    QAtA = ladel_add_matrices_pattern(0, work->data->Q, 0, AtA, c);
+    QAtA = ladel_add_matrices_pattern(work->data->Q, AtA, c);
     QAtA->symmetry = UPPER;
 
     /* TODO: consider SCHUR method also with ordering */
