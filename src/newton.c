@@ -54,9 +54,8 @@ void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
         #endif
     } else if (work->solver->factorization_method == FACTORIZE_SCHUR)
     {
-        // work->solver->reset_newton = TRUE;
         if ((work->solver->reset_newton && work->solver->nb_active_constraints) || 
-            (work->solver->nb_enter + work->solver->nb_leave) > MAX_RANK_UPDATE) {
+            (work->solver->nb_enter + work->solver->nb_leave) > 0.1*(work->data->n+work->data->m)) {
             ldlcholQAtsigmaA(work, c);   
         } else if (work->solver->nb_active_constraints) {
             if(work->solver->nb_enter) {

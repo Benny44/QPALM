@@ -266,19 +266,37 @@ void mat_inf_norm_rows(solver_sparse *M, c_float *E) {
     }
   }
 }
-#endif 
+
+#endif /* USE_CHOLMOD */
 
 
 void ldlchol(solver_sparse *M, QPALMWorkspace *work, solver_common *c) {
   #ifdef USE_LADEL
-  work->solver->LD = ladel_factor_free(work->solver->LD);
   ladel_diag d;
   d.diag_elem = 1.0/work->gamma;
   if (work->settings->proximal) d.diag_size = work->data->n;
   else d.diag_size = 0;
-  // TODO: consider ordering for SCHUR complement
-  ladel_factorize_with_diag(M, d, work->solver->sym, NO_ORDERING, &work->solver->LD, c);
 
+  if (work->solver->first_factorization)
+  {
+    work->solver->LD = ladel_factor_free(work->solver->LD);
+    /* Compute the pattern of Q+A^T*A to allocate L */
+    solver_sparse *AtA, *QAtA;
+    AtA = ladel_mat_mat_transpose_pattern(work->solver->At_sqrt_sigma, work->data->A, c);
+    QAtA = ladel_add_matrices_pattern(0, work->data->Q, 0, AtA, c);
+    QAtA->symmetry = UPPER;
+
+    /* TODO: consider SCHUR method also with ordering */
+    ladel_factorize_advanced_with_diag(M, d, work->solver->sym, NO_ORDERING, &work->solver->LD, QAtA, c);
+    
+    ladel_sparse_free(AtA);
+    ladel_sparse_free(QAtA);
+    work->solver->first_factorization = FALSE;
+  }
+  else
+  {
+    ladel_factorize_with_prior_basis_with_diag(M, d, work->solver->sym, work->solver->LD, c);
+  }
   #elif defined USE_CHOLMOD
   if (work->solver->LD) {
       CHOLMOD(free_factor)(&work->solver->LD, c);
