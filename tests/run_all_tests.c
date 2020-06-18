@@ -10,6 +10,7 @@
 #include "test_validate.h"
 #include "test_error_handling.h"
 #include "test_ls_qp.h"
+#include "test_medium_qp.h"
 
 
 int main(){
@@ -17,6 +18,7 @@ int main(){
     MU_RUN_SUITE(suite_lin_alg);
     MU_RUN_SUITE(suite_solver);
     MU_RUN_SUITE(suite_basic_qp);
+    MU_RUN_SUITE(suite_medium_qp);
     MU_RUN_SUITE(suite_prim_inf_qp);
     MU_RUN_SUITE(suite_dua_inf_qp);
     MU_RUN_SUITE(suite_degen_hess);
