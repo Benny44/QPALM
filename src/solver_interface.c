@@ -422,9 +422,8 @@ void ldlupdate_sigma_changed(QPALMWorkspace *work, solver_common *c) {
   //LD = ldlupdate(LD,Ae,'+');
   CHOLMOD(updown)(TRUE, Ae, work->solver->LD, c);
   CHOLMOD(free_sparse)(&Ae, c);
-
   for (k = 0; k < work->data->m; k++) {
-    At_scalex[sigma_changed[k]]= 1.0/At_scalex[sigma_changed[k]]; 
+    At_scalex[k]= 1.0/At_scalex[k]; 
   }
   CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
   #endif  
