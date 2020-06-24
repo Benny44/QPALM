@@ -396,6 +396,7 @@ void ldldowndate_leaving_constraints(QPALMWorkspace *work, solver_common *c) {
 
 void ldlupdate_sigma_changed(QPALMWorkspace *work, solver_common *c) {
   c_int *sigma_changed = work->solver->enter;
+  c_int row;
   size_t k, nb_sigma_changed = (size_t) work->nb_sigma_changed;
   
   #ifdef USE_LADEL
@@ -406,15 +407,41 @@ void ldlupdate_sigma_changed(QPALMWorkspace *work, solver_common *c) {
   #endif
   
   for (k = 0; k < nb_sigma_changed; k++) {
-    At_scalex[sigma_changed[k]]= c_sqrt(1-1/(At_scalex[sigma_changed[k]]*At_scalex[sigma_changed[k]])); 
+    row = sigma_changed[k];
+    At_scalex[row] = At_scalex[row]*At_scalex[row];
+    if (work->solver->factorization_method == FACTORIZE_SCHUR) 
+      At_scalex[row] = c_sqrt(1-1/At_scalex[row]); 
   }
 
   #ifdef USE_LADEL
-  for (k = 0; k < nb_sigma_changed; k++)
+  if (work->solver->factorization_method == FACTORIZE_KKT)
   {
-    ladel_rank1_update(work->solver->LD, work->solver->sym, work->solver->At_sqrt_sigma, 
-                        sigma_changed[k], At_scalex[sigma_changed[k]], UPDATE, c);
+    ladel_sparse_matrix *W = ladel_sparse_alloc(work->data->n + work->data->m, 1, 1, UNSYMMETRIC, TRUE, FALSE);
+    W->p[0] = 0;
+    W->p[1] = 1;
+    W->x[0] = 1.0;
+    c_int row;
+    c_float factor;
+    for (k = 0; k < nb_sigma_changed; k++)
+    {
+      row = sigma_changed[k];
+      W->i[0] = (work->solver->LD->pinv) ? work->solver->LD->pinv[row] : row;
+      // ladel_print("Row: %d\n", row);
+      factor = work->sigma_inv[row]*(At_scalex[row] - 1.0);
+      // ladel_print("Factor: %f\n", factor);
+      ladel_rank1_update(work->solver->LD, work->solver->sym, W, 0, factor, UPDATE, c);
+    }
+    ladel_sparse_free(W);
+    work->solver->reset_newton = TRUE;
+  } else
+  {
+    for (k = 0; k < nb_sigma_changed; k++)
+    {
+      ladel_rank1_update(work->solver->LD, work->solver->sym, work->solver->At_sqrt_sigma, 
+                          sigma_changed[k], At_scalex[sigma_changed[k]], UPDATE, c);
+    }
   }
+  
   #elif defined USE_CHOLMOD
   CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
   Ae = CHOLMOD(submatrix)(work->solver->At_sqrt_sigma, NULL, -1, 

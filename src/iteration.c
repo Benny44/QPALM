@@ -109,8 +109,7 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
                 work->sigma_inv[k] = 1.0/sigma_temp;
                 mult_factor = c_sqrt(mult_factor);
                 work->sqrt_sigma[k] = mult_factor * work->sqrt_sigma[k];
-                if (work->solver->factorization_method == FACTORIZE_SCHUR) 
-                    At_scalex[k] = mult_factor;
+                At_scalex[k] = mult_factor;
             } else {
                 if (work->sigma[k] != work->settings->sigma_max) {
                     sigma_changed[work->nb_sigma_changed] = (c_int)k;
@@ -118,13 +117,11 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
                 } 
                 work->sigma[k] = work->settings->sigma_max;
                 work->sigma_inv[k] = 1.0/work->settings->sigma_max;
-                if (work->solver->factorization_method == FACTORIZE_SCHUR) 
-                    At_scalex[k] = work->sqrt_sigma_max / work->sqrt_sigma[k];
+                At_scalex[k] = work->sqrt_sigma_max / work->sqrt_sigma[k];
                 work->sqrt_sigma[k] = work->sqrt_sigma_max;
             }
         } else {
-            if (work->solver->factorization_method == FACTORIZE_SCHUR)
-                At_scalex[k] = 1.0;
+            At_scalex[k] = 1.0;
         }
     }
 
@@ -136,15 +133,14 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
     CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
     #endif
 
-    if (work->solver->factorization_method == FACTORIZE_KKT || 
-        (work->settings->proximal && work->gamma < work->settings->gamma_max) || 
-        (work->nb_sigma_changed > 0.25*MAX_RANK_UPDATE)) 
+    if ((work->settings->proximal && work->gamma < work->settings->gamma_max) || 
+        (work->nb_sigma_changed > c_min(0.1*(work->data->n+work->data->m), 0.25*MAX_RANK_UPDATE))) 
     {
         work->solver->reset_newton = TRUE;
     } else if (work->nb_sigma_changed == 0){
         /* do nothing */
-    } else {  
-          ldlupdate_sigma_changed(work, c);
+    } else {
+        ldlupdate_sigma_changed(work, c);
     }
 }
 
