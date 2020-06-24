@@ -163,7 +163,8 @@ void boost_gamma(QPALMWorkspace *work, solver_common *c) {
 
     c_float prev_gamma = work->gamma;
     if (work->solver->nb_active_constraints) {
-        solver_sparse *AtsigmaA;
+        // work->gamma = 1e10;
+        solver_sparse *AtsigmaA = NULL;
         size_t nb_active = 0;
         for (size_t i = 0; i < work->data->m; i++){
             if (work->solver->active_constraints[i]){
@@ -172,26 +173,30 @@ void boost_gamma(QPALMWorkspace *work, solver_common *c) {
             }      
         }
         #ifdef USE_LADEL
-        solver_sparse *A, *At;
+        ladel_print("BOOSTING GAMMA--------------------\n");
+        solver_sparse *A = NULL, *At = NULL;
         if (work->solver->factorization_method == FACTORIZE_KKT)
         {
-            size_t i;
-            At = ladel_column_submatrix(work->solver->At, work->solver->enter, nb_active);
-            A = ladel_transpose(At, TRUE, c);
-            for (i = 0; i < nb_active; i++) 
-                work->temp_m[i] = work->sigma[work->solver->enter[i]];
-            AtsigmaA = ladel_mat_diag_mat_transpose(At, A, work->temp_m, c);
+            work->gamma = 1e10;
+            // size_t i;
+            // At = ladel_column_submatrix(work->solver->At, work->solver->enter, nb_active);
+            // A = ladel_transpose(At, TRUE, c);
+            // for (i = 0; i < nb_active; i++) 
+            //     work->temp_m[i] = work->sigma[work->solver->enter[i]];
+            // AtsigmaA = ladel_mat_diag_mat_transpose(At, A, work->temp_m, c);
         } else if (work->solver->factorization_method == FACTORIZE_SCHUR)
         {
             At = ladel_column_submatrix(work->solver->At_sqrt_sigma, work->solver->enter, nb_active);
             A = ladel_transpose(At, TRUE, c);
             AtsigmaA = ladel_mat_mat_transpose(At, A, c);
+            work->gamma = c_max(work->settings->gamma_max, 1e14/gershgorin_max(AtsigmaA, work->temp_n, work->neg_dphi));
         }
         #elif defined USE_CHOLMOD
         AtsigmaA = CHOLMOD(aat)(work->solver->At_sqrt_sigma, work->solver->enter, nb_active, TRUE, c);
+        work->gamma = c_max(work->settings->gamma_max, 1e14/gershgorin_max(AtsigmaA, work->temp_n, work->neg_dphi));
         #endif 
 
-        work->gamma = c_max(work->settings->gamma_max, 1e14/gershgorin_max(AtsigmaA, work->temp_n, work->neg_dphi));
+        // work->gamma = c_max(work->settings->gamma_max, 1e14/gershgorin_max(AtsigmaA, work->temp_n, work->neg_dphi));
         work->gamma_maxed = TRUE;
         #ifdef USE_LADEL
         A = ladel_sparse_free(A);
@@ -208,7 +213,6 @@ void boost_gamma(QPALMWorkspace *work, solver_common *c) {
         vec_add_scaled(work->Qd, work->d, work->Qd, work->tau/work->gamma - work->tau/prev_gamma, work->data->n);
         work->solver->reset_newton = TRUE;
     }
-    c_print("Gamma boosted to %e\n", work->gamma);
 }
 
 void update_primal_iterate(QPALMWorkspace *work, solver_common *c) {
