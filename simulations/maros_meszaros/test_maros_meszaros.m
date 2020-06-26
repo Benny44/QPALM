@@ -20,8 +20,8 @@ out_maha             = cell(1, ll);
 out_osqp             = cell(1, ll);
 new                  = {};
 
-options.qpalm_matlab = true;
-options.qpalm_c = false;
+options.qpalm_matlab = false;
+options.qpalm_c = true;
 options.osqp = false;
 options.qpoases = false;
 options.gurobi = false;
@@ -41,8 +41,10 @@ Iter_gurobi = [];
 maros_files = {};
 Stats_qpalm_matlab = {};
 
-options.SCALING_ITER=2;
+options.SCALING_ITER=10;
 options.EPS_ABS=1e-6;
+options.VERBOSE = false;
+options.TIME_LIMIT = 3600; 
 
 for i = 1:ll
     baseFileName = Filename{i};
@@ -106,4 +108,6 @@ end
 n_values = 1:ll;
 
 save('../output/maros_meszaros');
+
+cd('tuning');
 

@@ -82,7 +82,7 @@ if options.qpalm_matlab
     for k = 1:n
         opts.solver = 'newton';
         opts.scalar_sig = false;
-        opts.maxiter = MAXITER;
+        opts.maxiter = 50000;
         opts.eps_abs = EPS_ABS;
         opts.eps_rel = EPS_REL;
         opts.eps_abs_in = min(EPS_ABS*1e6, 1);
@@ -97,6 +97,7 @@ if options.qpalm_matlab
         opts.Delta   = 100;
         opts.scaling = 'simple';
         opts.scaling_iter = SCALING_ITER;
+        opts.linsys = 2;
         tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,A,lbA,ubA,x_warm_start,y_warm_start,opts);
         qpalm_time = toc;
         t(k) = qpalm_time;
@@ -125,18 +126,22 @@ if options.qpalm_c
         settings = solver.default_settings();
         
         settings.verbose = VERBOSE;
-        settings.scaling = SCALING_ITER;
+        settings.scaling = 10;
         settings.max_iter = 50000;
         settings.eps_abs_in = min(EPS_ABS*1e6, 1);
         settings.eps_rel_in = min(EPS_REL*1e6, 1);
+        settings.rho = 0.1;
         settings.eps_abs = EPS_ABS;
         settings.eps_rel = EPS_REL;
         settings.eps_prim_inf = EPS_ABS;
         settings.eps_dual_inf = EPS_ABS;
         settings.time_limit = TIME_LIMIT;
-%         settings.proximal = true;
-%         settings.gamma_init = 1e6;
-%         settings.gamma_max = 1e6;
+        settings.proximal = true;
+        settings.gamma_init = 1e7;
+        settings.gamma_max = 1e7;
+        settings.sigma_init = 2e1;
+        settings.delta = 100;
+        settings.factorization_method = 0; %0: KKT, 1: SCHUR
 
         solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
         try
