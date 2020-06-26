@@ -142,7 +142,7 @@ c_int validate_settings(const QPALMSettings *settings) {
 
   if (settings->sigma_max <= 0) {
 # ifdef PRINTING
-    c_eprint("delta must be positive");
+    c_eprint("sigma_max must be positive");
 # endif /* ifdef PRINTING */
     return FALSE;
   }

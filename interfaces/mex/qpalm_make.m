@@ -19,7 +19,7 @@ this_path = fileparts(mfilename('fullpath'));
 cd(this_path);
 
 !git submodule update --init
-!git submodule update --recursive --remote
+% !git submodule update --recursive --remote
 
 %% For the matlab version of QPALM we need the following mex functions.
 % PWAlinesearch_setup;

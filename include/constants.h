@@ -74,7 +74,7 @@ extern "C" {
 #define EPS_DUAL_INF (1e-5)    /**< default dual infeasibility tolerance */
 #define THETA (0.25)           /**< default penalty update criterion parameter */
 #define DELTA (100)            /**< default penalty update factor */
-#define SIGMA_MAX (1e9)        /**< defautl penalty cap */
+#define SIGMA_MAX (1e9)        /**< default penalty cap */
 #define SIGMA_INIT (2e1)       /**< default initial penalty parameter (guideline) */
 #define PROXIMAL (TRUE)        /**< default use of proximal method of multipliers */
 #define GAMMA_INIT (1E1)       /**< default initial proximal penalty parameter */
@@ -90,7 +90,7 @@ extern "C" {
 #define VERBOSE (TRUE)         /**< default write out progress setting */
 #define PRINT_ITER (1)         /**< default frequency of printing */
 
-#define RESET_NEWTON_ITER (100) /**< default frequency of performing a full Cholesky factorization */
+#define RESET_NEWTON_ITER (10000) /**< default frequency of performing a full Cholesky factorization */
 
 #define ENABLE_DUAL_TERMINATION (FALSE) /**< enable termination after dual objective > something (useful in branch and bound) */
 #define DUAL_OBJECTIVE_LIMIT (QPALM_INFTY) /**< termination value for the dual objective (useful in branch and bound) */
