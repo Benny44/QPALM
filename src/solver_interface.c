@@ -17,13 +17,45 @@
 #include "ladel.h"
 #endif
 
-void qpalm_set_factorization_method(QPALMWorkspace *work)
+void qpalm_set_factorization_method(QPALMWorkspace *work, solver_common *c)
 {
   #ifdef USE_LADEL
   if (work->settings->factorization_method == FACTORIZE_KKT_OR_SCHUR)
   {
-    /* TODO: determine criterion to set the factorization method depending on Q and A */
-    work->solver->factorization_method = FACTORIZE_KKT;
+    ladel_int nnz_kkt, nnz_schur;
+    nnz_kkt = work->data->Q->nzmax + work->data->A->nzmax + work->data->m;
+    // solver_common *c, common;
+    // c = &common;
+    /* Idea 1: Compare nnz(KKT) and nnz(Q+At*A) (exactly) */
+    /* NB: This operation could be very expensive (O(n^2)) if A has a dense row. Therefore,
+    either an estimate needs to be obtained for nnz(Q+At*A), or we have to default to the
+    KKT method in that case. */
+    /* NB: If nnz(KKT) == nnz(Q+AtA) << n^2, then KKT will perform a bit better due to the 
+    ordering. */
+    /* TODO: If we actually compute this and SCHUR is chosen, we may as well store QAtA for 
+    the first factorization. */
+    solver_sparse *At, *AtA, *QAtA;
+    c->array_int_ncol1 = work->index_L; /* Avoid allocating full workspace */
+    At = ladel_transpose(work->data->A, FALSE, c);
+    c->array_int_ncol1 = NULL;
+    c = ladel_workspace_allocate(work->data->n);
+    
+    AtA = ladel_mat_mat_transpose_pattern(At, work->data->A, c);
+    QAtA = ladel_add_matrices_pattern(work->data->Q, AtA, c);
+    nnz_schur = QAtA->nzmax;
+
+    c = ladel_workspace_free(c);
+    At = ladel_sparse_free(At);
+    AtA = ladel_sparse_free(AtA);
+    QAtA = ladel_sparse_free(QAtA);
+
+    ladel_print("Exact nnz(kkt) = %ld, nnz(schur) = %ld\n", nnz_kkt, nnz_schur);
+    /* Switching criterion */
+    if (nnz_kkt < nnz_schur)
+        work->solver->factorization_method = FACTORIZE_KKT;
+    else
+        work->solver->factorization_method = FACTORIZE_SCHUR;
+
   } else
   {
     work->solver->factorization_method = work->settings->factorization_method;

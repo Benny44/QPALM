@@ -141,8 +141,6 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->data->Q    = CHOLMOD(copy_sparse)(data->Q, c);     
   #endif
 
-  qpalm_set_factorization_method(work);
-
   // Allocate internal solver variables 
   work->x        = c_calloc(n, sizeof(c_float));
   work->y        = c_calloc(m, sizeof(c_float));
@@ -193,6 +191,9 @@ QPALMWorkspace* qpalm_setup(const QPALMData *data, const QPALMSettings *settings
   work->Qdelta_x = c_calloc(n, sizeof(c_float));
   work->Adelta_x = c_calloc(m, sizeof(c_float));
 
+  qpalm_set_factorization_method(work, c);
+  c = &common;
+  
   // Perform scaling
   if (settings->scaling) {
     // Allocate scaling structure
