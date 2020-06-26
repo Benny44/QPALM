@@ -75,6 +75,7 @@ extern "C" {
 #define THETA (0.25)           /**< default penalty update criterion parameter */
 #define DELTA (100)            /**< default penalty update factor */
 #define SIGMA_MAX (1e9)        /**< defautl penalty cap */
+#define SIGMA_INIT (2e1)       /**< default initial penalty parameter (guideline) */
 #define PROXIMAL (TRUE)        /**< default use of proximal method of multipliers */
 #define GAMMA_INIT (1E1)       /**< default initial proximal penalty parameter */
 #define GAMMA_UPD (10)         /**< default proximal penalty update factor */
