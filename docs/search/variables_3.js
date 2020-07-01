@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['d',['D',['../structQPALMScaling.html#ad1acc3ea936bca94d4a166dee8c92bd9',1,'QPALMScaling::D()'],['../structQPALMCholmod.html#ad0aa804eb45d8ec35a7f5bc7cb8ad3d8',1,'QPALMCholmod::d()'],['../structQPALMWorkspace.html#afa68534735d876db13ce5deab9f1e953',1,'QPALMWorkspace::d()']]],
-  ['d_5ftemp',['D_temp',['../structQPALMCholmod.html#a75e770d10fb08d241acdd13373288e70',1,'QPALMCholmod::D_temp()'],['../structQPALMWorkspace.html#a2bc2197cd4f371383a791f58b11af6d2',1,'QPALMWorkspace::D_temp()']]],
+  ['d',['d',['../structQPALMSolver.html#a2de2e8676b3fee845ec37cd6598c9f48',1,'QPALMSolver::d()'],['../structQPALMWorkspace.html#afa68534735d876db13ce5deab9f1e953',1,'QPALMWorkspace::d()'],['../structQPALMScaling.html#ad1acc3ea936bca94d4a166dee8c92bd9',1,'QPALMScaling::D()']]],
+  ['d_5ftemp',['D_temp',['../structQPALMSolver.html#a089facc6cdbd3972d14a389d9ef283c2',1,'QPALMSolver::D_temp()'],['../structQPALMWorkspace.html#a2bc2197cd4f371383a791f58b11af6d2',1,'QPALMWorkspace::D_temp()']]],
   ['data',['data',['../structQPALMWorkspace.html#aef5a70ffeeade2377480c7cae36a8964',1,'QPALMWorkspace']]],
   ['delta',['delta',['../structQPALMSettings.html#a1bf9e088b59e076c100ce03da4431181',1,'QPALMSettings::delta()'],['../structQPALMWorkspace.html#a21bf2ea2cefa8eea9b7c4575d4dbca51',1,'QPALMWorkspace::delta()']]],
   ['delta2',['delta2',['../structQPALMWorkspace.html#a2bd4914a52d02e2b11c56863976bb5ff',1,'QPALMWorkspace']]],

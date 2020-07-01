@@ -72,9 +72,10 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Macros used in QPALM.  
+<p>Constants used in QPALM.  
 <a href="#details">More...</a></p>
-
+<div class="textblock"><code>#include &quot;ladel.h&quot;</code><br />
+</div>
 <p><a href="constants_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
@@ -113,10 +114,10 @@ Macros</h2></td></tr>
 <tr class="memitem:ac0a2840bf4b0b7115794565a2c364ebd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#ac0a2840bf4b0b7115794565a2c364ebd">QPALM_NULL</a>&#160;&#160;&#160;0</td></tr>
 <tr class="memdesc:ac0a2840bf4b0b7115794565a2c364ebd"><td class="mdescLeft">&#160;</td><td class="mdescRight">NULL, if something goes wrong during setup, the workspace pointer is set to this.  <a href="#ac0a2840bf4b0b7115794565a2c364ebd">More...</a><br /></td></tr>
 <tr class="separator:ac0a2840bf4b0b7115794565a2c364ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff445c7a0410a0bbf8969af9a95eef83"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#aff445c7a0410a0bbf8969af9a95eef83">QPALM_NAN</a>&#160;&#160;&#160;((<a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>)0x7fc00000UL)</td></tr>
+<tr class="memitem:aff445c7a0410a0bbf8969af9a95eef83"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#aff445c7a0410a0bbf8969af9a95eef83">QPALM_NAN</a>&#160;&#160;&#160;((<a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a>)0x7fc00000UL)</td></tr>
 <tr class="memdesc:aff445c7a0410a0bbf8969af9a95eef83"><td class="mdescLeft">&#160;</td><td class="mdescRight">not a number, used for the solution if the problem is primal or dual infeasible  <a href="#aff445c7a0410a0bbf8969af9a95eef83">More...</a><br /></td></tr>
 <tr class="separator:aff445c7a0410a0bbf8969af9a95eef83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6915f24c5ded08d422cf326004cbcb0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#af6915f24c5ded08d422cf326004cbcb0">QPALM_INFTY</a>&#160;&#160;&#160;((<a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>)1e20)</td></tr>
+<tr class="memitem:af6915f24c5ded08d422cf326004cbcb0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#af6915f24c5ded08d422cf326004cbcb0">QPALM_INFTY</a>&#160;&#160;&#160;((<a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a>)1e20)</td></tr>
 <tr class="memdesc:af6915f24c5ded08d422cf326004cbcb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">infinity, used to indicate one-sided constraints  <a href="#af6915f24c5ded08d422cf326004cbcb0">More...</a><br /></td></tr>
 <tr class="separator:af6915f24c5ded08d422cf326004cbcb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd517c6f195c75b9dd0f3aad65326f3b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#acd517c6f195c75b9dd0f3aad65326f3b">MAX_ITER</a>&#160;&#160;&#160;(10000)</td></tr>
@@ -153,8 +154,11 @@ Macros</h2></td></tr>
 <tr class="memdesc:a3fd2b1bcd7ddcf506237987ad780f495"><td class="mdescLeft">&#160;</td><td class="mdescRight">default penalty update factor  <a href="#a3fd2b1bcd7ddcf506237987ad780f495">More...</a><br /></td></tr>
 <tr class="separator:a3fd2b1bcd7ddcf506237987ad780f495"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac15c21e22beda7f850763449c2c4c81b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#ac15c21e22beda7f850763449c2c4c81b">SIGMA_MAX</a>&#160;&#160;&#160;(1e9)</td></tr>
-<tr class="memdesc:ac15c21e22beda7f850763449c2c4c81b"><td class="mdescLeft">&#160;</td><td class="mdescRight">defautl penalty cap  <a href="#ac15c21e22beda7f850763449c2c4c81b">More...</a><br /></td></tr>
+<tr class="memdesc:ac15c21e22beda7f850763449c2c4c81b"><td class="mdescLeft">&#160;</td><td class="mdescRight">default penalty cap  <a href="#ac15c21e22beda7f850763449c2c4c81b">More...</a><br /></td></tr>
 <tr class="separator:ac15c21e22beda7f850763449c2c4c81b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f6ad8818d7f5de228103a9617c9fd31"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a5f6ad8818d7f5de228103a9617c9fd31">SIGMA_INIT</a>&#160;&#160;&#160;(2e1)</td></tr>
+<tr class="memdesc:a5f6ad8818d7f5de228103a9617c9fd31"><td class="mdescLeft">&#160;</td><td class="mdescRight">default initial penalty parameter (guideline)  <a href="#a5f6ad8818d7f5de228103a9617c9fd31">More...</a><br /></td></tr>
+<tr class="separator:a5f6ad8818d7f5de228103a9617c9fd31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ab5081fb2e4bb477cb72a470b2d6e16"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a6ab5081fb2e4bb477cb72a470b2d6e16">PROXIMAL</a>&#160;&#160;&#160;(<a class="el" href="constants_8h.html#aa8cecfc5c5c054d2875c03e77b7be15d">TRUE</a>)</td></tr>
 <tr class="memdesc:a6ab5081fb2e4bb477cb72a470b2d6e16"><td class="mdescLeft">&#160;</td><td class="mdescRight">default use of proximal method of multipliers  <a href="#a6ab5081fb2e4bb477cb72a470b2d6e16">More...</a><br /></td></tr>
 <tr class="separator:a6ab5081fb2e4bb477cb72a470b2d6e16"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,7 +192,7 @@ Macros</h2></td></tr>
 <tr class="memitem:a2eb481ae0968e5e6b48fd1b3af025c2c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a2eb481ae0968e5e6b48fd1b3af025c2c">PRINT_ITER</a>&#160;&#160;&#160;(1)</td></tr>
 <tr class="memdesc:a2eb481ae0968e5e6b48fd1b3af025c2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">default frequency of printing  <a href="#a2eb481ae0968e5e6b48fd1b3af025c2c">More...</a><br /></td></tr>
 <tr class="separator:a2eb481ae0968e5e6b48fd1b3af025c2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53e54f0110748115e8abf9623a94a726"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a53e54f0110748115e8abf9623a94a726">RESET_NEWTON_ITER</a>&#160;&#160;&#160;(100)</td></tr>
+<tr class="memitem:a53e54f0110748115e8abf9623a94a726"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a53e54f0110748115e8abf9623a94a726">RESET_NEWTON_ITER</a>&#160;&#160;&#160;(10000)</td></tr>
 <tr class="memdesc:a53e54f0110748115e8abf9623a94a726"><td class="mdescLeft">&#160;</td><td class="mdescRight">default frequency of performing a full Cholesky factorization  <a href="#a53e54f0110748115e8abf9623a94a726">More...</a><br /></td></tr>
 <tr class="separator:a53e54f0110748115e8abf9623a94a726"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7be4c76f27b9ffb860fdfd4bca41010e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a7be4c76f27b9ffb860fdfd4bca41010e">ENABLE_DUAL_TERMINATION</a>&#160;&#160;&#160;(<a class="el" href="constants_8h.html#aa93f0eb578d23995850d61f7d61c55c1">FALSE</a>)</td></tr>
@@ -203,11 +207,26 @@ Macros</h2></td></tr>
 <tr class="memitem:a66a3dfe072d9b388807cbddc899c0d79"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a66a3dfe072d9b388807cbddc899c0d79">MAX_RANK_UPDATE</a>&#160;&#160;&#160;160</td></tr>
 <tr class="memdesc:a66a3dfe072d9b388807cbddc899c0d79"><td class="mdescLeft">&#160;</td><td class="mdescRight">maximum rank for the sparse factorization update  <a href="#a66a3dfe072d9b388807cbddc899c0d79">More...</a><br /></td></tr>
 <tr class="separator:a66a3dfe072d9b388807cbddc899c0d79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac614e94631396875c8063a081f4295a9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#ac614e94631396875c8063a081f4295a9">FACTORIZE_KKT</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:ac614e94631396875c8063a081f4295a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">factorize the kkt system  <a href="#ac614e94631396875c8063a081f4295a9">More...</a><br /></td></tr>
+<tr class="separator:ac614e94631396875c8063a081f4295a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37f34a2ab1ee7c4cd7fc69e8d4690e6a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a37f34a2ab1ee7c4cd7fc69e8d4690e6a">FACTORIZE_SCHUR</a>&#160;&#160;&#160;1</td></tr>
+<tr class="memdesc:a37f34a2ab1ee7c4cd7fc69e8d4690e6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">factorize the Schur complement  <a href="#a37f34a2ab1ee7c4cd7fc69e8d4690e6a">More...</a><br /></td></tr>
+<tr class="separator:a37f34a2ab1ee7c4cd7fc69e8d4690e6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1e9daf3da62acbdd2fd4882d6f0877f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#ab1e9daf3da62acbdd2fd4882d6f0877f">FACTORIZE_KKT_OR_SCHUR</a>&#160;&#160;&#160;2</td></tr>
+<tr class="memdesc:ab1e9daf3da62acbdd2fd4882d6f0877f"><td class="mdescLeft">&#160;</td><td class="mdescRight">select automatically between kkt system and schur complement  <a href="#ab1e9daf3da62acbdd2fd4882d6f0877f">More...</a><br /></td></tr>
+<tr class="separator:ab1e9daf3da62acbdd2fd4882d6f0877f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8431ece33bae36de1764905f66e13abb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a8431ece33bae36de1764905f66e13abb">FACTORIZATION_METHOD</a>&#160;&#160;&#160;<a class="el" href="constants_8h.html#ac614e94631396875c8063a081f4295a9">FACTORIZE_KKT</a></td></tr>
+<tr class="memdesc:a8431ece33bae36de1764905f66e13abb"><td class="mdescLeft">&#160;</td><td class="mdescRight">default method for solving the linear system  <a href="#a8431ece33bae36de1764905f66e13abb">More...</a><br /></td></tr>
+<tr class="separator:a8431ece33bae36de1764905f66e13abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06acf4a6575640e5bbbbfeb88225a8e0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="constants_8h.html#a06acf4a6575640e5bbbbfeb88225a8e0">ORDERING</a>&#160;&#160;&#160;AMD</td></tr>
+<tr class="memdesc:a06acf4a6575640e5bbbbfeb88225a8e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">ordering in the factorization  <a href="#a06acf4a6575640e5bbbbfeb88225a8e0">More...</a><br /></td></tr>
+<tr class="separator:a06acf4a6575640e5bbbbfeb88225a8e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p class="">Macros used in QPALM. </p>
+<div class="textblock"><p class="">Constants used in QPALM. </p>
 <dl class="section author"><dt>Author</dt><dd>Ben Hermans</dd></dl>
-<p>This file contains the macros that are used as default settings and to set the solver status. </p><dl class="section warning"><dt>Warning</dt><dd>Verbose is not implemented as of yet. </dd></dl>
+<p>This file contains the constants that are used as default settings and to set the solver status. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a3fd2b1bcd7ddcf506237987ad780f495"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3fd2b1bcd7ddcf506237987ad780f495">&#9670;&nbsp;</a></span>DELTA</h2>
@@ -350,6 +369,70 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 
 <p>default intermediate relative convergence tolerance </p>
+
+</div>
+</div>
+<a id="a8431ece33bae36de1764905f66e13abb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8431ece33bae36de1764905f66e13abb">&#9670;&nbsp;</a></span>FACTORIZATION_METHOD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FACTORIZATION_METHOD&#160;&#160;&#160;<a class="el" href="constants_8h.html#ac614e94631396875c8063a081f4295a9">FACTORIZE_KKT</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>default method for solving the linear system </p>
+
+</div>
+</div>
+<a id="ac614e94631396875c8063a081f4295a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac614e94631396875c8063a081f4295a9">&#9670;&nbsp;</a></span>FACTORIZE_KKT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FACTORIZE_KKT&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>factorize the kkt system </p>
+
+</div>
+</div>
+<a id="ab1e9daf3da62acbdd2fd4882d6f0877f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1e9daf3da62acbdd2fd4882d6f0877f">&#9670;&nbsp;</a></span>FACTORIZE_KKT_OR_SCHUR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FACTORIZE_KKT_OR_SCHUR&#160;&#160;&#160;2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>select automatically between kkt system and schur complement </p>
+
+</div>
+</div>
+<a id="a37f34a2ab1ee7c4cd7fc69e8d4690e6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37f34a2ab1ee7c4cd7fc69e8d4690e6a">&#9670;&nbsp;</a></span>FACTORIZE_SCHUR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FACTORIZE_SCHUR&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>factorize the Schur complement </p>
 
 </div>
 </div>
@@ -511,6 +594,22 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="a06acf4a6575640e5bbbbfeb88225a8e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06acf4a6575640e5bbbbfeb88225a8e0">&#9670;&nbsp;</a></span>ORDERING</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ORDERING&#160;&#160;&#160;AMD</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ordering in the factorization </p>
+
+</div>
+</div>
 <a id="a2eb481ae0968e5e6b48fd1b3af025c2c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2eb481ae0968e5e6b48fd1b3af025c2c">&#9670;&nbsp;</a></span>PRINT_ITER</h2>
 
@@ -598,7 +697,7 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define QPALM_INFTY&#160;&#160;&#160;((<a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>)1e20)</td>
+          <td class="memname">#define QPALM_INFTY&#160;&#160;&#160;((<a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a>)1e20)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -630,7 +729,7 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define QPALM_NAN&#160;&#160;&#160;((<a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>)0x7fc00000UL)</td>
+          <td class="memname">#define QPALM_NAN&#160;&#160;&#160;((<a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a>)0x7fc00000UL)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -727,7 +826,7 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define RESET_NEWTON_ITER&#160;&#160;&#160;(100)</td>
+          <td class="memname">#define RESET_NEWTON_ITER&#160;&#160;&#160;(10000)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -768,6 +867,22 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="a5f6ad8818d7f5de228103a9617c9fd31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f6ad8818d7f5de228103a9617c9fd31">&#9670;&nbsp;</a></span>SIGMA_INIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SIGMA_INIT&#160;&#160;&#160;(2e1)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>default initial penalty parameter (guideline) </p>
+
+</div>
+</div>
 <a id="ac15c21e22beda7f850763449c2c4c81b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac15c21e22beda7f850763449c2c4c81b">&#9670;&nbsp;</a></span>SIGMA_MAX</h2>
 
@@ -780,7 +895,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>defautl penalty cap </p>
+<p>default penalty cap </p>
 
 </div>
 </div>

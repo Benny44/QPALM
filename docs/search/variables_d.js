@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['reset_5fnewton',['reset_newton',['../structQPALMCholmod.html#a5d243ea350665531164a8b355ac7c370',1,'QPALMCholmod']]],
-  ['reset_5fnewton_5fiter',['reset_newton_iter',['../structQPALMSettings.html#a2dbfacec051f4d321c15d7493d404b8b',1,'QPALMSettings']]],
-  ['rho',['rho',['../structQPALMSettings.html#a39d647ae87752808f0a33ab020dd0591',1,'QPALMSettings']]]
+  ['pri_5fres',['pri_res',['../structQPALMWorkspace.html#a46bd3912583b69f83d5bd3cbb2bee8b2',1,'QPALMWorkspace']]],
+  ['pri_5fres_5fin',['pri_res_in',['../structQPALMWorkspace.html#a4178a4d2bfdb85f18f14e3ddfaec142c',1,'QPALMWorkspace']]],
+  ['pri_5fres_5fnorm',['pri_res_norm',['../structQPALMInfo.html#a21e0db7fa16ec32656953c375dc01e3c',1,'QPALMInfo']]],
+  ['print_5fiter',['print_iter',['../structQPALMSettings.html#afefe5fb2257756b4ea254096cc19092e',1,'QPALMSettings']]],
+  ['proximal',['proximal',['../structQPALMSettings.html#a11c44b1eb59c00cb640da78d1606cdf5',1,'QPALMSettings']]]
 ];

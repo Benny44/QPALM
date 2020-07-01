@@ -1,14 +1,7 @@
 var searchData=
 [
-  ['s',['s',['../structQPALMWorkspace.html#a6428bf5b44e920828469514559b93de8',1,'QPALMWorkspace']]],
-  ['scaling',['scaling',['../structQPALMSettings.html#abe76ae92171f3a1e5e4dcc934d797ac7',1,'QPALMSettings::scaling()'],['../structQPALMWorkspace.html#a20daf0c6d38c77121e113af63ed726b6',1,'QPALMWorkspace::scaling()']]],
-  ['settings',['settings',['../structQPALMWorkspace.html#a9e29077d16b88e77e8aae6f06f69ec0c',1,'QPALMWorkspace']]],
-  ['sigma',['sigma',['../structQPALMWorkspace.html#a585c53dd55cbc9aaecd42d224bde483f',1,'QPALMWorkspace']]],
-  ['sigma_5fmax',['sigma_max',['../structQPALMSettings.html#a03cf631c375a9ddaa17545ffead9883d',1,'QPALMSettings']]],
-  ['solution',['solution',['../structQPALMWorkspace.html#a44a489b6424974f302d679893efae327',1,'QPALMWorkspace']]],
-  ['sqrt_5fdelta',['sqrt_delta',['../structQPALMWorkspace.html#adc663b895fd02bd845677d6e928f029e',1,'QPALMWorkspace']]],
-  ['sqrt_5fsigma',['sqrt_sigma',['../structQPALMWorkspace.html#a5628bcd9c8b6ab0ca4dd5015a0c39fb8',1,'QPALMWorkspace']]],
-  ['sqrt_5fsigma_5fmax',['sqrt_sigma_max',['../structQPALMWorkspace.html#a82507933e684075bab8883a851960cf1',1,'QPALMWorkspace']]],
-  ['status',['status',['../structQPALMInfo.html#a50d560141016d6b0a0198feb84c4a835',1,'QPALMInfo']]],
-  ['status_5fval',['status_val',['../structQPALMInfo.html#a8e754dd1c46f6b40ea54fb7422764522',1,'QPALMInfo']]]
+  ['q',['q',['../structQPALMData.html#aa6775bd0b50250223ddd66115da68a12',1,'QPALMData::q()'],['../structQPALMData.html#ae2415bbdfd7b443bbae4a4db50b99f0f',1,'QPALMData::Q()']]],
+  ['qd',['Qd',['../structQPALMSolver.html#a7c1c1a3896bba7ecb8aa889dd09d9794',1,'QPALMSolver::Qd()'],['../structQPALMWorkspace.html#af3614a39bf75c0331f89447caa3d1217',1,'QPALMWorkspace::Qd()']]],
+  ['qdelta_5fx',['Qdelta_x',['../structQPALMWorkspace.html#a7a10abcbd6a5e3cb44b7dca2cf679c7a',1,'QPALMWorkspace']]],
+  ['qx',['Qx',['../structQPALMWorkspace.html#a9104271b5dc1b242f3d6d5c175dcb0c1',1,'QPALMWorkspace']]]
 ];

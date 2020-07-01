@@ -74,8 +74,19 @@ $(function() {
 
 <p>QPALM main solver API.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="constants_8h_source.html">constants.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="global__opts_8h_source.html">global_opts.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="iteration_8h_source.html">iteration.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="lin__alg_8h_source.html">lin_alg.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="linesearch_8h_source.html">linesearch.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="newton_8h_source.html">newton.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="nonconvex_8h_source.html">nonconvex.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="scaling_8h_source.html">scaling.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="solver__interface_8h_source.html">solver_interface.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="termination_8h_source.html">termination.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="types_8h_source.html">types.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="util_8h_source.html">util.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="validate_8h_source.html">validate.h</a>&quot;</code><br />
 </div>
 <p><a href="qpalm_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -83,12 +94,12 @@ $(function() {
 Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Main solver API</div></td></tr>
 <tr class="memitem:a4aa4b201790332b345faf7ca36f54be5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a4aa4b201790332b345faf7ca36f54be5">qpalm_set_default_settings</a> (<a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings)</td></tr>
-<tr class="memdesc:a4aa4b201790332b345faf7ca36f54be5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set default settings from <a class="el" href="constants_8h.html" title="Macros used in QPALM.">constants.h</a> file.  <a href="#a4aa4b201790332b345faf7ca36f54be5">More...</a><br /></td></tr>
+<tr class="memdesc:a4aa4b201790332b345faf7ca36f54be5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set default settings from <a class="el" href="constants_8h.html" title="Constants used in QPALM.">constants.h</a> file.  <a href="#a4aa4b201790332b345faf7ca36f54be5">More...</a><br /></td></tr>
 <tr class="separator:a4aa4b201790332b345faf7ca36f54be5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2cb9bd7b22941e8fb298c517797c594"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#ac2cb9bd7b22941e8fb298c517797c594">qpalm_setup</a> (const <a class="el" href="structQPALMData.html">QPALMData</a> *data, const <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings)</td></tr>
 <tr class="memdesc:ac2cb9bd7b22941e8fb298c517797c594"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize QPALM solver allocating memory.  <a href="#ac2cb9bd7b22941e8fb298c517797c594">More...</a><br /></td></tr>
 <tr class="separator:ac2cb9bd7b22941e8fb298c517797c594"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40dba45b28017437a74e31d43dcb8933"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a40dba45b28017437a74e31d43dcb8933">qpalm_warm_start</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *x_warm_start, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *y_warm_start)</td></tr>
+<tr class="memitem:a40dba45b28017437a74e31d43dcb8933"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a40dba45b28017437a74e31d43dcb8933">qpalm_warm_start</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, <a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *x_warm_start, <a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *y_warm_start)</td></tr>
 <tr class="memdesc:a40dba45b28017437a74e31d43dcb8933"><td class="mdescLeft">&#160;</td><td class="mdescRight">Warm start workspace variables x, x_0, x_prev, Ax, Qx, y and sigma.  <a href="#a40dba45b28017437a74e31d43dcb8933">More...</a><br /></td></tr>
 <tr class="separator:a40dba45b28017437a74e31d43dcb8933"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17fcba910c32b8518df93617591b1cf1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a17fcba910c32b8518df93617591b1cf1">qpalm_solve</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
@@ -97,10 +108,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a349f4343b96fb674a823ae6e03634ff7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a349f4343b96fb674a823ae6e03634ff7">qpalm_update_settings</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, const <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings)</td></tr>
 <tr class="memdesc:a349f4343b96fb674a823ae6e03634ff7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the settings to the new settings.  <a href="#a349f4343b96fb674a823ae6e03634ff7">More...</a><br /></td></tr>
 <tr class="separator:a349f4343b96fb674a823ae6e03634ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a586e7a22d9ed41fb2d477490fdabc875"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a586e7a22d9ed41fb2d477490fdabc875">qpalm_update_bounds</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *bmin, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *bmax)</td></tr>
+<tr class="memitem:a586e7a22d9ed41fb2d477490fdabc875"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a586e7a22d9ed41fb2d477490fdabc875">qpalm_update_bounds</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, const <a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *bmin, const <a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *bmax)</td></tr>
 <tr class="memdesc:a586e7a22d9ed41fb2d477490fdabc875"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the lower and upper bounds.  <a href="#a586e7a22d9ed41fb2d477490fdabc875">More...</a><br /></td></tr>
 <tr class="separator:a586e7a22d9ed41fb2d477490fdabc875"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6fc63096cd84c85c7e4a31ab950a00b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#ac6fc63096cd84c85c7e4a31ab950a00b">qpalm_update_q</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *q)</td></tr>
+<tr class="memitem:ac6fc63096cd84c85c7e4a31ab950a00b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#ac6fc63096cd84c85c7e4a31ab950a00b">qpalm_update_q</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, const <a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *q)</td></tr>
 <tr class="memdesc:ac6fc63096cd84c85c7e4a31ab950a00b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the linear part of the cost.  <a href="#ac6fc63096cd84c85c7e4a31ab950a00b">More...</a><br /></td></tr>
 <tr class="separator:ac6fc63096cd84c85c7e4a31ab950a00b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a856ef78171b77f0f526a8d4255e15223"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="qpalm_8h.html#a856ef78171b77f0f526a8d4255e15223">qpalm_cleanup</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
@@ -154,7 +165,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set default settings from <a class="el" href="constants_8h.html" title="Macros used in QPALM.">constants.h</a> file. </p>
+<p>Set default settings from <a class="el" href="constants_8h.html" title="Constants used in QPALM.">constants.h</a> file. </p>
 <p class="">Assumes settings are already allocated in memory. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">settings</td><td>Settings structure </td></tr>
@@ -252,13 +263,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *&#160;</td>
           <td class="paramname"><em>bmin</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *&#160;</td>
           <td class="paramname"><em>bmax</em>&#160;</td>
         </tr>
         <tr>
@@ -297,7 +308,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *&#160;</td>
           <td class="paramname"><em>q</em>&#160;</td>
         </tr>
         <tr>
@@ -373,13 +384,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *&#160;</td>
           <td class="paramname"><em>x_warm_start</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *&#160;</td>
           <td class="paramname"><em>y_warm_start</em>&#160;</td>
         </tr>
         <tr>

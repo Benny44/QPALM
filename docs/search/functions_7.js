@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['newton_5fset_5fdirection',['newton_set_direction',['../newton_8c.html#a592090ac6dbd1f0bf59a5ec0eaa0173a',1,'newton_set_direction(QPALMWorkspace *work, cholmod_common *c):&#160;newton.c'],['../newton_8h.html#a592090ac6dbd1f0bf59a5ec0eaa0173a',1,'newton_set_direction(QPALMWorkspace *work, cholmod_common *c):&#160;newton.c']]]
+  ['mat_5ftpose_5fvec',['mat_tpose_vec',['../solver__interface_8c.html#aa0574481a6dc6221dd3b9562f8c54cd5',1,'mat_tpose_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c):&#160;solver_interface.c'],['../solver__interface_8h.html#aa0574481a6dc6221dd3b9562f8c54cd5',1,'mat_tpose_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c):&#160;solver_interface.c']]],
+  ['mat_5fvec',['mat_vec',['../solver__interface_8c.html#a4824fb035d8cdb8ba46e4ac5c4049d5d',1,'mat_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c):&#160;solver_interface.c'],['../solver__interface_8h.html#a4824fb035d8cdb8ba46e4ac5c4049d5d',1,'mat_vec(solver_sparse *A, solver_dense *x, solver_dense *y, solver_common *c):&#160;solver_interface.c']]]
 ];

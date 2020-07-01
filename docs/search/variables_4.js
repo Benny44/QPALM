@@ -1,10 +1,10 @@
 var searchData=
 [
   ['e',['E',['../structQPALMScaling.html#a8e0f516b3576cb21c6775008f42a6b41',1,'QPALMScaling']]],
-  ['e_5ftemp',['E_temp',['../structQPALMCholmod.html#a81f1783209b107329ef325f7da73c231',1,'QPALMCholmod::E_temp()'],['../structQPALMWorkspace.html#ac7d0355a7c31ec062df981ff4b8199f8',1,'QPALMWorkspace::E_temp()']]],
+  ['e_5ftemp',['E_temp',['../structQPALMSolver.html#a00836243f1e8a0eceaa96192ed629903',1,'QPALMSolver::E_temp()'],['../structQPALMWorkspace.html#ac7d0355a7c31ec062df981ff4b8199f8',1,'QPALMWorkspace::E_temp()']]],
   ['einv',['Einv',['../structQPALMScaling.html#a8e9adc9bd55190204f3d4f0a862e55cb',1,'QPALMScaling']]],
   ['enable_5fdual_5ftermination',['enable_dual_termination',['../structQPALMSettings.html#a62270e36124bab6ae453fe14fc166b23',1,'QPALMSettings']]],
-  ['enter',['enter',['../structQPALMCholmod.html#aa8b56653cf6a253c025c7430b112d4ee',1,'QPALMCholmod']]],
+  ['enter',['enter',['../structQPALMSolver.html#a5bee2c57792dcefaab0c82bae951f730',1,'QPALMSolver']]],
   ['eps_5fabs',['eps_abs',['../structQPALMSettings.html#adadd5ae5aada22693f708c55678777f4',1,'QPALMSettings']]],
   ['eps_5fabs_5fin',['eps_abs_in',['../structQPALMSettings.html#a0b5e66e45976754edbefb12c9aa6cd4d',1,'QPALMSettings::eps_abs_in()'],['../structQPALMWorkspace.html#aea88d9a6ba20755e6ed817b513f496b2',1,'QPALMWorkspace::eps_abs_in()']]],
   ['eps_5fdua',['eps_dua',['../structQPALMWorkspace.html#a66248f1ef4c0895a8a21afefacfd92f1',1,'QPALMWorkspace']]],

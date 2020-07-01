@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['pri_5fres',['pri_res',['../structQPALMWorkspace.html#a46bd3912583b69f83d5bd3cbb2bee8b2',1,'QPALMWorkspace']]],
-  ['pri_5fres_5fin',['pri_res_in',['../structQPALMWorkspace.html#a4178a4d2bfdb85f18f14e3ddfaec142c',1,'QPALMWorkspace']]],
-  ['pri_5fres_5fnorm',['pri_res_norm',['../structQPALMInfo.html#a21e0db7fa16ec32656953c375dc01e3c',1,'QPALMInfo']]],
-  ['print_5fiter',['print_iter',['../structQPALMSettings.html#afefe5fb2257756b4ea254096cc19092e',1,'QPALMSettings']]],
-  ['proximal',['proximal',['../structQPALMSettings.html#a11c44b1eb59c00cb640da78d1606cdf5',1,'QPALMSettings']]]
+  ['n',['n',['../structQPALMData.html#a8a238460cbd7dd6571ac594b92a946cf',1,'QPALMData']]],
+  ['nb_5factive_5fconstraints',['nb_active_constraints',['../structQPALMSolver.html#ac6e40e88f1971fb3656b9fdb0f92b710',1,'QPALMSolver']]],
+  ['nb_5fenter',['nb_enter',['../structQPALMSolver.html#afd05f50fde870af84e9e04937d353e20',1,'QPALMSolver']]],
+  ['nb_5fleave',['nb_leave',['../structQPALMSolver.html#ac1a069b2f335ac7afe097e60f901c70b',1,'QPALMSolver']]],
+  ['nb_5fsigma_5fchanged',['nb_sigma_changed',['../structQPALMWorkspace.html#a273528558b417f6a77e22fae44fa7774',1,'QPALMWorkspace']]],
+  ['neg_5fdphi',['neg_dphi',['../structQPALMSolver.html#a02b7e7b5183d2ab895ea7802abdabc25',1,'QPALMSolver::neg_dphi()'],['../structQPALMWorkspace.html#a771d4ed92094edc40f650ed185178acd',1,'QPALMWorkspace::neg_dphi()']]],
+  ['nonconvex',['nonconvex',['../structQPALMSettings.html#ad08dba9fae1355c1489056bcc884965f',1,'QPALMSettings']]]
 ];

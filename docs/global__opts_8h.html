@@ -67,6 +67,9 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">global_opts.h File Reference</div>  </div>
 </div><!--header-->
@@ -74,31 +77,20 @@ $(function() {
 
 <p>Custom memory allocation, print and utility functions, and data types for floats and ints.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;cholmod.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;ladel.h&quot;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
 <code>#include &lt;math.h&gt;</code><br />
 </div>
 <p><a href="global__opts_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr><td colspan="2"><div class="groupHeader">CHOLMOD data types and macros</div></td></tr>
-<tr class="memitem:a058e7dbf59195ee615d22066fbdd844b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a058e7dbf59195ee615d22066fbdd844b">DINT</a></td></tr>
-<tr class="separator:a058e7dbf59195ee615d22066fbdd844b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a060b837c3b4486ee35317744156f3da2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a060b837c3b4486ee35317744156f3da2">Real</a>&#160;&#160;&#160;double</td></tr>
-<tr class="separator:a060b837c3b4486ee35317744156f3da2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91adff1610bdf681555a8f2e330dc963"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a91adff1610bdf681555a8f2e330dc963">Int</a>&#160;&#160;&#160;int</td></tr>
-<tr class="separator:a91adff1610bdf681555a8f2e330dc963"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2bdae8b2a1a2c6cc68215ef219d2673"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#af2bdae8b2a1a2c6cc68215ef219d2673">Int_max</a>&#160;&#160;&#160;INT_MAX</td></tr>
-<tr class="separator:af2bdae8b2a1a2c6cc68215ef219d2673"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96c2976c8b8307b8dab27af3273f1533"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a96c2976c8b8307b8dab27af3273f1533">CHOLMOD</a>(name)&#160;&#160;&#160;cholmod_ ## name</td></tr>
-<tr class="separator:a96c2976c8b8307b8dab27af3273f1533"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa9c89c62b53deb647c3722a1114ffb1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#afa9c89c62b53deb647c3722a1114ffb1">ITYPE</a>&#160;&#160;&#160;CHOLMOD_INT</td></tr>
-<tr class="separator:afa9c89c62b53deb647c3722a1114ffb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3834ad0136a8b95a6589500e4009fe9a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a3834ad0136a8b95a6589500e4009fe9a">DTYPE</a>&#160;&#160;&#160;CHOLMOD_DOUBLE</td></tr>
-<tr class="separator:a3834ad0136a8b95a6589500e4009fe9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77ceac8d6af195fe72f95f6afd87c45e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a77ceac8d6af195fe72f95f6afd87c45e">ID</a>&#160;&#160;&#160;&quot;%d&quot;</td></tr>
-<tr class="separator:a77ceac8d6af195fe72f95f6afd87c45e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2336d5d13c962e6c12d86805579d1d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#ad2336d5d13c962e6c12d86805579d1d0">c_print</a>&#160;&#160;&#160;printf</td></tr>
+<tr class="separator:ad2336d5d13c962e6c12d86805579d1d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9696c33bf4ec403af004b2945fc7d99f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a9696c33bf4ec403af004b2945fc7d99f">c_eprint</a>(...)</td></tr>
+<tr class="separator:a9696c33bf4ec403af004b2945fc7d99f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Custom memory allocation (e.g. matlab/python)</div></td></tr>
 <tr class="memitem:a3ab8252f80f6fe439c69aa168f64ee5e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a3ab8252f80f6fe439c69aa168f64ee5e">c_malloc</a>&#160;&#160;&#160;malloc</td></tr>
 <tr class="memdesc:a3ab8252f80f6fe439c69aa168f64ee5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">custom malloc  <a href="#a3ab8252f80f6fe439c69aa168f64ee5e">More...</a><br /></td></tr>
@@ -131,13 +123,12 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr><td colspan="2"><div class="groupHeader">Data customizations</div></td></tr>
-<tr class="memitem:a7f1a9fda95e52979658c20a0d134fb15"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="global__opts_8h.html#a060b837c3b4486ee35317744156f3da2">Real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a></td></tr>
-<tr class="memdesc:a7f1a9fda95e52979658c20a0d134fb15"><td class="mdescLeft">&#160;</td><td class="mdescRight">doubles for numerical values  <a href="#a7f1a9fda95e52979658c20a0d134fb15">More...</a><br /></td></tr>
-<tr class="separator:a7f1a9fda95e52979658c20a0d134fb15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3217a0f49d3e52b74e9dd830c44472f"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="global__opts_8h.html#a91adff1610bdf681555a8f2e330dc963">Int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a></td></tr>
-<tr class="memdesc:aa3217a0f49d3e52b74e9dd830c44472f"><td class="mdescLeft">&#160;</td><td class="mdescRight">long or int for indices  <a href="#aa3217a0f49d3e52b74e9dd830c44472f">More...</a><br /></td></tr>
-<tr class="separator:aa3217a0f49d3e52b74e9dd830c44472f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9511c4510c4f8c4416edbce9f4a02853"><td class="memItemLeft" align="right" valign="top">typedef ladel_double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a></td></tr>
+<tr class="memdesc:a9511c4510c4f8c4416edbce9f4a02853"><td class="mdescLeft">&#160;</td><td class="mdescRight">type for floating point numbers  <a href="#a9511c4510c4f8c4416edbce9f4a02853">More...</a><br /></td></tr>
+<tr class="separator:a9511c4510c4f8c4416edbce9f4a02853"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c5fda88a4f0817f2786e1566fa3c80d"><td class="memItemLeft" align="right" valign="top">typedef ladel_int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="global__opts_8h.html#a6c5fda88a4f0817f2786e1566fa3c80d">c_int</a></td></tr>
+<tr class="memdesc:a6c5fda88a4f0817f2786e1566fa3c80d"><td class="mdescLeft">&#160;</td><td class="mdescRight">type for integer numbers  <a href="#a6c5fda88a4f0817f2786e1566fa3c80d">More...</a><br /></td></tr>
+<tr class="separator:a6c5fda88a4f0817f2786e1566fa3c80d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Custom memory allocation, print and utility functions, and data types for floats and ints. </p>
@@ -178,6 +169,25 @@ Typedefs</h2></td></tr>
 
 <p>custom calloc </p>
 
+</div>
+</div>
+<a id="a9696c33bf4ec403af004b2945fc7d99f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9696c33bf4ec403af004b2945fc7d99f">&#9670;&nbsp;</a></span>c_eprint</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define c_eprint</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code" href="global__opts_8h.html#ad2336d5d13c962e6c12d86805579d1d0">c_print</a>(<span class="stringliteral">&quot;ERROR in %s: &quot;</span>, __FUNCTION__); <a class="code" href="global__opts_8h.html#ad2336d5d13c962e6c12d86805579d1d0">c_print</a>( \</div><div class="line">    __VA_ARGS__); <a class="code" href="global__opts_8h.html#ad2336d5d13c962e6c12d86805579d1d0">c_print</a>(<span class="stringliteral">&quot;\n&quot;</span>);</div><div class="ttc" id="global__opts_8h_html_ad2336d5d13c962e6c12d86805579d1d0"><div class="ttname"><a href="global__opts_8h.html#ad2336d5d13c962e6c12d86805579d1d0">c_print</a></div><div class="ttdeci">#define c_print</div><div class="ttdef"><b>Definition:</b> global_opts.h:155</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a4f8399dfdd5aded24b094b2e4ba21d9b"></a>
@@ -272,6 +282,20 @@ Typedefs</h2></td></tr>
 
 </div>
 </div>
+<a id="ad2336d5d13c962e6c12d86805579d1d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2336d5d13c962e6c12d86805579d1d0">&#9670;&nbsp;</a></span>c_print</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define c_print&#160;&#160;&#160;printf</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a8865c6728c372790de8dee1ed24c7480"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8865c6728c372790de8dee1ed24c7480">&#9670;&nbsp;</a></span>c_realloc</h2>
 
@@ -301,108 +325,6 @@ Typedefs</h2></td></tr>
 </div><div class="memdoc">
 
 <p>square root </p>
-
-</div>
-</div>
-<a id="a96c2976c8b8307b8dab27af3273f1533"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96c2976c8b8307b8dab27af3273f1533">&#9670;&nbsp;</a></span>CHOLMOD</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CHOLMOD</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">name</td><td>)</td>
-          <td>&#160;&#160;&#160;cholmod_ ## name</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a058e7dbf59195ee615d22066fbdd844b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a058e7dbf59195ee615d22066fbdd844b">&#9670;&nbsp;</a></span>DINT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DINT</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3834ad0136a8b95a6589500e4009fe9a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3834ad0136a8b95a6589500e4009fe9a">&#9670;&nbsp;</a></span>DTYPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define DTYPE&#160;&#160;&#160;CHOLMOD_DOUBLE</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a77ceac8d6af195fe72f95f6afd87c45e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77ceac8d6af195fe72f95f6afd87c45e">&#9670;&nbsp;</a></span>ID</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ID&#160;&#160;&#160;&quot;%d&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a91adff1610bdf681555a8f2e330dc963"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91adff1610bdf681555a8f2e330dc963">&#9670;&nbsp;</a></span>Int</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define Int&#160;&#160;&#160;int</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af2bdae8b2a1a2c6cc68215ef219d2673"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af2bdae8b2a1a2c6cc68215ef219d2673">&#9670;&nbsp;</a></span>Int_max</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define Int_max&#160;&#160;&#160;INT_MAX</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afa9c89c62b53deb647c3722a1114ffb1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa9c89c62b53deb647c3722a1114ffb1">&#9670;&nbsp;</a></span>ITYPE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ITYPE&#160;&#160;&#160;CHOLMOD_INT</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -436,50 +358,36 @@ Typedefs</h2></td></tr>
 
 </div>
 </div>
-<a id="a060b837c3b4486ee35317744156f3da2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a060b837c3b4486ee35317744156f3da2">&#9670;&nbsp;</a></span>Real</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define Real&#160;&#160;&#160;double</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="a7f1a9fda95e52979658c20a0d134fb15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f1a9fda95e52979658c20a0d134fb15">&#9670;&nbsp;</a></span>c_float</h2>
+<a id="a9511c4510c4f8c4416edbce9f4a02853"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9511c4510c4f8c4416edbce9f4a02853">&#9670;&nbsp;</a></span>c_float</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="global__opts_8h.html#a060b837c3b4486ee35317744156f3da2">Real</a> <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a></td>
+          <td class="memname">typedef ladel_double <a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>doubles for numerical values </p>
+<p>type for floating point numbers </p>
 
 </div>
 </div>
-<a id="aa3217a0f49d3e52b74e9dd830c44472f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3217a0f49d3e52b74e9dd830c44472f">&#9670;&nbsp;</a></span>c_int</h2>
+<a id="a6c5fda88a4f0817f2786e1566fa3c80d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c5fda88a4f0817f2786e1566fa3c80d">&#9670;&nbsp;</a></span>c_int</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="global__opts_8h.html#a91adff1610bdf681555a8f2e330dc963">Int</a> <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a></td>
+          <td class="memname">typedef ladel_int <a class="el" href="global__opts_8h.html#a6c5fda88a4f0817f2786e1566fa3c80d">c_int</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>long or int for indices </p>
+<p>type for integer numbers </p>
 
 </div>
 </div>

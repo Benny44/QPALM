@@ -89,9 +89,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a59c8e0cefe0eb9a61da6d50ade8a15f3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structQPALMSettings.html">QPALMSettings</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#a59c8e0cefe0eb9a61da6d50ade8a15f3">copy_settings</a> (const <a class="el" href="structQPALMSettings.html">QPALMSettings</a> *settings)</td></tr>
 <tr class="memdesc:a59c8e0cefe0eb9a61da6d50ade8a15f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy settings creating a new settings structure.  <a href="#a59c8e0cefe0eb9a61da6d50ade8a15f3">More...</a><br /></td></tr>
 <tr class="separator:a59c8e0cefe0eb9a61da6d50ade8a15f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14fe651105f1f38b2a3a49614f4b8ae2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#a14fe651105f1f38b2a3a49614f4b8ae2">update_status</a> (<a class="el" href="structQPALMInfo.html">QPALMInfo</a> *info, <a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a> status_val)</td></tr>
+<tr class="memitem:a14fe651105f1f38b2a3a49614f4b8ae2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#a14fe651105f1f38b2a3a49614f4b8ae2">update_status</a> (<a class="el" href="structQPALMInfo.html">QPALMInfo</a> *info, <a class="el" href="global__opts_8h.html#a6c5fda88a4f0817f2786e1566fa3c80d">c_int</a> status_val)</td></tr>
 <tr class="memdesc:a14fe651105f1f38b2a3a49614f4b8ae2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update solver status (value and string).  <a href="#a14fe651105f1f38b2a3a49614f4b8ae2">More...</a><br /></td></tr>
 <tr class="separator:a14fe651105f1f38b2a3a49614f4b8ae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2df3d6733ca8d84d3f15681675486a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#ae2df3d6733ca8d84d3f15681675486a0">print_header</a> (void)</td></tr>
+<tr class="memdesc:ae2df3d6733ca8d84d3f15681675486a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print the header with QPALM version number and fields.  <a href="#ae2df3d6733ca8d84d3f15681675486a0">More...</a><br /></td></tr>
+<tr class="separator:ae2df3d6733ca8d84d3f15681675486a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ee0584322ee4cac18e04eb9d13932e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#a6ee0584322ee4cac18e04eb9d13932e8">print_iteration</a> (<a class="el" href="global__opts_8h.html#a6c5fda88a4f0817f2786e1566fa3c80d">c_int</a> iter, <a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:a6ee0584322ee4cac18e04eb9d13932e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print information about the current iteration.  <a href="#a6ee0584322ee4cac18e04eb9d13932e8">More...</a><br /></td></tr>
+<tr class="separator:a6ee0584322ee4cac18e04eb9d13932e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4a3db21e55ea56c33c599e405771403"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8c.html#ae4a3db21e55ea56c33c599e405771403">print_final_message</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work)</td></tr>
+<tr class="memdesc:ae4a3db21e55ea56c33c599e405771403"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print final message as a box with info.  <a href="#ae4a3db21e55ea56c33c599e405771403">More...</a><br /></td></tr>
+<tr class="separator:ae4a3db21e55ea56c33c599e405771403"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Utility functions. </p>
@@ -163,6 +172,89 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ae4a3db21e55ea56c33c599e405771403"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4a3db21e55ea56c33c599e405771403">&#9670;&nbsp;</a></span>print_final_message()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void print_final_message </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
+          <td class="paramname"><em>work</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Print final message as a box with info. </p>
+<p class="">(Final residuals, objective function, runtime) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae2df3d6733ca8d84d3f15681675486a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2df3d6733ca8d84d3f15681675486a0">&#9670;&nbsp;</a></span>print_header()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void print_header </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Print the header with QPALM version number and fields. </p>
+
+</div>
+</div>
+<a id="a6ee0584322ee4cac18e04eb9d13932e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ee0584322ee4cac18e04eb9d13932e8">&#9670;&nbsp;</a></span>print_iteration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void print_iteration </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="global__opts_8h.html#a6c5fda88a4f0817f2786e1566fa3c80d">c_int</a>&#160;</td>
+          <td class="paramname"><em>iter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *&#160;</td>
+          <td class="paramname"><em>work</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Print information about the current iteration. </p>
+<p class="">(Residuals, stepsize and objective value) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iter</td><td>The current iteration number </td></tr>
+    <tr><td class="paramname">work</td><td>Workspace </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a14fe651105f1f38b2a3a49614f4b8ae2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a14fe651105f1f38b2a3a49614f4b8ae2">&#9670;&nbsp;</a></span>update_status()</h2>
 
@@ -178,7 +270,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="global__opts_8h.html#aa3217a0f49d3e52b74e9dd830c44472f">c_int</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="global__opts_8h.html#a6c5fda88a4f0817f2786e1566fa3c80d">c_int</a>&#160;</td>
           <td class="paramname"><em>status_val</em>&#160;</td>
         </tr>
         <tr>

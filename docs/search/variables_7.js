@@ -1,6 +1,12 @@
 var searchData=
 [
-  ['ld',['LD',['../structQPALMCholmod.html#aa13c04a0c6d42ce03f4ed35facecdb17',1,'QPALMCholmod']]],
-  ['ld_5fq',['LD_Q',['../structQPALMCholmod.html#af008e7888238e648de13c65121197042',1,'QPALMCholmod']]],
-  ['leave',['leave',['../structQPALMCholmod.html#a9b386126a4e4d1773152c32e40cb7ccf',1,'QPALMCholmod']]]
+  ['i',['i',['../structarray__element.html#a0e8187e1e64fd18b0dbe5f2990139e28',1,'array_element']]],
+  ['index_5fj',['index_J',['../structQPALMWorkspace.html#a43b0fc9c50417ee9ed33acece1f61563',1,'QPALMWorkspace']]],
+  ['index_5fl',['index_L',['../structQPALMWorkspace.html#af1a5130d10eac6f1cca4e989592cffe4',1,'QPALMWorkspace']]],
+  ['index_5fp',['index_P',['../structQPALMWorkspace.html#a45ccfcbf6d91b05ecac8df1b31dee2b9',1,'QPALMWorkspace']]],
+  ['info',['info',['../structQPALMWorkspace.html#a37b5c22c01352658c55dadcde7481222',1,'QPALMWorkspace']]],
+  ['initialized',['initialized',['../structQPALMWorkspace.html#a2b11e2d88538ac40ee4458f019dd9b5f',1,'QPALMWorkspace']]],
+  ['inner_5fmax_5fiter',['inner_max_iter',['../structQPALMSettings.html#a85d5b4da186c51e6e92b22cf746c4a75',1,'QPALMSettings']]],
+  ['iter',['iter',['../structQPALMInfo.html#a37deb2f191ee74eb42877aff5d31e44c',1,'QPALMInfo']]],
+  ['iter_5fout',['iter_out',['../structQPALMInfo.html#a10f2f0fd44923bdcc22951f9de27d391',1,'QPALMInfo']]]
 ];

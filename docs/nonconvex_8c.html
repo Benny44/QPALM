@@ -92,12 +92,12 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a5af0ff8dd6794af60484c4fdca873fd5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8c.html#a5af0ff8dd6794af60484c4fdca873fd5">set_settings_nonconvex</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, cholmod_common *c)</td></tr>
-<tr class="memdesc:a5af0ff8dd6794af60484c4fdca873fd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the proximal parameters for nonconvex QPs.  <a href="#a5af0ff8dd6794af60484c4fdca873fd5">More...</a><br /></td></tr>
-<tr class="separator:a5af0ff8dd6794af60484c4fdca873fd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8d8f2961242a1367cab7c1957a3006c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8c.html#ae8d8f2961242a1367cab7c1957a3006c">gershgorin_max</a> (cholmod_sparse *M, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *center, <a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *radius)</td></tr>
-<tr class="memdesc:ae8d8f2961242a1367cab7c1957a3006c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the Gershgorin upper bound for the eigenvalues of a symmetric matrix.  <a href="#ae8d8f2961242a1367cab7c1957a3006c">More...</a><br /></td></tr>
-<tr class="separator:ae8d8f2961242a1367cab7c1957a3006c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ff50e6448c57737f4bed0689550f10e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8c.html#a7ff50e6448c57737f4bed0689550f10e">set_settings_nonconvex</a> (<a class="el" href="structQPALMWorkspace.html">QPALMWorkspace</a> *work, <a class="el" href="types_8h.html#a104c7fb73a51d9ce72647fcc68e8bff5">solver_common</a> *c)</td></tr>
+<tr class="memdesc:a7ff50e6448c57737f4bed0689550f10e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the proximal parameters for nonconvex QPs.  <a href="#a7ff50e6448c57737f4bed0689550f10e">More...</a><br /></td></tr>
+<tr class="separator:a7ff50e6448c57737f4bed0689550f10e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2a80b1d0a937afe2f6731b182ed63ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="nonconvex_8c.html#ab2a80b1d0a937afe2f6731b182ed63ac">gershgorin_max</a> (<a class="el" href="types_8h.html#a8ebb23b8bd268deb6f5b1c5cd58b3923">solver_sparse</a> *M, <a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *center, <a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *radius)</td></tr>
+<tr class="memdesc:ab2a80b1d0a937afe2f6731b182ed63ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the Gershgorin upper bound for the eigenvalues of a symmetric matrix.  <a href="#ab2a80b1d0a937afe2f6731b182ed63ac">More...</a><br /></td></tr>
+<tr class="separator:ab2a80b1d0a937afe2f6731b182ed63ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Routines to deal with nonconvex QPs. </p>
@@ -121,28 +121,28 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ae8d8f2961242a1367cab7c1957a3006c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8d8f2961242a1367cab7c1957a3006c">&#9670;&nbsp;</a></span>gershgorin_max()</h2>
+<a id="ab2a80b1d0a937afe2f6731b182ed63ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2a80b1d0a937afe2f6731b182ed63ac">&#9670;&nbsp;</a></span>gershgorin_max()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> gershgorin_max </td>
+          <td class="memname"><a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> gershgorin_max </td>
           <td>(</td>
-          <td class="paramtype">cholmod_sparse *&#160;</td>
+          <td class="paramtype"><a class="el" href="types_8h.html#a8ebb23b8bd268deb6f5b1c5cd58b3923">solver_sparse</a> *&#160;</td>
           <td class="paramname"><em>M</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *&#160;</td>
           <td class="paramname"><em>center</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="global__opts_8h.html#a7f1a9fda95e52979658c20a0d134fb15">c_float</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> *&#160;</td>
           <td class="paramname"><em>radius</em>&#160;</td>
         </tr>
         <tr>
@@ -155,7 +155,8 @@ Functions</h2></td></tr>
 
 <p>Calculate the Gershgorin upper bound for the eigenvalues of a symmetric matrix. </p>
 <p class="">This routine uses the Gershgorin circle theorem to compute an upper bound on the eigenvalues of a matrix.</p>
-<p class="">@assumption M is symmetric </p><dl class="params"><dt>Parameters</dt><dd>
+<dl class="section note"><dt>Note</dt><dd>M is assumed to be symmetric</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">M</td><td>Matrix </td></tr>
     <tr><td class="paramname">center</td><td>Vector of size M-&gt;ncol to hold the values of the centers of the discs </td></tr>
@@ -167,8 +168,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5af0ff8dd6794af60484c4fdca873fd5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5af0ff8dd6794af60484c4fdca873fd5">&#9670;&nbsp;</a></span>set_settings_nonconvex()</h2>
+<a id="a7ff50e6448c57737f4bed0689550f10e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ff50e6448c57737f4bed0689550f10e">&#9670;&nbsp;</a></span>set_settings_nonconvex()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -182,7 +183,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cholmod_common *&#160;</td>
+          <td class="paramtype"><a class="el" href="types_8h.html#a104c7fb73a51d9ce72647fcc68e8bff5">solver_common</a> *&#160;</td>
           <td class="paramname"><em>c</em>&#160;</td>
         </tr>
         <tr>
@@ -198,6 +199,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">work</td><td>Workspace </td></tr>
+    <tr><td class="paramname">c</td><td>Linear systems solver environment </td></tr>
   </table>
   </dd>
 </dl>
