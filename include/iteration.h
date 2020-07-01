@@ -20,17 +20,21 @@
  * 
  * This routine is called at the start of every QPALM iteration. It computes the current residual vectors,
  * which are required by the termination routines and by the other iteration routines.
- * @param work Workspace
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
  */
-void compute_residuals(QPALMWorkspace* work, solver_common *c);
+void compute_residuals( QPALMWorkspace  *work, 
+                        solver_common   *c);
 
 /**
  * Initialize penalty factors from initial x.
  * 
  * The formula used here can be found in \cite birgin2014practical.  
- * @param work Workspace
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
  */
-void initialize_sigma(QPALMWorkspace *work, solver_common *c);
+void initialize_sigma(  QPALMWorkspace  *work, 
+                        solver_common   *c);
 
 /**
  * Update the penalty factors. 
@@ -38,9 +42,11 @@ void initialize_sigma(QPALMWorkspace *work, solver_common *c);
  * Constraints that are active are penalized in proportion to their constraint violation.
  * If the number of changed penalty parameters is low, and the proximal penalty need not be further updated,
  * then the cholmod_factor LD is updated using a low-rank update based on the changed penalty factors.
- * @param work Workspace
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
  */
-void update_sigma(QPALMWorkspace* work, solver_common *c);
+void update_sigma(  QPALMWorkspace  *work, 
+                    solver_common   *c);
 
 /**
  * Update the proximal penalty. 
@@ -59,18 +65,22 @@ void update_gamma(QPALMWorkspace* work);
  * up the convergence of the dual residual in that case. First, the maximum allowed value is computed,
  * based on the fact that @f$Q+A^T \Sigma A + \frac{1}{\gamma}I@f$ should be sufficiently positive 
  * definite for the factorization routines.
- * @param work Workspace
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
  */
-void boost_gamma(QPALMWorkspace* work, solver_common *c);
+void boost_gamma(   QPALMWorkspace  *work, 
+                    solver_common   *c);
 
 /**
  * Update the primal iterate.
  * 
  * This function calls the functions that compute the newton direction and stepsize from exact linesearch,
  * and applies the update.
- * @param work Workspace
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
  */
-void update_primal_iterate(QPALMWorkspace *work, solver_common *c);
+void update_primal_iterate( QPALMWorkspace *work, 
+                            solver_common   *c);
 
 /**
  * Compute the (unscaled) primal objective value at the current iterate.
@@ -82,9 +92,11 @@ c_float compute_objective(QPALMWorkspace *work);
 /**
  * Compute the (unscaled) dual objective value at the current iterate.
  * @return The value of the dual objective at the current iterate.
- * @param work Workspace
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
  */ 
-c_float compute_dual_objective(QPALMWorkspace *work, solver_common *c);
+c_float compute_dual_objective( QPALMWorkspace *work, 
+                                solver_common   *c);
 
 
 #endif

@@ -1,9 +1,8 @@
 /**
  * @file constants.h
  * @author Ben Hermans
- * @brief Macros used in QPALM
- * @details This file contains the macros that are used as default settings and to set the solver status.
- * @warning Verbose is not implemented as of yet.
+ * @brief Constants used in QPALM
+ * @details This file contains the constants that are used as default settings and to set the solver status.
  */
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
@@ -103,11 +102,11 @@ extern "C" {
 #define FACTORIZE_SCHUR 1 /**< factorize the Schur complement */
 #define FACTORIZE_KKT_OR_SCHUR 2 /**< select automatically between kkt system and schur complement */
 
-#define FACTORIZATION_METHOD FACTORIZE_SCHUR /**< default method for solving the linear system */
+#define FACTORIZATION_METHOD FACTORIZE_KKT /**< default method for solving the linear system */
 
 #ifdef USE_LADEL
 #include "ladel.h"
-#define ORDERING AMD
+#define ORDERING AMD /**< ordering in the factorization */
 #elif defined USE_CHOLMOD
 #define ORDERING 0
 #endif

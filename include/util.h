@@ -6,14 +6,14 @@
  * to update the solver status, to print information and to time the algorithm.
  */
 #ifndef UTIL_H
-# define UTIL_H
+#define UTIL_H
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-# endif // ifdef __cplusplus
+#endif // ifdef __cplusplus
 
-# include "types.h"
-# include "constants.h"
+#include "types.h"
+#include "constants.h"
 
 
 /**********************

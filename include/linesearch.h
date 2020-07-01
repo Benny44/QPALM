@@ -16,8 +16,9 @@
 /**
  * Execute exact linesearch (using qsort)
  * 
- * @param work Workspace
- * @return tau Step size
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
+ * @return      tau  Step size
  */
 c_float exact_linesearch(QPALMWorkspace *work, solver_common *c);
 

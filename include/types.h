@@ -166,7 +166,7 @@ typedef struct {
   solver_dense *D_temp;          ///< temporary primal variable scaling vectors
   solver_dense *neg_dphi;        ///< -gradient of the Lagrangian
   solver_dense *rhs_kkt;         ///< [-dphi; zeros(m,1)]
-  solver_dense *sol_kkt;         ///< sol_kkt = kkt\rhs_kkt
+  solver_dense *sol_kkt;         ///< sol_kkt = kkt \\ rhs_kkt
   solver_dense *d;               ///< primal update step
   solver_dense *Ad;              ///< A * d
   solver_dense *Qd;              ///< Q * d

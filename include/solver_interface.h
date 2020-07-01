@@ -49,7 +49,17 @@ void mat_tpose_vec(solver_sparse *A,
                    solver_dense  *y,
                    solver_common *c);
 
-void qpalm_set_factorization_method(QPALMWorkspace *work, solver_common *c);
+/**
+ * Choose the linear systems solver method based on the problem data sizes.
+ * 
+ * This chooses between forming and solving the KKT system or the SCHUR complement.
+ * The resulting method is in work->solver->factorization_method.
+ * 
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
+ */
+void qpalm_set_factorization_method(QPALMWorkspace  *work, 
+                                    solver_common   *c);
 
 #ifdef USE_LADEL
 #include "ladel.h"
@@ -57,15 +67,64 @@ void qpalm_set_factorization_method(QPALMWorkspace *work, solver_common *c);
 #define mat_inf_norm_cols ladel_infinity_norm_columns
 #define mat_inf_norm_rows ladel_infinity_norm_rows
 
+/**
+ * Form the KKT system 
+ * @f$\begin{bmatrix}
+ * Q & A^T \\
+ * A & -\Sigma^{-1}
+ * \end{bmatrix} @f$. The result is in work->solver->kkt.
+ * 
+ * @note Only the rows of A corresponding to active constraints are included in the system above.
+ * This routine also saves some structures that are useful in updating the kkt system later.
+ * 
+ * @param work  Workspace
+ */
 void qpalm_form_kkt(QPALMWorkspace *work);
 
+/**
+ * Reform the KKT system (i.e. delete constraints which are no longer active and add those that are now active). 
+ * 
+ * @param work  Workspace
+ */
 void qpalm_reform_kkt(QPALMWorkspace *work);
 
-void kkt_update_entering_constraints(QPALMWorkspace *work, solver_common *c);
+/**
+ * Perform a factorization update for the entering constraints.
+ * 
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
+ */
+void kkt_update_entering_constraints(   QPALMWorkspace *work, 
+                                        solver_common   *c);
 
-void kkt_update_leaving_constraints(QPALMWorkspace *work, solver_common *c);
+/**
+ * Perform a factorization update for the leaving constraints.
+ * 
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
+ */
+void kkt_update_leaving_constraints(QPALMWorkspace  *work, 
+                                    solver_common   *c);
 
-void kkt_solve(QPALMWorkspace *work, solver_common *c);
+/**
+ * Solve the KKT system
+ * @f$\begin{bmatrix}
+ * Q + \frac{1}{\gamma}I & A^T \\
+ * A & -\Sigma^{-1}
+ * \end{bmatrix} \begin{bmatrix}
+ * d \\
+ * -\lambda
+ * \end{bmatrix} = \begin{bmatrix}
+ * -\nabla \varphi \\
+ * 0
+ * \end{bmatrix}
+ * @f$
+ * 
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
+ */
+void kkt_solve( QPALMWorkspace  *work, 
+                solver_common   *c);
 
 #elif defined USE_CHOLMOD
 #include "cholmod.h"

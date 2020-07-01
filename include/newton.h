@@ -19,9 +19,11 @@ extern "C" {
 /**
  * Sets work->d to the direction calculated by the semismooth Newton method
  * 
- * @param work Workspace
+ * @param work  Workspace
+ * @param c     Linear systems solver environment 
  */
-void newton_set_direction(QPALMWorkspace *work, solver_common *c);
+void newton_set_direction(  QPALMWorkspace  *work, 
+                            solver_common   *c);
 
 /**
  * Computes the set of active constraints and stores it in work->solver->active_constraints.

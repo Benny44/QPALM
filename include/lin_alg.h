@@ -83,9 +83,9 @@ void vec_set_scalar_int(c_int *a,
  * @param sc Value
  * @param n Vector length 
  */
-void vec_self_mult_scalar(c_float *a,
-                     c_float  sc,
-                     size_t   n);
+void vec_self_mult_scalar(  c_float *a,
+                            c_float sc,
+                            size_t  n);
 
 /**
  * Mulitply vector with a constant scale factor and store in a different vector.
@@ -95,10 +95,10 @@ void vec_self_mult_scalar(c_float *a,
  * @param b Output vector
  * @param n Vector length 
  */
-void vec_mult_scalar(const c_float *a,
-                     c_float  sc,
-                     c_float *b,
-                     size_t   n);
+void vec_mult_scalar(const c_float  *a,
+                     c_float        sc,
+                     c_float        *b,
+                     size_t         n);
 
 /** 
  * Inner product between two vectors, @f$a^T \cdot b@f$. 
@@ -119,7 +119,8 @@ c_float vec_prod(const c_float *a,
  * @param n Vector length
  * @return 2-norm of a
  */
-c_float vec_norm_two(const c_float *a, size_t n);
+c_float vec_norm_two(   const c_float   *a, 
+                        size_t          n);
 
 /**
  * Infinity norm of a vector, @f$\|a\|_\infty@f$
@@ -155,7 +156,11 @@ void vec_add_scaled(const c_float *a,
  * @param sc2 Scaling value for b
  * @param n Vector length
  * */
-void vec_mult_add_scaled(c_float *a, const c_float *b, c_float sc1, c_float sc2, size_t n);
+void vec_mult_add_scaled(   c_float         *a, 
+                            const c_float   *b, 
+                            c_float         sc1, 
+                            c_float         sc2, 
+                            size_t          n);
 
 /**
  * Elementwise reciprocal @f$b_i = 1/a_i@f$.

@@ -23,13 +23,16 @@ extern "C" {
  * This routine uses the Gershgorin circle theorem to compute an upper bound on the eigenvalues of 
  * a matrix.
  * 
- * @assumption M is symmetric
+ * @note M is assumed to be symmetric
+ * 
  * @param M Matrix
  * @param center Vector of size M->ncol to hold the values of the centers of the discs
  * @param radius Vector of size M->ncol to hold the values of the radii of the discs
  * @return Upper bound on the eigenvalues of M
  */
-c_float gershgorin_max(solver_sparse* M, c_float *center, c_float *radius);
+c_float gershgorin_max( solver_sparse   *M, 
+                        c_float         *center, 
+                        c_float         *radius);
 
 /**
  * Set the proximal parameters for nonconvex QPs.
@@ -38,9 +41,11 @@ c_float gershgorin_max(solver_sparse* M, c_float *center, c_float *radius);
  * (smaller than @f$ \frac{1}{|\lambda_\textrm{min}|} @f$). This ensures positive definiteness of 
  * @f$ Q + \frac{1}{\gamma}I @f$ during the iterations. The minimum eigenvalue is computed using lobpcg.
  * 
- * @param work Workspace
+ * @param work  Workspace
+ * @param c     Linear systems solver environment
  */
-void set_settings_nonconvex(QPALMWorkspace *work, solver_common *c);
+void set_settings_nonconvex(QPALMWorkspace  *work, 
+                            solver_common   *c);
 
 
 # ifdef __cplusplus

@@ -125,7 +125,8 @@ void qpalm_update_bounds(QPALMWorkspace *work,
  * @param work Workspace
  * @param q Linear part of the objective
  */
-void qpalm_update_q(QPALMWorkspace *work, const c_float *q);
+void qpalm_update_q(QPALMWorkspace  *work, 
+                    const c_float   *q);
 
 
 /**
@@ -140,4 +141,4 @@ void qpalm_cleanup(QPALMWorkspace *work);
  * @}
  */
 
-#endif
+#endif /* QPALM_H */

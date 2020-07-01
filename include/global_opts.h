@@ -18,8 +18,8 @@ extern "C" {
 
 #ifdef USE_LADEL
 #include "ladel.h"
-typedef ladel_double  c_float;
-typedef ladel_int     c_int;
+typedef ladel_double  c_float; /**< type for floating point numbers */
+typedef ladel_int     c_int; /**< type for integer numbers */
 
 #elif defined USE_CHOLMOD
 #include "cholmod.h"
@@ -122,11 +122,6 @@ static void* c_calloc(size_t num, size_t size) {
 
     #   endif /* if PY_MAJOR_VERSION >= 3 */
 
-// #define c_calloc(n,s) ({
-//         void * p_calloc = c_malloc((n)*(s));
-//         memset(p_calloc, 0, (n)*(s));
-//         p_calloc;
-//     })
     #   define c_free PyMem_Free
     #   define c_realloc PyMem_Realloc
 #  else  /* if not MATLAB of Python */
