@@ -102,7 +102,7 @@ extern "C" {
 #define FACTORIZE_SCHUR 1 /**< factorize the Schur complement */
 #define FACTORIZE_KKT_OR_SCHUR 2 /**< select automatically between kkt system and schur complement */
 
-#define FACTORIZATION_METHOD FACTORIZE_KKT /**< default method for solving the linear system */
+#define FACTORIZATION_METHOD FACTORIZE_KKT_OR_SCHUR /**< default method for solving the linear system */
 
 #ifdef USE_LADEL
 #include "ladel.h"

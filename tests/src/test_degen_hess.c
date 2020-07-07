@@ -61,6 +61,10 @@ void degen_hess_suite_setup(void) {
     Qp[0] = 0; Qp[1] = 2; Qp[2] = 4; Qp[3] = 4;
     Qi[0] = 0; Qi[1] = 1; Qi[2] = 0; Qi[3] = 1; 
 
+    #ifdef USE_LADEL
+    ladel_to_upper_diag(Q);
+    #endif
+
     data->A = A;
     data->Q = Q;
 }

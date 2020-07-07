@@ -5,44 +5,69 @@ schur_approx = true;
 this_path = fileparts(mfilename('fullpath'));
 cd(this_path);
 
-load('mm_ladel_kkt.mat')
+% load('mm_ladel_kkt.mat')
+load('full_newest_kkt.mat')
+% load('kkt_reference')
 T_qpalm_c_kkt = Tqpalm_c;
 Iter_qpalm_c_kkt = Iter_qpalm_c;
 
-load('mm_ladel_schur_limit_2.mat')
+% load('mm_ladel_schur_limit_2.mat')
+load('full_newest_schur.mat');
+% load('schur_reference')
+
 T_qpalm_c_schur = Tqpalm_c;
 Iter_qpalm_c_schur = Iter_qpalm_c;
 
-load('mm_cholmod.mat')
-T_qpalm_c_cholmod = Tqpalm_c;
+% load('mm_cholmod.mat')
+% T_qpalm_c_cholmod = Tqpalm_c;
 
 figure 
-loglog([1e-3 1e3],[1 1],'b--');
+loglog([1e-4 1e3],[1 1],'b--');
 hold on
-for i = 1:136
-    if ismember(i, [13,14,15,21])
-        continue;
-    else
+loglog([2 2], [1e-5, 1e1],'g--')  
+
+NNZ_KKT = zeros(size(T_qpalm_c_kkt));
+NNZ_SCHUR = zeros(size(T_qpalm_c_kkt));
+for i = 1:length(T_qpalm_c_kkt)
+%     if ismember(i, [13,14,15,21])
+%         continue;
+%     else
         prob = matData{i};
-        nnz_kkt = nnz(triu(prob.P)) + nnz(prob.A) + prob.m;
+        nnz_kkt = nnz(triu(prob.P,1)) + prob.n + nnz(prob.A) + prob.m;
+        NNZ_KKT(i) = nnz_kkt;
         if schur_approx
-            Annz = zeros(prob.m,1);
+            nnz_schur_approx = nnz(triu(prob.P,1)) + prob.n;
+            
             At = prob.A';
+            max_Annz = 0;
+            n = matData{i}.n;
             for j = 1:prob.m
-                Annz(j) = nnz(At(:,j));
+                Annz = nnz(At(:,j));
+                if Annz + max_Annz <= n
+                    nnz_schur_approx = nnz_schur_approx + 0.5*Annz*(Annz-1);
+                else
+                    nnz_schur_approx = nnz_schur_approx + (n-max_Annz)*(Annz-(n-max_Annz+1)/2);
+                end
+                max_Annz = max(max_Annz, Annz);
             end
-            nnz_schur_approx = nnz(triu(prob.P)) + 0.5*sum(Annz.*(Annz-1));
+            
+            
+            NNZ_SCHUR(i) = nnz_schur_approx;
             loglog(nnz_kkt/nnz_schur_approx, T_qpalm_c_kkt(i)/T_qpalm_c_schur(i), 'b*');
 %             loglog(nnz_kkt/nnz_schur_approx, T_qpalm_c_kkt(i)/T_qpalm_c_cholmod(i), 'r*');
 %             loglog(nnz_kkt/nnz_schur_approx, T_qpalm_c_schur(i)/T_qpalm_c(i), 'gsq');
 
         else
-            nnz_schur = nnz(triu(prob.P+prob.A'*prob.A));
+            try
+                nnz_schur = nnz(triu(prob.P+prob.A'*prob.A, 1)) + prob.n;
+            catch
+                nnz_schur = matData{i}.n^2;
+            end
             loglog(nnz_kkt/nnz_schur, T_qpalm_c_kkt(i)/T_qpalm_c_schur(i), 'b*');
 %             loglog(nnz_kkt/nnz_schur, T_qpalm_c_kkt(i)/T_qpalm_c_cholmod(i), 'r*');
 %             loglog(nnz_kkt/nnz_schur, T_qpalm_c_schur(i)/T_qpalm_c_cholmod(i), 'gsq');
         end
-    end
+%     end
 end
 
 title('Comparison KKT and SCHUR methods');
