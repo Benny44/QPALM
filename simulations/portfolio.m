@@ -2,24 +2,24 @@
 %Sparse regressor selection
 clear; close all;
 
-options.qpalm_matlab = true;
-options.qpalm_c = false;
-options.osqp = false;
-options.qpoases = false;
+options.qpalm_matlab = false;
+options.qpalm_c = true;
+options.osqp = true;
+options.qpoases = true;
 options.gurobi = false;
-options.VERBOSE = true;
-options.SCALING_ITER = 0;
-% options.EPS_ABS = 1e-4;
+options.VERBOSE = false;
+options.SCALING_ITER = 10;
+options.EPS_ABS = 1e-6;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
 Tosqp = [];
 Tqpoases = [];
 Tgurobi = [];
-rng(1)
+% rng(1)
 
 nb_gamma = 2;
-n_values = 400:20:421;
+n_values = 100:20:1000;
 nb_n = length(n_values);
 
 for i = 1:nb_n

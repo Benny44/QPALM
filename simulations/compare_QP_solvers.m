@@ -141,7 +141,7 @@ if options.qpalm_c
         settings.gamma_max = 1e7;
         settings.sigma_init = 2e1;
         settings.delta = 100;
-        settings.factorization_method = 0; %0: KKT, 1: SCHUR
+        settings.factorization_method = 2; %0: KKT, 1: SCHUR
 
         solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
         try
@@ -222,7 +222,7 @@ else
 end
 
 if options.qpoases
-    qpoases_options = qpOASES_options('default', 'printLevel', 0, 'terminationTolerance', 1e-6, 'maxCpuTime', TIME_LIMIT);
+    qpoases_options = qpOASES_options('default', 'printLevel', 0, 'terminationTolerance', EPS_ABS, 'maxCpuTime', TIME_LIMIT, 'maxIter', MAXITER);
 
     for k = 1:n
         [x.qpoases,fval,status.qpoases,iter.qpoases,lambda,auxOutput] = qpOASES(prob.Q,prob.q,prob.A,l,u,prob.lb,prob.ub,qpoases_options);
