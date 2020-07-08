@@ -1,7 +1,4 @@
 #include "qpalm.h"
-#include "constants.h"
-#include "global_opts.h"
-#include "cholmod.h"
 #include "qpalm_qps.h"
 #include "qps_conversion.h"
 #include <stdio.h>
@@ -147,13 +144,3 @@ char* convert_qps_to_new_format(const char* filename) {
     return new_filename;
 
 }
-
-// int main(int argc, char *argv[]) {
-//     char* filename = argv[1];
-
-//     char* new_filename = convert_qps_to_new_format(filename);  
-
-//     c_free(new_filename);
-//     return 0;
-
-// }

@@ -7,6 +7,6 @@ eps_abs 1e-6
 eps_rel 1e-6
 eps_prim_inf 1e-6
 eps_dual_inf 1e-6
-max_iter 10000
+max_iter 50000
 verbose 1 
 time_limit 3600

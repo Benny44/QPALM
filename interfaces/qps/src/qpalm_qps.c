@@ -1,7 +1,4 @@
 #include "qpalm.h"
-#include "constants.h"
-#include "global_opts.h"
-#include "cholmod.h"
 #include "qpalm_qps.h"
 #include "qps_conversion.h"
 #include "index_hash.h"
@@ -10,13 +7,19 @@
 #include <math.h>
 #include <string.h>
 
+#ifdef USE_LADEL
+#include "ladel.h"
+#elif defined USE_CHOLMOD
+#include "cholmod.h"
+#endif
+
 typedef struct {
     int no_name_bounds;
     int no_name_rhs;
 } read_options;
 
-/* Print a cholmod matrix so the output can be entered into matlab */
-void print_cholmod_matlab(cholmod_sparse *M) {
+/* Print a sparse matrix so the output can be entered into matlab */
+void print_sparse_matlab(solver_sparse *M) {
     printf("M = sparse(%ld, %ld);", M->nrow, M->ncol);
     size_t col, index = 0; 
     long int row;
@@ -207,11 +210,16 @@ int get_sizes_and_check_format(FILE *fp, QPALMData *data, struct index_table **f
         data->bmin = c_calloc(m, sizeof(c_float));
         data->bmax = c_calloc(m, sizeof(c_float));    
 
-        cholmod_common c;
+        solver_common c;
+        #ifdef USE_LADEL
+        data->A = ladel_sparse_alloc((c_int)m, (c_int)n, (c_int)Annz, UNSYMMETRIC, TRUE, FALSE);
+        data->Q = ladel_sparse_alloc(n, n, Qnnz, LOWER, TRUE, FALSE);
+        #elif defined USE_CHOLMOD
         CHOLMOD(start)(&c);
         data->A = CHOLMOD(allocate_sparse)(m, n, Annz, TRUE, TRUE, 0, CHOLMOD_REAL, &c);
         data->Q = CHOLMOD(allocate_sparse)(n, n, Qnnz, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
         CHOLMOD(finish)(&c);
+        #endif
     }
     return old_format_detected;
 }
@@ -293,7 +301,7 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
                     data->bmax[k] = QPALM_INFTY;
             }
         } else if (!strcmp(command, "COLUMNS")) {
-            Ap[0] = 0;
+            Ap[0] = 0; Ap[1] = 0;
             size_t elemA = 0;
             prev_col = 1;
             col = 0;
@@ -489,7 +497,7 @@ void read_data(FILE* fp, QPALMData *data, struct index_table* row_index_table,
         } else if (!strcmp(command, "QUADOBJ")) {
             prev_col = 1;
             size_t elemQ = 0;
-            Qp[0] = 0;
+            Qp[0] = 0; Qp[1] = 0;
             while(next_char == ' ') {
                 fgets(line, 100, fp);
                 sscanf(line, "%s %s %le", colchar, rowchar, &temp);
@@ -635,6 +643,8 @@ void read_settings(QPALMSettings *settings, FILE* fp) {
             settings->delta = temp;
         else if (!strcmp(setting, "sigma_max"))
             settings->sigma_max = temp;
+        else if (!strcmp(setting, "sigma_init"))
+            settings->sigma_init = temp;
         else if (!strcmp(setting, "proximal"))
             settings->proximal = (c_int)temp;
         else if (!strcmp(setting, "gamma_init"))
@@ -661,6 +671,15 @@ void read_settings(QPALMSettings *settings, FILE* fp) {
             settings->dual_objective_limit = temp;
         else if (!strcmp(setting, "time_limit"))
             settings->time_limit = temp;
+        else if (!strcmp(setting, "ordering"))
+            settings->ordering = (c_int)temp;
+        else if (!strcmp(setting, "factorization_method"))
+            settings->factorization_method = (c_int)temp;
+        else if (!strcmp(setting, "max_rank_update"))
+            settings->max_rank_update = (c_int)temp;
+        else if (!strcmp(setting, "max_rank_update_fraction"))
+            settings->max_rank_update_fraction = temp;
+        
         else {
             printf("Unrecognised setting: %s\n", setting);
             return;
@@ -751,18 +770,6 @@ int main(int argc, char*argv[]){
 
     printf("Reading successful.\n");
 
-    // printf("Q\n");
-    // print_cholmod_matlab(data->Q);
-    // printf("A\n");
-    // print_cholmod_matlab(data->A);
-    // printf("q\n");
-    // print_dense_vector_matlab(data->q, n);
-    // printf("bmin\n");
-    // print_dense_vector_matlab(data->bmin, m);
-    // printf("bmax\n");
-    // print_dense_vector_matlab(data->bmax, m);
-
-
     /* Setup problem */
     QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     if (argc==3) {
@@ -774,11 +781,12 @@ int main(int argc, char*argv[]){
         } else {
             read_settings(settings, fp);
         }
+        fclose(fp);
     } else {
        qpalm_set_default_settings(settings);
     }
 
-    cholmod_common c;
+    solver_common c;
     QPALMWorkspace *work = qpalm_setup(data, settings);
 
     /* Solve Problem */
@@ -796,11 +804,16 @@ int main(int argc, char*argv[]){
     print_out_bpmpd(data, work->info, argv[1]);
     #endif
 
-    // // Clean workspace
+    // Clean workspace
+    #ifdef USE_LADEL
+    data->Q = ladel_sparse_free(data->Q);
+    data->A = ladel_sparse_free(data->A);
+    #elif defined USE_CHOLMOD
     CHOLMOD(start)(&c);
     CHOLMOD(free_sparse)(&data->Q, &c);
     CHOLMOD(free_sparse)(&data->A, &c);
     CHOLMOD(finish)(&c);
+    #endif
     qpalm_cleanup(work);
 
     c_free(data->q);
