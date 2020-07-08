@@ -117,7 +117,7 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x, solver_common *c) {
             norm_w = vec_norm_two(w, n);
             lambda -= c_sqrt(2)*norm_w; /* Theoretical bound on the eigenvalue */
             if (n <= 3) lambda -= 1e-6; /* If n <= 3, we should have the exact eigenvalue, hence we subtract a small value */
-            return lambda;
+            break;
         } 
         vec_add_scaled(w, x, w, -vec_prod(x, w, n), n);
         vec_self_mult_scalar(w, 1.0/vec_norm_two(w, n), n);
