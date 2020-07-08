@@ -20,7 +20,8 @@ add_executable(run_all_tests
 
 target_include_directories(run_all_tests 
         PRIVATE 
-                include)
+                include
+                include/Minunit)
 
 target_link_libraries(run_all_tests qpalm)
 

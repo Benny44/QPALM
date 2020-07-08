@@ -10,3 +10,7 @@
 	path = LADEL
 	url = https://github.com/Benny44/LADEL
 	branch = master
+[submodule "tests/include/Minunit"]
+	path = tests/include/Minunit
+	url = https://github.com/Benny44/Minunit.git
+	branch = master
