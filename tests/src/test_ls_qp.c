@@ -20,6 +20,7 @@ void ls_qp_suite_setup(void) {
     settings->eps_abs = 1e-6;
     settings->eps_rel = 1e-6;
     settings->gamma_max = 1e3;
+    settings->gamma_init = 1e1;
 
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;

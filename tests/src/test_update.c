@@ -96,7 +96,7 @@ MU_TEST(test_update_settings) {
     mu_assert_double_eq(work->solution->x[0], -0.1, 1e-5);
     mu_assert_double_eq(work->solution->x[1], 0.3, 1e-5);
 
-    settings->gamma_init *= 10;
+    settings->gamma_init *= 0.1;
     settings->theta = 0.9;
     settings->proximal = TRUE;
     settings->scaling = 10;
