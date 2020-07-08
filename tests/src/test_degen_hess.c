@@ -107,5 +107,12 @@ MU_TEST(test_degen_hess) {
 MU_TEST_SUITE(suite_degen_hess) {
     MU_SUITE_CONFIGURE(degen_hess_suite_setup, degen_hess_suite_teardown, NULL, degen_hess_test_teardown);
 
+    settings->max_rank_update_fraction = 1.0;
+
+    settings->factorization_method = FACTORIZE_KKT_OR_SCHUR;
+    MU_RUN_TEST(test_degen_hess);
+    settings->factorization_method = FACTORIZE_KKT;
+    MU_RUN_TEST(test_degen_hess);
+    settings->factorization_method = FACTORIZE_SCHUR;
     MU_RUN_TEST(test_degen_hess);
 }       

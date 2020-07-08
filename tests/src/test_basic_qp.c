@@ -15,9 +15,6 @@ static c_float solution[N] = {2.0000000e+00, -6.3801365e+01, -3.3821109e+03, -6.
 
 void basic_qp_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
-    qpalm_set_default_settings(settings);
-    settings->eps_abs = 1e-6;
-    settings->eps_rel = 1e-6;
 
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
@@ -88,6 +85,22 @@ void basic_qp_suite_setup(void) {
     data->q[1] = 2.9613971e+00; 
     data->q[2] = 7.2865370e+00; 
     data->q[3] = 7.8925204e+00;
+}
+
+void basic_qp_test_setup(void)
+{
+    settings->proximal = PROXIMAL;
+    settings->scaling = SCALING;
+    settings->warm_start = WARM_START;
+    settings->max_iter = MAX_ITER;
+    settings->inner_max_iter = INNER_MAX_ITER;
+    settings->eps_abs = 1e-6;
+    settings->eps_rel = 1e-6;
+    settings->enable_dual_termination = ENABLE_DUAL_TERMINATION;
+    settings->dual_objective_limit = DUAL_OBJECTIVE_LIMIT;
+    settings->sigma_max = SIGMA_MAX;
+    settings->time_limit = TIME_LIMIT;
+    settings->gamma_init = 1e1;
 }
 
 void basic_qp_suite_teardown(void) {
@@ -179,6 +192,7 @@ MU_TEST(test_basic_qp_warm_start) {
     settings->proximal = TRUE;
     settings->warm_start = TRUE;
     work = qpalm_setup(data, settings);
+
     c_float x[N] = {2.0, -60.0, -3380.0, -6.0};
     c_float y[M] = {0.0, 0.0, -23.0, -0.014, 0.0};
     qpalm_warm_start(work, x, y);
@@ -200,6 +214,7 @@ MU_TEST(test_basic_qp_warm_start_unscaled) {
     settings->proximal = TRUE;
     settings->warm_start = TRUE;
     work = qpalm_setup(data, settings);
+
     c_float x[N] = {2.0, -60.0, -3380.0, -6.0};
     c_float y[M] = {0.0, 0.0, -23.0, -0.01, 0.0};
     qpalm_warm_start(work, x, y);
@@ -293,9 +308,6 @@ MU_TEST(test_basic_qp_warm_start_resolve) {
 
 MU_TEST(test_basic_qp_maxiter) {
     // Setup workspace
-    qpalm_set_default_settings(settings);
-    settings->eps_abs = 1e-6;
-    settings->eps_rel = 1e-6;
     settings->max_iter = 1;
 
     work = qpalm_setup(data, settings);
@@ -307,7 +319,6 @@ MU_TEST(test_basic_qp_maxiter) {
 
 MU_TEST(test_basic_qp_inner_maxiter) {
     // Setup workspace
-    qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-8;
     settings->eps_rel = 1e-8;
     settings->inner_max_iter = 2;
@@ -322,9 +333,6 @@ MU_TEST(test_basic_qp_inner_maxiter) {
 
 MU_TEST(test_basic_qp_dual_objective) {
     // Setup workspace
-    qpalm_set_default_settings(settings);
-    settings->eps_abs = 1e-6;
-    settings->eps_rel = 1e-6;
     settings->enable_dual_termination = TRUE;
 
     work = qpalm_setup(data, settings);
@@ -342,9 +350,6 @@ MU_TEST(test_basic_qp_dual_objective) {
 
 MU_TEST(test_basic_qp_dual_early_termination) {
     // Setup workspace
-    qpalm_set_default_settings(settings);
-    settings->eps_abs = 1e-6;
-    settings->eps_rel = 1e-6;
     settings->enable_dual_termination = TRUE;
     settings->dual_objective_limit = -1000000000.0;
 
@@ -383,10 +388,8 @@ MU_TEST(test_basic_qp_time_limit) {
     mu_assert_long_eq(work->info->status_val, QPALM_TIME_LIMIT_REACHED);
 }
 
-
-MU_TEST_SUITE(suite_basic_qp) {
-    MU_SUITE_CONFIGURE(basic_qp_suite_setup, basic_qp_suite_teardown, NULL, basic_qp_test_teardown);
-
+MU_TEST_COLLECTION(basic_qp_all)
+{
     MU_RUN_TEST(test_basic_qp);
     MU_RUN_TEST(test_basic_qp_unscaled);
     MU_RUN_TEST(test_basic_qp_noprox);
@@ -403,3 +406,23 @@ MU_TEST_SUITE(suite_basic_qp) {
     MU_RUN_TEST(test_basic_qp_sigma_max);
     MU_RUN_TEST(test_basic_qp_time_limit);
 }
+
+MU_TEST_SUITE(suite_basic_qp) {
+    MU_SUITE_CONFIGURE(basic_qp_suite_setup, basic_qp_suite_teardown, basic_qp_test_setup, basic_qp_test_teardown);
+    
+    qpalm_set_default_settings(settings);
+    settings->max_rank_update_fraction = 1.0;
+    settings->factorization_method = FACTORIZE_KKT_OR_SCHUR;
+    MU_RUN_COLLECTION(basic_qp_all);
+    /* Now run the tests for a KKT factorization method */
+    qpalm_set_default_settings(settings);
+    settings->factorization_method = FACTORIZE_KKT;
+    settings->max_rank_update_fraction = 1.0;
+    MU_RUN_COLLECTION(basic_qp_all);
+    /* Now run the tests for a SCHUR factorization method */
+    qpalm_set_default_settings(settings);
+    settings->factorization_method = FACTORIZE_SCHUR;
+    settings->max_rank_update_fraction = 1.0;
+    MU_RUN_COLLECTION(basic_qp_all);
+}
+    

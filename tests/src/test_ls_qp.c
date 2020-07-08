@@ -113,5 +113,15 @@ MU_TEST(test_ls_qp) {
 MU_TEST_SUITE(suite_ls_qp) {
     MU_SUITE_CONFIGURE(ls_qp_suite_setup, ls_qp_suite_teardown, NULL, ls_qp_test_teardown);
 
+    settings->max_rank_update_fraction = 1.0;
+    settings->factorization_method = FACTORIZE_KKT_OR_SCHUR;
     MU_RUN_TEST(test_ls_qp);
+
+    settings->factorization_method = FACTORIZE_KKT;
+    MU_RUN_TEST(test_ls_qp);
+
+    settings->factorization_method = FACTORIZE_SCHUR;
+    MU_RUN_TEST(test_ls_qp);
+
+    
 }

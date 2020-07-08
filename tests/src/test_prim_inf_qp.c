@@ -16,20 +16,11 @@ solver_common common;
 
 void prim_inf_qp_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
-    qpalm_set_default_settings(settings);
-    settings->eps_abs = 1e-6;
-    settings->eps_rel = 1e-6;
 
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
     data->m = M;
     data->c = 0;
-    // c_float q[N] = {1, -2};
-    // data->q = q;
-    // c_float bmin[M] = {-5, -10, 16};
-    // c_float bmax[M] = {5, 10, 20};
-    // data->bmin = bmin;
-    // data->bmax = bmax;
 
     data->q = c_calloc(N,sizeof(c_float));
     data->q[0] = 1; data->q[1] = -2; 
@@ -86,9 +77,7 @@ void prim_inf_qp_suite_teardown(void) {
     c_free(data->bmin);
     c_free(data->bmax);
     c_free(data);
-
 }
-
 
 void prim_inf_qp_test_teardown(void) {
     qpalm_cleanup(work);
@@ -135,12 +124,35 @@ MU_TEST(test_prim_inf_qp_noprox_unscaled) {
     mu_assert_long_eq(work->info->status_val, QPALM_PRIMAL_INFEASIBLE);
 }
 
-MU_TEST_SUITE(suite_prim_inf_qp) {
-    MU_SUITE_CONFIGURE(prim_inf_qp_suite_setup, prim_inf_qp_suite_teardown, NULL, prim_inf_qp_test_teardown);
-
+MU_TEST_COLLECTION(prim_inf_qp_all)
+{
     MU_RUN_TEST(test_prim_inf_qp);
     MU_RUN_TEST(test_prim_inf_qp_unscaled);
     MU_RUN_TEST(test_prim_inf_qp_noprox);
     MU_RUN_TEST(test_prim_inf_qp_noprox_unscaled);
+}
+
+MU_TEST_SUITE(suite_prim_inf_qp) {
+    MU_SUITE_CONFIGURE(prim_inf_qp_suite_setup, prim_inf_qp_suite_teardown, NULL, prim_inf_qp_test_teardown);
+
+    qpalm_set_default_settings(settings);
+    settings->eps_abs = 1e-6;
+    settings->eps_rel = 1e-6;
+    settings->max_rank_update_fraction = 1.0;
+    settings->factorization_method = FACTORIZE_KKT_OR_SCHUR;
+    MU_RUN_COLLECTION(prim_inf_qp_all);
     
+    qpalm_set_default_settings(settings);
+    settings->eps_abs = 1e-6;
+    settings->eps_rel = 1e-6;
+    settings->max_rank_update_fraction = 1.0;
+    settings->factorization_method = FACTORIZE_KKT;
+    MU_RUN_COLLECTION(prim_inf_qp_all);
+    
+    qpalm_set_default_settings(settings);
+    settings->eps_abs = 1e-6;
+    settings->eps_rel = 1e-6;
+    settings->max_rank_update_fraction = 1.0;
+    settings->factorization_method = FACTORIZE_SCHUR;
+    MU_RUN_COLLECTION(prim_inf_qp_all);   
 }

@@ -7,22 +7,24 @@
 #define QNZMAX 4
 
 QPALMWorkspace *work; // Workspace
+QPALMSettings *settings;
+QPALMData *data;
+solver_common *c;
+solver_common common;
 
 void nonconvex_qp_suite_setup(void) {
-    QPALMSettings *settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
+    settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
     qpalm_set_default_settings(settings);
     settings->eps_abs = 1e-6;
     settings->eps_rel = 1e-6;
     settings->nonconvex = TRUE;
     settings->scaling = FALSE; /*So we can retrieve the actual eigenvalue*/
  
-
-    QPALMData *data = (QPALMData *)c_malloc(sizeof(QPALMData));
+    data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
     data->m = M;
     data->c = 0;
 
-    solver_common common, *c;
     c = &common;
     #ifdef USE_LADEL
     data->A = ladel_sparse_alloc(M, N, ANZMAX, UNSYMMETRIC, TRUE, FALSE);
@@ -86,11 +88,10 @@ void nonconvex_qp_suite_setup(void) {
     data->q[0] = -2.0146781e+00; 
     data->q[1] = 2.9613971e+00; 
     data->q[2] = 7.2865370e+00; 
-    data->q[3] = 7.8925204e+00;
+    data->q[3] = 7.8925204e+00;   
+}
 
-    // Setup workspace
-    work = qpalm_setup(data, settings);
-
+void nonconvex_qp_suite_teardown(void) {
     // Cleanup temporary structures
     c_free(settings);
     #ifdef USE_LADEL
@@ -109,11 +110,13 @@ void nonconvex_qp_suite_setup(void) {
     c_free(data);
 }
 
-void nonconvex_qp_suite_teardown(void) {
+void nonconvex_qp_test_teardown(void) {
     qpalm_cleanup(work);
 }
 
 void test_nonconvex_qp(void) {
+    // Setup workspace
+    work = qpalm_setup(data, settings); 
     // Solve Problem
     qpalm_solve(work);
 
@@ -123,7 +126,15 @@ void test_nonconvex_qp(void) {
 }
 
 MU_TEST_SUITE(suite_nonconvex) {
-    MU_SUITE_CONFIGURE(nonconvex_qp_suite_setup, nonconvex_qp_suite_teardown, NULL, NULL);
+    MU_SUITE_CONFIGURE(nonconvex_qp_suite_setup, nonconvex_qp_suite_teardown, NULL, nonconvex_qp_test_teardown);
 
+    settings->max_rank_update_fraction = 1.0;
+    settings->factorization_method = FACTORIZE_KKT_OR_SCHUR;
+    MU_RUN_TEST(test_nonconvex_qp);
+
+    settings->factorization_method = FACTORIZE_KKT;
+    MU_RUN_TEST(test_nonconvex_qp);
+
+    settings->factorization_method = FACTORIZE_SCHUR;
     MU_RUN_TEST(test_nonconvex_qp);
 }

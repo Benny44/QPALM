@@ -20,6 +20,7 @@ void update_suite_setup(void) {
     settings->eps_rel = 1e-6;
     settings->scaling = 2;
     settings->proximal = TRUE;
+    settings->factorization_method = FACTORIZE_KKT;
 
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;

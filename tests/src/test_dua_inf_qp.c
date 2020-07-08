@@ -15,9 +15,6 @@ solver_common common;
 
 void dua_inf_qp_suite_setup(void) {
     settings = (QPALMSettings *)c_malloc(sizeof(QPALMSettings));
-    qpalm_set_default_settings(settings);
-    settings->eps_abs = 1e-6;
-    settings->eps_rel = 1e-6;
 
     data = (QPALMData *)c_malloc(sizeof(QPALMData));
     data->n = N;
@@ -137,12 +134,35 @@ MU_TEST(test_dua_inf_qp_noprox_unscaled) {
     mu_assert_long_eq(work->info->status_val, QPALM_DUAL_INFEASIBLE);
 }
 
-MU_TEST_SUITE(suite_dua_inf_qp) {
-    MU_SUITE_CONFIGURE(dua_inf_qp_suite_setup, dua_inf_qp_suite_teardown, NULL, dua_inf_qp_test_teardown);
-
+MU_TEST_COLLECTION(dua_inf_qp_all)
+{
     MU_RUN_TEST(test_dua_inf_qp);
     MU_RUN_TEST(test_dua_inf_qp_unscaled);
     MU_RUN_TEST(test_dua_inf_qp_noprox);
     MU_RUN_TEST(test_dua_inf_qp_noprox_unscaled);
-    
+}
+
+MU_TEST_SUITE(suite_dua_inf_qp) {
+    MU_SUITE_CONFIGURE(dua_inf_qp_suite_setup, dua_inf_qp_suite_teardown, NULL, dua_inf_qp_test_teardown);
+
+    qpalm_set_default_settings(settings);
+    settings->eps_abs = 1e-6;
+    settings->eps_rel = 1e-6;
+    settings->factorization_method = FACTORIZE_KKT_OR_SCHUR;
+    settings->max_rank_update_fraction = 1.0;
+    MU_RUN_COLLECTION(dua_inf_qp_all);
+
+    qpalm_set_default_settings(settings);
+    settings->eps_abs = 1e-6;
+    settings->eps_rel = 1e-6;
+    settings->factorization_method = FACTORIZE_KKT;
+    settings->max_rank_update_fraction = 1.0;
+    MU_RUN_COLLECTION(dua_inf_qp_all);
+
+    qpalm_set_default_settings(settings);
+    settings->eps_abs = 1e-6;
+    settings->eps_rel = 1e-6;
+    settings->factorization_method = FACTORIZE_SCHUR;
+    settings->max_rank_update_fraction = 1.0;
+    MU_RUN_COLLECTION(dua_inf_qp_all);   
 }
