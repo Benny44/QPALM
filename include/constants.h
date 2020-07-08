@@ -96,6 +96,7 @@ extern "C" {
 #define TIME_LIMIT (QPALM_INFTY) /**< time limit after which the solver aborts */
 
 #define MAX_RANK_UPDATE 160 /**< maximum rank for the sparse factorization update */
+#define MAX_RANK_UPDATE_FRACTION 0.1 /**< maximum rank (relative to n+m) for the factorization update */
 
 /* Options for settings->factorization_method */
 #define FACTORIZE_KKT 0 /**< factorize the kkt system */

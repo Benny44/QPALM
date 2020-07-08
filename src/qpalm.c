@@ -37,34 +37,36 @@ extern "C" {
 
 void qpalm_set_default_settings(QPALMSettings *settings) {
 
-  settings->max_iter                = MAX_ITER;                /* maximum iterations */
-  settings->inner_max_iter          = INNER_MAX_ITER;          /* maximum iterations per subproblem */
-  settings->eps_abs                 = (c_float)EPS_ABS;        /* absolute convergence tolerance */
-  settings->eps_rel                 = (c_float)EPS_REL;        /* relative convergence tolerance */
-  settings->eps_abs_in              = (c_float)EPS_ABS_IN;     /* intermediate absolute convergence tolerance */
-  settings->eps_rel_in              = (c_float)EPS_REL_IN;     /* intermediate relative convergence tolerance */
-  settings->rho                     = (c_float)RHO;            /* tolerance scaling factor */
-  settings->eps_prim_inf            = (c_float)EPS_PRIM_INF;   /* primal infeasibility tolerance */
-  settings->eps_dual_inf            = (c_float)EPS_DUAL_INF;   /* dual infeasibility tolerance */
-  settings->theta                   = (c_float)THETA;          /* penalty update criterion parameter */
-  settings->delta                   = (c_float)DELTA;          /* penalty update factor */
-  settings->sigma_max               = (c_float)SIGMA_MAX;      /* penalty parameter cap */
-  settings->sigma_init              = (c_float)SIGMA_INIT;     /* initial penalty parameter (guideline) */
-  settings->proximal                = PROXIMAL;                /* boolean, proximal method of multipliers*/
-  settings->gamma_init              = (c_float)GAMMA_INIT;     /* proximal penalty parameter */
-  settings->gamma_upd               = (c_float)GAMMA_UPD;      /* proximal penalty update factor*/
-  settings->gamma_max               = (c_float)GAMMA_MAX;      /* proximal penalty parameter cap*/
-  settings->scaling                 = SCALING;                 /* boolean, scaling */
-  settings->nonconvex               = NONCONVEX;               /* boolean, nonconvex */
-  settings->warm_start              = WARM_START;              /* boolean, warm start solver */
-  settings->verbose                 = VERBOSE;                 /* boolean, write out progress */
-  settings->print_iter              = PRINT_ITER;              /* frequency of printing */
-  settings->reset_newton_iter       = RESET_NEWTON_ITER;       /* frequency of performing a full Cholesky factorization */
-  settings->enable_dual_termination = ENABLE_DUAL_TERMINATION; /* allow for dual termination (useful in branch and bound) */
-  settings->dual_objective_limit    = DUAL_OBJECTIVE_LIMIT;    /* termination value for the dual objective (useful in branch and bound) */
-  settings->time_limit              = TIME_LIMIT;              /* time limit */
-  settings->ordering                = ORDERING;                /* ordering */
-  settings->factorization_method    = FACTORIZATION_METHOD;    /* factorization method (kkt or schur) */
+  settings->max_iter                  = MAX_ITER;                           /* maximum iterations */
+  settings->inner_max_iter            = INNER_MAX_ITER;                     /* maximum iterations per subproblem */
+  settings->eps_abs                   = (c_float)EPS_ABS;                   /* absolute convergence tolerance */
+  settings->eps_rel                   = (c_float)EPS_REL;                   /* relative convergence tolerance */
+  settings->eps_abs_in                = (c_float)EPS_ABS_IN;                /* intermediate absolute convergence tolerance */
+  settings->eps_rel_in                = (c_float)EPS_REL_IN;                /* intermediate relative convergence tolerance */
+  settings->rho                       = (c_float)RHO;                       /* tolerance scaling factor */
+  settings->eps_prim_inf              = (c_float)EPS_PRIM_INF;              /* primal infeasibility tolerance */
+  settings->eps_dual_inf              = (c_float)EPS_DUAL_INF;              /* dual infeasibility tolerance */
+  settings->theta                     = (c_float)THETA;                     /* penalty update criterion parameter */
+  settings->delta                     = (c_float)DELTA;                     /* penalty update factor */
+  settings->sigma_max                 = (c_float)SIGMA_MAX;                 /* penalty parameter cap */
+  settings->sigma_init                = (c_float)SIGMA_INIT;                /* initial penalty parameter (guideline) */
+  settings->proximal                  = PROXIMAL;                           /* boolean, proximal method of multipliers*/
+  settings->gamma_init                = (c_float)GAMMA_INIT;                /* proximal penalty parameter */
+  settings->gamma_upd                 = (c_float)GAMMA_UPD;                 /* proximal penalty update factor*/
+  settings->gamma_max                 = (c_float)GAMMA_MAX;                 /* proximal penalty parameter cap*/
+  settings->scaling                   = SCALING;                            /* boolean, scaling */
+  settings->nonconvex                 = NONCONVEX;                          /* boolean, nonconvex */
+  settings->warm_start                = WARM_START;                         /* boolean, warm start solver */
+  settings->verbose                   = VERBOSE;                            /* boolean, write out progress */
+  settings->print_iter                = PRINT_ITER;                         /* frequency of printing */
+  settings->reset_newton_iter         = RESET_NEWTON_ITER;                  /* frequency of performing a full Cholesky factorization */
+  settings->enable_dual_termination   = ENABLE_DUAL_TERMINATION;            /* allow for dual termination (useful in branch and bound) */
+  settings->dual_objective_limit      = (c_float)DUAL_OBJECTIVE_LIMIT;      /* termination value for the dual objective (useful in branch and bound) */
+  settings->time_limit                = (c_float)TIME_LIMIT;                /* time limit */
+  settings->ordering                  = ORDERING;                           /* ordering */
+  settings->factorization_method      = FACTORIZATION_METHOD;               /* factorization method (kkt or schur) */
+  settings->max_rank_update           = MAX_RANK_UPDATE;                    /* maximum rank of the update */
+  settings->max_rank_update_fraction  = (c_float)MAX_RANK_UPDATE_FRACTION;  /* maximum rank (relative to n+m) of the update */
 }
 
 

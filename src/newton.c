@@ -36,7 +36,8 @@ void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
             work->solver->first_factorization = FALSE;
         } 
         else if (work->solver->reset_newton || 
-                (work->solver->nb_enter + work->solver->nb_leave) > c_min(0.1*(work->data->n+work->data->m), MAX_RANK_UPDATE)) 
+                (work->solver->nb_enter + work->solver->nb_leave) > 
+                    c_min(work->settings->max_rank_update_fraction*(work->data->n+work->data->m), work->settings->max_rank_update))
         {
             qpalm_reform_kkt(work);
             ladel_factorize_with_prior_basis_with_diag(work->solver->kkt, d, work->solver->sym, work->solver->LD, c);
@@ -55,7 +56,8 @@ void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
     } else if (work->solver->factorization_method == FACTORIZE_SCHUR)
     {
         if ((work->solver->reset_newton && work->solver->nb_active_constraints) || 
-            (work->solver->nb_enter + work->solver->nb_leave) > c_min(0.1*(work->data->n+work->data->m), MAX_RANK_UPDATE)) {
+            (work->solver->nb_enter + work->solver->nb_leave) > 
+                c_min(work->settings->max_rank_update_fraction*(work->data->n+work->data->m), work->settings->max_rank_update)) {
             ldlcholQAtsigmaA(work, c);   
         } else if (work->solver->nb_active_constraints) {
             if(work->solver->nb_enter) {

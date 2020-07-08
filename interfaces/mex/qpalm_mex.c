@@ -68,7 +68,9 @@ const char* QPALM_SETTINGS_FIELDS[] = {"max_iter",                  //c_int
                                       "time_limit",                 //c_float
                                       "verbose",                    //c_int
                                       "ordering",                   //c_int
-                                      "factorization_method"};      //c_int                   
+                                      "factorization_method",       //c_int    
+                                      "max_rank_update",            //c_int
+                                      "max_rank_update_fraction"};  //c_float                      
 
 
 // internal utility functions
@@ -479,6 +481,8 @@ mxArray* copySettingsToMxStruct(QPALMSettings* settings){
   mxSetField(mxPtr, 0, "time_limit",                mxCreateDoubleScalar(settings->time_limit));
   mxSetField(mxPtr, 0, "ordering",                  mxCreateDoubleScalar(settings->ordering));
   mxSetField(mxPtr, 0, "factorization_method",      mxCreateDoubleScalar(settings->factorization_method));
+  mxSetField(mxPtr, 0, "max_rank_update",           mxCreateDoubleScalar(settings->max_rank_update));
+  mxSetField(mxPtr, 0, "max_rank_update_fraction",  mxCreateDoubleScalar(settings->max_rank_update_fraction));
 
   return mxPtr;
 }
@@ -520,4 +524,6 @@ void copyMxStructToSettings(const mxArray* mxPtr, QPALMSettings* settings){
   settings->time_limit                = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "time_limit"));
   settings->ordering                  = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "ordering"));
   settings->factorization_method      = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "factorization_method"));
+  settings->max_rank_update           = (c_int)mxGetScalar(mxGetField(mxPtr, 0, "max_rank_update"));
+  settings->max_rank_update_fraction  = (c_float)mxGetScalar(mxGetField(mxPtr, 0, "max_rank_update_fraction"));
 }

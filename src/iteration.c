@@ -134,7 +134,8 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
     #endif
 
     if ((work->settings->proximal && work->gamma < work->settings->gamma_max) || 
-        (work->nb_sigma_changed > c_min(0.1*(work->data->n+work->data->m), 0.25*MAX_RANK_UPDATE))) 
+        (work->nb_sigma_changed > 
+            c_min(work->settings->max_rank_update_fraction*(work->data->n+work->data->m), 0.25*work->settings->max_rank_update))) 
     {
         work->solver->reset_newton = TRUE;
     } else if (work->nb_sigma_changed == 0){

@@ -52,6 +52,8 @@ QPALMSettings* copy_settings(const QPALMSettings *settings) {
     new->time_limit               = settings->time_limit;
     new->ordering                 = settings->ordering;
     new->factorization_method     = settings->factorization_method;
+    new->max_rank_update          = settings->max_rank_update;
+    new->max_rank_update_fraction = settings->max_rank_update_fraction;
     return new;
 }
 

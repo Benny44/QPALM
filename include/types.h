@@ -146,6 +146,8 @@ typedef struct {
   c_float time_limit;               ///< time limit @details @note Assumption: @f$>0@f$
   c_int   ordering;                 ///< ordering method for factorization
   c_int   factorization_method;     ///< factorize KKT or Schur complement
+  c_int   max_rank_update;          ///< maximum rank for the sparse factorization update
+  c_float max_rank_update_fraction; ///< maximum rank (relative to n+m) for the factorization update
 } QPALMSettings;
 
 /**
