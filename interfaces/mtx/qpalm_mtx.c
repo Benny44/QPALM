@@ -1,12 +1,15 @@
 #include "qpalm.h"
-#include "constants.h"
-#include "global_opts.h"
-#include "cholmod.h"
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
 
-cholmod_sparse* mtx_load_A(FILE *fp, size_t *n, size_t *m){
+#ifdef USE_LADEL
+#include "ladel.h"
+#elif defined USE_CHOLMOD
+#include "cholmod.h"
+#endif
+
+solver_sparse* mtx_load_A(FILE *fp, size_t *n, size_t *m){
     // Get the first line out of the way
     char first_line[1000];
     if (fgets(first_line, sizeof first_line, fp) == NULL) {
@@ -19,10 +22,15 @@ cholmod_sparse* mtx_load_A(FILE *fp, size_t *n, size_t *m){
         fprintf(stderr, "Wrong file format. Expected second line to contain row col nnz.\n");
     };
     
-    cholmod_common c;
+    solver_common c;
+    solver_sparse *A;
+    #ifdef USE_LADEL
+    A = ladel_sparse_alloc(*m, *n, nnz, UNSYMMETRIC, TRUE, FALSE);
+    #elif defined USE_CHOLMOD
     CHOLMOD(start)(&c);
-    cholmod_sparse *A = CHOLMOD(allocate_sparse)(*m, *n, nnz, TRUE, TRUE, 0, CHOLMOD_REAL, &c);
+    A = CHOLMOD(allocate_sparse)(*m, *n, nnz, TRUE, TRUE, 0, CHOLMOD_REAL, &c);
     CHOLMOD(finish)(&c);
+    #endif
 
     c_float *Ax; c_int *Ai, *Ap;
     Ax = A->x; Ap = A->p; Ai = A->i;
@@ -57,7 +65,7 @@ cholmod_sparse* mtx_load_A(FILE *fp, size_t *n, size_t *m){
     return A;
 }
 
-cholmod_sparse* mtx_load_Q(FILE *fp, size_t n_check){
+solver_sparse* mtx_load_Q(FILE *fp, size_t n_check){
         // Get the first line out of the way
     char first_line[1000];
     if (fgets(first_line, sizeof first_line, fp) == NULL){
@@ -74,10 +82,15 @@ cholmod_sparse* mtx_load_Q(FILE *fp, size_t n_check){
         fprintf(stderr, "Expected a square matrix of %lu by %lu but got a matrix of %lu by %lu\n", n_check, n_check, m, n);
     }
     
-    cholmod_common c;
+    solver_common c;
+    solver_sparse *Q;
+    #ifdef USE_LADEL
+    Q = ladel_sparse_alloc(n, n, nnz, UPPER, TRUE, FALSE);
+    #elif defined USE_CHOLMOD
     CHOLMOD(start)(&c);
-    cholmod_sparse *Q = CHOLMOD(allocate_sparse)(n, n, nnz, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
+    Q = CHOLMOD(allocate_sparse)(n, n, nnz, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
     CHOLMOD(finish)(&c);
+    #endif
 
     c_float *Qx; c_int *Qi, *Qp;
     Qx = Q->x; Qp = Q->p; Qi = Q->i;
@@ -157,7 +170,7 @@ int main(int argc, char*argv[]){
     if(fp == NULL) {
         fprintf(stderr, "Could not open file %s\n", argv[fileno]);return 1;
     }
-    cholmod_sparse* A = mtx_load_A(fp, &n, &m);
+    solver_sparse* A = mtx_load_A(fp, &n, &m);
     fclose(fp);
 
     // Load Q
@@ -166,7 +179,7 @@ int main(int argc, char*argv[]){
     if(fp == NULL) {
         fprintf(stderr, "Could not open file %s\n", argv[fileno]);return 1;
     }
-    cholmod_sparse* Q = mtx_load_Q(fp, n);
+    solver_sparse* Q = mtx_load_Q(fp, n);
     fclose(fp);
 
     // Load q
@@ -219,17 +232,22 @@ int main(int argc, char*argv[]){
     qpalm_set_default_settings(settings);
 
     // Setup workspace
-    cholmod_common c;
+    solver_common c;
     work = qpalm_setup(data, settings);
 
     // Solve Problem
     qpalm_solve(work);
 
     // Clean workspace
+    #ifdef USE_LADEL
+    data->A = ladel_sparse_free(data->A);
+    data->Q = ladel_sparse_free(data->Q);
+    #elif defined USE_CHOLMOD
     CHOLMOD(start)(&c);
     CHOLMOD(free_sparse)(&data->Q, &c);
     CHOLMOD(free_sparse)(&data->A, &c);
     CHOLMOD(finish)(&c);
+    #endif
 
     qpalm_cleanup(work);
     c_free(data->q);
