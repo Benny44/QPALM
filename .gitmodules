@@ -1,6 +1,6 @@
 [submodule "suitesparse"]
 	path = suitesparse
-	url = https://github.com/jluttine/suitesparse.git
+	url = https://github.com/DrTimothyAldenDavis/SuiteSparse.git
 	branch = master
 [submodule "interfaces/QPALM.jl"]
 	path = interfaces/QPALM.jl
