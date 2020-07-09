@@ -1,16 +1,22 @@
 #include "qpalm.h"
-#include "global_opts.h"
+#ifdef USE_LADEL
+#include "ladel.h"
+#elif defined USE_CHOLMOD
 #include "cholmod.h"
-#include "constants.h"
-#include "cholmod_interface.h"
+#endif
 
-cholmod_sparse *python_allocate_cholmod_sparse(size_t m, size_t n, size_t nzmax) {
-  cholmod_common common, *c;
+solver_sparse *python_allocate_sparse(size_t m, size_t n, size_t nzmax) {
+  solver_common common, *c;
   c = &common;
+  solver_sparse *M;
+  #ifdef USE_LADEL
+  M = ladel_sparse_alloc(m, n, nzmax, UNSYMMETRIC, TRUE, FALSE);
+  #elif defined USE_CHOLMOD
   CHOLMOD(start)(c);
   cholmod_set_settings(c);
-  cholmod_sparse *M = CHOLMOD(allocate_sparse)(m, n, nzmax, TRUE, TRUE, 0, CHOLMOD_REAL, c);
+  M = CHOLMOD(allocate_sparse)(m, n, nzmax, TRUE, TRUE, 0, CHOLMOD_REAL, c);
   CHOLMOD(finish)(c);
+  #endif
   return M;
 }
 
@@ -27,17 +33,19 @@ void python_free_settings(QPALMSettings *settings) {
 }
 
 void python_free_data(QPALMData *data) {
-    cholmod_common common, *c;
+    solver_common common, *c;
     c = &common;
     if (data) {
+      #ifdef USE_LADEL
+      data->Q = ladel_sparse_free(data->Q);
+      data->A = ladel_sparse_free(data->A);
+      #elif defined USE_CHOLMOD
       CHOLMOD(start)(c);
-
       if (data->Q) CHOLMOD(free_sparse)(&data->Q, c);
-
       if (data->A) CHOLMOD(free_sparse)(&data->A, c);
-
       CHOLMOD(finish)(c);
-
+      #endif 
+      
       if (data->q) c_free(data->q);
 
       if (data->bmin) c_free(data->bmin);

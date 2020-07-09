@@ -43,11 +43,11 @@ if [ $solver = "cholmod" ]; then
 
   #Build QPALM and tests
   cd $builddir
-  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_CHOLMOD=ON
+  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=OFF -DUSE_CHOLMOD=ON -DINTERFACES=OFF -DPYTHON=ON -DUNITTESTS=OFF
 elif [ $solver = "ladel" ]; then
   LD_PRELOAD=""
   cd $builddir
-  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=ON -DUSE_LADEL=ON -DINTERFACES=ON
+  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=OFF -DUSE_LADEL=ON -DINTERFACES=OFF -DPYTHON=ON -DUNITTESTS=OFF
 fi
 make
 ctest -VV

@@ -5,6 +5,8 @@ import scipy.sparse as sp
 
 
 solver = qp.Qpalm()
+solver._settings.contents.eps_abs = 1e-10
+solver._settings.contents.eps_rel = 1e-10
 
 row = np.array([0, 0, 1, 1])
 col = np.array([0, 1, 0, 1])
@@ -21,9 +23,11 @@ data = np.array([1, 1, 1, 1, 1, 1])
 A = sp.csc_matrix((data, (row, col)), shape=(4, 3))
 
 solver.set_data(Q=Q, A=A, q=q, bmin=bmin, bmax=bmax)
+
 solver._solve()
 sol_x = solver._work.contents.solution.contents.x
 tol = 1e-5
+
 assert(abs(sol_x[0] - 5.5) < tol)
 assert(abs(sol_x[1] - 5.0) < tol)
 assert(abs(sol_x[2] - (-10)) < tol)
@@ -46,9 +50,8 @@ assert(abs(sol_x[0] - 5.5) < strict_tol)
 assert(abs(sol_x[1] - 5.0) < strict_tol)
 assert(abs(sol_x[2] - (-10)) < strict_tol)
 
-
-solver._settings.contents.eps_abs = 1e-4
-solver._settings.contents.eps_rel = 1e-4
+solver._settings.contents.eps_abs = 1e-6
+solver._settings.contents.eps_rel = 1e-6
 solver._update_settings()
 
 solver._data.contents.bmin[3] = -15

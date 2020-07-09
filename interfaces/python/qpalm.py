@@ -6,29 +6,44 @@ import scipy.sparse as sp
 import os
 import sys
 
-#Cholmod matrix structure
-class cholmod_sparse(Structure):
-    _fields_ = [("nrow", c_ulong),
-                ("ncol", c_ulong),
-                ("nzmax", c_ulong),
-                ("p", c_void_p),
-                ("i", c_void_p),
-                ("nz", c_void_p),
-                ("x", c_void_p),
-                ("z", c_void_p),
-                ("stype", c_int),
-                ("itype", c_int),
-                ("xtype", c_int),
-                ("dtype", c_int),
-                ("sorted", c_int),
-                ("packed", c_int)
-                ]
-
-cholmod_sparse_pointer = POINTER(cholmod_sparse)
-
-
 c_long_p = POINTER(c_long)
 c_double_p = POINTER(c_double)
+
+# Change this line depending on which binary of QPALM is used
+linsys = "ladel" #"ladel" or "cholmod"
+
+#sparse matrix structure
+if linsys=="ladel":
+    class solver_sparse(Structure):
+        _fields_ = [("nzmax", c_long),
+                    ("nrow", c_long),
+                    ("ncol", c_long),
+                    ("p", c_void_p),
+                    ("i", c_void_p),
+                    ("x", c_void_p),
+                    ("nz", c_void_p),
+                    ("values", c_long),
+                    ("symmetry", c_long)
+                    ]
+elif linsys=="cholmod":
+    class solver_sparse(Structure):
+        _fields_ = [("nrow", c_ulong),
+                    ("ncol", c_ulong),
+                    ("nzmax", c_ulong),
+                    ("p", c_void_p),
+                    ("i", c_void_p),
+                    ("nz", c_void_p),
+                    ("x", c_void_p),
+                    ("z", c_void_p),
+                    ("stype", c_int),
+                    ("itype", c_int),
+                    ("xtype", c_int),
+                    ("dtype", c_int),
+                    ("sorted", c_int),
+                    ("packed", c_int)
+                    ]
+
+solver_sparse_pointer = POINTER(solver_sparse)
 
 #QPALM structures
 class QPALMSettings(Structure):
@@ -44,6 +59,7 @@ class QPALMSettings(Structure):
                 ("theta", c_double),
                 ("delta", c_double),
                 ("sigma_max", c_double),
+                ("sigma_init", c_double),
                 ("proximal", c_long),
                 ("gamma_init", c_double),
                 ("gamma_upd", c_double),
@@ -56,7 +72,11 @@ class QPALMSettings(Structure):
                 ("reset_newton_iter", c_long),
                 ("enable_dual_termination", c_long),
                 ("dual_objective_limit", c_double),
-                ("time_limit", c_double)
+                ("time_limit", c_double),
+                ("ordering", c_long),
+                ("factorization_method", c_long),
+                ("max_rank_update", c_long),
+                ("max_rank_update_fraction", c_double)
                 ]
 
 QPALMSettings_pointer = POINTER(QPALMSettings)
@@ -64,8 +84,8 @@ QPALMSettings_pointer = POINTER(QPALMSettings)
 class QPALMData(Structure):
     _fields_ = [("n", c_ulong),
                 ("m", c_ulong),
-                ("Q", cholmod_sparse_pointer),
-                ("A", cholmod_sparse_pointer),
+                ("Q", solver_sparse_pointer),
+                ("A", solver_sparse_pointer),
                 ("q", POINTER(c_double)),
                 ("c", c_double),
                 ("bmin", POINTER(c_double)),
@@ -112,6 +132,7 @@ class QPALMWork(Structure):
                 ("temp_m", POINTER(c_double)),
                 ("temp_n", POINTER(c_double)),
                 ("sigma", POINTER(c_double)),
+                ("sigma_inv", POINTER(c_double)),
                 ("sqrt_sigma_max", c_double),
                 ("nb_sigma_changed", c_long),
                 ("gamma", c_double),
@@ -157,7 +178,7 @@ class QPALMWork(Structure):
                 ("Adelta_x", POINTER(c_double)),
                 ("D_temp", POINTER(c_double)),
                 ("E_temp", POINTER(c_double)),
-                ("chol", c_void_p),
+                ("solver", c_void_p),
                 ("settings", QPALMSettings_pointer),
                 ("scaling", c_void_p),
                 ("solution", POINTER(QPALMSolution)),
@@ -231,8 +252,8 @@ class Qpalm:
         #Make Q symmetric
         Q = (Q+Q.transpose())/2
 
-        self._data[0].A = self.python_interface.python_allocate_cholmod_sparse(m, n, A.nnz)
-        self._data[0].Q = self.python_interface.python_allocate_cholmod_sparse(n, n, Q.nnz)
+        self._data[0].A = self.python_interface.python_allocate_sparse(m, n, A.nnz)
+        self._data[0].Q = self.python_interface.python_allocate_sparse(n, n, Q.nnz)
 
         Ap = A.indptr
         Ap = Ap.astype(np.int64)
@@ -317,6 +338,8 @@ class Qpalm:
             if (platform.system() == 'Linux'):
                 print("OS is Linux")      
                 lib_dir = lib_dir + "/build/lib/"
+                if linsys=="ladel":
+                    ladel_lib = CDLL(lib_dir + "libladel.so", mode=RTLD_GLOBAL)
                 self.python_interface = CDLL(lib_dir + "libqpalm.so")
             elif (platform.system() == 'Windows'):
                 print("OS is Windows")
@@ -342,7 +365,7 @@ class Qpalm:
         self.python_interface.qpalm_setup.restype = QPALMWork_pointer
         self.python_interface.qpalm_solve.restype = None
         self.python_interface.qpalm_cleanup.restype = None
-        self.python_interface.python_allocate_cholmod_sparse.restype = cholmod_sparse_pointer
+        self.python_interface.python_allocate_sparse.restype = solver_sparse_pointer
         self.python_interface.python_free_settings.restype = None
         self.python_interface.python_free_data.restype = None
         self.python_interface.qpalm_warm_start.restype = None

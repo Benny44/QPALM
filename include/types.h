@@ -233,7 +233,7 @@ typedef struct {
   c_float *x0;            ///< record of the primal iterate during the last dual update
   c_float *xx0;           ///< x - x0
   c_float *dphi;          ///< gradient of the Lagrangian
-  c_float *neg_dphi;      ///< -dphi, required as the rhs in Cholmod 
+  c_float *neg_dphi;      ///< -dphi, required as the rhs in SCHUR
   c_float *dphi_prev;     ///< previous gradient of the Lagrangian
   c_float *d;             ///< primal update step
 
