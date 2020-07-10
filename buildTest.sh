@@ -31,7 +31,7 @@ fi
 builddir=$curdir/build/debug
 
 
-solver="ladel"
+solver="cholmod"
 
 if [ $solver = "cholmod" ]; then
   metisdir=$curdir/build/metis
@@ -43,11 +43,11 @@ if [ $solver = "cholmod" ]; then
 
   #Build QPALM and tests
   cd $builddir
-  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=OFF -DUSE_CHOLMOD=ON -DINTERFACES=OFF -DPYTHON=ON -DUNITTESTS=OFF
+  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DUSE_CHOLMOD=ON -DINTERFACES=ON -DPYTHON=OFF -DCOVERAGE=ON -DUNITTESTS=ON
 elif [ $solver = "ladel" ]; then
   LD_PRELOAD=""
   cd $builddir
-  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DCOVERAGE=OFF -DUSE_LADEL=ON -DINTERFACES=OFF -DPYTHON=ON -DUNITTESTS=OFF
+  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DUSE_LADEL=ON -DINTERFACES=ON -DPYTHON=OFF -DCOVERAGE=ON -DUNITTESTS=ON
 fi
 make
 ctest -VV
