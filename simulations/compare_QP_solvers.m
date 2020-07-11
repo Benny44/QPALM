@@ -21,7 +21,7 @@ else
     VERBOSE = options.VERBOSE;
 end
 if ~isfield(options, 'SCALING_ITER')
-    SCALING_ITER = 2;
+    SCALING_ITER = 10;
 else
     SCALING_ITER = options.SCALING_ITER;
 end
@@ -173,7 +173,7 @@ if options.osqp
         solver = osqp;
         osqp_settings = solver.default_settings();
 
-%         osqp_settings.scaling = SCALING_ITER;
+        osqp_settings.scaling = SCALING_ITER;
         osqp_settings.max_iter = 10000000000;
         osqp_settings.time_limit = TIME_LIMIT;
         osqp_settings.eps_abs = EPS_ABS;

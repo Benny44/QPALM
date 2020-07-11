@@ -500,7 +500,6 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       #ifdef PRINTING
       if (work->settings->verbose) {
-        work->info->objective = compute_objective(work);
         print_iteration(iter, work); 
         print_final_message(work);
       }

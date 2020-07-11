@@ -27,7 +27,7 @@ beq = zeros(nx*T,1);
 lb = zeros(nx*(T+1)+nu*T,1);
 ub = zeros(nx*(T+1)+nu*T,1);
 
-e = 0.000;
+e = 0.002;
 
 for k=0:T-1
    lb(k*(nx+nu)+1:k*(nx+nu)+nx) = -x_upper*(1-e);

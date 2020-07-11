@@ -6,10 +6,11 @@ options.qpalm_matlab = false;
 options.qpalm_c = true;
 options.osqp = true;
 options.qpoases = true;
-options.gurobi = false;
+options.gurobi = true;
 options.VERBOSE = false;
 options.SCALING_ITER = 10;
 options.EPS_ABS = 1e-6;
+options.TIME_LIMIT = 600;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
@@ -18,7 +19,7 @@ Tqpoases = [];
 Tgurobi = [];
 % rng(1)
 
-nb_gamma = 2;
+nb_gamma = 5;
 n_values = 100:20:1000;
 nb_n = length(n_values);
 
@@ -80,11 +81,24 @@ for i = 1:nb_n
     if options.qpoases, Iter_qpoases(i) = iter.qpoases; end
     if options.gurobi, Iter_gurobi(i) = iter.gurobi; end
     
+    if options.qpalm_matlab, Status_qpalm_matlab{i} = status.qpalm_matlab; end
+    if options.qpalm_c, Status_qpalm_c{i} = status.qpalm_c; end
+    if options.osqp, Status_osqp{i} = status.osqp; end
+    if options.qpoases, Status_qpoases{i} = status.qpoases; end
+    if options.gurobi, Status_gurobi{i} = status.gurobi; end
+    
+    if options.qpalm_matlab, X_qpalm_matlab{i} = X.qpalm_matlab; end
+    if options.qpalm_c, X_qpalm_c{i} = X.qpalm_c; end
+    if options.osqp, X_osqp{i} = X.osqp; end
+    if options.qpoases, X_qpoases{i} = X.qpoases; end
+    if options.gurobi, X_gurobi{i} = X.gurobi; end
+    
 end
 
+save('output/Portfolio')
 % save('output/Portfolio', 'n_values','Tqpalm_matlab','Tqpalm_c','Tosqp','Tqpoases','Tgurobi');
 
 %% Plot results
 
-% plot_QP_comparison('output/Portfolio')
+plot_QP_comparison('output/Portfolio')
     

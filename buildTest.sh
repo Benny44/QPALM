@@ -31,7 +31,7 @@ fi
 builddir=$curdir/build/debug
 
 
-solver="cholmod"
+solver="ladel"
 
 if [ $solver = "cholmod" ]; then
   metisdir=$curdir/build/metis

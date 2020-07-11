@@ -21,10 +21,10 @@ out_osqp             = cell(1, ll);
 new                  = {};
 
 options.qpalm_matlab = false;
-options.qpalm_c = true;
+options.qpalm_c = false;
 options.osqp = false;
 options.qpoases = false;
-options.gurobi = false;
+options.gurobi = true;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];
