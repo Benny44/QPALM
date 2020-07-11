@@ -38,7 +38,8 @@ endif()
 
 option (COVERAGE "Perform code coverage" OFF)
 option (PYTHON "Compile for the python interface" OFF)
-option (INTERFACES "Compile interfaces" ON)
+option (JULIA "Compile for the julia interface" OFF)
+option (INTERFACES "Compile interfaces (qps/mtx)" ON)
 option (PRINTING "Allow printing" ON)
 option (PROF "Create executable demo for profiling with gprof" OFF)
 option (PPROF "Create executable demo for profiling with cpuprofile" OFF)
@@ -146,6 +147,10 @@ SET(SRC
 
 if (PYTHON)
     SET(SRC ${SRC} interfaces/python/qpalm_python.c)
+endif()
+
+if (JULIA)
+    SET(SRC ${SRC} interfaces/QPALM.jl/qpalm_julia.c)
 endif()
 
 add_library(qpalm ${SRC})

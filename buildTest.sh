@@ -47,7 +47,7 @@ if [ $solver = "cholmod" ]; then
 elif [ $solver = "ladel" ]; then
   LD_PRELOAD=""
   cd $builddir
-  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DUSE_LADEL=ON -DINTERFACES=ON -DPYTHON=OFF -DCOVERAGE=ON -DUNITTESTS=ON
+  cmake $curdir -DCMAKE_BUILD_TYPE=debug -DUSE_LADEL=ON -DINTERFACES=ON -DPYTHON=OFF -DCOVERAGE=ON -DUNITTESTS=ON -DJULIA=ON
 fi
 make
 ctest -VV
