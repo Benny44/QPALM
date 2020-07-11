@@ -182,7 +182,6 @@ void mexFunction(int nlhs, mxArray * plhs [], int nrhs, const mxArray * prhs [])
         #ifdef USE_LADEL
         data->A = ladel_get_sparse_from_matlab(A, &Amatrix, UNSYMMETRIC);
         data->Q = ladel_get_sparse_from_matlab(Q, &Qmatrix, UPPER);
-        ladel_to_upper_diag(data->Q);
         #elif defined USE_CHOLMOD
         double dummy = 0;
         data->A = sputil_get_sparse(A, &Amatrix, &dummy, 0);
