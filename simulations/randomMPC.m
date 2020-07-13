@@ -125,6 +125,16 @@ for i = 1:nb_n
     osqp_time = 0;
     qpoases_time = 0;
     gurobi_time = 0;
+    
+    % Initialize with the autonomous trajectory
+    x_warm = zeros(nx*(T+1)+nu*T,1);
+    x_warm(1:nx) = x_init;
+    x_k = x_init;
+    for k = 1:T
+        x_k = A*x_k;
+        x_warm(k*(nx+nu)+1:k*nu+(k+1)*nx) = x_k;
+    end
+    options.x = x_warm;
       
     [X, timings, iter, status, options] = compare_QP_solvers(prob, options);
     if options.qpalm_matlab , qpalm_matlab_time = qpalm_matlab_time + timings.qpalm_matlab; end
@@ -161,9 +171,9 @@ end
 
 if options.osqp, Tosqp(strcmp(Status_osqp, 'run time limit reached')) = options.TIME_LIMIT; end
 
-% save('output/MPC');
+save('output/MPC');
 
 %% Plot results
 
-% plot_QP_comparison('output/MPC')
+plot_QP_comparison('output/MPC')
     
