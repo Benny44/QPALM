@@ -170,7 +170,6 @@ void boost_gamma(QPALMWorkspace *work, solver_common *c) {
             }      
         }
         #ifdef USE_LADEL
-        ladel_print("BOOSTING GAMMA--------------------\n");
         solver_sparse *A = NULL, *At = NULL;
         if (work->solver->factorization_method == FACTORIZE_KKT)
         {
