@@ -47,12 +47,12 @@ end
 %% QPALM Matlab
 
 if isfield(options, 'x')
-    x_warm_start = x;
+    x_warm_start = options.x;
 else 
     x_warm_start = [];
 end
 if isfield(options, 'y')
-    y_warm_start = y;
+    y_warm_start = options.y;
 else 
     y_warm_start = [];
 end
