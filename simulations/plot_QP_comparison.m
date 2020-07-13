@@ -15,6 +15,7 @@ semilogy(n_values(1:length(Tqpalm_matlab)), Tqpalm_matlab, 'm',...
 grid on
 set(gca,'fontsize',14)
 xlabel('Number of primal variables')
+% xlabel('Time step')
 ylabel('Runtime (s)')
 % title(plot_title);
 legend('QPALM', 'OSQP', 'qpOASES','Gurobi','Location','southeast')

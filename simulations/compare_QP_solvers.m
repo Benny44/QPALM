@@ -44,6 +44,25 @@ else
     EPS_ABS = options.EPS_ABS;
     EPS_REL = EPS_ABS;
 end
+
+if ~isfield(options, 'update')
+    update = false;
+else
+    update = options.update;
+end
+
+if ~isfield(options, 'return_solvers')
+    return_solvers = false;
+else
+    return_solvers = options.return_solvers;
+end
+
+if ~isfield(options, 'solvers_setup')
+    solvers_setup = false;
+else
+    solvers_setup = options.solvers_setup;
+end
+
 %% QPALM Matlab
 
 if isfield(options, 'x')
@@ -122,9 +141,13 @@ end
 if options.qpalm_c
     
     for k = 1:n
-        solver = qpalm;
-        settings = solver.default_settings();
+        if ~solvers_setup
+            solver = qpalm;
+        else
+            solver = options.qpalm_solver;
+        end
         
+        settings = solver.default_settings();
         settings.verbose = VERBOSE;
         settings.scaling = 10;
         settings.max_iter = 50000;
@@ -142,8 +165,17 @@ if options.qpalm_c
         settings.sigma_init = 2e1;
         settings.delta = 100;
         settings.factorization_method = 2; %0: KKT, 1: SCHUR
-
-        solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
+            
+        if ~update
+            solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
+        else
+%             solver.update_q(prob.q);
+            solver.update_bounds(lbA, ubA);
+        end
+        
+        if (~isempty(x_warm_start) || ~isempty(y_warm_start))
+            solver.warm_start(x_warm_start, y_warm_start);
+        end
         try
             res_qpalm = solver.solve();
             t(k) = res_qpalm.info.run_time;
@@ -153,7 +185,16 @@ if options.qpalm_c
             res_qpalm.info.iter = inf;
             res_qpalm.x = nan;
         end
-        solver.delete();
+        
+        if ~return_solvers
+            solver.delete();
+        elseif ~solvers_setup
+            options.qpalm_solver = solver;
+            options.solvers_setup = true;
+        end
+        
+%         options.y = res_qpalm.y;
+            
     end
 
     status.qpalm_c = res_qpalm.info.status;
@@ -170,9 +211,14 @@ end
 % 
 if options.osqp
     for k = 1:n
-        solver = osqp;
-        osqp_settings = solver.default_settings();
+        
+        if ~solvers_setup
+            solver = osqp;
+        else
+            solver = options.osqp_solver;
+        end
 
+        osqp_settings = solver.default_settings();
         osqp_settings.scaling = SCALING_ITER;
         osqp_settings.max_iter = 10000000000;
         osqp_settings.time_limit = TIME_LIMIT;
@@ -180,10 +226,19 @@ if options.osqp
         osqp_settings.eps_rel = EPS_REL;
         osqp_settings.eps_prim_inf = EPS_ABS;
         osqp_settings.eps_dual_inf = EPS_ABS;
-        
         osqp_settings.verbose = VERBOSE;
-%         osqp_settings.polish = true;
-        solver.setup(prob.Q, prob.q, A,lbA,ubA, osqp_settings);
+        
+        if ~update
+            solver.setup(prob.Q, prob.q, A,lbA,ubA, osqp_settings);
+        else
+            new.l = lbA;
+            new.u = ubA;
+            solver.update(new);
+        end
+        
+        if (~isempty(x_warm_start) || ~isempty(y_warm_start))
+            solver.warm_start('x', x_warm_start, 'y', y_warm_start);
+        end
         try
             res_osqp = solver.solve();
             t(k) = res_osqp.info.run_time;
@@ -194,7 +249,12 @@ if options.osqp
             res_osqp.x = nan;
         end
 
-        solver.delete();
+        if ~return_solvers
+            solver.delete();
+        elseif ~solvers_setup
+            options.osqp_solver = solver;
+            options.solvers_setup = true;
+        end 
         
     end
 
@@ -225,7 +285,12 @@ if options.qpoases
     qpoases_options = qpOASES_options('default', 'printLevel', 0, 'terminationTolerance', EPS_ABS, 'maxCpuTime', TIME_LIMIT, 'maxIter', MAXITER);
 
     for k = 1:n
-        [x.qpoases,fval,status.qpoases,iter.qpoases,lambda,auxOutput] = qpOASES(prob.Q,prob.q,prob.A,l,u,prob.lb,prob.ub,qpoases_options);
+        if (~isempty(x_warm_start))
+            auxInput = qpOASES_auxInput('x0', x_warm_start);
+            [x.qpoases,fval,status.qpoases,iter.qpoases,lambda,auxOutput] = qpOASES(prob.Q,prob.q,prob.A,l,u,prob.lb,prob.ub,qpoases_options, auxInput);
+        else
+            [x.qpoases,fval,status.qpoases,iter.qpoases,lambda,auxOutput] = qpOASES(prob.Q,prob.q,prob.A,l,u,prob.lb,prob.ub,qpoases_options);
+        end
         t(k) = auxOutput.cpuTime;
     end
     timings.qpoases = sum(t)/n;
@@ -291,7 +356,7 @@ if options.gurobi
     
     model.sense = '<';
     
-    params.outputflag = 0;
+    params.OutputFlag = 0;
     params.OptimalityTol = EPS_ABS;
     params.FeasibilityTol = EPS_ABS;
     params.TimeLimit = TIME_LIMIT;
