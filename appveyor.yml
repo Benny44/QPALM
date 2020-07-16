@@ -16,6 +16,7 @@ environment:
   QPALM_VERSION: "2.0"
 
 install:
+  - cmd: git submodule update --init --recursive
   - "%APPVEYOR_BUILD_FOLDER%\\appveyor\\install.cmd"
 
 test_script:
