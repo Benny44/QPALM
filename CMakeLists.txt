@@ -183,6 +183,7 @@ endif()
 if (USE_LADEL)
     target_include_directories(qpalm
             PUBLIC
+                    $ENV{MINICONDA_INCLUDE}
                     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
                     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/LADEL/include>)
     target_link_libraries(qpalm ladel ${LAPACK} ${LAPACKE})
