@@ -24,15 +24,17 @@ REM Copy License
 xcopy ..\..\LICENSE %QPALM_DEPLOY_DIR%
 REM Copy includes
 xcopy ..\..\include\*.h %QPALM_DEPLOY_DIR%\include
+xcopy ..\..\LADEL\include\*.h %QPALM_DEPLOY_DIR%\include
+xcopy ..\..\LADEL\amd\Include\*.h %QPALM_DEPLOY_DIR%\include
+
 REM Copy shared library
 ::powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
-xcopy bin\Release\qpalm.dll %QPALM_DEPLOY_DIR%\bin
-xcopy Release\qpalm.lib %QPALM_DEPLOY_DIR%\lib
+xcopy bin\Release\*.dll %QPALM_DEPLOY_DIR%\bin
+xcopy Release\*.lib %QPALM_DEPLOY_DIR%\lib
 
 REM Compress package
 7z a -ttar %QPALM_DEPLOY_DIR%.tar %QPALM_DEPLOY_DIR%
 7z a -tgzip %QPALM_DEPLOY_DIR%.tar.gz %QPALM_DEPLOY_DIR%.tar
-
 
 :: Deploy package
 curl -T %QPALM_DEPLOY_DIR%.tar.gz -ubenny44:%BINTRAY_API_KEY% -H "X-Bintray-Package:QPALM" -H "X-Bintray-Version:%QPALM_VERSION%" -H "X-Bintray-Override: 1" https://api.bintray.com/content/benny44/generic/QPALM/%QPALM_VERSION%/

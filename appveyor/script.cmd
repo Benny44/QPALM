@@ -15,7 +15,7 @@ cd build\debug
 
 :: powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
 
-cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% -DUNITTESTS=ON
+cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% -DUSE_LADEL=ON -DUNITTESTS=ON
 cmake --build . --config Debug
 
 :: Run the tests
