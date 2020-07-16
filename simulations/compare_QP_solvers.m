@@ -45,6 +45,12 @@ else
     EPS_REL = EPS_ABS;
 end
 
+if ~isfield(options, 'NONCONVEX')
+    NONCONVEX = false;
+else
+    NONCONVEX = options.NONCONVEX;
+end
+
 if ~isfield(options, 'update')
     update = false;
 else
@@ -165,6 +171,7 @@ if options.qpalm_c
         settings.sigma_init = 2e1;
         settings.delta = 100;
         settings.factorization_method = 2; %0: KKT, 1: SCHUR
+        settings.nonconvex = true;
             
         if ~update
             solver.setup(prob.Q, prob.q, A,lbA,ubA, settings);
