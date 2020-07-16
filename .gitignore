@@ -40,3 +40,6 @@ buildQPS.sh
 /simulations/tbxmanager/*
 Testing
 private
+*.SIF
+*.d
+*.f
