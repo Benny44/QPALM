@@ -18,6 +18,8 @@ cd build\debug
 cmake ..\.. -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% -DUSE_LADEL=ON -DUNITTESTS=ON
 cmake --build . --config Debug
 
+if %errorlevel% neq 0 exit /b %errorlevel%
+
 :: Run the tests
 :: ..\test\run_all_tests.exe
 :: powershell -NoExit -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))"
@@ -26,7 +28,7 @@ set PATH=%PATH%;%MINICONDA_PATH%\Library\bin
 ctest -C Debug -VV
 ::.\bin\Debug\run_all_tests.exe
 
-if errorlevel 1 exit /b 1
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 cd %APPVEYOR_BUILD_FOLDER%
 
