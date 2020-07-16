@@ -126,6 +126,10 @@ endif()
 
 if (USE_LADEL)
     add_subdirectory(LADEL)
+    if (NOT WIN32)
+        execute_process(COMMAND bash -c "cp ${CMAKE_CURRENT_LIST_DIR}/LADEL/include/* ${INCLUDE_DIR}")
+        execute_process(COMMAND bash -c "cp ${CMAKE_CURRENT_LIST_DIR}/LADEL/amd/Include/* ${INCLUDE_DIR}")
+    endif()
 endif()
 
 if (UNIX)

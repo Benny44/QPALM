@@ -45,7 +45,7 @@ builddir=$curdir/build/release
 
 cd $builddir
 
-cmake ../.. -DCMAKE_BUILD_TYPE=release -DCOVERAGE=OFF
+cmake ../.. -DCMAKE_BUILD_TYPE=release -DUSE_LADEL=ON -DCOVERAGE=OFF -DJULIA=ON
 make
 
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
@@ -69,7 +69,9 @@ mkdir $QPALM_DEPLOY_DIR/interfaces/python/build/lib
 
 # Copy license
 cp LICENSE $QPALM_DEPLOY_DIR/info
-cp suitesparse/LICENSE.txt $QPALM_DEPLOY_DIR/info/LICENSEsuitesparse.txt
+# cp suitesparse/LICENSE.txt $QPALM_DEPLOY_DIR/info/LICENSEsuitesparse.txt
+cp LADEL/LICENSE $QPALM_DEPLOY_DIR/info/LICENSE_LADEL.txt
+cp LADEL/amd/License.txt $QPALM_DEPLOY_DIR/info/LICENSE_AMD.txt
 # Copy includes
 cp build/include/*.h  $QPALM_DEPLOY_DIR/include
 # Copy static library
@@ -79,7 +81,6 @@ cp build/lib/*.$OS_SHARED_LIB_EXT $QPALM_DEPLOY_DIR/lib
 # Copy compiled interfaces
 cp $builddir/bin/qpalm_mtx $QPALM_DEPLOY_DIR/interfaces
 cp $builddir/bin/qpalm_qps $QPALM_DEPLOY_DIR/interfaces
-
 
 cd $curdir
 # Compile the python interface
@@ -103,12 +104,12 @@ if [ ! -d "build/metis" ]; then
   mkdir build/metis
 fi
 
-metisdir=$pythondir/build/metis
-cd $metisdir
+# metisdir=$pythondir/build/metis
+# cd $metisdir
 
-cmake $curdir/suitesparse/metis-5.1.0 -DGKLIB_PATH=$curdir/suitesparse/metis-5.1.0/GKlib -DSHARED=1 && make 
-cd $pythondir
-cp build/metis/libmetis/libmetis.$OS_SHARED_LIB_EXT build/lib/
+# cmake $curdir/suitesparse/metis-5.1.0 -DGKLIB_PATH=$curdir/suitesparse/metis-5.1.0/GKlib -DSHARED=1 && make 
+# cd $pythondir
+# cp build/metis/libmetis/libmetis.$OS_SHARED_LIB_EXT build/lib/
 
 #Build QPALM and tests
 
@@ -116,7 +117,7 @@ builddir=$pythondir/build/debug
 
 cd $builddir
 
-cmake $curdir -DCMAKE_BUILD_TYPE=release -DINTERFACES=OFF -DUNITTESTS=OFF -DPYTHON=ON
+cmake $curdir -DCMAKE_BUILD_TYPE=release -DUSE_LADEL=ON -DINTERFACES=OFF -DUNITTESTS=OFF -DPYTHON=ON
 make
 
 cd $curdir

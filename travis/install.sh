@@ -21,16 +21,15 @@ conda update --yes -q conda
 conda create --quiet --yes -n condaenv_build python=3.7
 source activate condaenv_build
 
+# conda config --set always_yes yes --set changeps1 no
+# conda update --yes -q conda
 
-conda config --set always_yes yes --set changeps1 no
-conda update --yes -q conda
-
-conda create --quiet --yes -n condaenv_build python=3.7
-source activate condaenv_build
+# conda create --quiet --yes -n condaenv_build python=3.7
+# source activate condaenv_build
 
 #conda install -c conda-forge suitesparse
 conda install -c conda-forge lapack
-conda install -c intel mkl
+# conda install -c intel mkl
 conda install -c anaconda python
 # conda init
 #conda activate base
