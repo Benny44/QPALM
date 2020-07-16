@@ -24,7 +24,7 @@ options.qpalm_matlab = false;
 options.qpalm_c = false;
 options.osqp = false;
 options.qpoases = false;
-options.gurobi = true;
+options.gurobi = false;
 
 Tqpalm_matlab = [];
 Tqpalm_c = [];

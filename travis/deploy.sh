@@ -9,7 +9,6 @@ fi
 #hash -r
 #source activate testenv
 
-
 echo "Creating Bintray package..."
 
 # Compile QPALM

@@ -22,9 +22,9 @@ Iter_qpalm_c_schur = Iter_qpalm_c;
 % T_qpalm_c_cholmod = Tqpalm_c;
 
 figure 
-loglog([1e-4 1e3],[1 1],'b--');
+loglog([1e-4 1e3],[1 1],'k--');
 hold on
-loglog([2 2], [1e-5, 1e1],'g--')  
+% loglog([2 2], [1e-5, 1e1],'g--')  
 
 NNZ_KKT = zeros(size(T_qpalm_c_kkt));
 NNZ_SCHUR = zeros(size(T_qpalm_c_kkt));
@@ -53,7 +53,7 @@ for i = 1:length(T_qpalm_c_kkt)
             
             
             NNZ_SCHUR(i) = nnz_schur_approx;
-            loglog(nnz_kkt/nnz_schur_approx, T_qpalm_c_kkt(i)/T_qpalm_c_schur(i), 'b*');
+            loglog(nnz_kkt/nnz_schur_approx, T_qpalm_c_kkt(i)/T_qpalm_c_schur(i), 'bx');
 %             loglog(nnz_kkt/nnz_schur_approx, T_qpalm_c_kkt(i)/T_qpalm_c_cholmod(i), 'r*');
 %             loglog(nnz_kkt/nnz_schur_approx, T_qpalm_c_schur(i)/T_qpalm_c(i), 'gsq');
 
@@ -70,6 +70,7 @@ for i = 1:length(T_qpalm_c_kkt)
 %     end
 end
 
+set(gca,'fontsize',12)
 title('Comparison KKT and SCHUR methods');
 ylabel('T_{KKT} / T_{SCHUR}');
 % title('Comparison LADEL and CHOLMOD');

@@ -78,7 +78,7 @@ end
 
 %Prep A and lbA and ubA for QPALM and OSQP
 if isfield(prob, 'l') || isfield(prob, 'u')
-    A = [prob.A; eye(size(prob.A,2))];
+    A = [prob.A; speye(size(prob.A,2))];
     A_combined = true;
 else
     A = prob.A;
