@@ -219,12 +219,18 @@ void kkt_update_entering_constraints(QPALMWorkspace *work, solver_common *c)
 void kkt_update_leaving_constraints(QPALMWorkspace *work, solver_common *c)
 {
     ladel_int col, index, n = work->data->n, m = work->data->m;
+    ladel_double *sigma_inv = work->sigma_inv;
+    solver_sparse *kkt = work->solver->kkt;
 
     for (index = 0; index < work->solver->nb_leave; index++)
     {
         col = work->solver->leave[index] + n;
         ladel_row_del(work->solver->LD, work->solver->sym, col, c);
-        /* no need to update the kkt system here */
+        
+        /* no need to update the kkt system here, except for iterative refinement */
+        kkt->nz[col] = 1;
+        kkt->i[kkt->p[col]] = col;
+        kkt->x[kkt->p[col]] = -sigma_inv[col-n];
     }
 }
 

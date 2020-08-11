@@ -18,6 +18,7 @@ void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
 
     set_active_constraints(work);
     set_entering_leaving_constraints(work);
+    
     if (work->solver->factorization_method == FACTORIZE_KKT)
     {
         #ifdef USE_LADEL 
@@ -52,6 +53,45 @@ void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
         }
 
         kkt_solve(work, c);
+
+        // /* Iterative refinement: compute r = b - Ax = -dphi - kkt*sol and add sol += A\r */
+        mat_vec(work->solver->kkt, work->solver->sol_kkt, work->solver->rhs_kkt, c);
+        vec_mult_add_scaled(work->solver->rhs_kkt, work->solver->sol_kkt, 1, 1.0/work->gamma, work->data->n);
+        vec_self_mult_scalar(work->solver->rhs_kkt, -1, work->data->m + work->data->n);
+        c_float ref_norm = c_max(vec_norm_inf(work->solver->rhs_kkt, work->data->n + work->data->m), vec_norm_inf(work->dphi, work->data->n));
+        vec_mult_add_scaled(work->solver->rhs_kkt, work->dphi, 1, -1, work->data->n);
+
+        c_float first_res = vec_norm_inf(work->solver->rhs_kkt, work->data->n + work->data->m);
+        c_float res = first_res;
+        c_int k = 0;
+
+        // if(res > RELATIVE_REFINEMENT_TOLERANCE*ref_norm) ladel_print("ref_norm: %e\n", ref_norm);
+
+        while(k < MAX_REFINEMENT_ITERATIONS && res > c_max(RELATIVE_REFINEMENT_TOLERANCE*ref_norm, ABSOLUTE_REFINEMENT_TOLERANCE))
+        {
+            k++;
+            // ladel_print("Refinement because relative res = %e (ref_norm = %e)\n", vec_norm_inf(work->solver->rhs_kkt, work->data->n + work->data->m)/ref_norm, ref_norm);
+            prea_vec_copy(work->solver->sol_kkt, work->temp_n, work->data->n);
+            prea_vec_copy(work->solver->sol_kkt + work->data->n, work->temp_m, work->data->m);
+            ladel_dense_solve(work->solver->LD, work->solver->rhs_kkt, work->solver->sol_kkt, c);
+            vec_add_scaled(work->solver->sol_kkt, work->d, work->d, 1, work->data->n);
+
+            vec_mult_add_scaled(work->solver->sol_kkt, work->temp_n, 1, 1, work->data->n);
+            vec_mult_add_scaled(work->solver->sol_kkt + work->data->n, work->temp_m, 1, 1, work->data->m);
+            mat_vec(work->solver->kkt, work->solver->sol_kkt, work->solver->rhs_kkt, c);
+            vec_mult_add_scaled(work->solver->rhs_kkt, work->solver->sol_kkt, 1, 1.0/work->gamma, work->data->n);
+            vec_self_mult_scalar(work->solver->rhs_kkt, -1, work->data->m + work->data->n);
+            vec_mult_add_scaled(work->solver->rhs_kkt, work->dphi, 1, -1, work->data->n);
+            res = vec_norm_inf(work->solver->rhs_kkt, work->data->n + work->data->m);
+            // if(res > RELATIVE_REFINEMENT_TOLERANCE*ref_norm)
+            //     ladel_print("K = %d, Res = %e (first res = %e)\n", k, res/ref_norm, first_res/ref_norm);
+            // else
+            //     ladel_print("FINAL K = %d, Res = %e (first res = %e)\n", k, res/ref_norm, first_res/ref_norm);
+        }
+
+        // if (k==MAX_REFINEMENT_ITERATIONS) ladel_print("ITREF FAILED, final res = %e (first res = %e)\n", res/ref_norm, first_res/ref_norm);
+
+
         #endif
     } else if (work->solver->factorization_method == FACTORIZE_SCHUR)
     {
@@ -76,6 +116,7 @@ void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
     prea_int_vec_copy(work->solver->active_constraints, work->solver->active_constraints_old, work->data->m);
 
     work->solver->reset_newton = FALSE;
+
 }
 
 void set_active_constraints(QPALMWorkspace *work) {
