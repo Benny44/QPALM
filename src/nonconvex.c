@@ -13,6 +13,7 @@
 #include "constants.h"
 #include "global_opts.h"
 #include "lin_alg.h"
+#include "util.h"
 #ifdef MATLAB /* For the mexinterface, call lapack included in matlab */
     #include "lapack.h"
 #else
@@ -115,7 +116,7 @@ static c_float lobpcg(QPALMWorkspace *work, c_float *x, solver_common *c) {
         /* Note: check inf norm because it is cheaper */
         if (vec_norm_inf(w, n) < LOBPCG_TOL) {
             norm_w = vec_norm_two(w, n);
-            lambda -= c_sqrt(2)*norm_w; /* Theoretical bound on the eigenvalue */
+            lambda -= c_sqrt(2)*norm_w + 1e-6; /* Theoretical bound on the eigenvalue */
             if (n <= 3) lambda -= 1e-6; /* If n <= 3, we should have the exact eigenvalue, hence we subtract a small value */
             break;
         } 
@@ -174,6 +175,10 @@ void set_settings_nonconvex(QPALMWorkspace *work, solver_common *c){
         work->settings->proximal = TRUE;
         work->settings->gamma_init = 1/c_absval(lambda);
         work->settings->gamma_max = work->settings->gamma_init;
+        work->gamma_maxed = TRUE;
+    } else
+    {
+        work->settings->nonconvex = FALSE;
     }
 }
 

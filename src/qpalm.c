@@ -474,6 +474,9 @@ void qpalm_solve(QPALMWorkspace *work) {
   c_int iter;
   c_int iter_out = 0;
   c_int prev_iter = 0; /* iteration number at which the previous subproblem finished*/
+  c_float eps_k_abs = work->settings->eps_abs_in; 
+  c_float eps_k_rel = work->settings->eps_rel_in; 
+  c_float eps_k;
 
   for (iter = 0; iter < work->settings->max_iter; iter++) {
 
@@ -555,25 +558,54 @@ void qpalm_solve(QPALMWorkspace *work) {
         update_sigma(work, c);
       } 
 
-      if(work->settings->proximal) {
-        if (!work->gamma_maxed && iter_out > 0 && work->solver->nb_enter == 0 && work->solver->nb_leave == 0 && work->info->pri_res_norm < work->eps_pri) {
-          //Axys = Ax + y./sigma
-            vec_ew_div(work->y, work->sigma, work->temp_m, work->data->m);
-            vec_add_scaled(work->Ax, work->temp_m, work->Axys, 1, work->data->m);
-            set_active_constraints(work);
-            set_entering_leaving_constraints(work);
-            if (work->solver->nb_enter == 0 && work->solver->nb_leave == 0) {
-              // c_print("Boosting gamma on iter: %d\n", iter);
-              boost_gamma(work, c);
+      if (work->settings->nonconvex)
+      {
+        if (work->settings->scaling) {
+        /**NB Implementation detail: store Einv*Ax and Einv*z in temp_2m. 
+         * The infinity norm of that vector is equal to the maximum
+         * of the infinity norms of Einv*Ax and Einv*z.*/
+            vec_ew_prod(work->scaling->Einv, work->Ax, work->temp_2m, m);
+            vec_ew_prod(work->scaling->Einv, work->z, work->temp_2m + m, m);
+            eps_k =  eps_k_abs + eps_k_rel*vec_norm_inf(work->temp_2m, m);                  
+        } else {
+            eps_k =  eps_k_abs + eps_k_rel*c_max(
+                                    vec_norm_inf(work->Ax, m),
+                                    vec_norm_inf(work->z, m));
+        }
+        if (work->info->pri_res_norm < eps_k)
+        {
+          prea_vec_copy(work->x, work->x0, work->data->n);
+          eps_k_abs = c_max(work->settings->eps_abs, work->settings->rho*eps_k_abs);
+          eps_k_rel = c_max(work->settings->eps_rel, work->settings->rho*eps_k_rel);
+        }
+        else
+        {
+          /* We do not update the tolerances and proximal point */
+        }
+      } else
+      {
+        if(work->settings->proximal) {
+          if (!work->gamma_maxed && iter_out > 0 && work->solver->nb_enter == 0 && work->solver->nb_leave == 0 && work->info->pri_res_norm < work->eps_pri) {
+            //Axys = Ax + y./sigma
+              vec_ew_div(work->y, work->sigma, work->temp_m, work->data->m);
+              vec_add_scaled(work->Ax, work->temp_m, work->Axys, 1, work->data->m);
+              set_active_constraints(work);
+              set_entering_leaving_constraints(work);
+              if (work->solver->nb_enter == 0 && work->solver->nb_leave == 0) {
+                // c_print("Boosting gamma on iter: %d\n", iter);
+                boost_gamma(work, c);
+              } else {
+                update_gamma(work);
+              }
             } else {
               update_gamma(work);
             }
-          } else {
-            update_gamma(work);
-          }
-        
-        prea_vec_copy(work->x, work->x0, work->data->n);
+          
+          prea_vec_copy(work->x, work->x0, work->data->n);
+        }
       }
+
+      
 
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
       iter_out++;
@@ -594,7 +626,7 @@ void qpalm_solve(QPALMWorkspace *work) {
 
       if(work->settings->proximal) {
         update_gamma(work);
-        prea_vec_copy(work->x, work->x0, work->data->n);
+        if (!work->settings->nonconvex) prea_vec_copy(work->x, work->x0, work->data->n);
       }
 
       prea_vec_copy(work->pri_res, work->pri_res_in, m);
