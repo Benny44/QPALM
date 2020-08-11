@@ -102,12 +102,12 @@ elseif ~isfield(prob, 'l') && isfield(prob, 'u')
     ubA = [prob.ub; prob.u];
 end
 
-if options.qpalm_matlab       
+if isfield(options, 'qpalm_matlab') && options.qpalm_matlab     
     
     for k = 1:n
         opts.solver = 'newton';
         opts.scalar_sig = false;
-        opts.maxiter = 50000;
+        opts.maxiter = MAXITER;
         opts.eps_abs = EPS_ABS;
         opts.eps_rel = EPS_REL;
         opts.eps_abs_in = min(EPS_ABS*1e6, 1);
@@ -115,14 +115,14 @@ if options.qpalm_matlab
         opts.eps_pinf = EPS_ABS;
         opts.eps_dinf = EPS_ABS;
         opts.proximal = true;
-        opts.gamma    = 1e1;
+        opts.gamma    = 1e7;
         opts.gammaUpd = 10;
         opts.gammaMax = 1e7;
         opts.verbose = VERBOSE;
         opts.Delta   = 100;
         opts.scaling = 'simple';
         opts.scaling_iter = SCALING_ITER;
-        opts.linsys = 2;
+        opts.linsys = 10;
         tic;[x_qpalm,y_qpalm,stats_qpalm] = qpalm_matlab(prob.Q,prob.q,A,lbA,ubA,x_warm_start,y_warm_start,opts);
         qpalm_time = toc;
         t(k) = qpalm_time;
@@ -144,7 +144,7 @@ end
 
 %% QPALM C
 
-if options.qpalm_c
+if isfield(options, 'qpalm_c') && options.qpalm_c
     
     for k = 1:n
         if ~solvers_setup
@@ -155,8 +155,9 @@ if options.qpalm_c
         
         settings = solver.default_settings();
         settings.verbose = VERBOSE;
+        settings.print_iter = 100;
         settings.scaling = 10;
-        settings.max_iter = 50000;
+        settings.max_iter = MAXITER;
         settings.eps_abs_in = min(EPS_ABS*1e6, 1);
         settings.eps_rel_in = min(EPS_REL*1e6, 1);
         settings.rho = 0.1;
@@ -216,7 +217,7 @@ if options.qpalm_c
 end
 %% OSQP
 % 
-if options.osqp
+if isfield(options, 'osqp') && options.osqp
     for k = 1:n
         
         if ~solvers_setup
@@ -288,7 +289,7 @@ else
     u = [];
 end
 
-if options.qpoases
+if isfield(options, 'qpoases') && options.qpoases
     qpoases_options = qpOASES_options('default', 'printLevel', 0, 'terminationTolerance', EPS_ABS, 'maxCpuTime', TIME_LIMIT, 'maxIter', MAXITER);
 
     for k = 1:n
@@ -342,7 +343,7 @@ if isfield(options, 'qrqp') && options.qrqp
     timings.qrqp = sum(t)/n;
 end
     
-if options.gurobi
+if isfield(options, 'gurobi') && options.gurobi
     if isfield(options, 'lp') && options.lp
        %do not define model.Q 
     else
@@ -391,6 +392,108 @@ if options.gurobi
 %         options.gurobi = false;
 %     end
     
-
 end
 
+cu = prob.ub;
+cl = prob.lb;
+if isfield(prob, 'u')
+    bu = prob.u;
+else
+    bu = [];
+end
+if isfield(prob, 'l')
+    bl = prob.l;
+else
+    bl = [];
+end
+
+
+if isfield(options, 'NewtonKKTqp') && options.NewtonKKTqp
+    act_cu = cu ~= 1e20;
+    act_cl = cl ~= -1e20;
+    act_bu = bu ~= 1e20;
+    act_bl = bl ~= -1e20;
+    
+    Id = speye(size(prob.Q));
+    newtonA = [prob.A(act_cu,:); -prob.A(act_cl,:); Id(act_bu,:); -Id(act_bl,:)];
+    newtonA = full(newtonA);
+    newtonB = [cu(act_cu)+1e-10;       -cl(act_cl)-1e-10;       bu(act_bu)+1e-10;   -bl(act_bl)-1e-10]; %very bad with eq. constr
+    
+    opts.maxit = MAXITER;
+    opts.verbose = VERBOSE;
+    opts.barrier = 0;
+    opts.tol_cost_fn = EPS_ABS;
+    opts.tol = EPS_ABS;
+    
+    try
+        Q_full = full(prob.Q);
+        x0 = zeros(size(prob.q));
+        tic; [x_final,logs] = NewtonKKTqp(Q_full,prob.q,newtonA,newtonB,x0,opts); newton_time = toc;
+    
+        x.NewtonKKTqp = x_final;
+        stats.NewtonKKTqp = logs;
+        iter.NewtonKKTqp = logs.nb_iter;
+        if (newton_time > 10*logs.cpu_total)
+            timings.NewtonKKTqp = newton_time;
+        else
+            timings.NewtonKKTqp = logs.cpu_total;
+        end
+        status.NewtonKKTqp = 'unknown';
+    catch
+        disp('NewtonKKTqp failed for some reason');
+        status.NewtonKKTqp = 'failed';
+        x.NewtonKKTqp = [];
+        iter.NewtonKKTqp = inf;
+        timings.NewtonKKTqp = TIME_LIMIT;
+        stats.NewtonKKTqp = [];
+    end
+end
+
+if isfield(options, 'ipopt') && options.ipopt
+    ubg = prob.ub;
+    lbg = prob.lb;
+    if isfield(prob, 'u')
+        ubx = prob.u;
+    else
+        ubx = [];
+    end
+    if isfield(prob, 'l')
+        lbx = prob.l;
+    else
+        lbx = [];
+    end
+    
+    import casadi.*
+    n = length(prob.q);
+    xi = MX.sym('x', n);
+    f = 0.5*xi'*prob.Q*xi+prob.q'*xi;
+    g = prob.A*xi;
+    prob_struct = struct('x',xi,'f',f,'g',g); %
+    % Options for ipopt
+    opt_ipopt.jit = false;
+    opt_ipopt.jit_options.flags = {'-O3'};
+    opt_ipopt.jit_options.verbose = true;
+    opt_ipopt.compiler = 'shell';
+    %opt_ipopt.jit_options.compiler = 'ccache gcc';
+%     opt_ipopt.ipopt.hessian_approximation = 'limited-memory';
+%     opt_ipopt.ipopt.limited_memory_max_history = 30;
+    opt_ipopt.ipopt.tol = EPS_ABS;
+    opt_ipopt.ipopt.constr_viol_tol = EPS_ABS;
+    opt_ipopt.ipopt.print_level = 0;
+    opt_ipopt.ipopt.max_cpu_time = TIME_LIMIT;
+    opt_ipopt.ipopt.max_iter = 1000000000;
+    opt_ipopt.ipopt.hessian_constant = 'yes';
+    opt_ipopt.print_time = false;
+
+    S = nlpsol('S', 'ipopt', prob_struct, opt_ipopt);
+    r = S('x0',x_warm_start,'lbx',lbx,'ubx',...
+        ubx,'lbg',lbg,'ubg',ubg); %Solve  
+    timings.ipopt = S.stats.t_wall_S;
+    status.ipopt = S.stats.return_status;
+    x.ipopt = r.x;
+    iter.ipopt = S.stats.iter_count;
+    
+%     results.ts_casadi(k) = S.stats.t_wall_S;
+%     results.ts_casadi(k) = toc(start);
+%     results.ts_casadi(k) = S.stats.t_wall_mainloop;
+end
