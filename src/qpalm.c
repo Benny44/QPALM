@@ -477,6 +477,7 @@ void qpalm_solve(QPALMWorkspace *work) {
   c_float eps_k_abs = work->settings->eps_abs_in; 
   c_float eps_k_rel = work->settings->eps_rel_in; 
   c_float eps_k;
+  c_int no_change_in_active_constraints = 0;
 
   for (iter = 0; iter < work->settings->max_iter; iter++) {
 
@@ -509,7 +510,9 @@ void qpalm_solve(QPALMWorkspace *work) {
       #endif
 
       return; 
-    } else if (check_subproblem_termination(work)) {
+    } else if (check_subproblem_termination(work) || (no_change_in_active_constraints == 2)) {
+      no_change_in_active_constraints = 0;
+
       prea_vec_copy(work->yh, work->y, m);
       prea_vec_copy(work->Atyh, work->Aty, n);
 
@@ -619,8 +622,8 @@ void qpalm_solve(QPALMWorkspace *work) {
       
     
     } else if (iter == prev_iter + work->settings->inner_max_iter){ 
-      
-      if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
+        no_change_in_active_constraints = 0;     
+        if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
         update_sigma(work, c);
       } 
 
@@ -634,6 +637,9 @@ void qpalm_solve(QPALMWorkspace *work) {
       prev_iter = iter;
 
     } else {
+
+      if (work->solver->nb_enter+work->solver->nb_leave) no_change_in_active_constraints = 0;
+      else no_change_in_active_constraints++;
 
       if (mod(iter, work->settings->reset_newton_iter) == 0) work->solver->reset_newton = TRUE; 
       update_primal_iterate(work, c);
