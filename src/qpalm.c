@@ -478,6 +478,8 @@ void qpalm_solve(QPALMWorkspace *work) {
   c_float eps_k_rel = work->settings->eps_rel_in; 
   c_float eps_k;
   c_int no_change_in_active_constraints = 0;
+  c_int nest_k = 0;
+  c_float nest_factor = 0.0;
 
   for (iter = 0; iter < work->settings->max_iter; iter++) {
 
@@ -510,12 +512,36 @@ void qpalm_solve(QPALMWorkspace *work) {
       #endif
 
       return; 
-    } else if (check_subproblem_termination(work) || (no_change_in_active_constraints == 2)) {
+    } else if (check_subproblem_termination(work) || (no_change_in_active_constraints == 3)) {
       no_change_in_active_constraints = 0;
 
-      prea_vec_copy(work->yh, work->y, m);
-      prea_vec_copy(work->Atyh, work->Aty, n);
+      if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
+        update_sigma(work, c);
+      }
 
+      // /* NB: do regular y update if subproblem not solved to high accuracy, else use Nesterov */
+      // if (work->eps_abs_in > work->settings->eps_abs || work->eps_rel_in > work->settings->eps_rel || work->nb_sigma_changed > 0 || TRUE)
+      // {
+        prea_vec_copy(work->yh, work->y, m);
+        prea_vec_copy(work->Atyh, work->Aty, n);
+      // } else 
+      // {
+      //   c_print("NESTEROV (sigma_change = %ld)\n", work->nb_sigma_changed);
+      //   if (nest_k == 0)
+      //   {
+      //     prea_vec_copy(work->yh, work->y, m);
+      //     prea_vec_copy(work->Atyh, work->Aty, n);
+      //   } else
+      //   {
+      //     nest_factor = (nest_k-1.0)/(nest_k+2.0);
+      //     vec_add_scaled(work->yh, work->y, work->temp_m, -1, m);
+      //     vec_add_scaled(work->yh, work->temp_m, work->y, nest_factor, m);
+      //     vec_add_scaled(work->Atyh, work->Aty, work->temp_n, -1, n);
+      //     vec_add_scaled(work->Atyh, work->temp_n, work->Aty, nest_factor, n);
+      //   }
+      //   nest_k++;
+      // }
+      
       if(work->settings->enable_dual_termination) {
 
         work->info->dual_objective = compute_dual_objective(work, c);
@@ -555,11 +581,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       }
 
       work->eps_abs_in = c_max(work->settings->eps_abs, work->settings->rho*work->eps_abs_in);
-      work->eps_rel_in = c_max(work->settings->eps_rel, work->settings->rho*work->eps_rel_in);
-       
-      if (iter_out > 0 && work->info->pri_res_norm > work->eps_pri) {
-        update_sigma(work, c);
-      } 
+      work->eps_rel_in = c_max(work->settings->eps_rel, work->settings->rho*work->eps_rel_in); 
 
       if (work->settings->nonconvex)
       {
@@ -617,6 +639,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       #ifdef PRINTING
       if (work->settings->verbose && mod(iter, work->settings->print_iter) == 0) {
         c_print("%4ld | ---------------------------------------------------\n", iter);
+        c_print("Sigma_changed: %4ld, Dua2_res: %4e\n", work->nb_sigma_changed, work->info->dua2_res_norm);
       }
       #endif
       
