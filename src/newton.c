@@ -56,7 +56,7 @@ void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
 
         // /* Iterative refinement: compute r = b - Ax = -dphi - kkt*sol and add sol += A\r */
         mat_vec(work->solver->kkt, work->solver->sol_kkt, work->solver->rhs_kkt, c);
-        vec_mult_add_scaled(work->solver->rhs_kkt, work->solver->sol_kkt, 1, 1.0/work->gamma, work->data->n);
+        if(work->settings->proximal) vec_mult_add_scaled(work->solver->rhs_kkt, work->solver->sol_kkt, 1, 1.0/work->gamma, work->data->n);
         vec_self_mult_scalar(work->solver->rhs_kkt, -1, work->data->m + work->data->n);
         c_float ref_norm = c_max(vec_norm_inf(work->solver->rhs_kkt, work->data->n + work->data->m), vec_norm_inf(work->dphi, work->data->n));
         vec_mult_add_scaled(work->solver->rhs_kkt, work->dphi, 1, -1, work->data->n);
@@ -79,7 +79,7 @@ void newton_set_direction(QPALMWorkspace *work, solver_common *c) {
             vec_mult_add_scaled(work->solver->sol_kkt, work->temp_n, 1, 1, work->data->n);
             vec_mult_add_scaled(work->solver->sol_kkt + work->data->n, work->temp_m, 1, 1, work->data->m);
             mat_vec(work->solver->kkt, work->solver->sol_kkt, work->solver->rhs_kkt, c);
-            vec_mult_add_scaled(work->solver->rhs_kkt, work->solver->sol_kkt, 1, 1.0/work->gamma, work->data->n);
+            if(work->settings->proximal) vec_mult_add_scaled(work->solver->rhs_kkt, work->solver->sol_kkt, 1, 1.0/work->gamma, work->data->n);
             vec_self_mult_scalar(work->solver->rhs_kkt, -1, work->data->m + work->data->n);
             vec_mult_add_scaled(work->solver->rhs_kkt, work->dphi, 1, -1, work->data->n);
             res = vec_norm_inf(work->solver->rhs_kkt, work->data->n + work->data->m);
