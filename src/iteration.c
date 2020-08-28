@@ -133,7 +133,7 @@ void update_sigma(QPALMWorkspace* work, solver_common *c) {
     CHOLMOD(scale)(work->solver->At_scale, CHOLMOD_COL, work->solver->At_sqrt_sigma, c);
     #endif
 
-    if ((work->settings->proximal && work->gamma < work->settings->gamma_max) || 
+    if (work->solver->first_factorization || (work->settings->proximal && work->gamma < work->settings->gamma_max) || 
         (work->nb_sigma_changed > 
             c_min(work->settings->max_rank_update_fraction*(work->data->n+work->data->m), 0.25*work->settings->max_rank_update))) 
     {
