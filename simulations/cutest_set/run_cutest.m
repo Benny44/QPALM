@@ -49,7 +49,7 @@ Stats_qpalm_matlab = {};
 
 options.SCALING_ITER=10;
 options.EPS_ABS=1e-6;
-options.VERBOSE = false;
+options.VERBOSE = true;
 options.TIME_LIMIT = 3600;
 options.MAXITER = 1e9;
 options.NONCONVEX = true;

@@ -21,7 +21,7 @@ out_osqp             = cell(1, ll);
 new                  = {};
 
 options.qpalm_matlab = false;
-options.qpalm_c = false;
+options.qpalm_c = true;
 options.osqp = false;
 options.qpoases = false;
 options.gurobi = false;
@@ -45,6 +45,7 @@ options.SCALING_ITER=10;
 options.EPS_ABS=1e-6;
 options.VERBOSE = false;
 options.TIME_LIMIT = 3600; 
+options.MAXITER = 1e9;
 
 for i = 1:ll
     baseFileName = Filename{i};
@@ -109,5 +110,5 @@ n_values = 1:ll;
 
 save('../output/maros_meszaros');
 
-cd('tuning');
+% cd('tuning');
 

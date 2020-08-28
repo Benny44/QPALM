@@ -155,7 +155,7 @@ if isfield(options, 'qpalm_c') && options.qpalm_c
         
         settings = solver.default_settings();
         settings.verbose = VERBOSE;
-        settings.print_iter = 100;
+        settings.print_iter = 1;
         settings.scaling = 10;
         settings.max_iter = MAXITER;
         settings.eps_abs_in = min(EPS_ABS*1e6, 1);

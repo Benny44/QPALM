@@ -107,7 +107,7 @@ classdef qpalm < handle
             else
                 q   = full(q(:));
             end
-
+            
             % Create proper constraints if they are not passed
             if (isempty(A) && (~isempty(bmin) || ~isempty(bmax))) || ...
                 (~isempty(A) && (isempty(bmin) && isempty(bmax)))

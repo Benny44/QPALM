@@ -2,38 +2,15 @@ close all
 
 TIME_LIMIT = 3600;
 
-load('/home/ben/Documents/Projects/QPALM/simulations/results/MM_OSQP_BOYD.mat')
-Status_osqp_boyd = Status_osqp;
-Tosqp_boyd = Tosqp;
-
-load('/home/ben/Documents/Projects/QPALM/simulations/results/MM_OSQP.mat')
-Tosqp = [Tosqp, Tosqp_boyd];
-Status_osqp = [Status_osqp, Status_osqp_boyd];
-
+load('/home/ben/Documents/Projects/QPALM/simulations/results/journal_paper/MM_OSQP.mat')
 [gs_osqp, fail_rate_osqp, Tosqp] = compute_geometric_mean(Tosqp, Status_osqp, 'solved', TIME_LIMIT);
 Tosqp_hat = Tosqp;
 
-
-load('/home/ben/Documents/Projects/QPALM/simulations/results/MM_GUROBI_BOYD.mat')
-Status_gurobi_boyd = Status_gurobi;
-Tgurobi_boyd = Tgurobi;
-
-load('/home/ben/Documents/Projects/QPALM/simulations/results/MM_GUROBI.mat')
-Tgurobi = [Tgurobi, Tgurobi_boyd]; 
-Status_gurobi = [Status_gurobi, Status_gurobi_boyd];
-
+load('/home/ben/Documents/Projects/QPALM/simulations/results/journal_paper/MM_GUROBI.mat')
 [gs_gurobi, fail_rate_gurobi, Tgurobi] = compute_geometric_mean(Tgurobi, Status_gurobi, 'OPTIMAL', TIME_LIMIT);
 Tgurobi_hat = Tgurobi;
 
-load('/home/ben/Documents/Projects/QPALM/simulations/results/MM_QPALM_BOYD.mat')
-
-Status_qpalm_c_boyd = Status_qpalm_c;
-Tqpalm_c_boyd = Tqpalm_c;
-
-load('/home/ben/Documents/Projects/QPALM/simulations/results/MM_QPALM.mat')
-Tqpalm_c = [Tqpalm_c, Tqpalm_c_boyd];
-Status_qpalm_c = [Status_qpalm_c, Status_qpalm_c_boyd];
-
+load('/home/ben/Documents/Projects/QPALM/simulations/results/journal_paper/MM_QPALM_C.mat')
 [gs_qpalm, fail_rate_qpalm, Tqpalm_c] = compute_geometric_mean(Tqpalm_c, Status_qpalm_c, 'solved', TIME_LIMIT);
 
 gs_min = min([gs_gurobi, gs_qpalm, gs_osqp]);

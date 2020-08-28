@@ -43,3 +43,4 @@ private
 *.SIF
 *.d
 *.f
+/simulations/cutest_set/jit_tmp.c

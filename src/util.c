@@ -10,6 +10,7 @@
 #include "lin_alg.h"
 #include "global_opts.h"
 #include "string.h"
+#include "types.h"
 /**********************
 * Utility Functions  *
 **********************/
