@@ -22,9 +22,9 @@ Iter_qpalm_c_schur = Iter_qpalm_c;
 % T_qpalm_c_cholmod = Tqpalm_c;
 
 figure 
-loglog([1e-4 1e3],[1 1],'k--');
+loglog([1e-8 1e3],[1 1],'k--');
 hold on
-% loglog([2 2], [1e-5, 1e1],'g--')  
+loglog([2 2], [1e-5, 1e1],'r--')  
 
 NNZ_KKT = zeros(size(T_qpalm_c_kkt));
 NNZ_SCHUR = zeros(size(T_qpalm_c_kkt));
@@ -43,6 +43,11 @@ for i = 1:length(T_qpalm_c_kkt)
             n = matData{i}.n;
             for j = 1:prob.m
                 Annz = nnz(At(:,j));
+                max_Annz = max(max_Annz, Annz);
+            end
+            
+            for j = 1:prob.m
+                Annz = nnz(At(:,j));
                 if Annz + max_Annz <= n
                     nnz_schur_approx = nnz_schur_approx + 0.5*Annz*(Annz-1);
                 else
@@ -50,10 +55,17 @@ for i = 1:length(T_qpalm_c_kkt)
                 end
                 max_Annz = max(max_Annz, Annz);
             end
-            
+            if (2*max_Annz > n)
+                nnz_schur_approx = nnz_schur_approx + 0.5*max_Annz*(max_Annz-1) - (n-max_Annz)*(max_Annz-(n-max_Annz+1)/2);
+            end
+            nnz_schur_approx = min(n*(n-1)/2, nnz_schur_approx);
             
             NNZ_SCHUR(i) = nnz_schur_approx;
-            loglog(nnz_kkt/nnz_schur_approx, T_qpalm_c_kkt(i)/T_qpalm_c_schur(i), 'bx');
+%             if (nnz_schur_approx > 10000) 
+%                 loglog(nnz_kkt/nnz_schur_approx, T_qpalm_c_kkt(i)/T_qpalm_c_schur(i), 'rx');
+%             else
+                loglog((nnz_kkt/nnz_schur_approx)^2*prob.n/(prob.n+prob.m), T_qpalm_c_kkt(i)/T_qpalm_c_schur(i), 'bx', 'MarkerSize', 12);
+%             end
 %             loglog(nnz_kkt/nnz_schur_approx, T_qpalm_c_kkt(i)/T_qpalm_c_cholmod(i), 'r*');
 %             loglog(nnz_kkt/nnz_schur_approx, T_qpalm_c_schur(i)/T_qpalm_c(i), 'gsq');
 
@@ -70,14 +82,17 @@ for i = 1:length(T_qpalm_c_kkt)
 %     end
 end
 
-set(gca,'fontsize',12)
-title('Comparison KKT and SCHUR methods');
-ylabel('T_{KKT} / T_{SCHUR}');
+set(gca,'fontsize',16)
+title('Comparison KKT and Schur methods');
+ylabel('T_{KKT} / T_{Schur}');
 % title('Comparison LADEL and CHOLMOD');
 % ylabel('T_{SCHUR_{LADEL}} / T_{SCHUR_{CHOLMOD}}');
 
 if schur_approx
-    xlabel('nnz_{KKT} / nnz_{SCHUR_{approx}}');
+    xlabel('$\displaystyle\frac{n}{n+m} \displaystyle\frac{|\widetilde{\mathcal K}|^2}{|\widetilde{H}|^2} $','interpreter','latex')
+%     xlabel('n/(n+m) nnz_{KKT} / nnz_{SCHUR_{approx}} ');
 else
     xlabel('nnz_{KKT} / nnz_{SCHUR}');
 end
+set(gca,'xtick',logspace(-8,3,12))
+axis tight

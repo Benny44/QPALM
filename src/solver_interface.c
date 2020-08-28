@@ -43,6 +43,7 @@ void qpalm_set_factorization_method(QPALMWorkspace *work, solver_common *c)
     c->array_int_ncol1 = NULL;
 
     ladel_int Atnz_col, Atnz_col_max = 0;
+    for (col = 0; col < m; col++) Atnz_col_max = c_max(At->p[col+1] - At->p[col], Atnz_col_max);
     for (col = 0; col < m; col++)
     {
       Atnz_col = At->p[col+1] - At->p[col];
@@ -50,15 +51,15 @@ void qpalm_set_factorization_method(QPALMWorkspace *work, solver_common *c)
         nnz_schur += 0.5*Atnz_col*(Atnz_col-1);
       else
         nnz_schur += (n-Atnz_col_max)*(Atnz_col-(n-Atnz_col_max+1)/2.0);
-      Atnz_col_max = c_max(Atnz_col, Atnz_col_max);
     }
-
+    if (2*Atnz_col_max > n) nnz_schur += 0.5*Atnz_col_max*(Atnz_col_max-1) - (n-Atnz_col_max)*(Atnz_col_max-(n-Atnz_col_max+1)/2.0);
+    nnz_schur = c_min(nnz_schur, n*(n-1)/2);
     /* NB: If nnz(KKT) == nnz(Q+AtA) << n^2, then KKT will perform a bit better due to the 
     ordering. */;
     At = ladel_sparse_free(At);
 
     /* Switching criterion */
-    if (nnz_kkt < 2*nnz_schur)
+    if ((nnz_kkt*nnz_kkt)/(nnz_schur*nnz_schur)*n/(n+m) < 2) 
         work->solver->factorization_method = FACTORIZE_KKT;
     else
         work->solver->factorization_method = FACTORIZE_SCHUR;
