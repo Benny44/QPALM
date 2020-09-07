@@ -25,7 +25,6 @@ void compute_residuals(QPALMWorkspace *work, solver_common *c) {
 
     //Axys = Ax + y./sigma
     vec_ew_prod(work->y, work->sigma_inv, work->temp_m, work->data->m);
-    // vec_ew_div(work->y, work->sigma, work->temp_m, work->data->m);
     vec_add_scaled(work->Ax, work->temp_m, work->Axys, 1, work->data->m);
     //z = min(max(Axys,bmin),bmax)
     vec_ew_mid_vec(work->Axys, work->data->bmin, work->data->bmax, work->z, work->data->m);

@@ -82,6 +82,7 @@ void scale_data(QPALMWorkspace *work) {
     // Equilibrate matrix Q and vector q
     // Q <- cDQD, q <- cDq
     vec_ew_prod(work->scaling->D, work->data->q, work->data->q, n);
+    vec_ew_prod(work->scaling->D, work->Qx, work->Qx, n);
     prea_vec_copy(work->scaling->D, work->D_temp, n);
     vec_add_scaled(work->Qx, work->data->q, work->dphi, 1, n);
     work->scaling->c = 1/c_max(1.0, vec_norm_inf(work->dphi, n));
