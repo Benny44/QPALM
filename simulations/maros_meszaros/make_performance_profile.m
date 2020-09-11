@@ -7,34 +7,33 @@ r = sort(r);
 
 failure_detected = false;
 
-y_temp = 0;
-
 T = length(r);
 
 for k = 1:T
     if (r(k) == inf || isnan(r(k)))
         failure_detected = true;
+        if (r(k) == inf) 
+            %deal with the plotting extension outside of this function
+            %that is, extend x = [x rmax]; y = [y y(end)];
+            break; 
+        end
     elseif k == 1
-        x_temp = r(k);
-        y_temp = 1/T;
         if r(k) ~= 1
-            x = [x x_temp];
-            y = [y 0];
+            x = [x r(k) r(k)];
+            y = [y 0 k/T];
+        else
+            x = [x r(k)];
+            y = [y k/T];
         end
             
     else
         if r(k) ~= r(k-1)
-            x = [x x_temp r(k)];
-            y = [y y_temp y_temp];
-            
-            y_temp = y_temp + 1/T;
-            x_temp = r(k);
+            x = [x r(k) r(k)];
+            y = [y (k-1)/T k/T];
         else
-            y_temp = y_temp + 1/T;
+            x = [x r(k)];
+            y = [y k/T];
         end
     end
-end
-
-
 end
 

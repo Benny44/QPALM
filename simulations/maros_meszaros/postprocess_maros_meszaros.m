@@ -13,13 +13,13 @@ Tgurobi_hat = Tgurobi;
 load('/home/ben/Documents/Projects/QPALM/simulations/results/journal_paper/MM_QPALM_C.mat')
 [gs_qpalm, fail_rate_qpalm, Tqpalm_c] = compute_geometric_mean(Tqpalm_c, Status_qpalm_c, 'solved', TIME_LIMIT);
 
-gs_min = min([gs_gurobi, gs_qpalm, gs_osqp]);
-gs_qpalm = gs_qpalm/gs_min;
-gs_osqp = gs_osqp/gs_min;
-gs_gurobi = gs_gurobi/gs_min;
+% gs_min = min([gs_gurobi, gs_qpalm, gs_osqp]);
+% gs_qpalm = gs_qpalm/gs_min;
+% gs_osqp = gs_osqp/gs_min;
+% gs_gurobi = gs_gurobi/gs_min;
 
 % fprintf('gs_qpalm: %.4f, gs_osqp: %.4f, gs_gurobi: %.4f\n', gs_qpalm, gs_osqp, gs_gurobi);
-fprintf('Shifted geometric means & %.4f & %.4f & %.4f\\\\\n', gs_qpalm, gs_osqp, gs_gurobi);
+fprintf('Runtime (sgm) & %.4f & %.4f & %.4f\\\\\n', gs_qpalm, gs_osqp, gs_gurobi);
 
 % fprintf('fail_qpalm: %.4f, fail_osqp: %.4f, fail_gurobi: %.4f\n', fail_rate_qpalm, fail_rate_osqp, fail_rate_gurobi);
 fprintf('Failure rate [\\%%] & %.4f & %.4f & %.4f\n', fail_rate_qpalm, fail_rate_osqp, fail_rate_gurobi);
@@ -40,17 +40,17 @@ r_gurobi = Tgurobi./Tmin;
 rmax = max(max(r_gurobi(r_gurobi~=inf & ~isnan(r_gurobi))), max(r_qpalm_c(r_qpalm_c~=inf & ~isnan(r_qpalm_c)))); 
 
 [xqp, yqp, fqp] = make_performance_profile(r_qpalm_c);
-if fqp
+% if fqp
     xqp = [xqp rmax];
     yqp = [yqp yqp(end)];
-end
+% end
 
 
 [xgu, ygu, fgu] = make_performance_profile(r_gurobi);
-if fgu
+% if fgu
     xgu = [xgu rmax];
     ygu = [ygu ygu(end)];
-end
+% end
 
 figure
 plot(log10(xqp), yqp, 'b', log10(xgu) ,ygu, 'k')
@@ -67,17 +67,17 @@ r_osqp = Tosqp./Tmin;
 rmax = max(max(r_osqp(r_osqp~=inf & ~isnan(r_osqp))), max(r_qpalm_c(r_qpalm_c~=inf & ~isnan(r_qpalm_c)))); 
 
 [xqp, yqp, fqp] = make_performance_profile(r_qpalm_c);
-if fqp
+% if fqp
     xqp = [xqp rmax];
     yqp = [yqp yqp(end)];
-end
+% end
 
 
 [xos, yos, fos] = make_performance_profile(r_osqp);
-if fos
+% if fos
     xos = [xos rmax];
     yos = [yos yos(end)];
-end
+% end
 
 figure
 plot(log10(xqp), yqp, 'b', log10(xos) ,yos, 'r')
