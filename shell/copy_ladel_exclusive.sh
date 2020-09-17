@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Copy everything to a new directory
-if [ -d "../QPALM_ladel" ]; then
-    rm -r ../QPALM_ladel
-fi
+# if [ -d "../QPALM_ladel" ]; then
+#     rm -r ../QPALM_ladel
+# fi
 
-mkdir ../QPALM_ladel
+# mkdir ../QPALM_ladel
 
 rsync -a . ../QPALM_ladel \
     --exclude .git/ \
@@ -18,6 +18,7 @@ rsync -a . ../QPALM_ladel \
     --exclude build/ \
     --exclude suitesparse/ \
     --exclude cmakeSuitesparse/ \
+    --exclude LADEL/ \
     --exclude docs/ \
 
 # Remove all the cholmod code in C
@@ -40,7 +41,7 @@ do
             if [ "$line" == "#elif defined USE_CHOLMOD" ]; then
                 ((i=i+1))
                 ladel_i=0
-                echo "Text read at $lineno from $f: $line"
+                # echo "Text read at $lineno from $f: $line"
             fi
 
             if [ "$ladel_i" -ge "$deleting" ]; then
@@ -53,7 +54,7 @@ do
                 if [[ $line =~ $re_ifdef || $line =~ $re_ifndef ]]; then
                     ((i=i+1))
                 fi
-                echo "Deleting line $lineno"
+                # echo "Deleting line $lineno"
                 sed -i "$lineno d" "$f"
             else
                 let lineno++
@@ -83,5 +84,60 @@ do
     # sed -i 's/#ifdef USE_LADEL//' $f
 done
 
+sed -i "s/%   qpalm_make('cholmod')//" interfaces/mex/qpalm_make.m
+sed -i "s/    fprintf(\'No linear systems solver selected. Using LADEL as the default.\n\');//" interfaces/mex/qpalm_make.m
+sed -i "s/    fprintf('Use qpalm_make(''cholmod'') if you wish to compile with CHOLMOD instead.\n');//" interfaces/mex/qpalm_make.m
+sed -i "s/    fprintf('Using CHOLMOD as the linear systems solver.\n');/error('This version of QPALM only works with LADEL.\n');/" interfaces/mex/qpalm_make.m
 
-# Clean up any externals
+## Clean up any externals
+
+#License
+cp private/LICENSE ../QPALM_ladel/
+
+#Matlab
+sed -i 's/No linear systems solver selected. Using LADEL as the default.\\n//' interfaces/mex/qpalm_make.m
+sed -i 's/if you wish to compile with CHOLMOD instead.\\n//' interfaces/mex/qpalm_make.m
+
+sed -i "s/    fprintf('');//" interfaces/mex/qpalm_make.m
+sed -i "s/    fprintf('Use qpalm_make(''cholmod'') ');//" interfaces/mex/qpalm_make.m
+
+sed -i "s/fprintf('Using CHOLMOD as the linear systems solver./error('CHOLMOD is not available in this version of QPALM/" interfaces/mex/qpalm_make.m
+sed -i "s/or ''cholmod''.//" interfaces/mex/qpalm_make.m
+
+ifs=0
+declare -i lineno=1
+f="interfaces/mex/qpalm_make.m"
+re_if="if.*"
+re_for="for i.*"
+re_modify="Modify.*"
+re_elseif="elseif.*"
+re_ifmetis="if METIS.*"
+re_end="end.*"
+while read -r line
+do
+    if [ "$line" == "elseif strcmp(solver, 'cholmod')" ]; then
+        ((ifs=ifs+1))
+        sed -i "$lineno d" "$f"
+    else
+        if [ "$ifs" -ge "$deleting" ]; then
+        # echo "Text read at $lineno from $f ($ifs ifs): $line"
+            if [[ $line =~ $re_if || $line =~ $re_for ]]; then
+                if ! [[ $line =~ $re_elseif || $line =~ $re_ifmetis || $line =~ $re_modify ]]; then
+                    ((ifs=ifs+1))
+                    echo "$line"
+                fi
+            fi
+            if [[ $line =~ $re_end ]]; then
+                ((ifs=ifs-1))
+                echo "$line"
+            fi
+            if [ "$ifs" -ge "$deleting" ]; then
+                sed -i "$lineno d" "$f"
+            else
+                let lineno++
+            fi
+        else
+            let lineno++
+        fi
+    fi
+done < "$f"
