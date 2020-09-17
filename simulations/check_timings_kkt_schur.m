@@ -89,7 +89,7 @@ ylabel('T_{KKT} / T_{Schur}');
 % ylabel('T_{SCHUR_{LADEL}} / T_{SCHUR_{CHOLMOD}}');
 
 if schur_approx
-    xlabel('$\displaystyle\frac{n}{n+m} \displaystyle\frac{|\widetilde{\mathcal K}|^2}{|\widetilde{H}|^2} $','interpreter','latex')
+    xlabel('$\displaystyle\frac{n}{n+m} \displaystyle\frac{|{\mathcal K}|^2}{|\widetilde{H}|^2} $','interpreter','latex')
 %     xlabel('n/(n+m) nnz_{KKT} / nnz_{SCHUR_{approx}} ');
 else
     xlabel('nnz_{KKT} / nnz_{SCHUR}');
