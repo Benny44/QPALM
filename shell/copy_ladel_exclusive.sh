@@ -124,12 +124,10 @@ do
             if [[ $line =~ $re_if || $line =~ $re_for ]]; then
                 if ! [[ $line =~ $re_elseif || $line =~ $re_ifmetis || $line =~ $re_modify ]]; then
                     ((ifs=ifs+1))
-                    echo "$line"
                 fi
             fi
             if [[ $line =~ $re_end ]]; then
                 ((ifs=ifs-1))
-                echo "$line"
             fi
             if [ "$ifs" -ge "$deleting" ]; then
                 sed -i "$lineno d" "$f"
@@ -141,3 +139,10 @@ do
         fi
     fi
 done < "$f"
+
+#Readme
+sed -i 's/## Check out QPALM_vLADEL//' README.md
+sed -i 's#Check out \[this\](https://github.com/Benny44/QPALM_vLADEL) for the main LGPL-v3 licensed version of QPALM based on LADEL. This repo is only maintained because it provides an interface also to CHOLMOD, which might be more useful than LADEL for dense problems.##' README.md 
+
+sed -i 's#* Suitesparse: authored by Tim Davis. Each of its modules is licensed separately, see \[suitesparse/LICENSE.txt\](https://github.com/jluttine/suitesparse/blob/e409f9fb39181ea86718dbf91ce39c2c7e6c3dcd/LICENSE.txt). The main module used in QPALM is CHOLMOD.#\* LADEL: authored by Ben Hermans and licensed under \[LGPL-v3\](https://github.com/Benny44/LADEL/blob/master/LICENSE).#' README.md
+sed -i 's#* Intel MKL: authored by the Intel Corporation and licensed under the Intel Simplified Software License.##' README.md

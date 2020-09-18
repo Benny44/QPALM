@@ -68,7 +68,7 @@ mkdir $QPALM_DEPLOY_DIR/interfaces/python/build
 mkdir $QPALM_DEPLOY_DIR/interfaces/python/build/lib
 
 # Copy license
-cp LICENSE $QPALM_DEPLOY_DIR/info
+cp LADEL/LICENSE $QPALM_DEPLOY_DIR/info
 # cp suitesparse/LICENSE.txt $QPALM_DEPLOY_DIR/info/LICENSEsuitesparse.txt
 cp LADEL/LICENSE $QPALM_DEPLOY_DIR/info/LICENSE_LADEL.txt
 cp LADEL/amd/License.txt $QPALM_DEPLOY_DIR/info/LICENSE_AMD.txt

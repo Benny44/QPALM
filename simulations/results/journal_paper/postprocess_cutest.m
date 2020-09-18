@@ -40,7 +40,7 @@ Status_ipopt = [Status_ipopt_A, Status_ipopt];
 X_ipopt = [X_ipopt_A, X_ipopt];
 files = [files_A, files];
 
-% [gs_ipopt, fail_rate_ipopt, Tipopt] = compute_geometric_mean(Tipopt, Status_ipopt, 'Solve_Succeeded', TIME_LIMIT);
+[gs_ipopt, fail_rate_ipopt, Tipopt] = compute_geometric_mean(Tipopt, Status_ipopt, 'Solve_Succeeded', TIME_LIMIT);
 % 
 % gs_min = min([gs_ipopt, gs_qpalm]);
 % gs_qpalm = gs_qpalm/gs_min;
