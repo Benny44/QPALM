@@ -146,3 +146,6 @@ sed -i 's#Check out \[this\](https://github.com/Benny44/QPALM_vLADEL) for the ma
 
 sed -i 's#* Suitesparse: authored by Tim Davis. Each of its modules is licensed separately, see \[suitesparse/LICENSE.txt\](https://github.com/jluttine/suitesparse/blob/e409f9fb39181ea86718dbf91ce39c2c7e6c3dcd/LICENSE.txt). The main module used in QPALM is CHOLMOD.#\* LADEL: authored by Ben Hermans and licensed under \[LGPL-v3\](https://github.com/Benny44/LADEL/blob/master/LICENSE).#' README.md
 sed -i 's#* Intel MKL: authored by the Intel Corporation and licensed under the Intel Simplified Software License.##' README.md
+
+# sed -i 's#QPALM.svg#QPALM_vLADEL.svg#' README.md
+sed -i 's#Benny44/QPALM#Benny44/QPALM_vLADEL#' README.md
