@@ -1,0 +1,594 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=6.862in,
+height=4.78in,
+at={(1.151in,1.04in)},
+scale only axis,
+xmode=log,
+xmin=1e-08,
+xmax=1000,
+xtick={ 1e-08,  1e-07,  1e-06,  1e-05, 0.0001,  0.001,   0.01,    0.1,      1,     10,    100,   1000},
+xminorticks=true,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\displaystyle\frac{n}{n+m} \displaystyle\frac{|{\mathcal K}|^2}{|\widetilde{H}|^2} $},
+ymode=log,
+ymin=1e-05,
+ymax=10,
+yminorticks=true,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\text{T}_{\text{KKT}}\text{ / T}_{\text{Schur}}$},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Comparison KKT and Schur methods}
+]
+\addplot [color=black, dashed, forget plot]
+  table[row sep=crcr]{%
+1e-08	1\\
+1000	1\\
+};
+\addplot [color=red, dashed, forget plot]
+  table[row sep=crcr]{%
+2	1e-05\\
+2	10\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.76222352818425	0.00862643234315936\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.76222352818425	0.00800802665494393\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.76222352818425	0.00862782555417836\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.76222352818425	0.00898246292579804\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.328959429971983	0.00213051869110078\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.328959429971983	0.00216445853496868\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.328959429971983	0.00394429042788691\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.328959429971983	0.00179114459776458\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.85994231494169e-08	0.00143191326472222\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+7.6529061530675e-06	0.0539760248664613\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.237980249923444	0.187491148618963\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.230500866370119	0.0633217726606321\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.23155548697666	0.154849420887324\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.226806163988467	0.0506801608326436\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.227323416094208	0.128211375774583\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.225923675216745	0.203953452690499\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.846515744010091	0.173411513915826\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.84863770046353	0.124025596255221\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.868698060941828	0.803362928707733\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.965482899229104	0.0342226494083031\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.967859002662956	0.171137246821729\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.989858812348738	0.679235389936063\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.754248924121214	0.106433533511228\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.756170083263649	0.134856179674907\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.774600840727471	0.734289199710973\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.021168870622049	0.475164094560426\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.843834390002688	0.94176539369143\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.567345690712932	1.07806326178954\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.550457350767155	3.23201673678504\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.554227690240735	0.991909848681103\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.590213445949977	1.23289870057599\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+145.963549117787	0.873650665429441\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+229.399438238944	1.75772054606896\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+226.395807302513	1.96396141855027\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+412.237839644528	0.97924093698736\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0857813718370568	0.926648102078267\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.973692343351619	1.08660210636147\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.34623082474679	0.0425419928544652\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.17696997174507	0.0351353305484339\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.8455999421045	1.37103841247508\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+32.4	0.869721413721414\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+10.0833333333333	1.47030760200322\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+10.7142857142857	0.813100991688546\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+10.7142857142857	0.839983319432861\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+2.80384615384615	1.20120435453454\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+2.80384615384615	1.22770086507583\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+2.80384615384615	1.03758424053914\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+7.36363636363636	1.24876330819402\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+5.0009001480188e-07	5.79643251363217e-05\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+5.0009001480188e-07	4.52078351796126e-05\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+233.78313575536	1.12504448475203\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.732699829101585	1.52253723197733\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.65026158607012\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.32790541765084\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.3801703641883\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.27486589513342\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.30677441657145\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.27914893258444\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.34129558311446\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.51625868534636\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.25400704531064\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.37971374711051\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.39281549255463\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.0209742989993	1.28512424331282\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.836132586865725	1.12141941851118\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.700018873201814	0.606024819468663\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.332198615245479	0.738634704532009\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+3	1.31199475622394\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00753953698300161	0.542143214502025\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00107091330464959	0.224022965257033\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00345866008377398	0.154339399859269\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.000168200731047368	0.0483112520206567\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00542168472468958	0.0924033027518383\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00374689535652208	0.0805818431169201\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00293271913215962	0.0644932350419548\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.000894060005866344	0.0284772093664141\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0402857773504898	0.152696683002901\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0427186263154101	0.632928644484245\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.519211453770675	0.821210559387731\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0133974088645064	0.479129167660631\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00606491286846235	0.45018389689241\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0143207664754869	0.574707977762998\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00364171359975189	0.373689195376521\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0339819741438555	0.498913806605807\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00471302947962159	0.497882830491568\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.143989964252691	0.342174280124138\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00144716812475172	0.13676799840729\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00229194239527339	0.218048116520174\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.499115861208583	0.166877035345888\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00961191634348301	0.90367094707939\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00973215030330847	0.777410305383896\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0101805857506243	0.754366687080269\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0384402484777662	0.569836274623353\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0408305790467047	0.710181051287385\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00157889780911235	0.202756585679531\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00984464368476531	0.806852090819375\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00898634582232264	0.761873863370958\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00154366987910781	0.0240838519754906\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+56.3333333333333	1.45719398170317\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0647943019206879	0.788310829306325\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.1470881268538	0.946787086292584\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.269640134421485	1.00019304699531\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.290121300716248	0.805089013259444\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0181861224953353	0.595369250736077\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0172763536413704	0.489773016867661\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0164109804121185	0.46824757707768\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.203649502395921	0.844322746100304\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0211300066099937	0.481938320085028\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00852920479926795	0.147184766272174\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00939496960074768	0.147972705087636\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0198105708237736	0.214303875125827\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0875995514798858	0.772576337975565\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0498716324238501	0.210369492921417\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0497264361294776	0.134150875345765\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0490397644126759	0.0328836739625458\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0203068641339117	0.677828531310353\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0424120118151071	0.950992912724193\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.108972920074214	0.129906153225076\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00277356448047611	0.0310344395424709\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.00523474838694241	0.0631134659425591\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0117329733693792	0.0284674004080684\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0181887885274413	0.0491993074108019\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0214164691444234	0.0165584955369113\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.030510492451336	0.0197584405295437\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0500937430420761	0.0167597176811053\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0116615618486996	0.388309278528951\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.000257994745571545	0.0110545577188039\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+10.0833333333333	1.29852755035009\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.00067514816874	0.936969938729693\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.00067514816874	0.867740660243688\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.00033753703672	0.841328442690821\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.176643087354754	0.0151878342933904\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.176643087354754	0.0295617512147049\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+40	1.43280113177041\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.601906528848475	0.00028791541875557\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+0.0237395697909656	0.202238812391193\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+1.02153803058378	0.870044893630542\\
+};
+\addplot [color=blue, draw=none, mark size=6.0pt, mark=x, mark options={solid, blue}, forget plot]
+  table[row sep=crcr]{%
+48	1.10716106356148\\
+};
+\end{axis}
+\end{tikzpicture}%
