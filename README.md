@@ -14,6 +14,12 @@ A proximal augmented Lagrangian method for (possibly **nonconvex**) QPs using se
 
 ## Installation
 
+First of all, clone this repo with all the submodules! For this, run
+```
+git clone https://github.com/Benny44/QPALM.git
+git submodule update --init --recursive
+```
+
 ### **Matlab**
 * To install the mex interface of QPALM, add QPALM and its subfolders to the matlab path. Then run qpalm_make.m. You can test whether QPALM is working using 
 the examples/qpalm_mex_demo.m and examples/qpalm_mex_nonconvex_demo.m.
