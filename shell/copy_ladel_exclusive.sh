@@ -21,6 +21,14 @@ rsync -a . ../QPALM_ladel \
     --exclude LADEL/ \
     --exclude docs/ \
 
+if [ -d "../QPALM_ladel/docs" ]; then 
+    rsync -a docs/Doxyfile ../QPALM_ladel/docs
+    rsync -a docs/ref.bib ../QPALM_ladel/docs
+else
+    mkdir ../QPALM_ladel/docs
+    rsync -a docs/ref.bib ../QPALM_ladel/docs
+fi
+
 # Remove all the cholmod code in C
 cd ../QPALM_ladel
 re_ifdef="#ifdef.*"
@@ -149,3 +157,16 @@ sed -i 's#* Intel MKL: authored by the Intel Corporation and licensed under the 
 
 # sed -i 's#QPALM.svg#QPALM_vLADEL.svg#' README.md
 sed -i 's#Benny44/QPALM#Benny44/QPALM_vLADEL#' README.md
+sed -i 's#io/QPALM#io/QPALM_vLADEL#' README.md
+
+#Documentation
+sed -i 's#github.com/Benny44/QPALM#github.com/Benny44/QPALM_vLADEL#' doxypages/mainpage.dox
+sed -i 's# * GPL 3.0# * LGPL-3.0#' doxypages/mainpage.dox
+sed -i 's#ladel/cholmod#ladel#' include/solver_interface.h
+sed -i 's#cholmod/ladel#ladel#' include/solver_interface.h
+sed -i 's#Finally, all the settings relevant to cholmod (and suitesparse) are included##' include/solver_interface.h
+sed -i 's#in this file as well.##'  include/solver_interface.h
+
+cd docs
+doxygen Doxyfile
+cd ..

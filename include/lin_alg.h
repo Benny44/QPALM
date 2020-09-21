@@ -148,7 +148,7 @@ void vec_add_scaled(const c_float *a,
                     size_t         n);
 
 /**
- * Scaled addition of one vector to another vector, both being scaled, @f$a_i = sc1\cdota_i + sc2\cdot b_i@f$ 
+ * Scaled addition of one vector to another vector, both being scaled, @f$a_i = sc1\cdot a_i + sc2\cdot b_i@f$ 
  * 
  * @param a Input and Output vector
  * @param b Input vector
