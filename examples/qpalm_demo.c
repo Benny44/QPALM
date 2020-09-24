@@ -1,6 +1,4 @@
 #include "qpalm.h"
-#include "types.h"
-#include "cholmod.h"
 #include <stdio.h>
 
 #define N 2
@@ -49,9 +47,19 @@ int main() {
   data->bmin = constant_vector(-2, data->m);
   data->bmax = constant_vector(2, data->m);
 
-  cholmod_common c;
-  CHOLMOD(start)(&c);
-  cholmod_sparse *A = CHOLMOD(allocate_sparse)(m, n, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, &c);
+  solver_common common, *c;
+  c = &common;
+  solver_sparse *A, *Q;
+  #ifdef USE_LADEL
+  A = ladel_sparse_alloc(M, N, ANZMAX, UNSYMMETRIC, TRUE, FALSE);
+  Q = ladel_sparse_alloc(N, N, QNZMAX, UPPER, TRUE, FALSE)
+  #elif defined USE_CHOLMOD
+  #include "cholmod.h"
+  CHOLMOD(start)(c);
+  A = CHOLMOD(allocate_sparse)(m, n, ANZMAX, TRUE, TRUE, 0, CHOLMOD_REAL, c);
+  Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, c);
+  #endif
+
   c_float *Ax;
   c_int *Ai, *Ap;
   Ax = A->x;
@@ -60,7 +68,6 @@ int main() {
   Ax[0] = 1.0; Ax[1] = 1.0; Ax[2] = 1.0; Ax[3] = 1.0;
   Ap[0] = 0; Ap[1] = 2; Ap[2] = 4;
   Ai[0] = 0; Ai[1] = 2; Ai[2] = 1; Ai[3] = 2;
-  cholmod_sparse *Q = CHOLMOD(allocate_sparse)(N, N, QNZMAX, TRUE, TRUE, -1, CHOLMOD_REAL, &c);
   c_float *Qx;
   c_int *Qi, *Qp;
   Qx = Q->x;
@@ -73,13 +80,11 @@ int main() {
   data->A = A;
   data->Q = Q;
 
-  CHOLMOD(finish)(&c);
-
   // Define Solver settings as default
   qpalm_set_default_settings(settings);
 
   // Setup workspace
-  work = qpalm_setup(data, settings, &c);
+  work = qpalm_setup(data, settings, c);
 
   // Solve Problem
   qpalm_solve(work);
@@ -99,10 +104,15 @@ int main() {
   #endif
 
   // Clean workspace
-  CHOLMOD(start)(&work->solver->c);
-  CHOLMOD(free_sparse)(&data->Q, &c);
-  CHOLMOD(free_sparse)(&data->A, &c);
-  CHOLMOD(finish)(&work->solver->c);
+  #ifdef USE_LADEL
+  data->Q = ladel_sparse_free(data->Q);
+  data->A = ladel_sparse_free(data->A);
+  #elif defined USE_CHOLMOD
+  CHOLMOD(start)(c);
+  CHOLMOD(free_sparse)(&data->Q, c);
+  CHOLMOD(free_sparse)(&data->A, c);
+  CHOLMOD(finish)(c);
+  #endif /* USE_CHOLMOD */
 
   qpalm_cleanup(work);
   c_free(data->q);
@@ -111,6 +121,6 @@ int main() {
   c_free(data);
   c_free(settings);
 
-    return 0;
+  return 0;
 
 }

@@ -21,16 +21,6 @@ cd(this_path);
 !git submodule update --init
 !git submodule update --recursive --remote
 
-%% For the matlab version of QPALM we need the following mex functions.
-% PWAlinesearch_setup;
-
-% cholmod_path = fullfile(this_path, '../../suitesparse/CHOLMOD/MATLAB');
-% addpath(cholmod_path);
-% cholmod_path = fileparts(which('cholmod_make.m'));
-% cd(cholmod_path);
-% cholmod_make;
-
-% cd(this_path);
 
 %% Determine the linear systems solver and specify the include paths
 fprintf ('Compiling QPALM mex function\n')

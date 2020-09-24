@@ -166,6 +166,16 @@ sed -i 's#ladel/cholmod#ladel#' include/solver_interface.h
 sed -i 's#cholmod/ladel#ladel#' include/solver_interface.h
 sed -i 's#Finally, all the settings relevant to cholmod (and suitesparse) are included##' include/solver_interface.h
 sed -i 's#in this file as well.##'  include/solver_interface.h
+sed -i 's#ladel/cholmod#ladel#' src/solver_interface.c
+sed -i 's#cholmod/ladel#ladel#' src/solver_interface.c
+sed -i 's#Finally, all the settings relevant to cholmod (and suitesparse) are included##' src/solver_interface.c
+sed -i 's#in this file as well.##'  src/solver_interface.c
+sed -i 's#@note The function in this file makes use of the cholmod scale routines.##' include/scaling.h
+sed -i 's#@note This function makes use of the cholmod scale routines.##' include/scaling.h
+sed -i 's#@note The function in this file makes use of the cholmod scale routines.##' src/scaling.c
+sed -i 's#cholmod_factor#factor#' src/iteration.c
+sed -i 's#cholmod_factor#factor#' include/iteration.h
+
 
 cd docs
 doxygen Doxyfile
