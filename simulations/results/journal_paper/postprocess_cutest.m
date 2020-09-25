@@ -3,6 +3,11 @@ close all
 TIME_LIMIT = 3600;
 
 load('/home/ben/Documents/Projects/QPALM/simulations/results/journal_paper/full_A_final.mat')
+i = [23, 37]; %A2NNDNIL and A5NNDNIL (PI and PI)
+Tqpalm_c(i) = [];
+Status_qpalm_c(i) = [];
+X_qpalm_c(i) = [];
+
 Tqpalm_c_A = Tqpalm_c;
 Status_qpalm_c_A = Status_qpalm_c;
 X_qpalm_c_A = X_qpalm_c;
@@ -21,8 +26,14 @@ X_qpalm_c_bar = X_qpalm_c;
 Tqpalm_c_bar = Tqpalm;
 
 [gs_qpalm, fail_rate_qpalm, Tqpalm] = compute_geometric_mean(Tqpalm, Status_qpalm_c, 'solved', TIME_LIMIT);
-
+fail_rate_qpalm = fail_rate_qpalm*length(Tqpalm)/(length(Tqpalm) + 5); %correct for infeasible problems
 load('/home/ben/Documents/Projects/QPALM/simulations/results/journal_paper/full_A_final_ipopt.mat')
+i = [23, 37]; %A2NNDNIL and A5NNDNIL (PI and PI)
+Tipopt(i) = [];
+Status_ipopt(i) = [];
+X_ipopt(i) = [];
+files(i) = [];
+
 Tipopt_A = Tipopt;
 Status_ipopt_A = Status_ipopt;
 X_ipopt_A = X_ipopt;
@@ -41,7 +52,8 @@ X_ipopt = [X_ipopt_A, X_ipopt];
 files = [files_A, files];
 
 [gs_ipopt, fail_rate_ipopt, Tipopt] = compute_geometric_mean(Tipopt, Status_ipopt, 'Solve_Succeeded', TIME_LIMIT);
-% 
+fail_rate_ipopt = fail_rate_ipopt*length(Tipopt)/(length(Tipopt) + 5); %correct for infeasible problems
+ 
 % gs_min = min([gs_ipopt, gs_qpalm]);
 % gs_qpalm = gs_qpalm/gs_min;
 % gs_ipopt = gs_ipopt/gs_min;
@@ -162,5 +174,5 @@ end
 % gs_qpalm = gs_qpalm/gs_min;
 % gs_ipopt = gs_ipopt/gs_min;
 fprintf('Runtime (sgm) & %.4f & %.4f\\\\\n', gs_qpalm, gs_ipopt);
-fprintf('Failure rate [\\%%] & %.4f & %.4f\\\\\n', fail_rate_qpalm, fail_rate_ipopt);
-fprintf('Optimal & %4d & %4d \n', nb_qpalm_wins, nb_ipopt_wins);
+fprintf('Optimal & %4d & %4d\\\\\n', nb_qpalm_wins, nb_ipopt_wins);
+fprintf('Failure rate [\\%%] & %.4f & %.4f \n', fail_rate_qpalm, fail_rate_ipopt);
