@@ -159,9 +159,21 @@ c_int is_primal_infeasible(QPALMWorkspace *work) {
 
     //out_of_bounds = bmax'*max(dy,0) + bmin'*min(dy,0)
     c_float out_of_bounds = 0;
-    for(size_t i=0; i < m; i++) {
-        out_of_bounds += (work->data->bmax[i] < work->scaling->E[i]*QPALM_INFTY) ? work->data->bmax[i]*c_max(work->delta_y[i], 0) : 0;
-        out_of_bounds += (work->data->bmin[i] > -work->scaling->E[i]*QPALM_INFTY) ? work->data->bmin[i]*c_min(work->delta_y[i], 0) : 0;
+    if (work->settings->scaling)
+    {
+        for(size_t i=0; i < m; i++) 
+        {
+            out_of_bounds += (work->data->bmax[i] < work->scaling->E[i]*QPALM_INFTY) ? work->data->bmax[i]*c_max(work->delta_y[i], 0) : 0;
+            out_of_bounds += (work->data->bmin[i] > -work->scaling->E[i]*QPALM_INFTY) ? work->data->bmin[i]*c_min(work->delta_y[i], 0) : 0;
+        }
+    }
+    else
+    {
+        for(size_t i=0; i < m; i++) 
+        {
+            out_of_bounds += (work->data->bmax[i] < QPALM_INFTY) ? work->data->bmax[i]*c_max(work->delta_y[i], 0) : 0;
+            out_of_bounds += (work->data->bmin[i] > -QPALM_INFTY) ? work->data->bmin[i]*c_min(work->delta_y[i], 0) : 0;
+        }
     }
 
     return (vec_norm_inf(work->Atdelta_y, n) <= eps_pinf_norm_Edy)
