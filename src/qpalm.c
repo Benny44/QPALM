@@ -639,7 +639,7 @@ void qpalm_solve(QPALMWorkspace *work) {
       #ifdef PRINTING
       if (work->settings->verbose && mod(iter, work->settings->print_iter) == 0) {
         c_print("%4ld | ---------------------------------------------------\n", iter);
-        c_print("Sigma_changed: %4ld, Dua2_res: %4e\n", work->nb_sigma_changed, work->info->dua2_res_norm);
+        // c_print("Sigma_changed: %4ld, Dua2_res: %4e\n", work->nb_sigma_changed, work->info->dua2_res_norm);
       }
       #endif
       
