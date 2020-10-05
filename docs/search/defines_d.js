@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['scaling',['SCALING',['../constants_8h.html#a10ff10afd2a3179ae42e67a12fd8d7fd',1,'constants.h']]],
-  ['sigma_5finit',['SIGMA_INIT',['../constants_8h.html#a5f6ad8818d7f5de228103a9617c9fd31',1,'constants.h']]],
-  ['sigma_5fmax',['SIGMA_MAX',['../constants_8h.html#ac15c21e22beda7f850763449c2c4c81b',1,'constants.h']]]
+  ['relative_5frefinement_5ftolerance',['RELATIVE_REFINEMENT_TOLERANCE',['../constants_8h.html#a35bcfd062e81f5cc7e64705f0f745a0a',1,'constants.h']]],
+  ['reset_5fnewton_5fiter',['RESET_NEWTON_ITER',['../constants_8h.html#a53e54f0110748115e8abf9623a94a726',1,'constants.h']]],
+  ['rho',['RHO',['../constants_8h.html#a3bf4402b9e2ae88e4462c3689f5d22b8',1,'constants.h']]]
 ];

@@ -161,6 +161,12 @@ Data Fields</h2></td></tr>
 <tr class="memitem:af74dad58f87a42daca251d5fef3137f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a6c5fda88a4f0817f2786e1566fa3c80d">c_int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structQPALMSettings.html#af74dad58f87a42daca251d5fef3137f2">factorization_method</a></td></tr>
 <tr class="memdesc:af74dad58f87a42daca251d5fef3137f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">factorize KKT or Schur complement  <a href="#af74dad58f87a42daca251d5fef3137f2">More...</a><br /></td></tr>
 <tr class="separator:af74dad58f87a42daca251d5fef3137f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ee6b7160227e8c78c7eb531368a00be"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a6c5fda88a4f0817f2786e1566fa3c80d">c_int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structQPALMSettings.html#a5ee6b7160227e8c78c7eb531368a00be">max_rank_update</a></td></tr>
+<tr class="memdesc:a5ee6b7160227e8c78c7eb531368a00be"><td class="mdescLeft">&#160;</td><td class="mdescRight">maximum rank for the sparse factorization update  <a href="#a5ee6b7160227e8c78c7eb531368a00be">More...</a><br /></td></tr>
+<tr class="separator:a5ee6b7160227e8c78c7eb531368a00be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a704324d24028742161365094dc80f9a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structQPALMSettings.html#a704324d24028742161365094dc80f9a9">max_rank_update_fraction</a></td></tr>
+<tr class="memdesc:a704324d24028742161365094dc80f9a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">maximum rank (relative to n+m) for the factorization update  <a href="#a704324d24028742161365094dc80f9a9">More...</a><br /></td></tr>
+<tr class="separator:a704324d24028742161365094dc80f9a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p class="">Settings struct. </p>
@@ -416,6 +422,38 @@ Data Fields</h2></td></tr>
 
 <p>maximum number of iterations </p>
 <dl class="section note"><dt>Note</dt><dd>Assumption: <img class="formulaInl" alt="$&gt;0$" src="form_67.png"/> </dd></dl>
+
+</div>
+</div>
+<a id="a5ee6b7160227e8c78c7eb531368a00be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ee6b7160227e8c78c7eb531368a00be">&#9670;&nbsp;</a></span>max_rank_update</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="global__opts_8h.html#a6c5fda88a4f0817f2786e1566fa3c80d">c_int</a> QPALMSettings::max_rank_update</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>maximum rank for the sparse factorization update </p>
+
+</div>
+</div>
+<a id="a704324d24028742161365094dc80f9a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a704324d24028742161365094dc80f9a9">&#9670;&nbsp;</a></span>max_rank_update_fraction</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="global__opts_8h.html#a9511c4510c4f8c4416edbce9f4a02853">c_float</a> QPALMSettings::max_rank_update_fraction</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>maximum rank (relative to n+m) for the factorization update </p>
 
 </div>
 </div>

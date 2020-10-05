@@ -1,6 +1,7 @@
 var searchData=
 [
   ['a',['A',['../structQPALMData.html#aa8ad86b157da4d793263547f1407707b',1,'QPALMData']]],
+  ['absolute_5frefinement_5ftolerance',['ABSOLUTE_REFINEMENT_TOLERANCE',['../constants_8h.html#af447c2cdb50dcca4f26a6cb908151234',1,'constants.h']]],
   ['active_5fconstraints',['active_constraints',['../structQPALMSolver.html#a15e3210a3071308b8a232611058e8a76',1,'QPALMSolver']]],
   ['active_5fconstraints_5fold',['active_constraints_old',['../structQPALMSolver.html#a6274ca602cb5384ea3da7cf362bd8f1b',1,'QPALMSolver']]],
   ['ad',['Ad',['../structQPALMSolver.html#a0b42b30a702eb6a4d24466d99889c383',1,'QPALMSolver::Ad()'],['../structQPALMWorkspace.html#ae40218985461185bbab01576ed8a1ca5',1,'QPALMWorkspace::Ad()']]],

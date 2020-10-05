@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ordering',['ORDERING',['../constants_8h.html#a06acf4a6575640e5bbbbfeb88225a8e0',1,'constants.h']]]
+  ['nonconvex',['NONCONVEX',['../constants_8h.html#a14fe7deb622594271f61212f88b3dd8c',1,'constants.h']]]
 ];

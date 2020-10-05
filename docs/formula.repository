@@ -98,3 +98,4 @@
 \form#97:$\|a\|_2$
 \form#98:$\begin{bmatrix} Q & A^T \\ A & -\Sigma^{-1} \end{bmatrix} $
 \form#99:$\begin{bmatrix} Q + \frac{1}{\gamma}I & A^T \\ A & -\Sigma^{-1} \end{bmatrix} \begin{bmatrix} d \\ -\lambda \end{bmatrix} = \begin{bmatrix} -\nabla \varphi \\ 0 \end{bmatrix} $
+\form#100:$a_i = sc1\cdot a_i + sc2\cdot b_i$

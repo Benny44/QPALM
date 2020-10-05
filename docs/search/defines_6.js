@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['lobpcg_5ftol',['LOBPCG_TOL',['../nonconvex_8c.html#ad8f250b38eea597d18296dec202f296b',1,'nonconvex.c']]]
+  ['inner_5fmax_5fiter',['INNER_MAX_ITER',['../constants_8h.html#a451ff722557802c68ead475155bdcfa0',1,'constants.h']]]
 ];

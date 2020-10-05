@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['factorization_5fmethod',['FACTORIZATION_METHOD',['../constants_8h.html#a8431ece33bae36de1764905f66e13abb',1,'constants.h']]],
-  ['factorize_5fkkt',['FACTORIZE_KKT',['../constants_8h.html#ac614e94631396875c8063a081f4295a9',1,'constants.h']]],
-  ['factorize_5fkkt_5for_5fschur',['FACTORIZE_KKT_OR_SCHUR',['../constants_8h.html#ab1e9daf3da62acbdd2fd4882d6f0877f',1,'constants.h']]],
-  ['factorize_5fschur',['FACTORIZE_SCHUR',['../constants_8h.html#a37f34a2ab1ee7c4cd7fc69e8d4690e6a',1,'constants.h']]],
-  ['false',['FALSE',['../constants_8h.html#aa93f0eb578d23995850d61f7d61c55c1',1,'constants.h']]]
+  ['enable_5fdual_5ftermination',['ENABLE_DUAL_TERMINATION',['../constants_8h.html#a7be4c76f27b9ffb860fdfd4bca41010e',1,'constants.h']]],
+  ['eps_5fabs',['EPS_ABS',['../constants_8h.html#a31527ac41638eec6e9b6dc36946b539a',1,'constants.h']]],
+  ['eps_5fabs_5fin',['EPS_ABS_IN',['../constants_8h.html#ae97e70b085502d1d8030c1f51da6151b',1,'constants.h']]],
+  ['eps_5fdual_5finf',['EPS_DUAL_INF',['../constants_8h.html#affd660a2cfd932d25c7aa55031e38c4f',1,'constants.h']]],
+  ['eps_5fprim_5finf',['EPS_PRIM_INF',['../constants_8h.html#ae5bd1f4535dc3f47ac763224bd59b151',1,'constants.h']]],
+  ['eps_5frel',['EPS_REL',['../constants_8h.html#a62c40728b469a0a6e1f696793569835a',1,'constants.h']]],
+  ['eps_5frel_5fin',['EPS_REL_IN',['../constants_8h.html#a0771de8aebffeee6adee8b9fea107548',1,'constants.h']]]
 ];

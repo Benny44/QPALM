@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['inner_5fmax_5fiter',['INNER_MAX_ITER',['../constants_8h.html#a451ff722557802c68ead475155bdcfa0',1,'constants.h']]]
+  ['gamma_5finit',['GAMMA_INIT',['../constants_8h.html#a597e8eb4c7142ae3ac89acfe0372db8c',1,'constants.h']]],
+  ['gamma_5fmax',['GAMMA_MAX',['../constants_8h.html#acc2c87b648c4995ea704dbae56bfacb1',1,'constants.h']]],
+  ['gamma_5fupd',['GAMMA_UPD',['../constants_8h.html#a2d22ea31bc3392c2e8f3a2baa94610d4',1,'constants.h']]]
 ];
