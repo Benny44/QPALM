@@ -148,6 +148,10 @@ do
     fi
 done < "$f"
 
+##Julia
+sed -i 's/#ifdef USE_LADEL//' interfaces/QPALM.jl/qpalm_julia.c
+sed -i 's@#endif /\* USE_LADEL \*/@@' interfaces/QPALM.jl/qpalm_julia.c
+
 #Readme
 sed -i 's/## Check out QPALM_vLADEL//' README.md
 sed -i 's#Check out \[this\](https://github.com/Benny44/QPALM_vLADEL) for the main LGPL-v3 licensed version of QPALM based on LADEL. This repo is only maintained because it provides an interface also to CHOLMOD, which might be more useful than LADEL for dense problems.##' README.md 
