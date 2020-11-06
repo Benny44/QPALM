@@ -28,8 +28,9 @@ source activate condaenv_build
 # source activate condaenv_build
 
 #conda install -c conda-forge suitesparse
+conda install -c conda-forge/label/cf202003 liblapacke 
 conda install -c conda-forge lapack
-conda install -c conda-forge liblapacke
+
 # conda install -c intel mkl
 conda install -c anaconda python
 # conda init
