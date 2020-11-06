@@ -29,7 +29,7 @@ source activate condaenv_build
 
 #conda install -c conda-forge suitesparse
 conda install -c conda-forge lapack
-conda install -c conda-forge lapacke
+conda install -c conda-forge liblapacke
 # conda install -c intel mkl
 conda install -c anaconda python
 # conda init
