@@ -26,8 +26,9 @@ if [ -d "../QPALM_ladel/docs" ]; then
     rsync -a docs/ref.bib ../QPALM_ladel/docs
 else
     mkdir ../QPALM_ladel/docs
-    rsync -a docs/ref.bib ../QPALM_ladel/docs
 fi
+rsync -a docs/ref.bib ../QPALM_ladel/docs
+
 
 # Remove all the cholmod code in C
 cd ../QPALM_ladel
@@ -153,8 +154,8 @@ sed -i 's/#ifdef USE_LADEL//' interfaces/QPALM.jl/qpalm_julia.c
 sed -i 's@#endif /\* USE_LADEL \*/@@' interfaces/QPALM.jl/qpalm_julia.c
 
 #Readme
-sed -i 's/## Check out QPALM_vLADEL//' README.md
-sed -i 's#Check out \[this\](https://github.com/Benny44/QPALM_vLADEL) for the main LGPL-v3 licensed version of QPALM based on LADEL. This repo is only maintained because it provides an interface also to CHOLMOD, which might be more useful than LADEL for dense problems.##' README.md 
+sed -i 's@## Check out \[our new version\](https://github.com/Benny44/QPALM_vLADEL)@@' README.md
+sed -i 's#\*\*The current repo is only maintained because it provides an interface also to CHOLMOD, which might be more useful than LADEL for dense problems. Check out \[this link\](https://github.com/Benny44/QPALM_vLADEL) for the main LGPL-v3 licensed version of QPALM based on LADEL.\*\*##' README.md 
 
 sed -i 's#* Suitesparse: authored by Tim Davis. Each of its modules is licensed separately, see \[suitesparse/LICENSE.txt\](https://github.com/jluttine/suitesparse/blob/e409f9fb39181ea86718dbf91ce39c2c7e6c3dcd/LICENSE.txt). The main module used in QPALM is CHOLMOD.#\* LADEL: authored by Ben Hermans and licensed under \[LGPL-v3\](https://github.com/Benny44/LADEL/blob/master/LICENSE).#' README.md
 sed -i 's#* Intel MKL: authored by the Intel Corporation and licensed under the Intel Simplified Software License.##' README.md
@@ -162,10 +163,14 @@ sed -i 's#* Intel MKL: authored by the Intel Corporation and licensed under the 
 # sed -i 's#QPALM.svg#QPALM_vLADEL.svg#' README.md
 sed -i 's#Benny44/QPALM#Benny44/QPALM_vLADEL#' README.md
 sed -i 's#io/QPALM#io/QPALM_vLADEL#' README.md
+sed -i 's#.txt). -->#.txt).#' README.md
+sed -i 's/<!-- ## Documentation/## Documentation/' README.md
 
 #Documentation
 sed -i 's#github.com/Benny44/QPALM#github.com/Benny44/QPALM_vLADEL#' doxypages/mainpage.dox
 sed -i 's# * GPL 3.0# * LGPL-3.0#' doxypages/mainpage.dox
+
+
 sed -i 's#ladel/cholmod#ladel#' include/solver_interface.h
 sed -i 's#cholmod/ladel#ladel#' include/solver_interface.h
 sed -i 's#Finally, all the settings relevant to cholmod (and suitesparse) are included##' include/solver_interface.h

@@ -120,6 +120,9 @@ cd $builddir
 cmake $curdir -DCMAKE_BUILD_TYPE=release -DUSE_LADEL=ON -DINTERFACES=OFF -DUNITTESTS=OFF -DPYTHON=ON
 make
 
+cd ../..
+python3 qpalm_python_demo.py
+
 cd $curdir
 
 # Copy includes

@@ -3,10 +3,6 @@ sudo: required
 branches:
   only:
   - master
-  - development
-  - lobpcg
-  - interfaces
-  - ladel-interface
 matrix:
   include:
   - os: linux

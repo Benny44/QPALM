@@ -1,7 +1,4 @@
-# QPALM
-
-## Check out QPALM_vLADEL
-Check out [this](https://github.com/Benny44/QPALM_vLADEL) for the main LGPL-v3 licensed version of QPALM based on LADEL. This repo is only maintained because it provides an interface also to CHOLMOD, which might be more useful than LADEL for dense problems.
+# Proximal Augmented Lagrangian method for Quadratic Programs
 
 [![Coverage Status](https://coveralls.io/repos/github/Benny44/QPALM/badge.svg?branch=master)](https://coveralls.io/github/Benny44/QPALM?branch=master)
 
@@ -10,9 +7,19 @@ Platform | CI Status
 Linux    | [![Linux Build Status](https://travis-ci.org/Benny44/QPALM.svg?env=BADGE=linux&branch=master)](https://travis-ci.com/Benny44/QPALM)
 OSX      | [![OSX Build Status](https://travis-ci.org/Benny44/QPALM.svg?env=BADGE=osx&branch=master)](https://travis-ci.com/Benny44/QPALM)
 
-A proximal augmented Lagrangian method for (possibly **nonconvex**) QPs using semismooth Newton direction and exact line search.
+QPALM is a numerical optimization package that finds stationary points of (possibly **nonconvex**) quadratic programs, that is 
+```
+minimize        0.5 x' Q x + q' x
 
-## Installation
+subject to      l <= A x <= u
+```
+
+## Check out [our new version](https://github.com/Benny44/QPALM_vLADEL)
+**The current repo is only maintained because it provides an interface also to CHOLMOD, which might be more useful than LADEL for dense problems. Check out [this link](https://github.com/Benny44/QPALM_vLADEL) for the main LGPL-v3 licensed version of QPALM based on LADEL.**
+
+
+
+<!-- ## Installation
 
 First of all, clone this repo with all the submodules! For this, run
 ```
@@ -75,25 +82,15 @@ Basic demos are available for the different ways to call the solver:
 * For the mex interface of QPALM, check out examples/qpalm_mex_demo.m and examples/qpalm_mex_nonconvex_demo.m.
 * For the C-version of QPALM, check out examples/qpalm_demo.c.
 * For the python interface of QPALM, check out interfaces/python/qpalm_python_demo.py.
-* For the Julia interface of QPALM, check out any of the files in interfaces/QPALM.jl/test/.
+* For the Julia interface of QPALM, check out any of the files in interfaces/QPALM.jl/test/. -->
 
-## Documentation
+<!-- ## Documentation
 
-You can now find the the documentation [online](https://benny44.github.io/QPALM/).
-
-## Tests
-
-The QPALM library is tested extensively. The tests currently have [![Coverage Status](https://coveralls.io/repos/github/Benny44/QPALM/badge.svg?branch=master)](https://coveralls.io/github/Benny44/QPALM?branch=master). To build the debug version and run the automated tests yourself, check out the custom compilation section above.
+You can now find the the documentation [here](https://benny44.github.io/QPALM/). This includes all information you need to get started using QPALM.
 
 ## Benchmarks
 
 Check out the paper below for detailed benchmark tests comparing QPALM with state-of-the-art solvers.
-
-## Contributors
-
-* **Ben Hermans** - *Main developer*
-* **Panagiotis Patrinos** - *Codeveloper*
-* **Andreas Themelis** - *Theoretical contributions*
 
 ## Citing
 
@@ -120,5 +117,5 @@ QPALM is licensed under GPL v3.0. Some modules are used in this software:
 * Intel MKL: authored by the Intel Corporation and licensed under the Intel Simplified Software License.
 * LOBPCG: the version of LOBPCG used here was written by Ben Hermans and licensed under the GNU Lesser General Public License v3.0, see [LOBPCG/LICENSE](https://github.com/Benny44/LOBPCG/blob/master/LICENSE).
 * LAPACK: authored by The University of Tennessee and The University of Tennessee Research Foundation, The University of California Berkeley, and The University of Colorado Denver, and licensed under BSD-3, see [here](https://github.com/Reference-LAPACK/lapack/blob/master/LICENSE).
-* Minunit: a minimal unit testing framework for C, modified from the version by David Siñuela Pastor and licensed under MIT, see [here](https://github.com/siu/minunit/blob/master/MIT-LICENSE.txt). 
+* Minunit: a minimal unit testing framework for C, modified from the version by David Siñuela Pastor and licensed under MIT, see [here](https://github.com/siu/minunit/blob/master/MIT-LICENSE.txt). -->
 
